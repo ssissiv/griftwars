@@ -21,5 +21,11 @@ function WorldGen:GeneratePlayer( world )
 	player:SetDetails( "Han" )
 	world:AddAgent( player )
 
+	local other = Agent()
+	other:SetDetails( "Kevin" )
+	other:GainAspect( Aspect.Cowardly() )
+	world:AddAgent( other )
+
 	world:MoveAgent( player, start )
+	world:MoveAgent( other, start )
 end

@@ -1,11 +1,14 @@
-local Agent = class( "Agent" )
-
-Agent.FLAGS = MakeEnum{
+local FLAGS = MakeEnum{
 	"PLAYER"
 }
 
+local Agent = class( "Agent" )
+Agent.FLAGS = FLAGS
+
 function Agent:init()
 	self.flags = {}
+	self.aspects = {}
+	self.sense_log = {}
 end
 
 function Agent:SetFlags( ... )
@@ -20,6 +23,43 @@ end
 
 function Agent:GetName()
 	return self.name or "No Name"
+end
+
+function Agent:IsPlayer()
+	return self:HasFlag( FLAGS.PLAYER )
+end
+
+function Agent:GetShortDesc()
+	if self:IsPlayer() then
+		return "You are here."
+	else
+		return loc.format( "{1} is standing here.", self.name )
+	end
+end
+
+function Agent:CollectInteractions( obj, verbs )
+	for i, aspect in self:Aspects() do
+		if aspect:CanInteract( self, obj ) then
+			if verbs then
+				table.insert( verbs, aspect )
+			else
+				return true
+			end
+		end
+	end
+	for i, aspect in obj:Aspects() do
+		if aspect:CanInteract( aspect, obj ) then
+			if verbs then
+				table.insert( verbs, aspect )
+			else
+				return true
+			end
+		end
+	end
+
+	if verbs then
+		return verbs
+	end
 end
 
 function Agent:SetDetails( name )
@@ -38,3 +78,30 @@ end
 function Agent:GetLocation()
 	return self.location
 end
+
+function Agent:GainAspect( aspect )
+	table.insert( self.aspects, aspect )
+	aspect:OnGainAspect( self )
+end
+
+function Agent:LoseAspect( aspect )
+	table.arrayremove( self.aspects, aspect )
+	aspect:OnLoseAspect( self )
+end
+
+function Agent:Aspects()
+	return ipairs( self.aspects )
+end
+
+function Agent:CanSee( obj )
+	return true
+end
+
+function Agent:Sense( txt )
+	table.insert( self.sense_log, txt )
+end
+
+function Agent:Senses()
+	return ipairs( self.sense_log )
+end
+

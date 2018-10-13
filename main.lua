@@ -18,11 +18,14 @@ require "input"
 require "eventsystem"
 require "gui/ui"
 
+require "game/msg"
 require "game/location"
 require "game/agent"
 require "game/worldbase"
 require "game/world"
 require "game/worldgen"
+require "game/aspects/aspect"
+require "game/aspects/traits"
 
 -----------------------------------------------------------
 

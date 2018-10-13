@@ -23,6 +23,10 @@ function Location:RemoveAgent( agent )
 	table.remove( self.contents, idx )
 end
 
+function Location:Contents()
+	return ipairs( self.contents )
+end
+
 function Location:GetTitle()
 	return self.title or "No Title"
 end
