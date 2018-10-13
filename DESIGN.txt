@@ -1,0 +1,238 @@
+Create procgen NPC relationship tree(s), bosses on top, subordinates down below.
+
+The main trees are:
+	employee/employer
+		Shows official job status.  Any given C can have at most 1 "official" boss, but may be working for multiple people by including a "Secret Employer" relationship.
+	family
+	wealth
+
+Each node represents an NPC, and an NPCs traits represent various tree-constraints and dictate the behaviours of that NPC.
+
+Hidden information:
+	This is an information modelling game.  Information does not travel instantly, but through specific Actions.  Every NPC has a unique world-view based on what they know.  All game concepts are part of the information system, including NPC traits, names, current actions, assets, network links to other NPCs, etc.
+
+	Hidden information is critical to how the NPC AI will evalaute its actions, and critical in keeping that branching factor relatively low.
+
+
+The goal is to become the root of a certain tree.  To do so entails tree operations.
+	Murder: remove a node.  May make certain people really really angry.
+	Coup: Murder and replace a node.  Definitely make certain people really angry.
+	Hired: move up a level in the tree, if there are spots available
+		Various ways to acquire the Hired result
+	Bribing: move up the wealth tree by paying someone the most
+
+For underground networks, identities are frequently hidden.  Interacting with others in the network entails going through
+channels, either from that network's trees but possibly also others.
+
+Certain NPCs have 'external links': these are links to assets that aren't modelled (effectively system input/output)
+
+NPCs all have positive and negative affinities.  Positive affinity to a long-term status is a "goal": to be rich, to be the boss, to get revenge, to be respected, etc.  (The more we model, the more varied the goals can be)  They act in accordance to their goals and their traits.  NPCs utilize the same verbs as the player does.  You can plug in NPC behaviour to the player character and watch the game play itself.
+
+Positive affinities can exist for actions, or certain resources, which indicate short-term goals or desires that will influence NPC actions.
+
+Actions all have a duration, and specific requirements, (the existence of their targets being one obvious one)
+
+Verbs:
+	Share knowledge <X>
+	Req: any connection
+
+	Give asset <X>
+	Req: any connection
+
+	Hide [Increase Safety for duration]
+
+
+(Non-Job) Skills / Traits:
+	Lazy
+		Verb: Do nothing for some time.
+	Palmgreaser
+		Verb: Bribe <X>
+		Req: X must desire money.
+	Scout
+		Verb: Learn aspect of <X>
+		Req: X must be a known edge between X and a previous known C.
+
+Jobs:
+	Implementation Note: Jobs probably just "give" skills of specific rank.
+
+	Dealer.  Sells product for cash, passes the cash up the wire.
+		Verb: Sell <Product> For <Y>
+		Req: Y must desire Product.
+	Brute.  Puts the hurt on other targets.  Dangerous, but can be lucrative.
+		Verb: Intimidate <NPC>
+	Hitman.  Puts the dead on other targets.
+		Verb: Kill <NPC>
+		Req: Safety <NPC> < <Skill>.
+			(Safety is derived from current location, presence of bodyguards, etc.)
+	Bodyguard.  Defend someone with your life.  Lucrative, and can get you in an inner circle, but very dangerous.
+		Verb: None!  You get dragged around with your boss.
+
+	Messenger/Courier.  Intel at your fingertips.  Take it to a target and don't get caught
+		Verb: Deliver missive.
+		Verb: Read missive
+		Might receive new identities as part of the job.  Might receive assets to finish the job.
+		The idea is that messengers deliver intel between otherwise distantly-connected NPCs nodes as a faster means of transferring intel.
+
+	Labor.  Work at a production facility making or helping to make something.  Mediocre pay, prospects, and boring.
+		Verb: Work hard.  [Gain respect and possible more money but lose your health]
+	Driver.  Take people, usually your boss, to specific places.  Gains you trust.
+		Verb: Work hard.
+		May acquire intel.
+
+	Fixer.  Basically, a random job from the above jobs.  Cause a Fixer can fix anything.  Triple pay.
+
+	Manager.  Run a set of NPCs to reach a certain Asset goal.  A goal can be a target asset amount, a target
+		asset rate, ....
+		Verb: Give Order 
+		Verb: Change parameter ? [A way to change prices of Dealing, or the goals for sub-managers, eg.]
+		Req: Underling is an employee and has Respect > X.
+
+
+
+Constraints:
+	NPCs at a higher employer-employee node impose constraints on their children, recursively.
+	eg. Peaceful NPCs will disable all Verbs that are "unlawful".
+
+	Honorable prohibits any Contracts from being willfully terminated.
+
+Contracts:
+	Contracts are agreemets between a set of NPCs.  These are constraints imposed by the said "Contract".  Contracts may or may not have a duration.
+
+	By default, Contracts can be violated at will, but this usually has severe consequences: you may lose Respect with people who know of the contract, and often anger the NPCs with who the contract was entered.  If they are vengeful, a vendetta will be created.
+
+Traits:
+	Are these binary things, or do they have a magnitude?  Are they values on an axis?  (eg. Forgiving <---> Vengeful)
+
+	Vengeful  A vendetta link is created with agent X when X performs a wrongdoing.
+
+Example Subtree:
+				Manager (Drug Lord)
+				/					\
+			Dealer C	-----		 \
+			/        \		   \	  \
+		Dealer A   Dealer B   Brute    Messenger
+
+Drug Lord links:
+	supplier: X
+	supplier: Y
+	buyer:
+	boss: Manager (not shown)
+	sister: E
+	owns: Money (10000 creds)
+	owns: Stash (100k nitroglaze)
+Drug Lord desc:
+	This is the guy who runs things at this level.  He has the only contact to Messenger, which he uses to send orders to brute (two links away), and to send sold Assets to C.
+
+Dealer C:
+	Manager gives C asset.  Sells and gives back to Manager.
+	Gives asset to A/B.
+	Gets orders for Brute, passes them on.
+
+Dealer A/B:
+	Ditto, but smaller #s than C.
+
+
+
+
+Gang wars.
+
+Multiplayer or head v. head gang wars.
+You start with a short depth procgen k-ary tree of goons, with bosses and subordinates.  Top dude is the top honcho.
+
+You start at the bottom and work your way up the procgen goon ladder, doin jobs and using Mordors style verbs to infiltrate and manipulate the networks.
+
+Throw in social sim / random character trait algorithm that you please :p
+
+People are a ? until you gain intel on them.  Often, they are just a nickname until you match with their real name.
+
+People get jobs and postings on timers not unlike Griftlands.  Castle Crashers crossed with Double Dragon cross with Staredew Valley.  They go home and sleep, behind doors.  Sometimes they got bodyguards.  Kids.  Significant others.  The more character behaviours the better.
+
+You have hunger/energy/bars like Punch Club.  There are Rank 1 jobs that do nothing but give you $$ (Punch Club tuning).  And you need to buy food / etc.  Jobs only appear on Ranked NPCs of equal to player Level, they yield 1 rep with the person.
+
+The jobs available are actually the planned actions for that NPC according to their stats / traits.  When you gain intel on an NPC, this reveals the action they are planning.  At the beginning, you start with a friend who tells you intel on people.  These are your first jobs.
+
+When rep maxes on an NPC, they will give you intel on a Rank 2 NPC.
+
+You have procgen streets, very simple 1D noise with stockpile of buildign types to dole out.  Distance is pretty important cause of meters
+
+Key is the AI.  Plan top-down, what's evaluated positively for a boss is ranked positively for a subordinate.  But maybe there's a plan phase for each trait, where the scoring is highest for actions tagged with that trait.
+	eg. Loyal: those actions which coincide with their bosses
+		Ambitious: those actions which gain the greatest fame.
+		Greedy: thos actions which gain the greatest $
+		Violent: those actions which gain the greatest infamy
+
+The actions an agent can do are specific to their class; for some NPCs, planning is very simple.  Most NPCs simply don't have the right combination of trait, stats, and actions to achieve anything.
+
+Traits give actions too:
+	Loyal: Increase relationship with bosses
+	Ambitious: meet a rank 2 NPC at a haunt.
+	Greedy: hustle a random person at their haunt for $.
+	Violent: beat up someoen you dislike.  +large infamy with everyone there, -opinion to target.
+
+And Trait x Trait gives actions:
+	Loyal Greedy: well maybe not this one
+	Loyal Violent: beat up someone who dislikes boss.
+	Clever Greedy: meet random someone, gain $$.
+
+Rank 1 NPCs have the least amount of actions.
+	* Homeless: search for $.
+	* steal from parent $.  Sports.
+
+Most actions restrict targets to their level, but some have a +/- modifier for how many levels above or low it targets.
+
+Rank / Hierarchy Tuning (level distribution)
+==========================================
+So people do what they do, and if there are actions to gain Rank, then people will raise Rank.  These are typically related to Job:
+	eg: Grocer -- gain $ to rank up.  He will then start targetting level 2 people.
+
+There needs tobe some mechansm to balance rank distribution to the desired amount, but not sure what that is yet.  ALso it needs tobe seeded with a reasonably interesting initial state.
+
+
+
+
+. --
+
+Maybe it's a 2d brawler, think Castle Crashers crossed with Double Dragon.
+Maybe we use Viking tech.  Maybe this is Ninja 2.
+
+---------------------------------------------------------
+
+Resources:
+Money
+* Income from group of citizens.  Can procgen create them: son who works at grocery, doting parent, drug hopper, boss,
+
+
+the verb: Dealing
+	Be nice / reasonable
+		give money
+		explain yourself
+
+	Be devious
+		manipulate
+		charm them
+		(learn information)
+
+	Be forceful
+		intimidate them
+		be cruel to them
+
+the subject: People
+	High level people
+		Are linked to multiple mid level people
+		have greater restrictions on dealings
+		many resources
+
+	mid level people
+		Are linked to multiple low level people
+		have some restrictions on dealings
+		some resources
+
+	low level people
+		have little restrictions on dealings
+		little to no resources
+
+
+
+
+
+
