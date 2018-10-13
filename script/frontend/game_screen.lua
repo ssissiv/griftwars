@@ -1,11 +1,8 @@
-local GameScreen =
-{
-	camera = nil,
-}
+local GameScreen = class( "GameScreen" )
 
-function GameScreen.New()
-	local self = table.shallowcopy( GameScreen )
-	self.world = World.new()
+function GameScreen:init()
+	local gen = WorldGen()
+	self.world = gen:GenerateWorld()
 	return self
 end
 
@@ -35,8 +32,26 @@ function GameScreen:RenderScreen( gui )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
-    ui.Text( "TODO"  )
+    local player = self.world:GetPlayer()
+
+    self:RenderPlayerDetails( ui, player )
+    ui.Separator()
+
+    self:RenderCurrentLocation( ui, player:GetLocation() )
+    ui.Separator()
+
     ui.End()
+end
+
+function GameScreen:RenderPlayerDetails( ui, player )
+    ui.TextColored( 0.5, 1.0, 1.0, 1.0, player:GetName() )
+    ui.SameLine( 0, 20 )
+    ui.Text( "HP: 3/3" )
+end
+
+function GameScreen:RenderCurrentLocation( ui, location )
+	ui.Text( location:GetTitle() )
+	ui.TextColored( 0.8, 0.8, 0.8, 1.0, location:GetDesc() )
 end
 
 function GameScreen:MouseMoved( mx, my )

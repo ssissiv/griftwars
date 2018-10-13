@@ -10,8 +10,6 @@ function DebugWorld:init( world )
 end
 
 function DebugWorld:RenderPanel( ui, panel, dbg )
-    ui.Text( string.format( "Time: %.2f, Tick: %d", self.world:GetDateTime(), self.world:GetUpdateTick() ))
-
     DebugTable.RenderPanel( self, ui, panel, dbg )
 end
 

@@ -1,61 +1,48 @@
-local World = class( "World" )
+local World = class( "World", WorldBase )
 
 function World:init()
-	self.datetime = 0
+	WorldBase.init( self )
 
-	self.events = EventSystem()
-	self.events:ListenForAny( self, self.OnWorldEvent )
-	self.scheduled_events = {}
+	self.locations = {}
+	self.agents = {}
 end
 
-function World:ListenForAny( listener, fn, priority )
-	self.events:ListenForAny( listener, fn, priority )
+function World:AddLocation( location )
+	table.insert( self.locations, location )
 end
 
-function World:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
+function World:AllLocations()
+	return ipairs( self.locations )
 end
 
-function World:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
-end
+function World:AddAgent( agent )
+	table.insert( self.agents, agent )
 
-function World:RemoveListener( listener )
-	self.events:RemoveListener( listener )
-end
-
-function World:BroadcastEvent( event_name, ... )
-	self.events:BroadcastEvent( event_name, ... )
-end
-
-function World:OnWorldEvent( event_name, ... )
-	if event_name == WORLD_EVENT.LOG then
-		print( "WORLD_EVENT.LOG:", ... )
+	if agent:HasFlag( Agent.FLAGS.PLAYER ) then
+		assert( self.player == nil )
+		self.player = agent
 	end
 end
 
-local function CompareScheduledEvents( ev1, ev2 )
-	return ev1.when < ev2.when
+function World:AllAgents()
+	return ipairs( self.agents )
 end
 
-function World:ScheduleEvent( delta, event_name, ... )
-	assert( delta > 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
-	local ev = { when = self.world_tick + delta, event_name, ... }
-	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
-	return ev
+function World:MoveAgent( agent, to )
+	local from = agent:GetLocation()
+	if from then
+		agent:ExitLocation()
+		from:RemoveAgent( agent )
+	end
+
+	if to then
+		agent:EnterLocation( to )
+		to:AddAgent( agent )
+	end
 end
 
-function World:SchedulePeriodicEvent( delta, event_name, ... )
-	local ev = self:ScheduleEvent( delta, event_name, ... )
-	ev.period = delta
-	return ev
-end
-
-function World:UnscheduleEvent( ev )
-	ev.cancel = true
-end
-
-function World:UpdateWorld( dt )
+function World:GetPlayer()
+	return self.player
 end
 
 

@@ -17,8 +17,12 @@ require "calendar"
 require "input"
 require "eventsystem"
 require "gui/ui"
-require "game/world"
 
+require "game/location"
+require "game/agent"
+require "game/worldbase"
+require "game/world"
+require "game/worldgen"
 
 -----------------------------------------------------------
 
@@ -58,7 +62,7 @@ end
 function love.load(arg)
     math.randomseed( os.time() )
     
-    local game = GameScreen.New()
+    local game = GameScreen()
 
     gui = UI()
     gui:AddScreen( game )

@@ -53,36 +53,16 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
         panel:AppendTable( ui, self.game, "Game" )
         panel:AppendTable( ui, self.game.world, "World" )
 
-        if ui.TreeNodeEx( "Resources", "DefaultOpen" ) then
-            for i, k, v in sorted_pairs( ALL_RESOURCES ) do
-                local num = self.game.world:GetResource( v )
-                local changed, new_num = ui.SliderInt( v.name, num, 0, v.max_stacks )
-                if changed and new_num ~= num then
-                    self.game.world:DeltaResource( v, new_num - num )
-                end
+        if ui.TreeNodeEx( "Locations", "DefaultOpen" ) then
+            for i, location in self.game.world:AllLocations() do
+                panel:AppendTable( ui, location )
             end
             ui.TreePop()
         end
 
-        if ui.TreeNodeEx( "Spells" ) then
-            for i, k, v in sorted_pairs( ALL_SPELLS ) do
-                if ui.Button( v.name ) then
-                    self.game.world.hand:AddSpell( v() )
-                end
-            end
-            ui.TreePop()
-        end
-
-        if ui.TreeNodeEx( "Creatures" ) then
-            local n = table.count( ALL_CREATURES )
-            for i, k, v in sorted_pairs( ALL_CREATURES ) do
-                local idx
-                if dbg:GetDebugEnv().spawn_creature == v then
-                    idx = i
-                end
-                if ui.RadioButton( v.name, idx or 0, n ) then
-                    dbg:GetDebugEnv().spawn_creature = v
-                end
+        if ui.TreeNodeEx( "Agents", "DefaultOpen" ) then
+            for i, agent in self.game.world:AllAgents() do
+                panel:AppendTable( ui, agent )
             end
             ui.TreePop()
         end
