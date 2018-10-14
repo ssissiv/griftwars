@@ -217,6 +217,13 @@ the verb: Dealing
 		be cruel to them
 
 the subject: People
+	Have relationships
+		Boss / Subordinate
+		Parent / Child
+		Snoop / Mole
+		Liked
+		Disliked
+
 	High level people
 		Are linked to multiple mid level people
 		have greater restrictions on dealings

@@ -19,6 +19,7 @@ function WorldGen:GeneratePlayer( world )
 	local player = Agent()
 	player:SetFlags( Agent.FLAGS.PLAYER )
 	player:SetDetails( "Han" )
+	player:GainAspect( Aspect.Scrounge() )
 	world:AddAgent( player )
 
 	local other = Agent()

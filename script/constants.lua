@@ -1,3 +1,5 @@
+DEV = true
+
 DBG_FLAGS = MakeBitField{ "RENDER" }
 
 

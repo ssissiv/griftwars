@@ -47,12 +47,14 @@ function Agent:CollectInteractions( obj, verbs )
 			end
 		end
 	end
-	for i, aspect in obj:Aspects() do
-		if aspect:CanInteract( aspect, obj ) then
-			if verbs then
-				table.insert( verbs, aspect )
-			else
-				return true
+	if obj then
+		for i, aspect in obj:Aspects() do
+			if aspect:CanInteract( self, obj ) then
+				if verbs then
+					table.insert( verbs, aspect )
+				else
+					return true
+				end
 			end
 		end
 	end

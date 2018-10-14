@@ -26,6 +26,7 @@ require "game/world"
 require "game/worldgen"
 require "game/aspects/aspect"
 require "game/aspects/traits"
+require "game/aspects/skills"
 
 -----------------------------------------------------------
 

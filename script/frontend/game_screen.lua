@@ -71,12 +71,25 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				ui.OpenPopup( "INTERACT" )
 			end
 			ui.PopStyleColor()
+
+			if ui.IsItemHovered() and is_instance( obj, Agent ) then
+				ui.BeginTooltip()
+				self:RenderAgentDetails( ui, obj )
+				ui.EndTooltip()
+			end
+
 			if ui.BeginPopup( "INTERACT" ) then
 				local t = agent:CollectInteractions( obj, {} )
 				for i, verb in ipairs( t ) do
-					local ok, details = verb:CanInteract( agent, obj )					
+					local ok, details = verb:CanInteract( agent, obj )		
 					if ui.MenuItem( tostring( details )) then
 						verb:Interact( agent, obj )
+					end
+				end
+				if DEV then
+					ui.Separator()
+					if ui.MenuItem( "Debug" ) then
+						DBG( obj )
 					end
 				end
 				ui.EndPopup()
@@ -86,7 +99,25 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		end
 		ui.PopID()
 	end
+
+	if agent then
+		local t = agent:CollectInteractions( nil, {} )
+		for i, verb in ipairs( t ) do
+			local ok, details = verb:CanInteract( agent, nil )
+			ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+			if ui.Selectable( tostring(details) ) then
+				verb:Interact( agent, nil )
+			end
+			ui.PopStyleColor()
+		end
+	end
 	ui.Unindent( 20 )
+end
+
+function GameScreen:RenderAgentDetails( ui, agent )
+	ui.Text( "HP:" )
+	ui.SameLine( 0, 10 )
+	ui.TextColored( 1, 0, 0, 1, string.format( "%d/%d", 3, 3 ))
 end
 
 function GameScreen:RenderSenses( ui, player )
