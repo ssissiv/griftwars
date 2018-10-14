@@ -8,7 +8,7 @@ end
 
 function DebugLocation:RenderPanel( ui, panel, dbg )
 	if ui.Button( "Warp To" ) then
-		self.location.world:GetPlayer():MoveToLocation( self.location )
+		self.location.world:GetPuppet():MoveToLocation( self.location )
 	end
     
     DebugTable.RenderPanel( self, ui, panel, dbg )

@@ -32,12 +32,12 @@ function GameScreen:RenderScreen( gui )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
-    local player = self.world:GetPlayer()
+    local puppet = self.world:GetPuppet()
 
-    self:RenderPlayerDetails( ui, player )
+    self:RenderPuppetDetails( ui, puppet )
     ui.Separator()
 
-    self:RenderLocationDetails( ui, player:GetLocation(), player )
+    self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
     ui.Separator()
     ui.End()
 
@@ -47,12 +47,12 @@ function GameScreen:RenderScreen( gui )
 	ui.SetNextWindowPos( 0, love.graphics.getHeight() * 0.8 )
 
     ui.Begin( "OUTPUT", true, flags )
-    self:RenderSenses( ui, player )
+    self:RenderSenses( ui, puppet )
     ui.End()
 end
 
-function GameScreen:RenderPlayerDetails( ui, player )
-    ui.TextColored( 0.5, 1.0, 1.0, 1.0, player:GetName() )
+function GameScreen:RenderPuppetDetails( ui, puppet )
+    ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetName() )
     ui.SameLine( 0, 20 )
     ui.Text( "HP: 3/3" )
 end
@@ -121,8 +121,8 @@ function GameScreen:RenderAgentDetails( ui, agent )
 	ui.TextColored( 1, 0, 0, 1, string.format( "%d/%d", 3, 3 ))
 end
 
-function GameScreen:RenderSenses( ui, player )
-	for i, txt in player:Senses() do
+function GameScreen:RenderSenses( ui, agent )
+	for i, txt in agent:Senses() do
 		ui.Text( txt )
 	end
 	ui.SetScrollHere()

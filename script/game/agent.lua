@@ -34,8 +34,12 @@ function Agent:IsPlayer()
 	return self:HasFlag( FLAGS.PLAYER )
 end
 
+function Agent:IsPuppet()
+	return self.world:GetPuppet() == self
+end
+
 function Agent:GetShortDesc()
-	if self:IsPlayer() then
+	if self:IsPuppet() then
 		return "You are here."
 	else
 		return loc.format( "{1} is standing here.", self.name )

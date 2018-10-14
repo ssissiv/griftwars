@@ -23,6 +23,7 @@ function World:SpawnAgent( agent )
 	if agent:HasFlag( Agent.FLAGS.PLAYER ) then
 		assert( self.player == nil )
 		self.player = agent
+		self.puppet = agent
 	end
 end
 
@@ -32,6 +33,15 @@ end
 
 function World:GetPlayer()
 	return self.player
+end
+
+function World:GetPuppet()
+	return self.puppet
+end
+
+function World:SetPuppet( agent )
+	assert( is_instance( agent, Agent ))
+	self.puppet = agent
 end
 
 
