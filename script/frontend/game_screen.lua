@@ -78,24 +78,33 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				ui.EndTooltip()
 			end
 
-			if ui.BeginPopup( "INTERACT" ) then
-				local t = agent:CollectInteractions( obj, {} )
-				for i, verb in ipairs( t ) do
-					local ok, details = verb:CanInteract( agent, obj )		
-					if ui.MenuItem( tostring( details )) then
-						verb:Interact( agent, obj )
-					end
-				end
-				if DEV then
-					ui.Separator()
-					if ui.MenuItem( "Debug" ) then
-						DBG( obj )
-					end
-				end
-				ui.EndPopup()
+		elseif DEV then
+			ui.PushStyleColor( ui.Style_Text, 0.5, 0.5, 0.5, 1 )
+			if ui.Selectable( obj:GetShortDesc() ) then
+				ui.OpenPopup( "INTERACT" )
 			end
+			ui.PopStyleColor()			
 		else
 			ui.TextColored( 0.5, 0.5, 0.5, 1.0, obj:GetShortDesc() )
+		end
+
+		if ui.BeginPopup( "INTERACT" ) then
+			local t = agent:CollectInteractions( obj, {} )
+			for i, verb in ipairs( t ) do
+				local ok, details = verb:CanInteract( agent, obj )		
+				if ui.MenuItem( tostring( details )) then
+					verb:Interact( agent, obj )
+				end
+			end
+			if DEV then
+				if #t > 0 then
+					ui.Separator()
+				end
+				if ui.MenuItem( "Debug" ) then
+					DBG( obj )
+				end
+			end
+			ui.EndPopup()
 		end
 		ui.PopID()
 	end

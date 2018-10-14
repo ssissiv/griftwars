@@ -57,6 +57,17 @@ function Agent:CollectInteractions( obj, verbs )
 				end
 			end
 		end
+
+	elseif self.location then
+		for i, feature in self.location:Aspects() do
+			if feature:CanInteract( self ) then
+				if verbs then
+					table.insert( verbs, feature )
+				else
+					return true
+				end
+			end
+		end
 	end
 
 	if verbs then
@@ -68,13 +79,16 @@ function Agent:SetDetails( name )
 	self.name = name
 end
 
-function Agent:ExitLocation()
-	self.location = nil
-end
+function Agent:MoveToLocation( location )
+	if self.location then
+		self.location:RemoveAgent( self )
+		self.location = nil
+	end
 
-function Agent:EnterLocation( location )
-	assert( is_instance( location, Location ))
-	self.location = location
+	if location then
+		self.location = location
+		location:AddAgent( self )
+	end
 end
 
 function Agent:GetLocation()

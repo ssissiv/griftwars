@@ -7,6 +7,7 @@ function Location:SetDetails( title, desc )
 	self.title = title
 	self.desc = desc
 	self.contents = {}
+	self.aspects = {}
 end
 
 function Location:AddAgent( agent )
@@ -34,3 +35,18 @@ end
 function Location:GetDesc()
 	return self.desc or "No Desc"
 end
+
+function Location:GainAspect( aspect )
+	table.insert( self.aspects, aspect )
+	aspect:OnGainAspect( self )
+end
+
+function Location:LoseAspect( aspect )
+	table.arrayremove( self.aspects, aspect )
+	aspect:OnLoseAspect( self )
+end
+
+function Location:Aspects()
+	return ipairs( self.aspects )
+end
+

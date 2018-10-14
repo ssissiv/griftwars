@@ -28,19 +28,6 @@ function World:AllAgents()
 	return ipairs( self.agents )
 end
 
-function World:MoveAgent( agent, to )
-	local from = agent:GetLocation()
-	if from then
-		agent:ExitLocation()
-		from:RemoveAgent( agent )
-	end
-
-	if to then
-		agent:EnterLocation( to )
-		to:AddAgent( agent )
-	end
-end
-
 function World:GetPlayer()
 	return self.player
 end

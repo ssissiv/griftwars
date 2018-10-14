@@ -20,6 +20,7 @@ require "gui/ui"
 
 require "game/msg"
 require "game/location"
+require "game/location_util"
 require "game/agent"
 require "game/worldbase"
 require "game/world"
@@ -27,6 +28,7 @@ require "game/worldgen"
 require "game/aspects/aspect"
 require "game/aspects/traits"
 require "game/aspects/skills"
+require "game/aspects/features"
 
 -----------------------------------------------------------
 
