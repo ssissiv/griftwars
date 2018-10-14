@@ -31,6 +31,7 @@ function WorldGen:GeneratePlayer( world )
 	local other = Agent()
 	other:SetDetails( "Kevin" )
 	other:GainAspect( Aspect.Cowardly() )
+	other:GainAspect( Aspect.Scrounge() )
 	world:SpawnAgent( other )
 
 	player:MoveToLocation( start )

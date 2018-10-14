@@ -96,6 +96,10 @@ function Agent:MoveToLocation( location )
 	end
 end
 
+function Agent:MoveToAgent( agent )
+	self:MoveToLocation( agent:GetLocation() )
+end
+
 function Agent:GetLocation()
 	return self.location
 end

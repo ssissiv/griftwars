@@ -77,15 +77,11 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				self:RenderAgentDetails( ui, obj )
 				ui.EndTooltip()
 			end
-
-		elseif DEV then
-			ui.PushStyleColor( ui.Style_Text, 0.5, 0.5, 0.5, 1 )
-			if ui.Selectable( obj:GetShortDesc() ) then
-				ui.OpenPopup( "INTERACT" )
-			end
-			ui.PopStyleColor()			
 		else
 			ui.TextColored( 0.5, 0.5, 0.5, 1.0, obj:GetShortDesc() )
+		end
+		if DEV and Input.IsControl() and ui.IsItemClicked() then
+			DBG( obj )
 		end
 
 		if ui.BeginPopup( "INTERACT" ) then
@@ -94,14 +90,6 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				local ok, details = verb:CanInteract( agent, obj )		
 				if ui.MenuItem( tostring( details )) then
 					verb:Interact( agent, obj )
-				end
-			end
-			if DEV then
-				if #t > 0 then
-					ui.Separator()
-				end
-				if ui.MenuItem( "Debug" ) then
-					DBG( obj )
 				end
 			end
 			ui.EndPopup()
@@ -113,7 +101,11 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		local t = agent:CollectInteractions( nil, {} )
 		for i, verb in ipairs( t ) do
 			local ok, details = verb:CanInteract( agent, nil )
-			ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+			if is_instance( verb, Feature ) then
+				ui.PushStyleColor( ui.Style_Text, 1, 0, 1, 1 )				
+			else
+				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+			end
 			if ui.Selectable( tostring(details) ) then
 				verb:Interact( agent, nil )
 			end
