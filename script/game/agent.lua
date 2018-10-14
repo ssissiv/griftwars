@@ -126,3 +126,8 @@ function Agent:Senses()
 	return ipairs( self.sense_log )
 end
 
+function Agent:__tostring()
+	return self:GetName()
+end
+
+

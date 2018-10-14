@@ -55,3 +55,8 @@ function Location:Aspects()
 	return ipairs( self.aspects )
 end
 
+function Location:__tostring()
+	return self:GetTitle()
+end
+
+
