@@ -3,6 +3,11 @@ local Location = class( "Location" )
 function Location:init()
 end
 
+function Location:OnSpawn( world )
+	assert( self.world == nil )
+	self.world = world
+end
+
 function Location:SetDetails( title, desc )
 	self.title = title
 	self.desc = desc

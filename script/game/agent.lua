@@ -11,6 +11,11 @@ function Agent:init()
 	self.sense_log = {}
 end
 
+function Agent:OnSpawn( world )
+	assert( self.world == nil )
+	self.world = world
+end
+
 function Agent:SetFlags( ... )
 	for i, flag in ipairs({...}) do
 		self.flags[ flag ] = true

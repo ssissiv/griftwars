@@ -7,7 +7,8 @@ function World:init()
 	self.agents = {}
 end
 
-function World:AddLocation( location )
+function World:SpawnLocation( location )
+	location:OnSpawn( self )
 	table.insert( self.locations, location )
 end
 
@@ -15,7 +16,8 @@ function World:AllLocations()
 	return ipairs( self.locations )
 end
 
-function World:AddAgent( agent )
+function World:SpawnAgent( agent )
+	agent:OnSpawn( self )
 	table.insert( self.agents, agent )
 
 	if agent:HasFlag( Agent.FLAGS.PLAYER ) then

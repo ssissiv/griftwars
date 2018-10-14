@@ -14,11 +14,11 @@ end
 function WorldGen:GeneratePlayer( world )
 	local start = Location()
 	start:SetDetails( "Your Home", "This is your home. It's pretty chill." )
-	world:AddLocation( start )
+	world:SpawnLocation( start )
 
 	local hood = Location()
 	hood:SetDetails( "The Junkyard Strip", "These dilapidated streets are home to all manner of detritus. Some on two legs.")
-	world:AddLocation( hood )
+	world:SpawnLocation( hood )
 
 	Location.Connect( start, hood )
 
@@ -26,12 +26,12 @@ function WorldGen:GeneratePlayer( world )
 	player:SetFlags( Agent.FLAGS.PLAYER )
 	player:SetDetails( "Han" )
 	player:GainAspect( Aspect.Scrounge() )
-	world:AddAgent( player )
+	world:SpawnAgent( player )
 
 	local other = Agent()
 	other:SetDetails( "Kevin" )
 	other:GainAspect( Aspect.Cowardly() )
-	world:AddAgent( other )
+	world:SpawnAgent( other )
 
 	player:MoveToLocation( start )
 	other:MoveToLocation( start )
