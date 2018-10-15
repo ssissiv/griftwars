@@ -34,11 +34,13 @@ function GameScreen:RenderScreen( gui )
     ui.Begin( "ROOM", true, flags )
     local puppet = self.world:GetPuppet()
 
-    self:RenderPuppetDetails( ui, puppet )
+    self:RenderAgentDetails( ui, puppet )
     ui.Separator()
 
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
     ui.Separator()
+
+    self:RenderAgentFocus( ui, puppet )
     ui.End()
 
 
@@ -51,15 +53,19 @@ function GameScreen:RenderScreen( gui )
     ui.End()
 end
 
-function GameScreen:RenderPuppetDetails( ui, puppet )
+function GameScreen:RenderAgentDetails( ui, puppet )
     ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetName() )
     ui.SameLine( 0, 20 )
     ui.Text( "HP: 3/3" )
+
+    ui.SameLine( 0, 40 )
+    ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", puppet:GetInventory():GetMoney() ))
 end
 
 function GameScreen:RenderLocationDetails( ui, location, agent )
 	ui.Text( location:GetTitle() )
 	ui.TextColored( 0.8, 0.8, 0.8, 1.0, location:GetDesc() )
+	ui.Spacing()
 
 	ui.Indent( 20 )
 
@@ -67,8 +73,8 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		ui.PushID(i)
 		if agent and agent:CollectInteractions( obj ) then
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
-			if ui.Selectable( obj:GetShortDesc() ) then
-				ui.OpenPopup( "INTERACT" )
+			if ui.Selectable( obj:GetShortDesc(), agent:GetFocus() == obj ) then
+				agent:SetFocus( obj )
 			end
 			ui.PopStyleColor()
 
@@ -77,23 +83,13 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				self:RenderAgentDetails( ui, obj )
 				ui.EndTooltip()
 			end
-		else
+		elseif agent ~= obj then
 			ui.TextColored( 0.5, 0.5, 0.5, 1.0, obj:GetShortDesc() )
 		end
 		if DEV and Input.IsControl() and ui.IsItemClicked() then
 			DBG( obj )
 		end
 
-		if ui.BeginPopup( "INTERACT" ) then
-			local t = agent:CollectInteractions( obj, {} )
-			for i, verb in ipairs( t ) do
-				local ok, details = verb:CanInteract( agent, obj )		
-				if ui.MenuItem( tostring( details )) then
-					verb:Interact( agent, obj )
-				end
-			end
-			ui.EndPopup()
-		end
 		ui.PopID()
 	end
 
@@ -106,7 +102,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 			else
 				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
 			end
-			if ui.Selectable( tostring(details) ) then
+			if ui.Selectable( verb:GetDesc() ) then
 				verb:Interact( agent, nil )
 			end
 			ui.PopStyleColor()
@@ -115,10 +111,27 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 	ui.Unindent( 20 )
 end
 
-function GameScreen:RenderAgentDetails( ui, agent )
-	ui.Text( "HP:" )
-	ui.SameLine( 0, 10 )
-	ui.TextColored( 1, 0, 0, 1, string.format( "%d/%d", 3, 3 ))
+function GameScreen:RenderAgentFocus( ui, agent )
+	local focus = agent:GetFocus()
+	if focus == nil then
+		return
+	end
+
+	ui.Text( focus:GetDesc() )
+
+	local t = agent:CollectInteractions( focus, {} )
+	for i, verb in ipairs( t ) do
+		local ok, details = verb:CanInteract( agent, focus )
+		if not ok then
+			ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
+		elseif ui.Selectable( verb:GetDesc() ) then
+			verb:Interact( agent, focus )
+		end
+
+		if ui.IsItemHovered() and details then
+			ui.SetTooltip( details )
+		end
+	end
 end
 
 function GameScreen:RenderSenses( ui, agent )

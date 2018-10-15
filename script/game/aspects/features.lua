@@ -27,9 +27,13 @@ function Portal:init( dest_location )
 	self.dest_location = dest_location
 end
 
+function Portal:GetDesc()
+	return loc.format( "Leave to {1}", self.dest_location:GetTitle() )
+end
+
 function Portal:CanInteract( actor )
 	if actor:GetLocation() == self.location then
-		return true, loc.format( "Leave to {1}", self.dest_location:GetTitle() )
+		return true
 	end
 	return false
 end

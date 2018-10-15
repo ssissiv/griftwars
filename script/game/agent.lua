@@ -6,9 +6,11 @@ local Agent = class( "Agent" )
 Agent.FLAGS = FLAGS
 
 function Agent:init()
+	self.prestige = 1
 	self.flags = {}
 	self.aspects = {}
 	self.sense_log = {}
+	self.inventory = Inventory()
 end
 
 function Agent:OnSpawn( world )
@@ -30,6 +32,10 @@ function Agent:GetName()
 	return self.name or "No Name"
 end
 
+function Agent:GetDesc()
+	return self:GetName()
+end
+
 function Agent:IsPlayer()
 	return self:HasFlag( FLAGS.PLAYER )
 end
@@ -48,7 +54,8 @@ end
 
 function Agent:CollectInteractions( obj, verbs )
 	for i, aspect in self:Aspects() do
-		if aspect:CanInteract( self, obj ) then
+		local ok, details = aspect:CanInteract( self, obj )
+		if ok or details then
 			if verbs then
 				table.insert( verbs, aspect )
 			else
@@ -58,7 +65,8 @@ function Agent:CollectInteractions( obj, verbs )
 	end
 	if obj then
 		for i, aspect in obj:Aspects() do
-			if aspect:CanInteract( self, obj ) then
+			local ok, details = aspect:CanInteract( self, obj )
+			if ok or details then
 				if verbs then
 					table.insert( verbs, aspect )
 				else
@@ -69,7 +77,8 @@ function Agent:CollectInteractions( obj, verbs )
 
 	elseif self.location then
 		for i, feature in self.location:Aspects() do
-			if feature:CanInteract( self ) then
+			local ok, details = feature:CanInteract( self )
+			if ok or details then
 				if verbs then
 					table.insert( verbs, feature )
 				else
@@ -88,10 +97,19 @@ function Agent:SetDetails( name )
 	self.name = name
 end
 
+function Agent:GetPrestige()
+	return self.prestige
+end
+
+function Agent:GetInventory()
+	return self.inventory
+end
+
 function Agent:MoveToLocation( location )
 	if self.location then
 		self.location:RemoveAgent( self )
 		self.location = nil
+		self:SetFocus( nil )
 	end
 
 	if location then
@@ -133,6 +151,15 @@ end
 function Agent:Senses()
 	return ipairs( self.sense_log )
 end
+
+function Agent:SetFocus( focus )
+	self.focus = focus
+end
+
+function Agent:GetFocus()
+	return self.focus
+end
+
 
 function Agent:__tostring()
 	return self:GetName()

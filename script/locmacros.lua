@@ -45,5 +45,9 @@ return
 			return "%"..tostring(percent)
 		end
 	end,
+
+	money = function( num )
+		return loc.format( "{1} {1*coin|coins}", num )
+	end
 }
 

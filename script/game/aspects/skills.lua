@@ -1,3 +1,5 @@
+local Skill = class( "Skill", Aspect )
+
 ---------------------------------------------------------------
 
 local Scrounge = class( "Aspect.Scrounge", Aspect )
@@ -8,9 +10,13 @@ Scrounge.STRINGS =
 	"{1.name} rummages around, looking for something.",
 }
 
+function Scrounge:GetDesc()
+	return "Scrounge around the area to look for something useful"
+end
+
 function Scrounge:CanInteract( actor, obj )
 	if actor == self.agent and obj == nil then
-		return true, "Scrounge around the area to look for something useful"
+		return true
 	end
 	return false
 end
