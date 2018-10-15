@@ -78,16 +78,12 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 			end
 			ui.PopStyleColor()
 
-			if ui.IsItemHovered() and is_instance( obj, Agent ) then
-				ui.BeginTooltip()
-				self:RenderAgentDetails( ui, obj )
-				ui.EndTooltip()
-			end
 		elseif agent ~= obj then
 			ui.TextColored( 0.5, 0.5, 0.5, 1.0, obj:GetShortDesc() )
 		end
 		if DEV and Input.IsControl() and ui.IsItemClicked() then
 			DBG( obj )
+			break
 		end
 
 		ui.PopID()
@@ -117,6 +113,7 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		return
 	end
 
+	self:RenderAgentDetails( ui, focus )
 	ui.Text( focus:GetDesc() )
 	ui.Indent( 20 )
 
@@ -134,11 +131,13 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		end
 	end
 
-	if ui.Selectable( "Release focus" ) then
+	ui.Unindent( 20 )
+	ui.NewLine()
+
+	if ui.Button( "Release focus" ) then
 		agent:SetFocus()
 	end
 
-	ui.Unindent( 20 )
 end
 
 function GameScreen:RenderSenses( ui, agent )

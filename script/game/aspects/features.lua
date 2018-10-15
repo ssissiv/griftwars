@@ -11,14 +11,14 @@ local Portal = class( "Feature.Portal", Feature )
 
 Portal.EXIT_STRINGS =
 {
-	"You leave.",
+	"You leave {2.title}.",
 	nil,
 	"{1.name} leaves.",
 }
 
 Portal.ENTER_STRINGS =
 {
-	"You enter.",
+	"You enter {2.title}.",
 	nil,
 	"{1.name} enters."
 }
@@ -39,11 +39,11 @@ function Portal:CanInteract( actor )
 end
 
 function Portal:Interact( actor )
-	Msg:Action( self.EXIT_STRINGS, actor )
+	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
 	actor:MoveToLocation( self.dest_location )
 	
-	Msg:Action( self.ENTER_STRINGS, actor )
+	Msg:Action( self.ENTER_STRINGS, actor, self.dest_location )
 end
 
 ---------------------------------------------------------------
