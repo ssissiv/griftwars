@@ -8,9 +8,10 @@ Agent.FLAGS = FLAGS
 function Agent:init()
 	self.prestige = 1
 	self.flags = {}
-	self.aspects = {}
-	self.sense_log = {}
-	self.inventory = Inventory()
+	self.aspects = {} -- array of Aspects
+	self.sense_log = {} -- array of strings
+	self.inventory = Inventory( self )
+	self.social_node = SocialNode( self )
 end
 
 function Agent:OnSpawn( world )
@@ -149,6 +150,10 @@ function Agent:Sense( txt )
 	table.insert( self.sense_log, txt )
 end
 
+function Agent:Echo( txt )
+	table.insert( self.sense_log, txt )
+end
+
 function Agent:Senses()
 	return ipairs( self.sense_log )
 end
@@ -161,6 +166,9 @@ function Agent:GetFocus()
 	return self.focus
 end
 
+function Agent:GetSocialNode()
+	return self.social_node
+end
 
 function Agent:__tostring()
 	return self:GetName()

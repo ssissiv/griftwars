@@ -1,6 +1,7 @@
 local Inventory = class( "Inventory" )
 
-function Inventory:init()
+function Inventory:init( owner )
+	self.owner = owner
 	self.money = 0
 end
 

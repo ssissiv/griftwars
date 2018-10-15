@@ -15,3 +15,9 @@ function Msg:Action( msgs, actor, target, ... )
 		end
 	end
 end
+
+function Msg:Echo( actor, format, ... )
+	local txt = loc.format( format, ... )
+	actor:Echo( txt )
+end
+

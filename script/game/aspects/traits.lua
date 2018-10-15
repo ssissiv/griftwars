@@ -48,8 +48,8 @@ function Poor:GetDesc( obj )
 end
 
 function Poor:CanInteract( actor, obj )
-	local cost = obj:GetPrestige()
 	if actor ~= self.agent and obj == self.agent then
+		local cost = obj:GetPrestige()
 		if actor:GetInventory():GetMoney() < cost then
 			return false, loc.format( "Requires at least {1#money}.", cost )
 		else
@@ -65,5 +65,7 @@ function Poor:Interact( actor, obj )
 	obj:GetInventory():DeltaMoney( delta )
 
 	Msg:Action( self.STRINGS, actor, obj, delta )
+
+	obj:GetSocialNode():ImproveRelationship( actor )
 end
 
