@@ -118,13 +118,14 @@ function GameScreen:RenderAgentFocus( ui, agent )
 	end
 
 	ui.Text( focus:GetDesc() )
+	ui.Indent( 20 )
 
 	local t = agent:CollectInteractions( focus, {} )
 	for i, verb in ipairs( t ) do
 		local ok, details = verb:CanInteract( agent, focus )
 		if not ok then
 			ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
-		elseif ui.Selectable( verb:GetDesc() ) then
+		elseif ui.Selectable( verb:GetDesc( focus ) ) then
 			verb:Interact( agent, focus )
 		end
 
@@ -132,6 +133,12 @@ function GameScreen:RenderAgentFocus( ui, agent )
 			ui.SetTooltip( details )
 		end
 	end
+
+	if ui.Selectable( "Release focus" ) then
+		agent:SetFocus()
+	end
+
+	ui.Unindent( 20 )
 end
 
 function GameScreen:RenderSenses( ui, agent )

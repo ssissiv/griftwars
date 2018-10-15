@@ -30,7 +30,7 @@ function WorldGen:GeneratePlayer( world )
 	world:SpawnAgent( player )
 
 	local other = Agent()
-	other:SetDetails( "Kevin" )
+	other:SetDetails( "Kevin", "Here's a guy." )
 	other:GainAspect( Trait.Cowardly() )
 	other:GainAspect( Trait.Poor() )
 	other:GainAspect( Skill.Scrounge() )

@@ -33,7 +33,7 @@ function Agent:GetName()
 end
 
 function Agent:GetDesc()
-	return self:GetName()
+	return self.desc or "No Desc"
 end
 
 function Agent:IsPlayer()
@@ -93,8 +93,9 @@ function Agent:CollectInteractions( obj, verbs )
 	end
 end
 
-function Agent:SetDetails( name )
+function Agent:SetDetails( name, desc )
 	self.name = name
+	self.desc = desc
 end
 
 function Agent:GetPrestige()
