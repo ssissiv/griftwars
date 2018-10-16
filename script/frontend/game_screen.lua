@@ -90,8 +90,8 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		local t = agent:CollectInteractions( nil, {} )
 		for i, verb in ipairs( t ) do
 			local ok, details = verb:CanInteract( agent, nil )
-			if is_instance( verb, Feature ) then
-				ui.PushStyleColor( ui.Style_Text, 1, 0, 1, 1 )				
+			if verb.COLOUR then
+				ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
 			else
 				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
 			end

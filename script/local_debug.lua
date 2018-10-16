@@ -2,12 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:random(3))",
-			"print(t:random(3,10))",
-			"world:SaveWorld()",
-			"print(stockpile)",
-			"print(world.stockpile)",
-			"print(world.stockpile.spells)",
 			"DBG(world.stockpile)",
 			"world:SaveWorld()",
 			"w = World.LoadWorld(0",
@@ -33,7 +27,13 @@ return {
 			"print(game.selected_tile)",
 			"print(game.selected_resource)",
 			"print(t)",
-			"print(t.CollectInteractions)"
+			"print(t.CollectInteractions)",
+			"t = {1,1,1}",
+			"print(table.unpack(t))",
+			",1print(table.unpack(t))",
+			"print(table.unpack(t),1)",
+			"print(table.unpack(t,1,3))",
+			"print(table.unpack(t,1,3),1)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -274,6 +274,11 @@ function MakeBitField(args)
     return bitfield
 end
 
+function Colour4( t, alpha )
+    local r, g, b = table.unpack( t )
+    return r, g, b, alpha or 1.0
+end
+
 function HexColour(val)
     return bit32.rshift(bit32.band(val, 0xFF000000), 24)/255,
         bit32.rshift(bit32.band(val, 0xFF0000), 16)/255,

@@ -1,5 +1,6 @@
 local UsePortal = class( "Verb.UsePortal", Verb )
 
+UsePortal.COLOUR = constants.colours.MAGENTA
 UsePortal.EXIT_STRINGS =
 {
 	"You leave {2.title}.",
