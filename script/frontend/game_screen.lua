@@ -73,6 +73,15 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		ui.PushID(i)
 		if agent ~= obj then
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
+			if is_instance( obj, Agent ) then
+				if obj:GetSocialNode():IsFriendly( agent ) then
+					ui.Image( assets.IMGS.liked, 16, 16 )
+					ui.SameLine( 0, 10 )
+				elseif obj:GetSocialNode():IsUnfriendly( agent ) then
+					ui.Image( assets.IMGS.disliked, 16, 16 )
+					ui.SameLine( 0, 10 )
+				end
+			end
 			if ui.Selectable( obj:GetShortDesc(), agent:GetFocus() == obj ) then
 				agent:SetFocus( obj )
 			end
@@ -122,6 +131,9 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		elseif ui.Selectable( verb:GetDesc( focus ) ) then
 			verb:Interact( agent, focus )
 		end
+
+		ui.SameLine( 0, 10 )
+		ui.Text( string.format( "[%d]", verb:GetDC() ))
 
 		if ui.IsItemHovered() and details then
 			ui.SetTooltip( details )

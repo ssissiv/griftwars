@@ -7,6 +7,7 @@ strictify( _G )
 
 util = require "util/util"
 constants = require "constants"
+assets = require "assets"
 require "debug/debug_mgr"
 debug_menus = require "debug/debug_menus"
 loc = require "locstring"
@@ -20,6 +21,7 @@ require "gui/ui"
 
 require "game/game_constants"
 require "game/msg"
+require "game/modifiers"
 require "game/location"
 require "game/location_util"
 require "game/inventory"
@@ -75,7 +77,9 @@ end
 --
 function love.load(arg)
     math.randomseed( os.time() )
-    
+
+    assets:LoadAll()
+
     local game = GameScreen()
 
     gui = UI()
