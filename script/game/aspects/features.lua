@@ -14,9 +14,9 @@ function Portal:init( dest_location )
 end
 
 function Portal:CollectInteractions( actor, obj, verbs )
-	if actor:GetLocation() == self.location then
+	if actor:GetLocation() == self.location and obj == nil then
 		if verbs then
-			table.insert( verbs, Verb.UsePortal( self.dest_location ))
+			table.insert( verbs, Verb.UsePortal( actor, self.dest_location ))
 		end
 		return true
 	end

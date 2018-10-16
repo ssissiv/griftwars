@@ -83,6 +83,18 @@ function Agent:CollectInteractions( obj, verbs )
 	end
 end
 
+function Agent:CollectAllInteractions( verbs )
+	if self.location then
+		for i, obj in self.location:Contents() do
+			self:CollectInteractions( obj, verbs )
+		end
+	end
+
+	self:CollectInteractions( nil, verbs )
+	
+	return verbs
+end
+
 function Agent:SetDetails( name, desc )
 	self.name = name
 	self.desc = desc

@@ -15,20 +15,16 @@ UsePortal.ENTER_STRINGS =
 	"{1.name} enters."
 }
 
-function UsePortal:init( dest_location )
-	self.dest_location = dest_location
-end
-
 function UsePortal:GetDesc()
-	return loc.format( "Leave to {1}", self.dest_location:GetTitle() )
+	return loc.format( "Leave to {1}", self.obj:GetTitle() )
 end
 
 function UsePortal:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
-	actor:MoveToLocation( self.dest_location )
+	actor:MoveToLocation( self.obj )
 	
-	Msg:Action( self.ENTER_STRINGS, actor, self.dest_location )
+	Msg:Action( self.ENTER_STRINGS, actor, self.obj )
 end
 
 ---------------------------------------------------------------
