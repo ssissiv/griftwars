@@ -12,4 +12,3 @@ function Aspect:OnLoseAspect( obj )
 	self.agent = nil
 	self.owner = nil
 end
-

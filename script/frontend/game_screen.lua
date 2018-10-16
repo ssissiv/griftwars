@@ -71,15 +71,12 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 	for i, obj in location:Contents() do
 		ui.PushID(i)
-		if agent and agent:CollectInteractions( obj ) then
+		if agent ~= obj then
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
 			if ui.Selectable( obj:GetShortDesc(), agent:GetFocus() == obj ) then
 				agent:SetFocus( obj )
 			end
 			ui.PopStyleColor()
-
-		elseif agent ~= obj then
-			ui.TextColored( 0.5, 0.5, 0.5, 1.0, obj:GetShortDesc() )
 		end
 		if DEV and Input.IsControl() and ui.IsItemClicked() then
 			DBG( obj )

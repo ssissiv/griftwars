@@ -255,17 +255,17 @@ the subject: People
 		little to no resources
 
 		scrounger
-			[nice] give money => liked
+			[nice] (Gift Money) give money => liked
 			[nice] respect : chat_up => liked
-			[devious] trick => get item
-			[devious] charm : chat_up => liked
-			[force] intimidate => 
+			[devious] (Trick) deceive => get item
+			[devious] (Chat Up) charm => liked
+			[force] intimidate => 	
 			[force] beatup => disliked, loot all, +cruelty
 			[liked] loot 1 / day
 			[behaviour]
 				meet someone
 				scrounge
-				
+
 
 
 

@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"t = lcg()",
-			"print(t:random())",
 			"print(t:random(3))",
 			"print(t:random(3,10))",
 			"world:SaveWorld()",
@@ -33,7 +31,9 @@ return {
 			"print(Shaders)",
 			"print(Shaders.foo)",
 			"print(game.selected_tile)",
-			"print(game.selected_resource)"
+			"print(game.selected_resource)",
+			"print(t)",
+			"print(t.CollectInteractions)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

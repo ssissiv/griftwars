@@ -54,43 +54,32 @@ function Agent:GetShortDesc()
 end
 
 function Agent:CollectInteractions( obj, verbs )
+	local found = false
 	for i, aspect in self:Aspects() do
-		local ok, details = aspect:CanInteract( self, obj )
-		if ok or details then
-			if verbs then
-				table.insert( verbs, aspect )
-			else
-				return true
-			end
+		if aspect.CollectInteractions and aspect:CollectInteractions( self, obj, verbs ) then
+			found = true
 		end
 	end
+	
 	if obj then
 		for i, aspect in obj:Aspects() do
-			local ok, details = aspect:CanInteract( self, obj )
-			if ok or details then
-				if verbs then
-					table.insert( verbs, aspect )
-				else
-					return true
-				end
+			if aspect.CollectInteractions and aspect:CollectInteractions( self, obj, verbs ) then
+				found = true
 			end
 		end
 
 	elseif self.location then
 		for i, feature in self.location:Aspects() do
-			local ok, details = feature:CanInteract( self )
-			if ok or details then
-				if verbs then
-					table.insert( verbs, feature )
-				else
-					return true
-				end
+			if feature.CollectInteractions and feature:CollectInteractions( self, obj, verbs ) then
+				found = true
 			end
 		end
 	end
 
 	if verbs then
 		return verbs
+	else
+		return found
 	end
 end
 

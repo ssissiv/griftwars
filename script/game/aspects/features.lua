@@ -9,42 +9,15 @@ end
 
 local Portal = class( "Feature.Portal", Feature )
 
-Portal.EXIT_STRINGS =
-{
-	"You leave {2.title}.",
-	nil,
-	"{1.name} leaves.",
-}
-
-Portal.ENTER_STRINGS =
-{
-	"You enter {2.title}.",
-	nil,
-	"{1.name} enters."
-}
-
 function Portal:init( dest_location )
 	self.dest_location = dest_location
 end
 
-function Portal:GetDesc()
-	return loc.format( "Leave to {1}", self.dest_location:GetTitle() )
-end
-
-function Portal:CanInteract( actor )
+function Portal:CollectInteractions( actor, obj, verbs )
 	if actor:GetLocation() == self.location then
+		if verbs then
+			table.insert( verbs, Verb.UsePortal( self.dest_location ))
+		end
 		return true
 	end
-	return false
 end
-
-function Portal:Interact( actor )
-	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
-
-	actor:MoveToLocation( self.dest_location )
-	
-	Msg:Action( self.ENTER_STRINGS, actor, self.dest_location )
-end
-
----------------------------------------------------------------
-
