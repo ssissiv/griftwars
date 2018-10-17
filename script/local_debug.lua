@@ -2,16 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(world.stockpile)",
-			"world:SaveWorld()",
-			"w = World.LoadWorld(0",
-			"w = World.LoadWorld()",
-			"world:SaveWorld()",
-			"w = World.LoadWorld()",
-			"world:SaveWorld()",
-			"w = World.LoadWorld()",
-			"print(w)",
-			"w = World.LoadWorld()",
 			"print(w)",
 			"DBG(w)",
 			"print(screen)",
@@ -33,7 +23,17 @@ return {
 			",1print(table.unpack(t))",
 			"print(table.unpack(t),1)",
 			"print(table.unpack(t,1,3))",
-			"print(table.unpack(t,1,3),1)"
+			"print(table.unpack(t,1,3),1)",
+			"print(t)",
+			"print(t:GetAspect(Aspect.Cowardly))",
+			"print(t:GetAspect(Trait.Cowardly))",
+			"DBG(Aspect)",
+			"print(Aspect.Cowardly)",
+			"print(Trait.Cowardly)",
+			"print(Aspect.Cowardly)",
+			"print(t:GetAspect(Aspect.Cowardly))",
+			"print(t:GetAspect(Trait.Cowardly))",
+			"print(t:GetAspect(Trait.Cowardly)._classname)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

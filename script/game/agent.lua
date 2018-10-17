@@ -139,6 +139,15 @@ function Agent:LoseAspect( aspect )
 	aspect:OnLoseAspect( self )
 end
 
+function Agent:GetAspect( aspect_class )
+	assert( aspect_class )
+	for i, aspect in ipairs( self.aspects ) do
+		if is_instance( aspect, aspect_class ) then
+			return aspect
+		end
+	end
+end
+
 function Agent:Aspects()
 	return ipairs( self.aspects )
 end
