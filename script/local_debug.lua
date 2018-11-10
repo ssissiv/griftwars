@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(w)",
 			"DBG(w)",
 			"print(screen)",
 			"print(screen.world)",
@@ -33,7 +32,8 @@ return {
 			"print(Aspect.Cowardly)",
 			"print(t:GetAspect(Aspect.Cowardly))",
 			"print(t:GetAspect(Trait.Cowardly))",
-			"print(t:GetAspect(Trait.Cowardly)._classname)"
+			"print(t:GetAspect(Trait.Cowardly)._classname)",
+			"print(t)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

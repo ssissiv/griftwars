@@ -25,3 +25,17 @@ function Poor:CollectInteractions( actor, obj, verbs )
 		return true
 	end
 end
+
+---------------------------------------------------------------
+
+local CanSocialize = class( "Trait.CanSocialize", Aspect )
+
+function CanSocialize:CollectInteractions( actor, obj, verbs )
+	if actor ~= self.agent and obj == self.agent then
+		if verbs then
+			table.insert( verbs, Verb.Socialize( actor, obj ) )
+		end
+		return true
+	end
+end
+

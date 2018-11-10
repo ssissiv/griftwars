@@ -1,9 +1,25 @@
 local Skill = class( "Skill", Aspect )
 
 function Skill:CollectInteractions( actor, obj, verbs )
-	if self.verb and self.agent == actor and obj == nil then
+	assert( self.verb or self.location_verb, self._classname )
+	local verb
+
+	if self.verb then
+		if self.agent == actor and is_instance( obj, Agent ) then
+			verb = self.verb
+		end
+	elseif self.location_verb then
+		if self.agent == actor and obj == nil then
+			verb = self.location_verb
+		end
+	else
+		error()
+	end
+
+	if verb then
 		if verbs then
-			table.insert( verbs, self.verb( actor, obj ) )
+			verb = verb( actor, obj )
+			table.insert( verbs, verb )
 		end
 		return true
 	end
@@ -12,6 +28,9 @@ end
 ---------------------------------------------------------------
 
 local Scrounge = class( "Skill.Scrounge", Skill )
-Scrounge.verb = Verb.Scrounge
+Scrounge.location_verb = Verb.Scrounge
 
 ---------------------------------------------------------------
+
+local Socialize = class( "Skill.Socialize", Skill )
+Socialize.verb = Verb.Socialize

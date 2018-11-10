@@ -26,6 +26,7 @@ function WorldGen:GeneratePlayer( world )
 	player:SetFlags( Agent.FLAGS.PLAYER )
 	player:SetDetails( "Han" )
 	player:GainAspect( Skill.Scrounge() )
+	player:GainAspect( Skill.Socialize() )
 	player:GetInventory():DeltaMoney( 1 )
 	world:SpawnAgent( player )
 
