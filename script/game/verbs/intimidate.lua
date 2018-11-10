@@ -22,4 +22,5 @@ end
 function Intimidate:Interact( actor, obj )
 	Msg:Action( self.STRINGS, actor, obj )
 	obj:GetSocialNode():DegradeRelationship( actor )
+	actor:DeltaStat( STAT.CRUELTY, 1 )
 end

@@ -29,7 +29,7 @@ class = function( name, baseclass )
     name = name_parts[#name_parts]
     local cl = rawget( t, name )
     if cl ~= nil then
-        assert_warning( cl.can_reload, "Tried to define a class that already exists: ".. name)
+        assert( cl.can_reload, "Tried to define a class that already exists: ".. name)
         print( "Reloading Class:", fullname )
         table.clear( cl )
     else

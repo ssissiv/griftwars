@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"REnderAgen",
+				"RenderAgentFocus"
+			],
+			[
 				"select",
 				"selected_resource"
 			],
@@ -199,8 +203,32 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "script/local_debug.lua",
+			"settings":
+			{
+				"buffer_size": 1000,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "script/game/verbs/verb.lua",
+			"settings":
+			{
+				"buffer_size": 488,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "script/game/agent.lua",
+			"settings":
+			{
+				"buffer_size": 3459,
+				"line_ending": "Unix"
+			}
+		}
 	],
-	"build_system": "Packages/User/love2d.sublime-build",
+	"build_system": "Packages/User/lua53.sublime-build",
 	"command_palette":
 	{
 		"height": 27.0,
@@ -224,6 +252,51 @@
 	},
 	"file_history":
 	[
+		"/Users/ccosta/Documents/Game Design/politka.txt",
+		"/Users/ccosta/Documents/Game Design/TheWire.txt",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/assets.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/frontend/game_screen.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/social_node.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/verbs/intimidate.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/game_constants.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/agent.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/aspects/traits.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/DESIGN.txt",
+		"/Users/ccosta/Documents/GitHub/griftwars/TODO.txt",
+		"/Users/ccosta/Documents/test.lua",
+		"/Users/ccosta/Documents/Game Design/RiverCityBlitz.txt",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/msg.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/main.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/verbs/offer_money.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/constants.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/modifiers.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/verbs/verb.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/debug/inspectors/debug_agent.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/location.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/aspects/features.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/verbs/use_portal.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/verbs/scrounge.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/aspects/skills.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/util/util.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/util/table.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/location_util.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/aspects/use_portal.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/aspects/aspect.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/worldgen.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/inventory.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/world.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/locmacros.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/debug/inspectors/debug_world.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/debug/inspectors/debug_location.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/input.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/debug/debug_menus.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/traits/traits.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/traits/local Cowardly = class( \"Aspect.Cowardly\" )",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/debug/debug_nodes.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/room.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/game/worldbase.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/debug/debug_mgr.lua",
+		"/Users/ccosta/Documents/GitHub/griftwars/script/gui/ui.lua",
 		"/Users/ccosta/Documents/Happy Corner/info.txt",
 		"/Users/ccosta/Documents/GitHub/storyland/script/game/world.lua",
 		"/Users/ccosta/Documents/GitHub/storyland/script/frontend/game_screen.lua",
@@ -243,7 +316,6 @@
 		"/Users/ccosta/Documents/GitHub/storyland/main.lua",
 		"/Users/ccosta/Documents/Happy Corner/questions.txt",
 		"/Users/ccosta/Documents/Game Design/gang_wars.txt",
-		"/Users/ccosta/Documents/test.lua",
 		"/Users/ccosta/Documents/Happy Corner/TODO.txt",
 		"/Users/ccosta/Documents/Happy Corner/treasurer_log.csv",
 		"/Users/ccosta/Documents/Happy Corner/meeting_minutes_02.txt",
@@ -307,51 +379,7 @@
 		"/Users/ccosta/Documents/Happy Corner/exec.txt",
 		"/Users/ccosta/Documents/Game Design/emotion_model.txt",
 		"/Users/ccosta/Documents/GitHub/storyland/script/game/world_assets.lua",
-		"/Users/ccosta/Documents/GitHub/storyland/script/util/strict.lua",
-		"/Users/ccosta/Documents/GitHub/storyland/script/worldmap.lua",
-		"/Users/ccosta/Documents/GitHub/storyland/script/debug/debug_contextmenu.lua",
-		"/Users/ccosta/Documents/GitHub/storyland/script/debug/tests/test_isclass.lua",
-		"/Users/ccosta/Documents/GitHub/storyland/script/frontend/calendar.lua",
-		"/Users/ccosta/Documents/GitHub/storyland/script/gui/combo_box.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/main.lua",
-		"/Users/ccosta/Documents/Game Design/the multi-cliker resource game",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/testui.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/combo_box.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/ui.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/constants.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/ui_render.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/layout.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/util/util.lua",
-		"/Users/ccosta/Documents/Klei/Caravan/scripts/Caravan.sublime-project",
-		"/Users/ccosta/Documents/Game Design/departure.txt",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/ui_widgets.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/util/table.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/multilayout.lua",
-		"/Users/ccosta/Documents/wedspeech.txt",
-		"/Users/ccosta/Documents/Game Design/dm.txt",
-		"/Users/ccosta/Documents/GitHub/iloveu/conf.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/gui/bbox.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/ui.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/layout.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/multilayout.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/ref.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/iloveu.sublime-project",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/util.lua",
-		"/Users/ccosta/Documents/Home/will.txt",
-		"/Users/ccosta/Documents/Taxes/2016/Notes.txt",
-		"/Users/ccosta/Documents/speech.txt",
-		"/Users/ccosta/Documents/dr.txt",
-		"/Users/ccosta/Documents/todo.txt",
-		"/Users/ccosta/Documents/Game Design/lp_camping.txt",
-		"/Users/ccosta/Library/Application Support/Sublime Text 2/Packages/User/love2d.sublime-build",
-		"/Users/ccosta/Documents/GitHub/iloveu/script/token_defs.lua",
-		"/Users/ccosta/Documents/GitHub/iloveu/testui.lua",
-		"/Users/ccosta/Documents/GitHub/covin/script/token_defs.lua",
-		"/Users/ccosta/Documents/GitHub/covin/script/game.lua",
-		"/Users/ccosta/Documents/GitHub/covin/script/token.lua",
-		"/Users/ccosta/Documents/GitHub/covin/main.lua",
-		"/Users/ccosta/Documents/GitHub/covin/covin.sublime-project",
-		"/Users/ccosta/Documents/GitHub/covin/script/constants.lua"
+		"/Users/ccosta/Documents/GitHub/storyland/script/util/strict.lua"
 	],
 	"find":
 	{
@@ -383,6 +411,51 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Ayuth",
+			"assets",
+			"Improve",
+			"CalculateDC",
+			"CanInteract",
+			"unp",
+			"Portal(",
+			"CollectINter",
+			"Aspect.Sc",
+			"CollectInteractions",
+			"self.",
+			"self",
+			"Creater",
+			"CreateRl",
+			"BeginToo",
+			"Give some mone",
+			"You are here",
+			"obj",
+			"RenderAgentFocus",
+			"\n		if ui.BeginPopup( \"INTERACT\" ) then\n			local t = agent:CollectInteractions( obj, {} )\n			for i, verb in ipairs( t ) do\n				local ok, details = verb:CanInteract( agent, obj )		\n				if ui.MenuItem( verb:GetDesc(), nil, nil, ok ) then\n					verb:Interact( agent, obj )\n				end\n\n				if ui.IsItemHovered() and details then\n					ui.SetTooltip( details )\n				end\n			end\n			ui.EndPopup()\n		end",
+			"renderpuppetd",
+			"selectable",
+			"Aspect.Cow",
+			"IsPLayer",
+			"GetPlayer",
+			"player",
+			"playerpuppet",
+			"GetPlayer",
+			"IsKey",
+			"Location",
+			"AddAgent",
+			"AddLocation",
+			"MoveAg",
+			".Link",
+			"BeginC",
+			"PushStyleColor",
+			"PushTextS",
+			"Popup",
+			"Content",
+			"GetDateT",
+			"ALL_RESOUR",
+			"Room",
+			"World:",
+			"New",
+			"ScreenTOCELL",
 			"rendersel",
 			"renderselect",
 			"selected_build_tile",
@@ -465,52 +538,7 @@
 			"schedule",
 			"FloodFill",
 			"selected",
-			"CompareSch",
-			"OnREmovedTo",
-			"scheduled_ev",
-			"CrackIndex",
-			"MAX_WORLD_SPEED",
-			"table.unpack",
-			"OnWorldEvent",
-			"debug/",
-			"AppendT",
-			"AppendGT",
-			"DebugRoot",
-			"ScreenTo",
-			"mouse",
-			"size",
-			"ZoomTo",
-			"header =",
-			"header\"",
-			"HEADER",
-			"WALL_TIME_TO_TICK",
-			"datetime",
-			":inset",
-			"renderpanel",
-			"GEtDebugEnv",
-			"option:",
-			"AddDebug",
-			"menu_params",
-			"AddDebugMenu",
-			"ui.Begin",
-			"GetSubject",
-			"menus",
-			"SHARED_BINDINGS",
-			"AddBindingGroup",
-			"debug_bindings",
-			"runbinding",
-			"GAME_BINDINGS",
-			"GetDebugEnv",
-			":Grid",
-			"draw",
-			"base_Creature",
-			"\"spell\"",
-			"world.map",
-			"self.world",
-			"Binding",
-			"\" ",
-			"opts",
-			"serialize"
+			"CompareSch"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -518,6 +546,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"Agent",
+			"WorldBase:",
+			"WorldBase",
 			"selected_resource",
 			"resources",
 			"DebugWorld",
@@ -582,8 +613,90 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "script/local_debug.lua",
+					"settings":
+					{
+						"buffer_size": 1000,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								593,
+								593
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "script/game/verbs/verb.lua",
+					"settings":
+					{
+						"buffer_size": 488,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								348,
+								348
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "script/game/agent.lua",
+					"settings":
+					{
+						"buffer_size": 3459,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1972,
+								1972
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2029.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -633,16 +746,292 @@
 		"selected_items":
 		[
 			[
+				"agent",
+				"script/game/agent.lua"
+			],
+			[
+				"todo",
+				"TODO.txt"
+			],
+			[
+				"trai",
+				"script/game/aspects/traits.lua"
+			],
+			[
+				"gamec",
+				"script/game/game_constants.lua"
+			],
+			[
+				"int",
+				"script/game/verbs/intimidate.lua"
+			],
+			[
+				"agen",
+				"script/game/agent.lua"
+			],
+			[
+				"trait",
+				"script/game/aspects/traits.lua"
+			],
+			[
+				"age",
+				"script/game/agent.lua"
+			],
+			[
+				"msg",
+				"script/game/msg.lua"
+			],
+			[
+				"socia",
+				"script/game/social_node.lua"
+			],
+			[
+				"des",
+				"DESIGN.txt"
+			],
+			[
+				"gamesc",
+				"script/frontend/game_screen.lua"
+			],
+			[
+				"asse",
+				"script/assets.lua"
+			],
+			[
+				"asset",
+				"script/assets.lua"
+			],
+			[
+				"ass",
+				"script/assets.lua"
+			],
+			[
+				"main",
+				"main.lua"
+			],
+			[
+				"social",
+				"script/game/social_node.lua"
+			],
+			[
+				"socialn",
+				"script/game/social_node.lua"
+			],
+			[
+				"gamsc",
+				"script/frontend/game_screen.lua"
+			],
+			[
+				"ver",
+				"script/game/verbs/verb.lua"
+			],
+			[
+				"intim",
+				"script/game/verbs/intimidate.lua"
+			],
+			[
+				"debugag",
+				"script/debug/inspectors/debug_agent.lua"
+			],
+			[
+				"loc",
+				"script/game/location.lua"
+			],
+			[
+				"usep",
+				"script/game/verbs/use_portal.lua"
+			],
+			[
+				"scr",
+				"script/game/verbs/scrounge.lua"
+			],
+			[
+				"skill",
+				"script/game/aspects/skills.lua"
+			],
+			[
+				"feat",
+				"script/game/aspects/features.lua"
+			],
+			[
+				"por",
+				"script/game/verbs/use_portal.lua"
+			],
+			[
+				"offerm",
+				"script/game/verbs/offer_money.lua"
+			],
+			[
+				"util",
+				"script/util/util.lua"
+			],
+			[
+				"ta",
+				"script/util/table.lua"
+			],
+			[
+				"con",
+				"script/constants.lua"
+			],
+			[
+				"use",
+				"script/game/verbs/use_portal.lua"
+			],
+			[
+				"verb",
+				"script/game/verbs/verb.lua"
+			],
+			[
+				"ve",
+				"script/game/verbs/verb.lua"
+			],
+			[
+				"game",
+				"script/frontend/game_screen.lua"
+			],
+			[
+				"featur",
+				"script/game/aspects/features.lua"
+			],
+			[
+				"featu",
+				"script/game/aspects/features.lua"
+			],
+			[
+				"ski",
+				"script/game/aspects/skills.lua"
+			],
+			[
+				"skills",
+				"script/game/aspects/skills.lua"
+			],
+			[
+				"off",
+				"script/game/verbs/offer_money.lua"
+			],
+			[
+				"inti",
+				"script/game/verbs/intimidate.lua"
+			],
+			[
+				"asp",
+				"script/game/aspects/aspect.lua"
+			],
+			[
+				"traits",
+				"script/game/aspects/traits.lua"
+			],
+			[
+				"tra",
+				"script/game/aspects/traits.lua"
+			],
+			[
+				"skil",
+				"script/game/aspects/skills.lua"
+			],
+			[
+				"invent",
+				"script/game/inventory.lua"
+			],
+			[
+				"consta",
+				"script/constants.lua"
+			],
+			[
+				"worl",
+				"script/game/world.lua"
+			],
+			[
+				"worldg",
+				"script/game/worldgen.lua"
+			],
+			[
+				"rai",
+				"script/game/aspects/traits.lua"
+			],
+			[
+				"locm",
+				"script/locmacros.lua"
+			],
+			[
+				"poor",
+				"script/debug/inspectors/debug_world.lua"
+			],
+			[
+				"inven",
+				"script/game/inventory.lua"
+			],
+			[
+				"input",
+				"script/input.lua"
+			],
+			[
+				"debugloc",
+				"script/debug/inspectors/debug_location.lua"
+			],
+			[
+				"debugw",
+				"script/debug/inspectors/debug_world.lua"
+			],
+			[
+				"debugm",
+				"script/debug/debug_menus.lua"
+			],
+			[
+				"loca",
+				"script/game/location.lua"
+			],
+			[
+				"world",
+				"script/game/worldgen.lua"
+			],
+			[
+				"games",
+				"script/frontend/game_screen.lua"
+			],
+			[
+				"wor",
+				"script/game/world.lua"
+			],
+			[
+				"sk",
+				"script/game/aspects/skills.lua"
+			],
+			[
+				"cowa",
+				"script/debug/inspectors/debug_world.lua"
+			],
+			[
+				"gent",
+				"script/game/agent.lua"
+			],
+			[
+				"design",
+				"DESIGN.txt"
+			],
+			[
+				"locat",
+				"script/game/location.lua"
+			],
+			[
+				"pagent",
+				"script/game/agent.lua"
+			],
+			[
+				"ui",
+				"script/gui/ui.lua"
+			],
+			[
+				"pui",
+				"script/gui/ui.lua"
+			],
+			[
 				"info",
 				"/Users/ccosta/Documents/Happy Corner/info.txt"
 			],
 			[
 				"map",
 				"script/game/worldmap.lua"
-			],
-			[
-				"gamesc",
-				"script/frontend/game_screen.lua"
 			],
 			[
 				"rel",
@@ -689,10 +1078,6 @@
 				"debug.lua"
 			],
 			[
-				"consta",
-				"script/game/game_constants.lua"
-			],
-			[
 				"uiren",
 				"script/gui/ui_render.lua"
 			],
@@ -703,10 +1088,6 @@
 			[
 				"uiwi",
 				"script/gui/ui_widgets.lua"
-			],
-			[
-				"ui",
-				"script/gui/ui.lua"
 			],
 			[
 				"ui.",
@@ -725,10 +1106,6 @@
 				"script/gui/ui_render.lua"
 			],
 			[
-				"main",
-				"main.lua"
-			],
-			[
 				"shad",
 				"script/render/shader_defs.lua"
 			],
@@ -739,14 +1116,6 @@
 			[
 				"creature",
 				"script/game/creatures/base_creature.lua"
-			],
-			[
-				"wor",
-				"script/game/world.lua"
-			],
-			[
-				"worl",
-				"script/game/world.lua"
 			],
 			[
 				"treasu",
@@ -773,10 +1142,6 @@
 				"script/game/worldmap.lua"
 			],
 			[
-				"todo",
-				"TODO.txt"
-			],
-			[
 				"lay",
 				"script/gui/layout.lua"
 			],
@@ -795,14 +1160,6 @@
 			[
 				"gui",
 				"script/gui/ui.lua"
-			],
-			[
-				"gamec",
-				"script/game/game_constants.lua"
-			],
-			[
-				"debugm",
-				"script/debug/debug_menus.lua"
 			],
 			[
 				"gamecon",
@@ -833,10 +1190,6 @@
 				"script/util/saveload.lua"
 			],
 			[
-				"util",
-				"script/util/util.lua"
-			],
-			[
 				"savelo",
 				"script/util/saveload.lua"
 			],
@@ -851,10 +1204,6 @@
 			[
 				"save",
 				"savegame.lua"
-			],
-			[
-				"world",
-				"script/game/worldmap.lua"
 			],
 			[
 				"serp",
@@ -907,242 +1256,6 @@
 			[
 				"gaemc",
 				"script/game/game_constants.lua"
-			],
-			[
-				"event",
-				"script/eventsystem.lua"
-			],
-			[
-				"eent",
-				"script/eventsystem.lua"
-			],
-			[
-				"gameco",
-				"script/game/game_constants.lua"
-			],
-			[
-				"fil",
-				"script/game/creatures/fieldling_creature.lua"
-			],
-			[
-				"cons",
-				"script/game/game_constants.lua"
-			],
-			[
-				"worldma",
-				"script/game/worldmap.lua"
-			],
-			[
-				"maptil",
-				"script/game/maptile.lua"
-			],
-			[
-				"maput",
-				"script/game/maputil.lua"
-			],
-			[
-				"base",
-				"script/game/creatures/base_creature.lua"
-			],
-			[
-				"table",
-				"script/util/table.lua"
-			],
-			[
-				"crea",
-				"script/game/creatures/fieldling_creature.lua"
-			],
-			[
-				"constants",
-				"script/game/game_constants.lua"
-			],
-			[
-				"cosn",
-				"script/game/game_constants.lua"
-			],
-			[
-				"debugpan",
-				"script/debug/debug_panel.lua"
-			],
-			[
-				"debugno",
-				"script/debug/debug_nodes.lua"
-			],
-			[
-				"debugw",
-				"script/debug/inspectors/debug_world.lua"
-			],
-			[
-				"debugn",
-				"script/debug/debug_nodes.lua"
-			],
-			[
-				"debugut",
-				"script/debug/debug_util.lua"
-			],
-			[
-				"debuwo",
-				"script/debug/debug_world.lua"
-			],
-			[
-				"camera",
-				"script/camera.lua"
-			],
-			[
-				"camer",
-				"script/camera.lua"
-			],
-			[
-				"debugmg",
-				"script/debug/debug_mgr.lua"
-			],
-			[
-				"came",
-				"script/camera.lua"
-			],
-			[
-				"layout",
-				"script/gui/layout.lua"
-			],
-			[
-				"amesc",
-				"script/frontend/game_screen.lua"
-			],
-			[
-				"gameren",
-				"script/frontend/game_screen.lua"
-			],
-			[
-				"gamecons",
-				"script/game/game_constants.lua"
-			],
-			[
-				"creatur",
-				"script/game/creatures/base_creature.lua"
-			],
-			[
-				"layou",
-				"script/gui/layout.lua"
-			],
-			[
-				"debuge",
-				"script/debug/debug_menus.lua"
-			],
-			[
-				"debugnod",
-				"script/debug/debug_nodes.lua"
-			],
-			[
-				"debugmenu",
-				"script/debug/debug_menus.lua"
-			],
-			[
-				"debugpa",
-				"script/debug/debug_panel.lua"
-			],
-			[
-				"debugpane",
-				"script/debug/debug_panel.lua"
-			],
-			[
-				"debugnode",
-				"script/debug/debug_nodes.lua"
-			],
-			[
-				"game_con",
-				"script/game/game_constants.lua"
-			],
-			[
-				"creaturesp",
-				"script/game/spells/creature_spells.lua"
-			],
-			[
-				"file",
-				"script/game/creatures/fieldling_creature.lua"
-			],
-			[
-				"tile",
-				"script/game/maptile.lua"
-			],
-			[
-				"creatureps",
-				"script/game/spells/creature_spells.lua"
-			],
-			[
-				"spells",
-				"script/game/spells/all_spells.lua"
-			],
-			[
-				"allsp",
-				"script/game/spells/all_spells.lua"
-			],
-			[
-				"resour",
-				"script/game/resource_defs.lua"
-			],
-			[
-				"creatu",
-				"script/game/creatures/base_creature.lua"
-			],
-			[
-				"lands",
-				"script/game/spells/land_spells.lua"
-			],
-			[
-				"landspe",
-				"script/game/spells/land_spells.lua"
-			],
-			[
-				"utility",
-				"script/game/spells/utility_spells.lua"
-			],
-			[
-				"mana",
-				"script/game/spells/mana_spells.lua"
-			],
-			[
-				"buildd",
-				"script/game/build_defs.lua"
-			],
-			[
-				"debugme",
-				"script/debug/debug_menus.lua"
-			],
-			[
-				"ebugm",
-				"script/debug/debug_mgr.lua"
-			],
-			[
-				"locald",
-				"script/local_debug.lua"
-			],
-			[
-				"reosu",
-				"script/game/resource_defs.lua"
-			],
-			[
-				"build",
-				"script/game/build_defs.lua"
-			],
-			[
-				"resourced",
-				"script/game/resource_defs.lua"
-			],
-			[
-				"resource",
-				"script/game/resource_defs.lua"
-			],
-			[
-				"wol",
-				"script/game/world.lua"
-			],
-			[
-				"game",
-				"script/game/world.lua"
-			],
-			[
-				"buildde",
-				"script/game/build_defs.lua"
 			]
 		],
 		"width": 0.0

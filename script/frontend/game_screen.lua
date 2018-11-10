@@ -60,6 +60,10 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 
     ui.SameLine( 0, 40 )
     ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", puppet:GetInventory():GetMoney() ))
+
+    for stat, aspect in puppet:Stats() do
+    	ui.Text( loc.format( "{1}: {2}", stat, aspect:GetValue() ))
+    end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, agent )

@@ -9,6 +9,8 @@ function Agent:init()
 	self.prestige = 1
 	self.flags = {}
 	self.aspects = {} -- array of Aspects
+	self.aspects_by_id = {}
+	self.stats = {}
 	self.sense_log = {} -- array of strings
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
@@ -130,26 +132,52 @@ function Agent:GetLocation()
 end
 
 function Agent:GainAspect( aspect )
+	local id = aspect:GetID()
 	table.insert( self.aspects, aspect )
+	assert( self.aspects_by_id[ id ] == nil )
+	self.aspects_by_id[ id ] = aspect
+	if is_instance( aspect, Aspect.StatValue ) then
+		self.stats[ id ] = aspect
+	end
 	aspect:OnGainAspect( self )
 end
 
 function Agent:LoseAspect( aspect )
+	local id = aspect:GetID()
+	assert( self.aspects_by_id[ id ] == aspect )
 	table.arrayremove( self.aspects, aspect )
+	self.aspects_by_id[ id ] = nil
+	if is_instance( aspect, Aspect.StatValue ) then
+		self.stats[ id ] = nil
+	end
 	aspect:OnLoseAspect( self )
 end
 
-function Agent:GetAspect( aspect_class )
-	assert( aspect_class )
-	for i, aspect in ipairs( self.aspects ) do
-		if is_instance( aspect, aspect_class ) then
-			return aspect
-		end
-	end
+function Agent:GetAspect( id )
+	return self.aspects_by_id[ id ]
 end
 
 function Agent:Aspects()
 	return ipairs( self.aspects )
+end
+
+function Agent:DeltaStat( stat, delta )
+	local aspect = self:GetAspect( stat )
+	if aspect == nil then
+		aspect = Aspect.StatValue( stat )
+		self:GainAspect( aspect )
+	end
+
+	aspect:DeltaValue( delta )
+end
+
+function Agent:GetStat( stat )
+	local aspect = self:GetAspect( stat )
+	return aspect and aspect:GetValue() or 0
+end
+
+function Agent:Stats()
+	return pairs( self.stats )
 end
 
 function Agent:CanSee( obj )

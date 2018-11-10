@@ -1,5 +1,9 @@
 local Aspect = class( "Aspect" )
 
+function Aspect:GetID()
+	return self._classname
+end
+
 function Aspect:OnGainAspect( obj )
 	if is_instance( obj, Agent ) then
 		self.agent = obj
