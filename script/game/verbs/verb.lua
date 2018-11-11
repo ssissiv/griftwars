@@ -12,6 +12,10 @@ function Verb:GetDC()
 	return self.dc or 0
 end
 
+function Verb:CheckDC()
+	return math.random( 1, 20 ) >= self:GetDC()
+end
+
 function Verb:CanInteract( actor, obj )
 	return true
 end

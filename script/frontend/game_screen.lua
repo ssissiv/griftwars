@@ -38,9 +38,11 @@ function GameScreen:RenderScreen( gui )
     ui.Separator()
 
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
-    ui.Separator()
 
     self:RenderAgentFocus( ui, puppet )
+
+    self:RenderAgentVerb( ui, puppet )
+
     ui.End()
 
 
@@ -78,11 +80,9 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		if agent ~= obj then
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
 			if is_instance( obj, Agent ) then
-				if obj:GetSocialNode():IsFriendly( agent ) then
-					ui.Image( assets.IMGS.liked, 16, 16 )
-					ui.SameLine( 0, 10 )
-				elseif obj:GetSocialNode():IsUnfriendly( agent ) then
-					ui.Image( assets.IMGS.disliked, 16, 16 )
+				local op = obj:GetOpinion( agent )
+				if assets.OPINION_IMG[ op ] then
+					ui.Image( assets.OPINION_IMG[ op ], 16, 16 )
 					ui.SameLine( 0, 10 )
 				end
 			end
@@ -109,7 +109,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
 			end
 			if ui.Selectable( verb:GetDesc() ) then
-				verb:Interact( agent, nil )
+				agent:SetVerb( verb )
 			end
 			ui.PopStyleColor()
 		end
@@ -123,6 +123,8 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		return
 	end
 
+    ui.Separator()
+
 	self:RenderAgentDetails( ui, focus )
 	ui.Text( focus:GetDesc() )
 	ui.Indent( 20 )
@@ -133,11 +135,11 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		if not ok then
 			ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
 		elseif ui.Selectable( verb:GetDesc( focus ) ) then
-			verb:Interact( agent, focus )
+			agent:SetVerb( verb )
 		end
 
 		ui.SameLine( 0, 10 )
-		ui.Text( string.format( "[%d]", verb:GetDC() ))
+		ui.Text( loc.format( "[{1}]", verb:GetDC() ))
 
 		if ui.IsItemHovered() and details then
 			ui.SetTooltip( details )
@@ -151,6 +153,24 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		agent:SetFocus()
 	end
 
+end
+
+function GameScreen:RenderAgentVerb( ui, agent )
+	local verb = agent:GetVerb()
+	if verb == nil then
+		return
+	end
+
+	ui.Separator()
+	ui.Text( verb:GetDesc() )
+
+	ui.Text( "DC:" )
+	ui.SameLine( 0, 10 )
+	ui.TextColored( 0, 1, 1, 1, tostring( verb:GetDC() ))
+
+	if ui.Button( string.format( "Roll!" )) then
+		verb:Interact( agent, agent:GetFocus() )
+	end
 end
 
 function GameScreen:RenderSenses( ui, agent )

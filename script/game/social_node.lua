@@ -16,43 +16,39 @@ function SocialNode:CreateRelationship( other )
 	return self.relationships[ other ]
 end
 
-function SocialNode:ImproveRelationship( other )
+function SocialNode:DeltaOpinion( other, op, delta )
 	local t = self.relationships[ other ] or self:CreateRelationship( other )
-	if t.opinion == OPINION.UNFRIENDLY then
-		t.opinion = OPINION.NEUTRAL
-	elseif (t.opinion or OPINION.NEUTRAL) == OPINION.NEUTRAL then
-		t.opinion = OPINION.FRIENDLY
+	local value = (t[ op ] or 0) + delta
+
+	t[ op ] = value
+	if t.max_op == nil or value > self:GetOpinionValue( t.max_op ) then
+		t.max_op = op
 	end
 
-	Msg:Echo( other, "{1.name} likes you a little more.", self.agent )
-	Msg:Echo( self.agent, "You like {1.name} a little more!", other )
+	Msg:Echo( other, OPINION_STRINGS[ op ][1], self.agent )
+	Msg:Echo( self.agent, OPINION_STRINGS[ op ][2], other )
 end
 
-function SocialNode:DegradeRelationship( other )
-	local t = self.relationships[ other ] or self:CreateRelationship( other )
-	if t.opinion == OPINION.FRIENDLY then
-		t.opinion = OPINION.NEUTRAL
-	elseif (t.opinion or OPINION.NEUTRAL) == OPINION.NEUTRAL then
-		t.opinion = OPINION.UNFRIENDLY
-	end
+function SocialNode:GetOpinionValue( other, op )
+	local t = self.relationships[ other ]
+	return t and t[ op ] or 0
+end
 
-	Msg:Echo( other, "{1.name} likes you a little less.", self.agent )
-	Msg:Echo( self.agent, "You like {1.name} a little less.", other )
+function SocialNode:GetOpinion( other )
+	local t = self.relationships[ other ]
+	return t and t.max_op or OPINION.NEUTRAL
 end
 
 function SocialNode:IsFriendly( other )
-	local t = self.relationships[ other ]
-	return t and t.opinion == OPINION.FRIENDLY
+	return self:GetOpinion( other ) == OPINION.LIKE
 end
 
 function SocialNode:IsNeutral( other )
-	local t = self.relationships[ other ]
-	return t and t.opinion == OPINION.NEUTRAL
+	return self:GetOpinion( other ) == OPINION.NEUTRAL
 end
 
 function SocialNode:IsUnfriendly( other )
-	local t = self.relationships[ other ]
-	return t and t.opinion == OPINION.UNFRIENDLY
+	return self:GetOpinion( other ) == OPINION.DISLIKE
 end
 
 

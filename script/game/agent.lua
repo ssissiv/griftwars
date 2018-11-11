@@ -97,9 +97,30 @@ function Agent:CollectAllInteractions( verbs )
 	return verbs
 end
 
-function Agent:SetDetails( name, desc )
+function Agent:SetDetails( name, desc, gender )
 	self.name = name
 	self.desc = desc
+	self.gender = gender
+
+	self:GenerateLocTable()
+end
+
+function Agent:GenerateLocTable()
+	if self.gender == GENDER.MALE then
+		self.himher = "him"
+		self.hishers = "his"
+		self.heshe = "he"
+
+	elseif self.gender == GENDER.FEMALE then
+		self.himher = "her"
+		self.hishers = "hers"
+		self.heshe = "she"
+
+	else
+		self.himher = "it"
+		self.hisher = "its"
+		self.heshe = "it"
+	end
 end
 
 function Agent:GetPrestige()
@@ -198,14 +219,34 @@ end
 
 function Agent:SetFocus( focus )
 	self.focus = focus
+
+	if self.verb and not self.verb:CanInteract( self, focus ) then
+		self:SetVerb( nil )
+	end
 end
 
 function Agent:GetFocus()
 	return self.focus
 end
 
+function Agent:SetVerb( verb )
+	self.verb = verb
+end
+
+function Agent:GetVerb()
+	return self.verb
+end
+
 function Agent:GetSocialNode()
 	return self.social_node
+end
+
+function Agent:GetOpinion( other )
+	return self.social_node:GetOpinion( other )
+end
+
+function Agent:DeltaOpinion( other, op, delta )
+	self.social_node:DeltaOpinion( other, op, delta )
 end
 
 function Agent:__tostring()

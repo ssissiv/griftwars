@@ -33,6 +33,5 @@ function OfferMoney:Interact( actor, obj )
 	obj:GetInventory():DeltaMoney( delta )
 
 	Msg:Action( self.STRINGS, actor, obj, delta )
-
-	obj:GetSocialNode():ImproveRelationship( actor )
+	obj:DeltaOpinion( actor, OPINION.LIKE, 1 )
 end

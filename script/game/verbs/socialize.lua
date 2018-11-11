@@ -1,6 +1,6 @@
 
 local Socialize = class( "Verb.Socialize", Verb )
-Socialize.STRINGS =
+Socialize.MSG =
 {
 	"Hey {2.name}. How's it going?",
 }
@@ -14,10 +14,15 @@ function Socialize:CalculateDC( mods )
 
 	mods:AddModifier( -self.actor:GetPrestige(), loc.format( "{1.name}'s prestige" ))
 
-	return mods:GetValue()
+	return 10 + mods:GetValue()
 end
 
 function Socialize:Interact( actor, obj )
-	Msg:Speak( self.STRINGS, actor, obj )
-	obj:GetSocialNode():ImproveRelationship( actor )
+	if self:CheckDC() then
+		Msg:Speak( self.MSG, actor, obj )
+		obj:DeltaOpinion( actor, OPINION.LIKE, 1 )
+	else
+		Msg:Speak( self.MSG, actor, obj )
+		Msg:Echo( actor, "{1.name} doesn't seem to care much for your attempt at interaction.", obj )
+	end
 end
