@@ -27,7 +27,7 @@ end
 
 function GameScreen:RenderScreen( gui )
 	local ui = imgui
-    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar" }
+    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
 	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.7 )
 	ui.SetNextWindowPos( 0, 0 )
 
