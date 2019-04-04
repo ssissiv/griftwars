@@ -14,6 +14,7 @@ end
 function WorldGen:GeneratePlayer( world )
 	local start = Location()
 	start:SetDetails( "Your Home", "This is your home. It's pretty chill." )
+	start:SetImage( assets.LOCATION_BGS.HOME )
 	world:SpawnLocation( start )
 
 	local hood = Location()

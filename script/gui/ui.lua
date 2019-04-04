@@ -113,6 +113,15 @@ function ui:RemoveScreen( screen )
 	table.arrayremove( self.screens, screen )
 end
 
+function ui:FindScreen( class )
+	assert( is_class( class ))
+	for i, screen in ipairs( self.screens ) do
+		if is_instance( screen, class ) then
+			return screen
+		end
+	end
+end
+
 ----------------------------------------------
 
 function ui:Log( fmt, ... )

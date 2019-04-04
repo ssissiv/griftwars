@@ -37,6 +37,6 @@ STAT = MakeEnum
 
 	-- Dynamic stats
 	"CRUELTY",
-	"HEART",
+	"GRIT",
 	"CRAFT",
 }

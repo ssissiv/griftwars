@@ -8,6 +8,14 @@ function Location:OnSpawn( world )
 	self.world = world
 end
 
+function Location:SetImage( image )
+	self.image = image
+end
+
+function Location:GetImage( image )
+	return self.image
+end
+
 function Location:SetDetails( title, desc )
 	self.title = title
 	self.desc = desc

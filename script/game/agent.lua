@@ -14,6 +14,10 @@ function Agent:init()
 	self.sense_log = {} -- array of strings
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
+
+	self:DeltaStat( STAT.STATURE, 1 )
+	self:DeltaStat( STAT.MENTALITY, 1 )
+	self:DeltaStat( STAT.CHARISMA, 1 )
 end
 
 function Agent:OnSpawn( world )

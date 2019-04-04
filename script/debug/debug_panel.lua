@@ -143,7 +143,7 @@ function DebugPanel:RenderPanel( dbg )
     ui.End()
 
     if self.show_test_window then
-        self.show_test_window = ui.ShowTestWindow()
+        self.show_test_window = ui.ShowTestWindow( true )
     end
 
     return show

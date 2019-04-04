@@ -28,7 +28,7 @@ end
 function GameScreen:RenderScreen( gui )
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
-	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.7 )
+	ui.SetNextWindowSize( love.graphics.getWidth(), 0 )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
@@ -39,19 +39,26 @@ function GameScreen:RenderScreen( gui )
 
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
 
-    self:RenderAgentFocus( ui, puppet )
+    -- self:RenderAgentFocus( ui, puppet )
 
-    self:RenderAgentVerb( ui, puppet )
-
+    local _, h = ui:GetWindowSize()
     ui.End()
 
+    local W, H = love.graphics.getWidth(), love.graphics.getHeight()
+    love.graphics.setColor( 255, 255, 255 )
+    if puppet:GetLocation():GetImage() then
+	    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
+	    love.graphics.draw( puppet:GetLocation():GetImage(), 0, h )
+	end
 
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove" }
-	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.2 )
-	ui.SetNextWindowPos( 0, love.graphics.getHeight() * 0.8 )
+	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.25 )
+	ui.SetNextWindowPos( 0, love.graphics.getHeight() * 0.75 )
 
     ui.Begin( "OUTPUT", true, flags )
     self:RenderSenses( ui, puppet )
+    self:RenderAgentVerb( ui, puppet )
+	ui.SetScrollHere()
     ui.End()
 end
 
@@ -63,8 +70,13 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     ui.SameLine( 0, 40 )
     ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", puppet:GetInventory():GetMoney() ))
 
+    local i = 1
     for stat, aspect in puppet:Stats() do
+    	if i > 1 then
+	    	ui.SameLine( 0, 15 )
+	    end
     	ui.Text( loc.format( "{1}: {2}", stat, aspect:GetValue() ))
+    	i = i + 1
     end
 end
 
@@ -164,11 +176,8 @@ function GameScreen:RenderAgentVerb( ui, agent )
 	ui.Separator()
 	ui.Text( verb:GetDesc() )
 
-	ui.Text( "DC:" )
-	ui.SameLine( 0, 10 )
-	ui.TextColored( 0, 1, 1, 1, tostring( verb:GetDC() ))
-
-	if ui.Button( string.format( "Roll!" )) then
+	local txt = loc.format( "Roll! (DC: {1})", verb:GetDC() )
+	if ui.Button( txt ) then
 		verb:Interact( agent, agent:GetFocus() )
 	end
 end
@@ -177,7 +186,6 @@ function GameScreen:RenderSenses( ui, agent )
 	for i, txt in agent:Senses() do
 		ui.Text( txt )
 	end
-	ui.SetScrollHere()
 end
 
 function GameScreen:MouseMoved( mx, my )

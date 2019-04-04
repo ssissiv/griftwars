@@ -1,0 +1,99 @@
+Interaction with NPCs begins at "Stranger level" -- you know nothing about the NPC.
+There are a few high-level verbs that are available:
+
+
+Greet
+	- Quips a greeting about the location, time, weather, etc
+	"Busy tonight."
+	"What you drinking?"
+	"How's the Beryllian Ale?""
+	Crit Fail:
+		- Quip back an insult or dismissal
+		++Dislikes
+	Fail:
+		Nothing (not interested)
+	Success:
+		- Quip back a greeting in response.
+		- Add/Learn trait: Remembers you (4 hours)
+	Crit Success (Good Impression)
+		Remembers++, Likes++
+
+
+Intimidate
+	"You are one ugly {species}".
+	- Quips a hostile greeting.
+	Crit Fail:
+		- Quip back an insult / warcry.
+		- Add/learn trait: Dislieks you (8 hours)
+	Fail:
+		- Quip back an insult / warcry.
+	Success:
+		- Quip back submission
+		- Add/Learn trait: Dislikes you (8 hours), Fears you (8 hours)
+
+Traits are critical and have a way of evolving into other traits, typically more permanent, over time.  The 'acquaintance'-level traits have a short duration, but if reinforced, will turn into permanent 'memorys'.  Reinforcement can be another social interaction, or even something just as simple as noticing you hang around (these traits will listen to proximity events to the player)
+
+The network of Trait interaction is expressed in TIS (Trait Interaction Syntax) which basically specifies dependencies and edge weights.
+
+Favor (Trait):
+	3+: Favor=0, ++Likes
+
+Annoyance (Trait):
+	3+: Visible
+	6+: ++Dislike.
+
+Friend:
+	5+: Friend==5
+
+Likes (Trait):
+	1+ Dislikes=0, ++Remembers
+
+Dislikes (Trait):
+	1+ Likes=0, ++Remembers
+
+
+Smalltalk (Verb)
+	Req: Dislike == 0, ++Remembers,
+	- ... generic chatter ... (probably not a quip)
+	Fail:
+		++Annoyance.
+	Success A:
+		++Remembers
+	Success B:
+		++Remembers, ++Favor
+	Success C:
+		++Remembers, ++Insight
+
+Offering (Verb)
+	Req: Hates==0, Trifle Loot
+	- Quip about thing.
+	"Listen, maybe you could find some use for this."
+	Fail:
+		++Annoyance
+	Success A:
+		++Remembers, ++Favor
+
+Pry (Verb)
+	Req: Dislike==0
+	"What's on the airwaves?"
+	Success:
+		++Insight
+	Success Crit:
+		Gain Story.
+
+Relay Story (Verb)
+	Req: Hate==0
+	- Quip about story.
+	"This rumour about the Greybulk Mercenaries is keeping things pretty tight."
+	Indifferent:
+	Success:
+		++Friend
+
+Ask for job (Verb)
+	- Generate job.
+	"I need 10 tns of Icenine. Don't ask."
+
+Introduce
+
+Ask about X (Verb)
+

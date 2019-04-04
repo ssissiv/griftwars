@@ -241,7 +241,18 @@ AI:
 
 		This opens up his network to a number of other NPCs, one of which is a Wealthy Merchant whom he pickpockets a luxry item, sells it to his Boss for $500, etc...
 
-		
+	Korn:
+		[11pm - 10am] Sleeps at home
+		[10am - 2pm] Goes to the corner to sell Ice.
+		[2pm - 4pm] Gambles at the Dingy Stool.
+		[4pm - 8pm] Chills at home.
+		[9pm - 11pm] Drinks at the Neon Sky.
+
+	Neon Sky:
+		[3pm - 4pm] Ice transaction: 
+		[8pm - 11pm] 4-8 patrons
+		[11pm - 12pm] Brawl between patrons
+
 
 
 
