@@ -24,8 +24,8 @@ function Msg:Speak( msgs, actor, target, ... )
 			txt = loc.format( txt, actor, target, ... )
 			actor:Sense( txt )
 		elseif obj == target and msgs[2] then
-			local txt = loc.format( "{1} says, '{2}'", actor )
-			txt = loc.format( txt, msgs[2], actor, target, ... )
+			local txt = loc.format( "{1} says, '{2}'", actor, msgs[2] )
+			txt = loc.format( txt, actor, target, ... )
 			target:Sense( txt )
 		elseif msgs[3] then
 			local txt = loc.format( "{1} says, '{2}'", actor, msgs[3] )

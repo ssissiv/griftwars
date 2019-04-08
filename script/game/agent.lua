@@ -14,6 +14,7 @@ function Agent:init()
 	self.sense_log = {} -- array of strings
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
+	self.viz = AgentViz()
 
 	self:DeltaStat( STAT.STATURE, 1 )
 	self:DeltaStat( STAT.MENTALITY, 1 )
@@ -222,11 +223,54 @@ function Agent:Senses()
 end
 
 function Agent:SetFocus( focus )
+	if self.focus then
+		local LOSE_FOCUS =
+		{
+			"You turn your attention away from {1}",
+			"{1} turns away from you.",
+		}
+		Msg:Action( LOSE_FOCUS, self, self.focus )
+
+		if self.focus.OnLoseFocus then
+			self.focus:OnLoseFocus( self )
+		end
+	end
+
 	self.focus = focus
+
+	if focus then
+		local GAIN_FOCUS =
+		{
+			"You turn your attention to {2}",
+			"{1} turns their attention to you.",
+		}
+		Msg:Action( GAIN_FOCUS, self, focus )
+
+		if focus.OnGainFocus then
+			focus:OnGainFocus( self )
+		end
+	end
 end
 
 function Agent:GetFocus()
 	return self.focus
+end
+
+function Agent:OnGainFocus( other )
+	local noticed = true
+	if noticed then
+		if self.focus ~= other then
+			local GREETING =
+			{
+				"What do you want?",
+				"What do you want?",
+				"What do you want?",
+			}
+			Msg:Speak( GREETING, self, other )
+
+			self:SetFocus( other )
+		end
+	end
 end
 
 function Agent:GetSocialNode()

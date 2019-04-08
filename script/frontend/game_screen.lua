@@ -34,10 +34,14 @@ function GameScreen:RenderScreen( gui )
     ui.Begin( "ROOM", true, flags )
     local puppet = self.world:GetPuppet()
 
+    -- Render details about the player.
     self:RenderAgentDetails( ui, puppet )
     ui.Separator()
 
+    -- Render the things at the player's location.
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
+
+    self:RenderBackground( ui, puppet )
 
     ui.End()
 
@@ -111,14 +115,34 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		self:RenderLocationInteractions( ui, agent )
 	end
 	ui.Unindent( 20 )
+end
 
-	-- Render the background image
+function GameScreen:RenderBackground( ui, agent )
     local _, h = ui:GetWindowSize()
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
     love.graphics.setColor( 255, 255, 255 )
-    if agent:GetLocation():GetImage() then
-	    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
-	    love.graphics.draw( agent:GetLocation():GetImage(), 0, h )
+
+	if is_instance( agent:GetFocus(), Agent ) then
+		-- head
+	    love.graphics.setColor( table.unpack( agent.viz.skin_colour ))
+		love.graphics.circle( "fill", W/2, h + 150, 100 )
+
+		-- eyes
+		love.graphics.setColor( 0, 0, 0 )
+		love.graphics.circle( "line", W/2 - 30, h + 150 - 20, 20 )
+		love.graphics.circle( "line", W/2 + 30, h + 150 - 20, 20 )
+
+		-- pupils
+		love.graphics.setColor( 0, 60, 90 )
+		love.graphics.circle( "fill", W/2 - 30, h + 150 - 10, 10 )
+		love.graphics.circle( "fill", W/2 + 30, h + 150 - 10, 10 )
+
+	else
+		-- Render the background image
+	    if agent:GetLocation():GetImage() then
+		    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
+		    love.graphics.draw( agent:GetLocation():GetImage(), 0, h )
+		end
 	end
 end
 

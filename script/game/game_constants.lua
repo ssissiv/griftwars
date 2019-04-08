@@ -39,4 +39,7 @@ STAT = MakeEnum
 	"CRUELTY",
 	"GRIT",
 	"CRAFT",
+
+	-- Transient stats
+	"PATIENCE",
 }

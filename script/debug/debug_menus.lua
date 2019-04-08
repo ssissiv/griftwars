@@ -98,23 +98,6 @@ local GAME_BINDINGS =
 {
     name = "Game",
     {
-        Binding = {key="s", CTRL = true },
-        Text = function( dbg )
-            local class = dbg:GetDebugEnv().spawn_creature
-            return string.format( "Spawn [%s]", tostring( class and class._classname ))
-        end,
-        Enabled = function( dbg )
-            return is_class( dbg:GetDebugEnv().spawn_creature, Creature )
-        end,
-        Do = function( dbg )
-            local env = dbg:GetDebugEnv()
-            assert( env.cx and env.cy )
-            local creature = env.spawn_creature()
-            env.world:AddCreature( creature ):MoveToTile( env.cx, env.cy )
-        end
-    },
-
-    {
         Binding = { key = "t", CTRL = true },
         Text = "Debug Tile",
         Do = function( dbg )

@@ -257,13 +257,13 @@ function DebugPanel:AppendTable( ui, v, name )
         ui.TextColored( 0, 1, 1, 1, name or tostring(v) )
 
         ui.Separator()
-        self:AddDebugMenu( ui, debug_menus.TABLE_BINDINGS, { v } )
+        self:AddDebugMenu( GetDbg(), ui, debug_menus.TABLE_BINDINGS, { v } )
 
         local debug_class = DebugUtil.FindRegisteredClass( v )
         if debug_class and debug_class.MENU_BINDINGS then
             for i, menu in ipairs( debug_class.MENU_BINDINGS ) do
                 ui.Separator()
-                self:AddDebugMenu( ui, menu, { v } )
+                self:AddDebugMenu( GetDbg(), ui, menu, { v } )
             end
         end
         ui.EndPopup()
