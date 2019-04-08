@@ -66,6 +66,10 @@ function GetDbg()
     return debug_mgr
 end
 
+function GetGUI()
+    return gui
+end
+
 function GetRand( seed )
     if seed then
         global_lcg:randomseed( seed )

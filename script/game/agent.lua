@@ -223,22 +223,10 @@ end
 
 function Agent:SetFocus( focus )
 	self.focus = focus
-
-	if self.verb and not self.verb:CanInteract( self, focus ) then
-		self:SetVerb( nil )
-	end
 end
 
 function Agent:GetFocus()
 	return self.focus
-end
-
-function Agent:SetVerb( verb )
-	self.verb = verb
-end
-
-function Agent:GetVerb()
-	return self.verb
 end
 
 function Agent:GetSocialNode()

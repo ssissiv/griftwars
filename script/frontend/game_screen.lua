@@ -39,17 +39,7 @@ function GameScreen:RenderScreen( gui )
 
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
 
-    -- self:RenderAgentFocus( ui, puppet )
-
-    local _, h = ui:GetWindowSize()
     ui.End()
-
-    local W, H = love.graphics.getWidth(), love.graphics.getHeight()
-    love.graphics.setColor( 255, 255, 255 )
-    if puppet:GetLocation():GetImage() then
-	    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
-	    love.graphics.draw( puppet:GetLocation():GetImage(), 0, h )
-	end
 
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove" }
 	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.25 )
@@ -57,7 +47,7 @@ function GameScreen:RenderScreen( gui )
 
     ui.Begin( "OUTPUT", true, flags )
     self:RenderSenses( ui, puppet )
-    self:RenderAgentVerb( ui, puppet )
+    self:RenderAgentFocus( ui, puppet )
 	ui.SetScrollHere()
     ui.End()
 end
@@ -70,11 +60,11 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     ui.SameLine( 0, 40 )
     ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", puppet:GetInventory():GetMoney() ))
 
+    ui.SameLine( 0, 25 )
+
     local i = 1
     for stat, aspect in puppet:Stats() do
-    	if i > 1 then
-	    	ui.SameLine( 0, 15 )
-	    end
+    	ui.SameLine( 0, 15 )
     	ui.Text( loc.format( "{1}: {2}", stat, aspect:GetValue() ))
     	i = i + 1
     end
@@ -87,6 +77,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 	ui.Indent( 20 )
 
+	-- Can only view location if not focussed on something else
 	for i, obj in location:Contents() do
 		ui.PushID(i)
 		if agent ~= obj then
@@ -98,10 +89,15 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 					ui.SameLine( 0, 10 )
 				end
 			end
-			if ui.Selectable( obj:GetShortDesc(), agent:GetFocus() == obj ) then
+			if ui.Selectable( "* ".. obj:GetShortDesc(), agent:GetFocus() == obj ) then
 				agent:SetFocus( obj )
 			end
 			ui.PopStyleColor()
+
+			if agent:GetFocus() == obj then
+				ui.SameLine( 0, 10 )
+				ui.Text( "(Focus)" )
+			end
 		end
 		if DEV and Input.IsControl() and ui.IsItemClicked() then
 			DBG( obj )
@@ -112,21 +108,43 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 	end
 
 	if agent then
-		local t = agent:CollectInteractions( nil, {} )
-		for i, verb in ipairs( t ) do
-			local ok, details = verb:CanInteract( agent, nil )
-			if verb.COLOUR then
-				ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
-			else
-				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
-			end
-			if ui.Selectable( verb:GetDesc() ) then
-				agent:SetVerb( verb )
-			end
-			ui.PopStyleColor()
-		end
+		self:RenderLocationInteractions( ui, agent )
 	end
 	ui.Unindent( 20 )
+
+	-- Render the background image
+    local _, h = ui:GetWindowSize()
+    local W, H = love.graphics.getWidth(), love.graphics.getHeight()
+    love.graphics.setColor( 255, 255, 255 )
+    if agent:GetLocation():GetImage() then
+	    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
+	    love.graphics.draw( agent:GetLocation():GetImage(), 0, h )
+	end
+end
+
+function GameScreen:RenderLocationInteractions( ui, agent )
+	local t = agent:CollectInteractions( nil, {} )
+	for i, verb in ipairs( t ) do
+		local ok, details = verb:CanInteract( agent, nil )
+		if verb.COLOUR then
+			ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
+		else
+			ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+		end
+		if ui.Selectable( verb:GetDesc() ) then
+			agent:SetFocus( verb )
+		end
+		ui.PopStyleColor()
+
+		if agent:GetFocus() == verb then
+			ui.SameLine( 0, 10 )
+			ui.Text( "(Focus)" )
+		end
+	end
+end
+
+function GameScreen:GetDebugEnv( env )
+	env.player = self.world:GetPlayer()
 end
 
 function GameScreen:RenderAgentFocus( ui, agent )
@@ -135,50 +153,35 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		return
 	end
 
-    ui.Separator()
-
-	self:RenderAgentDetails( ui, focus )
-	ui.Text( focus:GetDesc() )
-	ui.Indent( 20 )
-
-	local t = agent:CollectInteractions( focus, {} )
-	for i, verb in ipairs( t ) do
-		local ok, details = verb:CanInteract( agent, focus )
-		if not ok then
-			ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
-		elseif ui.Selectable( verb:GetDesc( focus ) ) then
-			agent:SetVerb( verb )
+	if is_instance( focus, Verb ) then
+		if ui.Button( loc.format( "{1} (DC: {2})", focus:GetDesc(), focus:GetDC() )) then
+			focus:Interact( agent )
 		end
+	else
+		local t = agent:CollectInteractions( focus, {} )
+		for i, verb in ipairs( t ) do
+			if i > 1 then
+				ui.SameLine( 0, 5 )
+			end
+			local ok, details = verb:CanInteract( agent, focus )
+			if not ok then
+				ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
+			else
+				local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
+				if ui.Button( txt ) then
+					verb:Interact( agent, agent:GetFocus() )
+				end
+			end
 
-		ui.SameLine( 0, 10 )
-		ui.Text( loc.format( "[{1}]", verb:GetDC() ))
-
-		if ui.IsItemHovered() and details then
-			ui.SetTooltip( details )
+			if ui.IsItemHovered() and details then
+				ui.SetTooltip( details )
+			end
 		end
 	end
 
-	ui.Unindent( 20 )
-	ui.NewLine()
-
+	ui.SameLine( 0, 5 )
 	if ui.Button( "Release focus" ) then
 		agent:SetFocus()
-	end
-
-end
-
-function GameScreen:RenderAgentVerb( ui, agent )
-	local verb = agent:GetVerb()
-	if verb == nil then
-		return
-	end
-
-	ui.Separator()
-	ui.Text( verb:GetDesc() )
-
-	local txt = loc.format( "Roll! (DC: {1})", verb:GetDC() )
-	if ui.Button( txt ) then
-		verb:Interact( agent, agent:GetFocus() )
 	end
 end
 

@@ -74,6 +74,13 @@ function DebugManager:GetDebugEnv()
     dbg_env.game = self.game
     dbg_env.world = self.game.world
     dbg_env.mx, dbg_env.my = love.mouse.getPosition()
+    dbg_env.gui = GetGUI()
+
+	local screen = dbg_env.gui:GetTopScreen()
+	if screen and screen.GetDebugEnv then
+		screen:GetDebugEnv( dbg_env )
+	end
+
     return dbg_env
 end
 

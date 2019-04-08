@@ -2,12 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(w)",
-			"print(screen)",
-			"print(screen.world)",
-			"print(game.world)",
-			"game.world = w",
-			"world:SaveWorld()",
 			"game.world = World.LoadWorld()",
 			"DBG(world.tiles)",
 			"DBG(game.world.map.tiles)",
@@ -33,7 +27,13 @@ return {
 			"print(t:GetAspect(Aspect.Cowardly))",
 			"print(t:GetAspect(Trait.Cowardly))",
 			"print(t:GetAspect(Trait.Cowardly)._classname)",
-			"print(t)"
+			"print(t)",
+			"print(player)",
+			"print(puppet)",
+			"print(agent)",
+			"help()",
+			"print(player)",
+			"print(player:GetFocus())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

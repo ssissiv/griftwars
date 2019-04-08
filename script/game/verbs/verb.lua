@@ -3,6 +3,15 @@ local Verb = class( "Verb" )
 function Verb:init( actor, obj )
 	self.actor = actor
 	self.obj = obj
+	print( "MAKE", self, debug.traceback() )
+end
+
+function Verb:AssignActor( actor )
+	self.actor = actor
+end
+
+function Verb:AssignObj( obj )
+	self.obj = obj
 end
 
 function Verb:GetDC()
