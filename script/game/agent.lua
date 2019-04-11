@@ -226,7 +226,7 @@ function Agent:SetFocus( focus )
 	if self.focus then
 		local LOSE_FOCUS =
 		{
-			"You turn your attention away from {1}",
+			"You turn your attention away from {2}",
 			"{1} turns away from you.",
 		}
 		Msg:Action( LOSE_FOCUS, self, self.focus )
