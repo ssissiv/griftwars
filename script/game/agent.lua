@@ -55,6 +55,8 @@ end
 function Agent:GetShortDesc()
 	if self:IsPuppet() then
 		return "You are here."
+	elseif self.focus == self.world:GetPuppet() then
+		return loc.format( "{1} is standing here, looking at you.", self.name )
 	else
 		return loc.format( "{1} is standing here.", self.name )
 	end
@@ -179,8 +181,26 @@ function Agent:LoseAspect( aspect )
 	aspect:OnLoseAspect( self )
 end
 
-function Agent:GetAspect( id )
+function Agent:GetAspect( arg )
+	local id
+	if type(arg) == "string" then
+		id = arg
+	elseif is_class( arg ) then
+		id = arg._classname
+	end
+
 	return self.aspects_by_id[ id ]
+end
+
+function Agent:HasAspect( arg )
+	local id
+	if type(arg) == "string" then
+		id = arg
+	elseif is_class( arg ) then
+		id = arg._classname
+	end
+
+	return self.aspects_by_id[ id ] ~= nil
 end
 
 function Agent:Aspects()

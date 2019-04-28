@@ -34,3 +34,10 @@ Scrounge.location_verb_class = Verb.Scrounge
 
 local Socialize = class( "Skill.Socialize", Skill )
 Socialize.verb_class = Verb.Socialize
+
+---------------------------------------------------------------
+
+local RumourMonger = class( "Skill.RumourMonger", Skill )
+RumourMonger.verb_class = Verb.ExchangeRumours
+
+

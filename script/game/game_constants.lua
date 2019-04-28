@@ -42,4 +42,5 @@ STAT = MakeEnum
 
 	-- Transient stats
 	"PATIENCE",
+	"RUMOURS",
 }
