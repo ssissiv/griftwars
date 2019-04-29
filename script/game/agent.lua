@@ -207,6 +207,24 @@ function Agent:Aspects()
 	return ipairs( self.aspects )
 end
 
+function Agent:AssignVerb( verb )
+	if self.verbs == nil then
+		self.verbs = {}
+	end
+	table.insert( self.verbs, verb )
+end
+
+function Agent:UnassignVerb( verb )
+	table.arrayremove( self.verbs, verb )
+	if #self.verbs == 0 then
+		self.verbs = nil
+	end
+end
+
+function Agent:Verbs()
+	return ipairs( self.verbs or table.empty )
+end
+
 function Agent:DeltaStat( stat, delta )
 	local aspect = self:GetAspect( stat )
 	if aspect == nil then

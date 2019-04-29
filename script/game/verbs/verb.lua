@@ -3,7 +3,6 @@ local Verb = class( "Verb" )
 function Verb:init( actor, obj )
 	self.actor = actor
 	self.obj = obj
-	print( "MAKE", self, debug.traceback() )
 end
 
 function Verb:AssignActor( actor )
@@ -27,6 +26,30 @@ end
 
 function Verb:CanInteract( actor, obj )
 	return true
+end
+
+function Verb:BeginActing()
+	self.actor:AssignVerb( self )
+
+	if self.VERB_DURATION then
+		local world = self.actor.world
+		self.start_time = world:GetDateTime()
+		self.start_duration = self.VERB_DURATION
+		self.start_ev = world:ScheduleFunction( self.start_duration, self.EndActing, self )
+	else
+		self:EndActing()
+	end
+end
+
+function Verb:GetActingProgress()
+	if self.start_ev and self.start_duration then
+		return 1.0 - (self.start_ev.when - self.actor.world:GetDateTime()) / self.start_duration
+	end
+end
+
+function Verb:EndActing()
+	self.actor:UnassignVerb( self )
+	self:Interact( self.actor, self.obj )
 end
 
 function Verb:__tostring()

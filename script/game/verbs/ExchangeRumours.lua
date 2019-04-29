@@ -1,5 +1,7 @@
 
 local ExchangeRumours = class( "Verb.ExchangeRumours", Verb )
+ExchangeRumours.VERB_DURATION = HALF_HOUR
+
 ExchangeRumours.LESSER_MSG =
 {
 	"You shoot the fat with {2.name}, sniffing out useful pieces of info.",

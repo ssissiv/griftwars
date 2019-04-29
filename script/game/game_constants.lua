@@ -1,3 +1,15 @@
+-- 1 second == 1 game minute.
+WALL_TO_GAME_TIME = 1/60.0
+
+PAUSE_TYPE = MakeEnum{ "DEBUG", "GAME" }
+
+-- Note: 'datetime' is a floating point measure of game hours passed.
+HALF_HOUR = 1 / 30
+ONE_HOUR = 1 / 60
+
+-- 6 am.
+DATETIME_START = 7
+
 OPINION = MakeEnum
 {
 	"NEUTRAL",
@@ -28,6 +40,11 @@ OPINION_STRINGS =
 	}
 }
 
+WORLD_EVENT = MakeEnum{
+	"LOG",
+	"VERB_FINISH",	
+}
+
 STAT = MakeEnum
 {
 	-- Core stats
@@ -44,3 +61,4 @@ STAT = MakeEnum
 	"PATIENCE",
 	"RUMOURS",
 }
+

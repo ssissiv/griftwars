@@ -7,7 +7,11 @@ function WorldBase:init()
 	self.events:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
 
-	self.rooms = {}
+	self.pause = {}
+end
+
+function WorldBase:IsGameOver()
+	return false
 end
 
 function WorldBase:ListenForAny( listener, fn, priority )
@@ -42,7 +46,15 @@ end
 
 function WorldBase:ScheduleEvent( delta, event_name, ... )
 	assert( delta > 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
-	local ev = { when = self.world_tick + delta, event_name, ... }
+	local ev = { when = self.datetime + delta, event_name, ... }
+	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
+	return ev
+end
+
+function WorldBase:ScheduleFunction( delta, fn, ... )
+	assert( delta > 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
+	assert( type(fn) == "function" )
+	local ev = { when = self.datetime + delta, fn, ... }
 	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
 	return ev
 end
@@ -57,7 +69,59 @@ function WorldBase:UnscheduleEvent( ev )
 	ev.cancel = true
 end
 
+function WorldBase:CheckScheduledEvents()
+	-- Broadcast any scheduled events.
+	local ev = self.scheduled_events[ 1 ]
+
+	while ev and ev.when <= self.datetime do
+		table.remove( self.scheduled_events, 1 )
+
+		if not ev.cancel then
+			if type( ev[1] ) == "function" then
+				local fn = ev[1]
+				fn( table.unpack( ev, 2 ))
+			else
+				self:BroadcastEvent( table.unpack( ev ) )
+			end
+		end
+
+		if not ev.cancel then
+			if ev.period then
+				ev.when = self.datetime + ev.period
+				table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
+			end
+		end
+
+		ev = self.scheduled_events[1]
+	end
+end
+
+
+function WorldBase:TogglePause( pause_type )
+	pause_type = pause_type or PAUSE_TYPE.DEBUG
+	assert( IsEnum( pause_type, PAUSE_TYPE ))
+	local idx = table.arrayfind( self.pause, pause_type )
+	if idx then
+		table.remove( self.pause, idx )
+	else
+		table.insert( self.pause, pause_type )
+	end
+end
+
+function WorldBase:IsPaused( pause_type )
+	if pause_type then
+		return table.arraycontains( pause_type )
+	else
+		return #self.pause > 0 or self:IsGameOver()
+	end
+end
+
+
 function WorldBase:UpdateWorld( dt )
+	if not self:IsPaused() then
+		self.datetime = self.datetime + (dt * WALL_TO_GAME_TIME)
+		self:CheckScheduledEvents()
+	end
 end
 
 

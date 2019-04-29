@@ -28,14 +28,20 @@ end
 function GameScreen:RenderScreen( gui )
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
-	ui.SetNextWindowSize( love.graphics.getWidth(), 0 )
+	ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
     local puppet = self.world:GetPuppet()
 
     -- Render details about the player.
+    ui.Text( Calendar.FormatTime( self.world:GetDateTime() ))
     self:RenderAgentDetails( ui, puppet )
+
+    -- Render what the player is doing...
+    for i, verb in puppet:Verbs() do
+    	ui.Text( loc.format( "{1} ({2#percent})", tostring(verb), verb:GetActingProgress() ))
+    end
     ui.Separator()
 
     -- Render the things at the player's location.
@@ -110,11 +116,13 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 		ui.PopID()
 	end
+	ui.Unindent( 20 )
 
 	if agent then
+		ui.Indent( 20 )
 		self:RenderLocationInteractions( ui, agent )
+		ui.Unindent( 20 )
 	end
-	ui.Unindent( 20 )
 end
 
 function GameScreen:RenderBackground( ui, agent )
@@ -179,7 +187,7 @@ function GameScreen:RenderAgentFocus( ui, agent )
 
 	if is_instance( focus, Verb ) then
 		if ui.Button( loc.format( "{1} (DC: {2})", focus:GetDesc(), focus:GetDC() )) then
-			focus:Interact( agent )
+			focus:BeginActing( agent )
 		end
 	else
 		local t = agent:CollectInteractions( focus, {} )
@@ -193,7 +201,7 @@ function GameScreen:RenderAgentFocus( ui, agent )
 			else
 				local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
 				if ui.Button( txt ) then
-					verb:Interact( agent, agent:GetFocus() )
+					verb:BeginActing( agent, agent:GetFocus() )
 				end
 			end
 

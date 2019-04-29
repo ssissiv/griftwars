@@ -259,6 +259,17 @@ function MakeEnum(args)
     return enum
 end
 
+function AppendEnum(enum, args)
+    setmetatable( enum, nil )
+    for k,v in ipairs(args) do
+        assert(type(v) == "string", "Enums come from strings")
+        assert(enum[v] == nil, v )
+        enum[v] = v
+    end
+    setmetatable( enum, _ENUM_META )
+    return enum
+end
+
 function IsEnum( val, enum )
     assert( getmetatable( enum ) == _ENUM_META )
     return val and enum[val] == val

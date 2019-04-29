@@ -161,6 +161,11 @@ function DebugManager:ToggleDebugConsole()
 	if self.console_settings.docked then
 		--self.imgui.ToggleInputPassthrough()
 	end
+
+	local env = self:GetDebugEnv()
+	if env.world then
+		env.world:TogglePause()
+	end
 end
 
 function DebugManager:IsConsoleOpen()

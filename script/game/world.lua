@@ -3,6 +3,7 @@ local World = class( "World", WorldBase )
 function World:init()
 	WorldBase.init( self )
 
+	self.datetime = DATETIME_START
 	self.locations = {}
 	self.agents = {}
 end
@@ -44,4 +45,6 @@ function World:SetPuppet( agent )
 	self.puppet = agent
 end
 
-
+function World:GetDateTime()
+	return self.datetime
+end
