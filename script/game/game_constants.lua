@@ -4,8 +4,9 @@ WALL_TO_GAME_TIME = 1/60.0
 PAUSE_TYPE = MakeEnum{ "DEBUG", "GAME" }
 
 -- Note: 'datetime' is a floating point measure of game hours passed.
-HALF_HOUR = 1 / 30
-ONE_HOUR = 1 / 60
+ONE_MINUTE = 1/60
+HALF_HOUR = 30/60
+ONE_HOUR = 1
 
 -- 6 am.
 DATETIME_START = 7

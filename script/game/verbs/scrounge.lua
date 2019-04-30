@@ -1,11 +1,20 @@
 
 local Scrounge = class( "Verb.Scrounge", Verb )
+
+Scrounge.ACT_DESC =
+{
+	"You are scrounging for some useful things.",
+	nil,
+	"{1.name} is here rummaging around.",
+}
+
 Scrounge.STRINGS =
 {
 	"You scrounge a bit, looking for useful things.",
 	nil,
 	"{1.name} rummages around, looking for something.",
 }
+Scrounge.VERB_DURATION = ONE_HOUR
 
 function Scrounge:CanInteract( actor, obj )
 	if obj ~= nil then
@@ -16,7 +25,7 @@ function Scrounge:CanInteract( actor, obj )
 end
 
 function Scrounge:GetDesc()
-	return "Scrounge around the area to look for something useful"
+	return "Scrounge"
 end
 
 function Scrounge:Interact( actor )

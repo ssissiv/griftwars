@@ -28,6 +28,16 @@ function Verb:CanInteract( actor, obj )
 	return true
 end
 
+function Verb:GetShortDesc()
+	if self.ACT_DESC then
+		if self.actor:IsPuppet() then
+			return loc.format( self.ACT_DESC[1], self.actor, self.target )
+		else
+			return loc.format( self.ACT_DESC[3], self.actor, self.target )
+		end
+	end
+end
+
 function Verb:BeginActing()
 	self.actor:AssignVerb( self )
 

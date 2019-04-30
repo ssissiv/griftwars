@@ -1,6 +1,6 @@
 
 local ExchangeRumours = class( "Verb.ExchangeRumours", Verb )
-ExchangeRumours.VERB_DURATION = HALF_HOUR
+ExchangeRumours.VERB_DURATION = ONE_HOUR / 4
 
 ExchangeRumours.LESSER_MSG =
 {

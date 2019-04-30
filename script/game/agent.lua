@@ -53,13 +53,21 @@ function Agent:IsPuppet()
 end
 
 function Agent:GetShortDesc()
-	if self:IsPuppet() then
-		return "You are here."
-	elseif self.focus == self.world:GetPuppet() then
-		return loc.format( "{1} is standing here, looking at you.", self.name )
-	else
-		return loc.format( "{1} is standing here.", self.name )
+	local desc
+	if self.verbs and #self.verbs > 0 then
+		-- TODO: primary verb?
+		desc = self.verbs[1]:GetShortDesc()
 	end
+
+	if desc == nil then
+		desc = loc.format( "{1} is standing here.", self.name )
+	end
+
+	if self.focus == self.world:GetPuppet() then
+		desc = desc .. loc.format( " {1.HeShe} is looking at you.", self:LocTable() )
+	end
+
+	return desc
 end
 
 function Agent:CollectInteractions( obj, verbs )
@@ -108,26 +116,36 @@ function Agent:SetDetails( name, desc, gender )
 	self.name = name
 	self.desc = desc
 	self.gender = gender
+end
 
-	self:GenerateLocTable()
+function Agent:LocTable()
+	if self.loc_table == nil then
+		self.loc_table = self:GenerateLocTable()
+	end
+	return self.loc_table
 end
 
 function Agent:GenerateLocTable()
+	local t = {}
 	if self.gender == GENDER.MALE then
-		self.himher = "him"
-		self.hishers = "his"
-		self.heshe = "he"
+		t.himher = "him"
+		t.hishers = "his"
+		t.heshe = "he"
+		t.HeShe = "He"
 
 	elseif self.gender == GENDER.FEMALE then
-		self.himher = "her"
-		self.hishers = "hers"
-		self.heshe = "she"
+		t.himher = "her"
+		t.hishers = "hers"
+		t.heshe = "she"
+		t.HeShe = "She"
 
 	else
-		self.himher = "it"
-		self.hisher = "its"
-		self.heshe = "it"
+		t.himher = "it"
+		t.hisher = "its"
+		t.heshe = "it"
+		t.HeShe = "It"
 	end
+	return t
 end
 
 function Agent:GetPrestige()

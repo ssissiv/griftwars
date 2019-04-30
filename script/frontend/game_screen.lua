@@ -40,6 +40,8 @@ function GameScreen:RenderScreen( gui )
 
     -- Render what the player is doing...
     for i, verb in puppet:Verbs() do
+    	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
+    	ui.SameLine( 0, 10 )
     	ui.Text( loc.format( "{1} ({2#percent})", tostring(verb), verb:GetActingProgress() ))
     end
     ui.Separator()
