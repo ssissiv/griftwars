@@ -101,7 +101,11 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 					ui.SameLine( 0, 10 )
 				end
 			end
-			if ui.Selectable( "* ".. obj:GetShortDesc(), agent:GetFocus() == obj ) then
+
+			local desc = loc.format( "* {1}", obj:GetShortDesc() )
+			if agent:IsBusy() then
+				ui.Text( desc )
+			elseif ui.Selectable( desc, agent:GetFocus() == obj ) then
 				agent:SetFocus( obj )
 			end
 			ui.PopStyleColor()
@@ -165,15 +169,14 @@ function GameScreen:RenderLocationInteractions( ui, agent )
 		else
 			ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
 		end
-		if ui.Selectable( verb:GetDesc() ) then
-			agent:SetFocus( verb )
+
+		local desc = loc.format( "{1} (DC: {2})", verb:GetDesc(), verb:GetDC() )
+		if agent:IsBusy() then
+			ui.TextColored( 0.5, 0.5, 0.5, 1, desc )
+		elseif ui.Selectable( desc ) then
+			verb:BeginActing( agent )
 		end
 		ui.PopStyleColor()
-
-		if agent:GetFocus() == verb then
-			ui.SameLine( 0, 10 )
-			ui.Text( "(Focus)" )
-		end
 	end
 end
 
@@ -187,29 +190,23 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		return
 	end
 
-	if is_instance( focus, Verb ) then
-		if ui.Button( loc.format( "{1} (DC: {2})", focus:GetDesc(), focus:GetDC() )) then
-			focus:BeginActing( agent )
+	local t = agent:CollectInteractions( focus, {} )
+	for i, verb in ipairs( t ) do
+		if i > 1 then
+			ui.SameLine( 0, 5 )
 		end
-	else
-		local t = agent:CollectInteractions( focus, {} )
-		for i, verb in ipairs( t ) do
-			if i > 1 then
-				ui.SameLine( 0, 5 )
+		local ok, details = verb:CanInteract( agent, focus )
+		if not ok then
+			ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
+		else
+			local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
+			if ui.Button( txt ) then
+				verb:BeginActing( agent, agent:GetFocus() )
 			end
-			local ok, details = verb:CanInteract( agent, focus )
-			if not ok then
-				ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
-			else
-				local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
-				if ui.Button( txt ) then
-					verb:BeginActing( agent, agent:GetFocus() )
-				end
-			end
+		end
 
-			if ui.IsItemHovered() and details then
-				ui.SetTooltip( details )
-			end
+		if ui.IsItemHovered() and details then
+			ui.SetTooltip( details )
 		end
 	end
 

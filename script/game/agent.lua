@@ -225,6 +225,10 @@ function Agent:Aspects()
 	return ipairs( self.aspects )
 end
 
+function Agent:IsBusy()
+	return self.verbs and #self.verbs > 0
+end
+
 function Agent:AssignVerb( verb )
 	if self.verbs == nil then
 		self.verbs = {}
