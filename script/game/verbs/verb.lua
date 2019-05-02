@@ -72,6 +72,18 @@ function Verb:BeginActing()
 	end
 end
 
+function Verb:CanCancel()
+	return true
+end
+
+function Verb:Cancel()
+	self.actor:UnassignVerb( self )
+	self.actor.world:UnscheduleEvent( self.start_ev )
+	self.start_ev = nil
+	self.start_duration = nil
+	self.start_time = nil
+end
+
 function Verb:GetActingProgress()
 	if self.start_ev and self.start_duration then
 		return 1.0 - (self.start_ev.when - self.actor.world:GetDateTime()) / self.start_duration
@@ -81,6 +93,9 @@ end
 function Verb:EndActing()
 	self.actor:UnassignVerb( self )
 	self:Interact( self.actor, self.obj )
+	self.start_ev = nil
+	self.start_duration = nil
+	self.start_time = nil
 end
 
 function Verb:__tostring()

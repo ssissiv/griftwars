@@ -45,6 +45,14 @@ function GameScreen:RenderScreen( gui )
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
     	ui.SameLine( 0, 10 )
     	ui.Text( loc.format( "{1} ({2#percent})", tostring(verb), verb:GetActingProgress() ))
+
+    	if verb:CanCancel() then
+    		ui.SameLine( 0, 10 )
+    		if ui.Button( "Cancel" ) then
+    			puppet:Echo( "Nah, forget that." )
+    			verb:Cancel()
+    		end
+    	end
     end
     ui.Separator()
 
