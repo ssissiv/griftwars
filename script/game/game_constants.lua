@@ -1,7 +1,7 @@
 -- 1 second == 1 game minute.
 WALL_TO_GAME_TIME = 1/60.0
 
-PAUSE_TYPE = MakeEnum{ "DEBUG", "GAME" }
+PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "GAME" }
 
 -- Note: 'datetime' is a floating point measure of game hours passed.
 ONE_MINUTE = 1/60

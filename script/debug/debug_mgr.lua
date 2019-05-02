@@ -164,7 +164,7 @@ function DebugManager:ToggleDebugConsole()
 
 	local env = self:GetDebugEnv()
 	if env.world then
-		env.world:TogglePause()
+		env.world:TogglePause( PAUSE_TYPE.CONSOLE )
 	end
 end
 

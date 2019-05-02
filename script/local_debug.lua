@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(game.selected_resource)",
-			"print(t)",
 			"print(t.CollectInteractions)",
 			"t = {1,1,1}",
 			"print(table.unpack(t))",
@@ -33,7 +31,9 @@ return {
 			"print(tostr(player.potential_verbs))",
 			"Verb:RecurseSubclasses( nil, function(...) print( ... ) end )",
 			"Verb:RecurseSubclasses( nil, function(c) print( c._classname ) end )",
-			"player:CollectInteractions()"
+			"player:CollectInteractions()",
+			"print(world:IsPaused())",
+			"print(tostr(world.pause))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
