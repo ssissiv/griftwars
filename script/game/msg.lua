@@ -36,6 +36,7 @@ function Msg:Speak( msgs, actor, target, ... )
 end
 
 function Msg:Echo( actor, format, ... )
+	assert( actor.Echo, tostring(actor))
 	local txt = loc.format( format, ... )
 	actor:Echo( txt )
 end

@@ -2,14 +2,13 @@ local FLAGS = MakeEnum{
 	"PLAYER"
 }
 
-local Agent = class( "Agent" )
+local Agent = class( "Agent", Entity )
 Agent.FLAGS = FLAGS
 
 function Agent:init()
+	Entity.init( self )
 	self.prestige = 1
 	self.flags = {}
-	self.aspects = {} -- array of Aspects
-	self.aspects_by_id = {}
 	self.stats = {}
 	self.sense_log = {} -- array of strings
 	self.inventory = Inventory( self )
@@ -19,11 +18,6 @@ function Agent:init()
 	self:DeltaStat( STAT.STATURE, 1 )
 	self:DeltaStat( STAT.MENTALITY, 1 )
 	self:DeltaStat( STAT.CHARISMA, 1 )
-end
-
-function Agent:OnSpawn( world )
-	assert( self.world == nil )
-	self.world = world
 end
 
 function Agent:SetFlags( ... )
@@ -175,54 +169,6 @@ end
 
 function Agent:GetLocation()
 	return self.location
-end
-
-function Agent:GainAspect( aspect )
-	local id = aspect:GetID()
-	table.insert( self.aspects, aspect )
-	assert( self.aspects_by_id[ id ] == nil )
-	self.aspects_by_id[ id ] = aspect
-	if is_instance( aspect, Aspect.StatValue ) then
-		self.stats[ id ] = aspect
-	end
-	aspect:OnGainAspect( self )
-end
-
-function Agent:LoseAspect( aspect )
-	local id = aspect:GetID()
-	assert( self.aspects_by_id[ id ] == aspect )
-	table.arrayremove( self.aspects, aspect )
-	self.aspects_by_id[ id ] = nil
-	if is_instance( aspect, Aspect.StatValue ) then
-		self.stats[ id ] = nil
-	end
-	aspect:OnLoseAspect( self )
-end
-
-function Agent:GetAspect( arg )
-	local id
-	if type(arg) == "string" then
-		id = arg
-	elseif is_class( arg ) then
-		id = arg._classname
-	end
-
-	return self.aspects_by_id[ id ]
-end
-
-function Agent:HasAspect( arg )
-	local id
-	if type(arg) == "string" then
-		id = arg
-	elseif is_class( arg ) then
-		id = arg._classname
-	end
-
-	return self.aspects_by_id[ id ] ~= nil
-end
-
-function Agent:Aspects()
-	return ipairs( self.aspects )
 end
 
 function Agent:IsBusy()

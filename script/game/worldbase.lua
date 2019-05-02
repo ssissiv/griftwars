@@ -2,6 +2,7 @@ local WorldBase = class( "WorldBase" )
 
 function WorldBase:init()
 	self.datetime = 0
+	self.world_speed = 1.0
 
 	self.events = EventSystem()
 	self.events:ListenForAny( self, self.OnWorldEvent )
@@ -116,10 +117,17 @@ function WorldBase:IsPaused( pause_type )
 	end
 end
 
+function WorldBase:SetWorldSpeed( speed )
+	self.world_speed = speed
+end
+
+function WorldBase:GetWorldSpeed()
+	return self.world_speed
+end
 
 function WorldBase:UpdateWorld( dt )
 	if not self:IsPaused() then
-		self.datetime = self.datetime + (dt * WALL_TO_GAME_TIME)
+		self.datetime = self.datetime + (dt * WALL_TO_GAME_TIME * self.world_speed)
 		self:CheckScheduledEvents()
 	end
 end

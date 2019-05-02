@@ -1,11 +1,7 @@
-local Location = class( "Location" )
+local Location = class( "Location", Entity )
 
 function Location:init()
-end
-
-function Location:OnSpawn( world )
-	assert( self.world == nil )
-	self.world = world
+	Entity.init( self )
 end
 
 function Location:SetImage( image )
@@ -20,7 +16,6 @@ function Location:SetDetails( title, desc )
 	self.title = title
 	self.desc = desc
 	self.contents = {}
-	self.aspects = {}
 end
 
 function Location:AddAgent( agent )
@@ -47,20 +42,6 @@ end
 
 function Location:GetDesc()
 	return self.desc or "No Desc"
-end
-
-function Location:GainAspect( aspect )
-	table.insert( self.aspects, aspect )
-	aspect:OnGainAspect( self )
-end
-
-function Location:LoseAspect( aspect )
-	table.arrayremove( self.aspects, aspect )
-	aspect:OnLoseAspect( self )
-end
-
-function Location:Aspects()
-	return ipairs( self.aspects )
 end
 
 function Location:__tostring()
