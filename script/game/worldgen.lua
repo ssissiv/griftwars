@@ -19,9 +19,8 @@ function WorldGen:GeneratePlayer( world )
 
 	local hood = Location()
 	hood:SetDetails( "The Junkyard Strip", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	hood:Connect( start )
 	world:SpawnLocation( hood )
-
-	Location.Connect( start, hood )
 
 	local player = Agent()
 	player:SetFlags( Agent.FLAGS.PLAYER )

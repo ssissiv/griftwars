@@ -1,25 +1,25 @@
-local UsePortal = class( "Verb.UsePortal", Verb )
+local Travel = class( "Verb.Travel", Verb )
 
-UsePortal.COLOUR = constants.colours.MAGENTA
-UsePortal.EXIT_STRINGS =
+Travel.COLOUR = constants.colours.MAGENTA
+Travel.EXIT_STRINGS =
 {
 	"You leave {2.title}.",
 	nil,
 	"{1.name} leaves.",
 }
 
-UsePortal.ENTER_STRINGS =
+Travel.ENTER_STRINGS =
 {
 	"You enter {2.title}.",
 	nil,
 	"{1.name} enters."
 }
 
-function UsePortal:GetDesc()
+function Travel:GetDesc()
 	return loc.format( "Leave to {1}", self.obj:GetTitle() )
 end
 
-function UsePortal:Interact( actor )
+function Travel:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
 	actor:MoveToLocation( self.obj )

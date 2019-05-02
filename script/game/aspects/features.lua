@@ -16,7 +16,7 @@ end
 function Portal:CollectInteractions( actor, obj, verbs )
 	if actor:GetLocation() == self.location and obj == nil then
 		if verbs then
-			table.insert( verbs, self:CreateVerb( Verb.UsePortal, actor, self.dest_location ))
+			table.insert( verbs, self:CreateVerb( Verb.Travel, actor, self.dest_location ))
 		end
 		return true
 	end

@@ -32,6 +32,13 @@ function Location:RemoveAgent( agent )
 	table.remove( self.contents, idx )
 end
 
+function Location:Connect( other )
+	assert( is_instance( other, Location ))
+	other:GainAspect( Feature.Portal( self ))
+	self:GainAspect( Feature.Portal( other ))
+end
+
+
 function Location:Contents()
 	return ipairs( self.contents )
 end
