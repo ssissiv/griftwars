@@ -5,6 +5,15 @@ function Verb:init( actor, obj )
 	self.obj = obj
 end
 
+function Verb.RecurseSubclasses( class, fn )
+	class = class or Verb
+	fn( class )
+
+	for i, subclass in ipairs( class._subclasses ) do
+		Verb.RecurseSubclasses( subclass, fn )
+	end
+end
+
 function Verb:AssignActor( actor )
 	assert( self.actor == nil or actor == self.actor )
 	self.actor = actor

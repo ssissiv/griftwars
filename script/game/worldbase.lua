@@ -46,14 +46,14 @@ local function CompareScheduledEvents( ev1, ev2 )
 end
 
 function WorldBase:ScheduleEvent( delta, event_name, ... )
-	assert( delta > 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
+	assert( delta >= 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
 	local ev = { when = self.datetime + delta, event_name, ... }
 	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
 	return ev
 end
 
 function WorldBase:ScheduleFunction( delta, fn, ... )
-	assert( delta > 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
+	assert( delta >= 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
 	assert( type(fn) == "function" )
 	local ev = { when = self.datetime + delta, fn, ... }
 	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )

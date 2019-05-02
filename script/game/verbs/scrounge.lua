@@ -16,12 +16,11 @@ Scrounge.STRINGS =
 }
 Scrounge.VERB_DURATION = ONE_HOUR
 
-function Scrounge:CanInteract( actor, obj )
-	if obj ~= nil then
-		return false
-	end
 
-	return true
+function Scrounge.CollectInteractions( actor, verbs )
+	if actor.location then
+		table.insert( verbs, Verb.Scrounge( actor ))
+	end
 end
 
 function Scrounge:CalculateDC( mods )

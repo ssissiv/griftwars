@@ -13,6 +13,16 @@ Intimidate.FAIL_MSG =
 	"{1.name} tries to intimidate {2.name} around but ends up being knocked around.",
 }
 
+function Intimidate.CollectInteractions( actor, verbs )
+	if actor.location then
+		for i, obj in actor.location:Contents() do
+			if actor:GetFocus() == obj and obj:HasAspect( Trait.Cowardly ) then
+				table.insert( verbs, Verb.Intimidate( actor, obj ))
+			end
+		end
+	end
+end
+
 
 function Intimidate:GetDesc()
 	return "Intimidate"

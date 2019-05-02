@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(world.tiles)",
-			"DBG(game.world.map.tiles)",
-			"print(Shaders)",
-			"print(Shaders.foo)",
-			"print(game.selected_tile)",
 			"print(game.selected_resource)",
 			"print(t)",
 			"print(t.CollectInteractions)",
@@ -33,7 +28,12 @@ return {
 			"help()",
 			"print(player)",
 			"print(player:GetFocus())",
-			"print(player)"
+			"print(player)",
+			"print(player.potential_verbs)",
+			"print(tostr(player.potential_verbs))",
+			"Verb:RecurseSubclasses( nil, function(...) print( ... ) end )",
+			"Verb:RecurseSubclasses( nil, function(c) print( c._classname ) end )",
+			"player:CollectInteractions()"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

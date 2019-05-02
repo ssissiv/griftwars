@@ -3,14 +3,12 @@ local Travel = class( "Verb.Travel", Verb )
 Travel.COLOUR = constants.colours.MAGENTA
 Travel.VERB_DURATION = 5 * ONE_MINUTE
 
-
 Travel.ACT_DESC =
 {
 	"You are traveling through here.",	
 	nil,
 	"{1.name} is here, heading towards {1#test}.",
 }
-
 
 Travel.EXIT_STRINGS =
 {
@@ -25,6 +23,16 @@ Travel.ENTER_STRINGS =
 	nil,
 	"{1.name} enters."
 }
+
+function Travel.CollectInteractions( actor, verbs )
+	if actor.location then
+		for i, aspect in actor.location:Aspects() do
+			if is_instance( aspect, Feature.Portal ) then
+				table.insert( verbs, Verb.Travel( actor, aspect.dest_location ))
+			end
+		end
+	end
+end
 
 function Travel:GetDesc()
 	return loc.format( "Leave to {1}", self.obj:GetTitle() )

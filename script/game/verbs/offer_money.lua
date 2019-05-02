@@ -7,6 +7,18 @@ OfferMoney.STRINGS =
 	"{1.name} gives {2.name} some money.",
 }
 
+
+function OfferMoney.CollectInteractions( actor, verbs )
+	if actor.location then
+		for i, obj in actor.location:Contents() do
+			if actor:GetFocus() == obj and obj:HasAspect( Trait.Poor ) then
+				table.insert( verbs, Verb.OfferMoney( actor, obj ))
+			end
+		end
+	end
+end
+
+
 function OfferMoney:GetDesc( obj )
 	if obj then
 		return loc.format( "Give {1#money}", obj:GetPrestige() )
@@ -15,16 +27,13 @@ function OfferMoney:GetDesc( obj )
 	end
 end
 
-function OfferMoney:CanInteract( actor, obj )
-	if obj then
-		local cost = obj:GetPrestige()
-		if actor:GetInventory():GetMoney() < cost then
-			return false, loc.format( "Requires at least {1#money}.", cost )
-		else
-			return true, loc.format( "Cost: {1#money}\n{2} will like you.", cost, obj:GetName() )
-		end
+function OfferMoney:CanInteract()
+	local cost = self.obj:GetPrestige()
+	if self.actor:GetInventory():GetMoney() < cost then
+		return false, loc.format( "Requires at least {1#money}.", cost )
+	else
+		return true, loc.format( "Cost: {1#money}\n{2} will like you.", cost, self.obj:GetName() )
 	end
-	return false
 end
 
 function OfferMoney:Interact( actor, obj )

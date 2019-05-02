@@ -21,10 +21,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 	end
 
 	if ui.TreeNode( "Verbs" ) then
-		if self.verbs == nil then
-			self.verbs = self.agent:CollectAllInteractions( {} )
-		end
-		for i, verb in ipairs( self.verbs ) do
+		for i, verb in self.agent:PotentialVerbs() do
 			panel:AppendTable( ui, verb )
 		end
 		ui.TreePop()

@@ -5,6 +5,17 @@ Socialize.MSG =
 	"Hey {2.name}. How's it going?",
 }
 
+function Socialize.CollectInteractions( actor, verbs )
+	if actor.location then
+		for i, obj in actor.location:Contents() do
+			if actor:GetFocus() == obj and is_instance( actor, Agent ) then
+				table.insert( verbs, Verb.Socialize( actor, obj ))
+			end
+		end
+	end
+end
+
+
 function Socialize:GetDesc()
 	return "Socialize"
 end

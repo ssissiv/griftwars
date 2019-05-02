@@ -11,6 +11,7 @@ function Agent:init()
 	self.flags = {}
 	self.stats = {}
 	self.sense_log = {} -- array of strings
+	self.potential_verbs = {}
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
@@ -64,46 +65,56 @@ function Agent:GetShortDesc()
 	return desc
 end
 
-function Agent:CollectInteractions( obj, verbs )
-	local found = false
-	for i, aspect in self:Aspects() do
-		if aspect.CollectInteractions and aspect:CollectInteractions( self, obj, verbs ) then
-			found = true
-		end
+function Agent:CollectInteractions()
+	local now = self.world:GetDateTime()
+	if now <= (self.verb_time or 0) then
+		return
 	end
+
+	-- FIXME: figure out a way to avoid churning this search.
+	self.verb_time = now + 10000
+
+	local verbs = self.potential_verbs
+	table.clear( verbs )
+
+	Verb.RecurseSubclasses( nil, function( class )
+		if class.CollectInteractions then
+			class.CollectInteractions( self, verbs )
+		end
+	end )
+
+	-- for i, aspect in self:Aspects() do
+	-- 	if aspect.CollectInteractions then
+	-- 		aspect:CollectInteractions( self, self.focus, verbs )
+	-- 	end
+	-- end
+
+	-- if self.focus then
+	-- 	for i, aspect in self.focus:Aspects() do
+	-- 		if aspect.CollectInteractions then
+	-- 			aspect:CollectInteractions( self, self.focus, verbs )
+	-- 		end
+	-- 	end
+	-- end
+
+
+	-- if self.location then
+	-- 	for i, obj in self.location:Contents() do
+	-- 		self:CollectInteractions( obj, verbs )
+	-- 	end	
+
+	-- 	for i, feature in self.location:Aspects() do
+	-- 		if feature.CollectInteractions then
+	-- 			feature:CollectInteractions( self, nil, verbs )
+	-- 		end
+	-- 	end
+	-- end
 	
-	if obj then
-		for i, aspect in obj:Aspects() do
-			if aspect.CollectInteractions and aspect:CollectInteractions( self, obj, verbs ) then
-				found = true
-			end
-		end
-
-	elseif self.location then
-		for i, feature in self.location:Aspects() do
-			if feature.CollectInteractions and feature:CollectInteractions( self, obj, verbs ) then
-				found = true
-			end
-		end
-	end
-
-	if verbs then
-		return verbs
-	else
-		return found
-	end
+	return self.potential_verbs
 end
 
-function Agent:CollectAllInteractions( verbs )
-	if self.location then
-		for i, obj in self.location:Contents() do
-			self:CollectInteractions( obj, verbs )
-		end
-	end
-
-	self:CollectInteractions( nil, verbs )
-	
-	return verbs
+function Agent:PotentialVerbs()
+	return ipairs( self.potential_verbs )
 end
 
 function Agent:SetDetails( name, desc, gender )
@@ -243,6 +254,7 @@ function Agent:SetFocus( focus )
 	end
 
 	self.focus = focus
+	self.verb_time = nil
 
 	if focus then
 		local GAIN_FOCUS =

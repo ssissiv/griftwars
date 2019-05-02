@@ -38,6 +38,8 @@ function GameScreen:RenderScreen( gui )
     ui.Text( Calendar.FormatTime( self.world:GetDateTime() ))
     self:RenderAgentDetails( ui, puppet )
 
+    puppet:CollectInteractions()
+
     -- Render what the player is doing...
     for i, verb in puppet:Verbs() do
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
@@ -161,22 +163,23 @@ function GameScreen:RenderBackground( ui, agent )
 end
 
 function GameScreen:RenderLocationInteractions( ui, agent )
-	local t = agent:CollectInteractions( nil, {} )
-	for i, verb in ipairs( t ) do
-		local ok, details = verb:CanInteract( agent, nil )
-		if verb.COLOUR then
-			ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
-		else
-			ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
-		end
+	for i, verb in agent:PotentialVerbs() do
+		if verb.obj == nil or verb.obj ~= agent:GetFocus() then
+			local ok, details = verb:CanInteract( agent, nil )
+			if verb.COLOUR then
+				ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
+			else
+				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+			end
 
-		local desc = verb:GetRoomDesc()
-		if agent:IsBusy() then
-			ui.TextColored( 0.5, 0.5, 0.5, 1, desc )
-		elseif ui.Selectable( desc ) then
-			verb:BeginActing( agent )
+			local desc = verb:GetRoomDesc()
+			if agent:IsBusy() then
+				ui.TextColored( 0.5, 0.5, 0.5, 1, desc )
+			elseif ui.Selectable( desc ) then
+				verb:BeginActing( agent )
+			end
+			ui.PopStyleColor()
 		end
-		ui.PopStyleColor()
 	end
 end
 
@@ -190,23 +193,26 @@ function GameScreen:RenderAgentFocus( ui, agent )
 		return
 	end
 
-	local t = agent:CollectInteractions( focus, {} )
-	for i, verb in ipairs( t ) do
-		if i > 1 then
-			ui.SameLine( 0, 5 )
-		end
-		local ok, details = verb:CanInteract( agent, focus )
-		if not ok then
-			ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
-		else
-			local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
-			if ui.Button( txt ) then
-				verb:BeginActing( agent, agent:GetFocus() )
+	local i = 0
+	for _, verb in agent:PotentialVerbs() do
+		if verb.obj == focus then
+			i = i + 1
+			if i > 1 then
+				ui.SameLine( 0, 5 )
 			end
-		end
+			local ok, details = verb:CanInteract( agent, focus )
+			if not ok then
+				ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
+			else
+				local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
+				if ui.Button( txt ) then
+					verb:BeginActing( agent, agent:GetFocus() )
+				end
+			end
 
-		if ui.IsItemHovered() and details then
-			ui.SetTooltip( details )
+			if ui.IsItemHovered() and details then
+				ui.SetTooltip( details )
+			end
 		end
 	end
 
