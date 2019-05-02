@@ -170,7 +170,7 @@ function GameScreen:RenderLocationInteractions( ui, agent )
 			ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
 		end
 
-		local desc = loc.format( "{1} (DC: {2})", verb:GetDesc(), verb:GetDC() )
+		local desc = verb:GetRoomDesc()
 		if agent:IsBusy() then
 			ui.TextColored( 0.5, 0.5, 0.5, 1, desc )
 		elseif ui.Selectable( desc ) then

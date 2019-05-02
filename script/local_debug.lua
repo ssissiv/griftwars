@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"game.world = World.LoadWorld()",
 			"DBG(world.tiles)",
 			"DBG(game.world.map.tiles)",
 			"print(Shaders)",
@@ -33,7 +32,8 @@ return {
 			"print(agent)",
 			"help()",
 			"print(player)",
-			"print(player:GetFocus())"
+			"print(player:GetFocus())",
+			"print(player)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

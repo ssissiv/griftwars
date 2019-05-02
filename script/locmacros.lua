@@ -7,6 +7,10 @@ return
 	-- "foo"
 	-- "foo and bar"
 	-- "foo, bar, and foobar"
+	test = function( t )
+		return tostring(t)
+	end,
+
 	listing = function( t )
 		local concat = t[1]
 		for i = 2, #t - 1 do

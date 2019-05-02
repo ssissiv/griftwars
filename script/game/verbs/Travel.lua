@@ -1,6 +1,17 @@
 local Travel = class( "Verb.Travel", Verb )
 
 Travel.COLOUR = constants.colours.MAGENTA
+Travel.VERB_DURATION = 5 * ONE_MINUTE
+
+
+Travel.ACT_DESC =
+{
+	"You are traveling through here.",	
+	nil,
+	"{1.name} is here, heading towards {1#test}.",
+}
+
+
 Travel.EXIT_STRINGS =
 {
 	"You leave {2.title}.",

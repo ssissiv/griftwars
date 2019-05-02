@@ -17,14 +17,9 @@ function Aspect:CreateVerb( verb_class, actor, obj )
 end
 
 function Aspect:OnGainAspect( obj )
-	if is_instance( obj, Agent ) then
-		self.agent = obj
-	else
-		self.owner = obj
-	end
+	self.owner = obj
 end
 
 function Aspect:OnLoseAspect( obj )
-	self.agent = nil
 	self.owner = nil
 end

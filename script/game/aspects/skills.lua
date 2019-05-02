@@ -5,11 +5,11 @@ function Skill:CollectInteractions( actor, obj, verbs )
 	local verb_class
 
 	if self.verb_class then
-		if self.agent == actor and is_instance( obj, Agent ) then
+		if self.owner == actor and is_instance( obj, Agent ) then
 			verb_class = self.verb_class
 		end
 	elseif self.location_verb_class then
-		if self.agent == actor and obj == nil then
+		if self.owner == actor and obj == nil then
 			verb_class = self.location_verb_class
 		end
 	else

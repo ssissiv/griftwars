@@ -21,3 +21,5 @@ function Portal:CollectInteractions( actor, obj, verbs )
 		return true
 	end
 end
+
+---------------------------------------------------------------

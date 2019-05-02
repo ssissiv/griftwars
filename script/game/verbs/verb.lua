@@ -6,11 +6,23 @@ function Verb:init( actor, obj )
 end
 
 function Verb:AssignActor( actor )
+	assert( self.actor == nil or actor == self.actor )
 	self.actor = actor
 end
 
 function Verb:AssignObj( obj )
 	self.obj = obj
+end
+
+function Verb:GetRoomDesc()
+	local dc = self:GetDC()
+	local desc = self:GetDesc()
+
+	if dc == 0 then
+		return desc
+	else
+		return loc.format( "{1} (DC: {2})", desc, dc )
+	end
 end
 
 function Verb:GetDC()
