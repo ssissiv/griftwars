@@ -16,7 +16,7 @@ Intimidate.FAIL_MSG =
 function Intimidate.CollectInteractions( actor, verbs )
 	if actor.location then
 		for i, obj in actor.location:Contents() do
-			if actor:GetFocus() == obj and obj:HasAspect( Trait.Cowardly ) then
+			if actor:GetFocus() == obj and obj:GetFocus() == actor and obj:HasAspect( Trait.Cowardly ) then
 				table.insert( verbs, Verb.Intimidate( actor, obj ))
 			end
 		end

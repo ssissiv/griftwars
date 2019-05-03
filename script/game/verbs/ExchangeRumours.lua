@@ -24,7 +24,7 @@ ExchangeRumours.NONE_MSG =
 function ExchangeRumours.CollectInteractions( actor, verbs )
 	if actor.location and actor:HasAspect( Skill.RumourMonger ) then
 		for i, obj in actor.location:Contents() do
-			if actor:GetFocus() == obj and obj:HasAspect( Skill.RumourMonger ) then
+			if actor:GetFocus() == obj and obj:GetFocus() == actor and obj:HasAspect( Skill.RumourMonger ) then
 				table.insert( verbs, Verb.ExchangeRumours( actor, obj ))
 			end
 		end

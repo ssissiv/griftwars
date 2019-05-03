@@ -11,7 +11,7 @@ OfferMoney.STRINGS =
 function OfferMoney.CollectInteractions( actor, verbs )
 	if actor.location then
 		for i, obj in actor.location:Contents() do
-			if actor:GetFocus() == obj and obj:HasAspect( Trait.Poor ) then
+			if actor:GetFocus() == obj and obj:GetFocus() == actor and obj:HasAspect( Trait.Poor ) then
 				table.insert( verbs, Verb.OfferMoney( actor, obj ))
 			end
 		end

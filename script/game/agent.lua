@@ -275,16 +275,16 @@ function Agent:GetFocus()
 end
 
 function Agent:OnGainFocus( other )
-	local noticed = true
+	local noticed = false
 	if noticed then
 		if self.focus ~= other then
 			local GREETING =
 			{
-				"What do you want?",
-				"What do you want?",
-				"What do you want?",
+				"You notice {2.name} looking at you.",
+				nil,
+				"{1.name} notices you looking at them.",
 			}
-			Msg:Speak( GREETING, self, other )
+			Msg:Action( GREETING, self, other )
 
 			self:SetFocus( other )
 		end
@@ -304,7 +304,7 @@ function Agent:DeltaOpinion( other, op, delta )
 end
 
 function Agent:__tostring()
-	return self:GetName()
+	return string.format( "[%s]", self:GetName() )
 end
 
 
