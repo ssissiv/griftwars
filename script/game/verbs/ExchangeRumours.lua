@@ -35,22 +35,41 @@ function ExchangeRumours:GetDesc()
 	return "Exchange Rumours"
 end
 
-function ExchangeRumours:Interact( actor, obj )
-	local actor_count = actor:GetStat( STAT.RUMOURS )
-	local obj_count = obj:GetStat( STAT.RUMOURS )
-
-	if actor_count > obj_count then
-		obj:DeltaStat( STAT.RUMOURS, math.min( actor_count - obj_count, 3 ))
-		actor:DeltaStat( STAT.RUMOURS, 1 )
-		Msg:Action( self.LESSER_MSG, actor, obj )
-
-	elseif actor_count == obj_count then
-		Msg:Action( self.NONE_MSG, actor, obj )
-
-	else
-		obj:DeltaStat( STAT.RUMOURS, 1 )
-		actor:DeltaStat( STAT.RUMOURS, math.min( obj_count - actor_count, 3 ))
-		Msg:Action( self.MORE_MSG, actor, obj )
-	end
+function ExchangeRumours:SpendCost()
+	self.actor:DeltaStat( STAT.CHARISMA, -1 )
 end
 
+function ExchangeRumours:CanInteract()
+	if self.actor:GetStat( STAT.CHARISMA ) <= 0 then
+		return false, "Requires Charisma"
+	end
+	return true
+end
+
+
+function ExchangeRumours:Interact( actor, obj )
+
+	self:SpendCost()
+
+	if not self:CheckDC() then
+		Msg:Action( self.NONE_MSG, actor, obj )
+	else
+		local learned, revealed = {}, {}
+		if actor:GetAspect( Skill.RumourMonger ):ExchangeInfo( obj, learned, revealed ) then
+			Msg:Action( self.MORE_MSG, actor, obj )
+
+			for i = 1, #learned, 2 do
+				local e_info, delta = learned[i], learned[i+1]
+				actor:Echo( loc.format( "Learned: {1} (x{2})", e_info, delta ))
+			end
+
+			for i = 1, #revealed, 2 do
+				local e_info, delta = revealed[i], revealed[i+1]
+				actor:Echo( loc.format( "Revealed: {1} (x{2})", e_info, delta ))
+			end
+
+		else
+			Msg:Action( self.LESSER_MSG, actor, obj )
+		end
+	end
+end

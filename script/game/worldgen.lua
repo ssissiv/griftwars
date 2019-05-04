@@ -28,6 +28,7 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Skill.Scrounge() )
 	player:GainAspect( Skill.Socialize() )
 	player:GainAspect( Skill.RumourMonger() )
+
 	player:GetInventory():DeltaMoney( 1 )
 	world:SpawnAgent( player )
 
@@ -36,7 +37,7 @@ function WorldGen:GeneratePlayer( world )
 	other:GainAspect( Trait.Cowardly() )
 	other:GainAspect( Trait.Poor() )
 	other:GainAspect( Skill.Scrounge() )
-	other:GainAspect( Skill.RumourMonger() )
+	other:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	world:SpawnAgent( other )
 
 	player:MoveToLocation( start )

@@ -289,6 +289,7 @@ function Agent:OnGainFocus( other )
 			self:SetFocus( other )
 		end
 	end
+	self.verb_time = nil
 end
 
 function Agent:GetSocialNode()

@@ -27,6 +27,8 @@ function Entity:GainAspect( aspect )
 		self.stats[ id ] = aspect
 	end
 	aspect:OnGainAspect( self )
+
+	return aspect
 end
 
 function Entity:LoseAspect( aspect )

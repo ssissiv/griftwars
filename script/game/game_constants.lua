@@ -60,6 +60,13 @@ STAT = MakeEnum
 
 	-- Transient stats
 	"PATIENCE",
-	"RUMOURS",
 }
 
+INFO = MakeEnum
+{
+	"NULL",
+	
+	"LOCAL_NEWS",
+--	"GOSSIP",
+--  'RUMOURS",
+}
