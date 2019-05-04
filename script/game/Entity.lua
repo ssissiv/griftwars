@@ -6,10 +6,27 @@ end
 function Entity:OnSpawn( world )
 	assert( self.world == nil )
 	self.world = world
+
+	if self.aspects then
+		for i, aspect in ipairs( self.aspects ) do
+			if aspect.OnSpawn then
+				aspect:OnSpawn( world )
+			end
+		end
+	end
 end
 
 function Entity:OnDespawn()
 	assert( self.world )
+
+	if self.aspects then
+		for i, aspect in ipairs( self.aspects ) do
+			if aspect.OnDespawn then
+				aspect:OnDespawn()
+			end
+		end
+	end
+
 	self.world = nil
 end
 
@@ -28,6 +45,10 @@ function Entity:GainAspect( aspect )
 	end
 	aspect:OnGainAspect( self )
 
+	if self.world and aspect.OnSpawn then
+		aspect:OnSpawn( self.world )
+	end
+
 	return aspect
 end
 
@@ -38,6 +59,10 @@ function Entity:LoseAspect( aspect )
 	self.aspects_by_id[ id ] = nil
 	if is_instance( aspect, Aspect.StatValue ) then
 		self.stats[ id ] = nil
+	end
+
+	if self.world and aspect.OnDespawn then
+		aspect:OnDespawn()
 	end
 	aspect:OnLoseAspect( self )
 

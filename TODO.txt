@@ -1,6 +1,20 @@
 TODO
 ====
 
+STATS:
+	Add max_value to stats.
+	Have core stats regen to max_stat over time.
+
+ADD BASIC FOOD / HUNGER cycle
+
+INFO MODEL:
+	Add verbs for utilizing certain info.
+	LOCAL_NEWS:
+		Event model for tracking newsworthy events within a region?
+		Somehow, local news lets you learn about 'public aspects' of people.
+
+
+
 AI:
 	implement utility functions for verbs.
 	all agents choose their highest weighted verb

@@ -16,9 +16,9 @@ function Agent:init()
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
 
-	self:DeltaStat( STAT.STATURE, 1 )
-	self:DeltaStat( STAT.MENTALITY, 1 )
-	self:DeltaStat( STAT.CHARISMA, 1 )
+	self:CreateStat( STAT.STATURE, 1, 1 ):DeltaRegen( 1 )
+	self:CreateStat( STAT.MENTALITY, 1, 1 ):DeltaRegen( 1 )
+	self:CreateStat( STAT.CHARISMA, 1, 1 ):DeltaRegen( 1 )
 end
 
 function Agent:SetFlags( ... )
@@ -204,6 +204,15 @@ function Agent:Verbs()
 	return ipairs( self.verbs or table.empty )
 end
 
+function Agent:CreateStat( stat, value, max_value )
+	assert( self:GetAspect( stat ) == nil )
+
+	local aspect = Aspect.StatValue( stat, value, max_value )
+	self:GainAspect( aspect )
+
+	return aspect
+end
+
 function Agent:DeltaStat( stat, delta )
 	local aspect = self:GetAspect( stat )
 	if aspect == nil then
@@ -216,7 +225,11 @@ end
 
 function Agent:GetStat( stat )
 	local aspect = self:GetAspect( stat )
-	return aspect and aspect:GetValue() or 0
+	if aspect then
+		return aspect:GetValue()
+	end
+	
+	return 0
 end
 
 function Agent:Stats()

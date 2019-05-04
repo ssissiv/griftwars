@@ -127,8 +127,13 @@ end
 
 function WorldBase:UpdateWorld( dt )
 	if not self:IsPaused() then
-		self.datetime = self.datetime + (dt * WALL_TO_GAME_TIME * self.world_speed)
+		local world_dt = dt * WALL_TO_GAME_TIME * self.world_speed
+		self.datetime = self.datetime + world_dt
 		self:CheckScheduledEvents()
+
+		if self.OnUpdateWorld then
+			self:OnUpdateWorld( dt, world_dt )
+		end
 	end
 end
 

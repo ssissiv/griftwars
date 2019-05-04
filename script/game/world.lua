@@ -6,6 +6,7 @@ function World:init()
 	self.datetime = DATETIME_START
 	self.locations = {}
 	self.agents = {}
+	self.stats = {}
 end
 
 function World:SpawnLocation( location )
@@ -15,6 +16,14 @@ end
 
 function World:AllLocations()
 	return ipairs( self.locations )
+end
+
+function World:RegisterStatValue( stat )
+	table.insert( self.stats, stat )
+end
+
+function World:UnregisterStatValue( stat )
+	table.arrayremove( self.stats, stat )
 end
 
 function World:SpawnAgent( agent )
@@ -47,4 +56,10 @@ end
 
 function World:GetDateTime()
 	return self.datetime
+end
+
+function World:OnUpdateWorld( dt, world_dt )
+	for i, stat in ipairs( self.stats ) do
+		stat:Regen( world_dt )
+	end
 end

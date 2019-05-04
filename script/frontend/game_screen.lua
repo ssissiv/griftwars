@@ -87,7 +87,12 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     local i = 1
     for stat, aspect in puppet:Stats() do
     	ui.SameLine( 0, 15 )
-    	ui.Text( loc.format( "{1}: {2}", stat, aspect:GetValue() ))
+    	local value, max_value = aspect:GetValue()
+    	if max_value then
+	    	ui.Text( loc.format( "{1}: {2}/{3}", stat, value, max_value ))
+	    else
+	    	ui.Text( loc.format( "{1}: {2}", stat, value ))
+	    end
     	i = i + 1
     end
 end
