@@ -47,19 +47,19 @@ function Agent:IsPuppet()
 	return self.world:GetPuppet() == self
 end
 
-function Agent:GetShortDesc()
+function Agent:GetShortDesc( viewer )
 	local desc
 	if self.verbs and #self.verbs > 0 then
 		-- TODO: primary verb?
-		desc = self.verbs[1]:GetShortDesc()
+		desc = self.verbs[1]:GetShortDesc( viewer )
 	end
 
 	if desc == nil then
-		desc = loc.format( "{1} is standing here.", self.name )
+		desc = loc.format( "{1.Id} is standing here.", self:LocTable( viewer ) )
 	end
 
 	if self.focus == self.world:GetPuppet() then
-		desc = desc .. loc.format( " {1.HeShe} is looking at you.", self:LocTable() )
+		desc = desc .. loc.format( " {1.HeShe} is looking at you.", self:LocTable( viewer ) )
 	end
 
 	return desc
@@ -117,20 +117,25 @@ function Agent:PotentialVerbs()
 	return ipairs( self.potential_verbs )
 end
 
+function Agent:MatchTarget( target )
+	return target == self
+end
+
 function Agent:SetDetails( name, desc, gender )
 	self.name = name
 	self.desc = desc
 	self.gender = gender
 end
 
-function Agent:LocTable()
-	if self.loc_table == nil then
-		self.loc_table = self:GenerateLocTable()
+function Agent:LocTable( viewer )
+	assert( viewer )
+	if self.loc_table == nil or self.loc_table.viewer ~= viewer  then
+		self.loc_table = self:GenerateLocTable( viewer )
 	end
 	return self.loc_table
 end
 
-function Agent:GenerateLocTable()
+function Agent:GenerateLocTable( viewer )
 	local t = {}
 	if self.gender == GENDER.MALE then
 		t.himher = "him"
@@ -150,6 +155,16 @@ function Agent:GenerateLocTable()
 		t.heshe = "it"
 		t.HeShe = "It"
 	end
+
+	local mem = self:GetAspect( Trait.Memory )
+	if mem and mem:CheckPrivacy( self, PRIVACY.ID ) then
+		t.id = loc.format( "[{1}]", self.name )
+		t.Id = t.id
+	else
+		t.id = "[Unknown]"
+		t.Id = t.id
+	end
+
 	return t
 end
 
@@ -256,8 +271,8 @@ function Agent:SetFocus( focus )
 	if self.focus then
 		local LOSE_FOCUS =
 		{
-			"You turn your attention away from {2}",
-			"{1} turns away from you.",
+			"You turn your attention away from {2.id}",
+			"{1.Id} turns away from you.",
 		}
 		Msg:Action( LOSE_FOCUS, self, self.focus )
 
@@ -272,8 +287,8 @@ function Agent:SetFocus( focus )
 	if focus then
 		local GAIN_FOCUS =
 		{
-			"You turn your attention to {2}",
-			"{1} turns their attention to you.",
+			"You turn your attention to {2.id}",
+			"{1.Id} turns their attention to you.",
 		}
 		Msg:Action( GAIN_FOCUS, self, focus )
 
@@ -293,9 +308,9 @@ function Agent:OnGainFocus( other )
 		if self.focus ~= other then
 			local GREETING =
 			{
-				"You notice {2.name} looking at you.",
+				"You notice {2.id} looking at you.",
 				nil,
-				"{1.name} notices you looking at them.",
+				"{1.id} notices you looking at them.",
 			}
 			Msg:Action( GREETING, self, other )
 

@@ -41,6 +41,15 @@ OPINION_STRINGS =
 	}
 }
 
+PRIVACY = MakeEnum
+{
+	"ID", -- Name, status, basic stats.
+	"LOOKS", -- What they look like.
+	"HAUNTS", -- Where they hang out.
+	"STATS", -- Detailed status.
+	"INTENT", -- Goals, AI status.
+}
+
 WORLD_EVENT = MakeEnum{
 	"LOG",
 	"VERB_FINISH",	

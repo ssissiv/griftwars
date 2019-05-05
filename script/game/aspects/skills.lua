@@ -20,6 +20,10 @@ function RumourMonger:GainInfo( e_info, delta )
 	self.info[ e_info ] = (self.info[ e_info ] or 0) + delta
 end
 
+function RumourMonger:Info()
+	return pairs( self.info )
+end
+
 function RumourMonger:GetInfo( e_info )
 	return (self.info[ e_info ] or 0)
 end

@@ -24,8 +24,30 @@ function GameScreen:RenderDebug()
 	imgui.Text( string.format( "Debug" ))
 end
 
+function GameScreen:RenderInventory( puppet )
+	local ui = imgui
+    local flags = { "AlwaysAutoResize", "NoScrollBar" }
+
+	ui.SetNextWindowSize( 400,300 )
+
+    ui.Begin( "Inventory", false, flags )
+
+    local rumours = puppet:GetAspect( Skill.RumourMonger )
+    if rumours and ui.TreeNodeEx( "Knowledge", "DefaultOpen" ) then
+    	for e_info, count in rumours:Info() do
+    		local txt = loc.format( "{1}: {2}", e_info, count )
+    		if ui.Button( txt ) then
+    		end
+    	end
+
+		ui.TreePop()
+	end
+
+    ui.End()
+end
 
 function GameScreen:RenderScreen( gui )
+
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
 	ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
@@ -72,6 +94,11 @@ function GameScreen:RenderScreen( gui )
     self:RenderAgentFocus( ui, puppet )
 	ui.SetScrollHere()
     ui.End()
+
+	if self.show_inventory then
+		self:RenderInventory( puppet )
+	end
+
 end
 
 function GameScreen:RenderAgentDetails( ui, puppet )
@@ -117,7 +144,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				end
 			end
 
-			local desc = loc.format( "* {1}", obj:GetShortDesc() )
+			local desc = loc.format( "* {1}", obj:GetShortDesc( agent ) )
 			if agent:IsBusy() then
 				ui.Text( desc )
 			elseif ui.Selectable( desc, agent:GetFocus() == obj ) then
@@ -251,6 +278,10 @@ function GameScreen:MousePressed( mx, my, btn )
 end
 
 function GameScreen:KeyPressed( key )
+	if key == "i" then
+		self.show_inventory = not self.show_inventory
+	end
+
 	return false
 end
 

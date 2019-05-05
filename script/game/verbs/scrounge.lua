@@ -5,14 +5,14 @@ Scrounge.ACT_DESC =
 {
 	"You are scrounging for some useful things.",
 	nil,
-	"{1.name} is here rummaging around.",
+	"{1.Id} is here rummaging around.",
 }
 
 Scrounge.STRINGS =
 {
 	"You scrounge a bit, looking for useful things.",
 	nil,
-	"{1.name} rummages around, looking for something.",
+	"{1.Id} rummages around, looking for something.",
 }
 Scrounge.VERB_DURATION = ONE_HOUR
 
