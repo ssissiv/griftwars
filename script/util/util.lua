@@ -322,4 +322,17 @@ function Lerp(x1,x2,t)
     return x1 + x2 * t - x1 * t
 end
 
+function SetBits( bits, flags )
+    return bit32.bor( bits, flags )
+end
+
+function CheckBits( bits, flags )
+    return bit32.band( bits, flags ) == flags
+end
+
+function ClearBits( bits, flags )
+    return bit32.bor( bits, bit32.bnot( flags ) )
+end
+
+
 return util

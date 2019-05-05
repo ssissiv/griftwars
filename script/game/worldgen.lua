@@ -28,18 +28,19 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Skill.Scrounge() )
 	player:GainAspect( Skill.Socialize() )
 	player:GainAspect( Skill.RumourMonger() )
-
+	player:GainAspect( Trait.Memory() )
 	player:GetInventory():DeltaMoney( 1 )
-	world:SpawnAgent( player )
+	world:SpawnAgent( player, start )
 
-	local other = Agent()
-	other:SetDetails( "Kevin", "Here's a guy.", GENDER.MALE )
-	other:GainAspect( Trait.Cowardly() )
-	other:GainAspect( Trait.Poor() )
-	other:GainAspect( Skill.Scrounge() )
-	other:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
-	world:SpawnAgent( other )
+	local NAMES = { "Bodie", "Ger", "Fry" }
 
-	player:MoveToLocation( start )
-	other:MoveToLocation( start )
+	for i = 1, 3 do
+		local other = Agent()
+		other:SetDetails( NAMES[ i ], "Here's a guy.", GENDER.MALE )
+		other:GainAspect( Trait.Cowardly() )
+		other:GainAspect( Trait.Poor() )
+		other:GainAspect( Skill.Scrounge() )
+		other:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
+		world:SpawnAgent( other, start )
+	end
 end

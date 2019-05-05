@@ -2,17 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(table.unpack(t))",
-			",1print(table.unpack(t))",
-			"print(table.unpack(t),1)",
-			"print(table.unpack(t,1,3))",
-			"print(table.unpack(t,1,3),1)",
-			"print(t)",
-			"print(t:GetAspect(Aspect.Cowardly))",
-			"print(t:GetAspect(Trait.Cowardly))",
-			"DBG(Aspect)",
-			"print(Aspect.Cowardly)",
-			"print(Trait.Cowardly)",
 			"print(Aspect.Cowardly)",
 			"print(t:GetAspect(Aspect.Cowardly))",
 			"print(t:GetAspect(Trait.Cowardly))",
@@ -33,7 +22,18 @@ return {
 			"print(world:IsPaused())",
 			"print(tostr(world.pause))",
 			"t:Regen()",
-			"t.value = 0"
+			"t.value = 0",
+			"print( CheckBits( 2, 0 ))",
+			"print( CheckBits( 2, 2 ))",
+			"print( CheckBits( 3, 2 ))",
+			"print( CheckBits( 3, 5 ))",
+			"print( CheckBits( 3, 8 ))",
+			"print( SetBits( 0, 2 ))",
+			"print(actor)",
+			"print(actor:CheckPrivacy( obj, PRIVACY.ID ))",
+			"print(actor:CheckPrivacy( obj, PRIVACY.LOOKS ))",
+			"print( player.verbs[1] )",
+			"print( player.verbs[1]:CanInteract())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

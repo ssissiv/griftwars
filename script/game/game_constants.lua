@@ -41,7 +41,7 @@ OPINION_STRINGS =
 	}
 }
 
-PRIVACY = MakeEnum
+PRIVACY = MakeBitField
 {
 	"ID", -- Name, status, basic stats.
 	"LOOKS", -- What they look like.

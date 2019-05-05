@@ -83,33 +83,6 @@ function Agent:CollectInteractions()
 		end
 	end )
 
-	-- for i, aspect in self:Aspects() do
-	-- 	if aspect.CollectInteractions then
-	-- 		aspect:CollectInteractions( self, self.focus, verbs )
-	-- 	end
-	-- end
-
-	-- if self.focus then
-	-- 	for i, aspect in self.focus:Aspects() do
-	-- 		if aspect.CollectInteractions then
-	-- 			aspect:CollectInteractions( self, self.focus, verbs )
-	-- 		end
-	-- 	end
-	-- end
-
-
-	-- if self.location then
-	-- 	for i, obj in self.location:Contents() do
-	-- 		self:CollectInteractions( obj, verbs )
-	-- 	end	
-
-	-- 	for i, feature in self.location:Aspects() do
-	-- 		if feature.CollectInteractions then
-	-- 			feature:CollectInteractions( self, nil, verbs )
-	-- 		end
-	-- 	end
-	-- end
-	
 	return self.potential_verbs
 end
 
@@ -127,8 +100,11 @@ function Agent:SetDetails( name, desc, gender )
 	self.gender = gender
 end
 
+function Agent:RegenerateLocTable( viewer )
+	self.loc_table = self:GenerateLocTable( viewer )
+end
+
 function Agent:LocTable( viewer )
-	assert( viewer )
 	if self.loc_table == nil or self.loc_table.viewer ~= viewer  then
 		self.loc_table = self:GenerateLocTable( viewer )
 	end
@@ -136,7 +112,9 @@ function Agent:LocTable( viewer )
 end
 
 function Agent:GenerateLocTable( viewer )
-	local t = {}
+	assert( viewer )
+
+	local t = { viewer = viewer }
 	if self.gender == GENDER.MALE then
 		t.himher = "him"
 		t.hishers = "his"
@@ -156,8 +134,7 @@ function Agent:GenerateLocTable( viewer )
 		t.HeShe = "It"
 	end
 
-	local mem = self:GetAspect( Trait.Memory )
-	if mem and mem:CheckPrivacy( self, PRIVACY.ID ) then
+	if viewer:CheckPrivacy( self, PRIVACY.ID ) then
 		t.id = loc.format( "[{1}]", self.name )
 		t.Id = t.id
 	else
@@ -176,6 +153,16 @@ function Agent:GetInventory()
 	return self.inventory
 end
 
+function Agent:GetMemory()
+	return self.memory
+end
+
+function Agent:CheckPrivacy( obj, pr_flags )
+	if self.memory then
+		return self.memory:CheckPrivacy( obj, pr_flags )
+	end
+end
+
 function Agent:MoveToLocation( location )
 	if self.location then
 		self.location:RemoveAgent( self )
@@ -184,6 +171,7 @@ function Agent:MoveToLocation( location )
 	end
 
 	if location then
+		assert( self.world )
 		self.location = location
 		location:AddAgent( self )
 	end
@@ -218,6 +206,18 @@ end
 function Agent:Verbs()
 	return ipairs( self.verbs or table.empty )
 end
+
+function Agent:CancelInvalidVerbs()
+	if self.verbs then
+		for i = #self.verbs, 1, -1 do
+			local verb = self.verbs[i]
+			if not verb:CanInteract() then
+				verb:Cancel()
+			end
+		end
+	end
+end
+
 
 function Agent:CreateStat( stat, value, max_value )
 	assert( self:GetAspect( stat ) == nil )
@@ -282,7 +282,6 @@ function Agent:SetFocus( focus )
 	end
 
 	self.focus = focus
-	self.verb_time = nil
 
 	if focus then
 		local GAIN_FOCUS =
@@ -296,6 +295,10 @@ function Agent:SetFocus( focus )
 			focus:OnGainFocus( self )
 		end
 	end
+
+	-- Focus probably changes verb eligibility.
+	self:CancelInvalidVerbs()
+	self.verb_time = nil
 end
 
 function Agent:GetFocus()

@@ -1,4 +1,25 @@
+
 local DebugUtil = class( "DebugUtil" )
+
+
+function DBG( v )
+    local debug_node = DebugUtil.CreateDebugNode( v )
+    GetDbg():CreatePanel( debug_node )
+end
+
+function DBQ( k, v )
+    local env = GetDbg():GetDebugEnv()
+    return env and env[ k ] or v
+end
+
+function DBSET( k, v )
+    local env = GetDbg():GetDebugEnv()
+    if env then
+        env[ k ] = v
+    end
+end
+
+
 
 function DebugUtil.FindRegisteredClass( v, base_class )
     for i, class in ipairs( get_subclasses( base_class or DebugNode )) do

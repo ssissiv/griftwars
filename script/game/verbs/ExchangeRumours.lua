@@ -4,29 +4,28 @@ ExchangeRumours.VERB_DURATION = ONE_HOUR / 4
 
 ExchangeRumours.LESSER_MSG =
 {
-	"You shoot the fat with {2.name}, sniffing out useful pieces of info.",
-	"{1.name} hails you. You shoot the fat, sniffing out useful pieces of info.",
-	"{1.name} is here chatting up {2.name}.",
+	"You shoot the fat with {2.id}, sniffing out useful pieces of info.",
+	"{1.Id} hails you. You shoot the fat, sniffing out useful pieces of info.",
+	"{1.Id} is here chatting up {2.id}.",
 }
 ExchangeRumours.MORE_MSG =
 {
-	"You shoot the fat with {2.name}, sniffing out info. You learn a lot.",
-	"{1.name} hails you. You shoot the fat and learn a lot.",
-	"{1.name} is here chatting up {2.name}.",
+	"You shoot the fat with {2.id}, sniffing out info. You learn a lot.",
+	"{1.Id} hails you. You shoot the fat and learn a lot.",
+	"{1.Id} is here chatting up {2.id}.",
 }
 ExchangeRumours.NONE_MSG =
 {
-	"You shoot the fat with {2.name}, but there is nothing to be learned.",
-	"{1.name} hails you. You shoot the fat but nothing interesting comes up.",
-	"{1.name} is here chatting up {2.name}.",
+	"You shoot the fat with {2.id}, but there is nothing to be learned.",
+	"{1.Id} hails you. You shoot the fat but nothing interesting comes up.",
+	"{1.Id} is here chatting up {2.id}.",
 }
 
 function ExchangeRumours.CollectInteractions( actor, verbs )
 	if actor.location and actor:HasAspect( Skill.RumourMonger ) then
-		for i, obj in actor.location:Contents() do
-			if actor:GetFocus() == obj and obj:GetFocus() == actor and obj:HasAspect( Skill.RumourMonger ) then
-				table.insert( verbs, Verb.ExchangeRumours( actor, obj ))
-			end
+		local obj = actor:GetFocus()
+		if obj and obj:GetFocus() == actor and obj:HasAspect( Skill.RumourMonger ) then
+			table.insert( verbs, Verb.ExchangeRumours( actor, obj ))
 		end
 	end
 end
@@ -43,6 +42,10 @@ function ExchangeRumours:CanInteract()
 	if self.actor:GetStat( STAT.CHARISMA ) <= 0 then
 		return false, "Requires Charisma"
 	end
+	if self.actor:GetFocus() ~= self.obj then
+		return false, "Requires focus"
+	end
+
 	return true
 end
 

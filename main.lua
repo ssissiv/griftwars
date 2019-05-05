@@ -14,6 +14,7 @@ loc = require "locstring"
 Shaders = require "render/shader_defs"
 GameScreen = require "frontend/game_screen"
 Camera = require "camera"
+bit32 = require "bit"
 require "calendar"
 require "input"
 require "eventsystem"
@@ -23,6 +24,7 @@ require "game/game_constants"
 require "game/msg"
 require "game/modifiers"
 require "game/entity"
+require "game/Engram"
 require "game/location"
 require "game/location_util"
 require "game/inventory"
@@ -56,22 +58,12 @@ local debug_mgr = nil
 local myShader
 local global_lcg = lcg()
 
-function DBG( v )
-    local debug_node = DebugUtil.CreateDebugNode( v )
-    debug_mgr:CreatePanel( debug_node )
-end
-
-function DBQ( k, v )
-    local env = debug_mgr:GetDebugEnv()
-    return env and env[ k ] or v
+function GetGUI()
+    return gui
 end
 
 function GetDbg()
     return debug_mgr
-end
-
-function GetGUI()
-    return gui
 end
 
 function GetRand( seed )

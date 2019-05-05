@@ -8,9 +8,9 @@ function Engram:MakeLocalNews()
 
 end
 
-function Engram.MakeKnown( pr_flags, target )
+function Engram.MakeKnown( obj, pr_flags )
 	local engram = Engram()
 	engram.pr_flags = pr_flags
-	engrma.target = target
+	engram.obj = obj
 	return engram
 end

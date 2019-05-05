@@ -26,8 +26,10 @@ function World:UnregisterStatValue( stat )
 	table.arrayremove( self.stats, stat )
 end
 
-function World:SpawnAgent( agent )
+function World:SpawnAgent( agent, location )
 	agent:OnSpawn( self )
+	agent:MoveToLocation( location )
+
 	table.insert( self.agents, agent )
 
 	if agent:HasFlag( Agent.FLAGS.PLAYER ) then
