@@ -30,14 +30,14 @@ OPINION_STRINGS =
 {
 	[ OPINION.FEAR ] =
 	{
-		"{1.name} fears you!",
-		"You fear {1.name}!",
+		"{1.Id} fears you!",
+		"You fear {1.id}!",
 	},
 
 	[ OPINION.LIKE ] =
 	{
-		"{1.name} likes you a little more!",
-		"You like {1.name} a little more!",
+		"{1.Id} likes you a little more!",
+		"You like {1.id} a little more!",
 	}
 }
 

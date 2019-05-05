@@ -66,7 +66,7 @@ function GameScreen:RenderScreen( gui )
     for i, verb in puppet:Verbs() do
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
     	ui.SameLine( 0, 10 )
-    	ui.Text( loc.format( "{1} ({2#percent})", tostring(verb), verb:GetActingProgress() ))
+    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc(), verb:GetActingProgress() ))
 
     	if verb:CanCancel() then
     		ui.SameLine( 0, 10 )
@@ -81,6 +81,8 @@ function GameScreen:RenderScreen( gui )
     -- Render the things at the player's location.
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
 
+    self:RenderPotentialVerbs( ui, puppet )
+
     self:RenderBackground( ui, puppet )
 
     ui.End()
@@ -90,8 +92,7 @@ function GameScreen:RenderScreen( gui )
 	ui.SetNextWindowPos( 0, love.graphics.getHeight() * 0.75 )
 
     ui.Begin( "OUTPUT", true, flags )
-    self:RenderSenses( ui, puppet )
-    self:RenderAgentFocus( ui, puppet )
+	    self:RenderSenses( ui, puppet )
 	ui.SetScrollHere()
     ui.End()
 
@@ -154,7 +155,9 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 			if agent:GetFocus() == obj then
 				ui.SameLine( 0, 10 )
-				ui.Text( "(Focus)" )
+				if ui.Text( "(Focus)" ) then
+					agent:SetFocus( nil )
+				end
 			end
 		end
 		if DEV and Input.IsControl() and ui.IsItemClicked() then
@@ -165,12 +168,44 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 		ui.PopID()
 	end
 	ui.Unindent( 20 )
+end
 
-	if agent then
-		ui.Indent( 20 )
-		self:RenderLocationInteractions( ui, agent )
-		ui.Unindent( 20 )
+function GameScreen:RenderPotentialVerbs( ui, agent )
+	ui.Indent( 20 )
+
+	local focus = agent:GetFocus()
+	if focus ~= nil then
+		if ui.Button( "0] Release Focus" ) then
+			agent:SetFocus()
+		end
 	end
+
+	for i, verb in agent:PotentialVerbs() do
+		local ok, details = verb:CanInteract()
+		local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
+
+		if not ok or agent:IsBusy() then
+			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+		else
+			if verb.COLOUR then
+				ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
+			else
+				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+			end
+
+			if ui.Selectable( txt ) then
+				verb:BeginActing()
+			end
+
+			ui.PopStyleColor()
+		end
+
+		if ui.IsItemHovered() and details then
+			ui.SetTooltip( details )
+		end
+	end
+
+	ui.Unindent( 20 )
 end
 
 function GameScreen:RenderBackground( ui, agent )
@@ -202,64 +237,8 @@ function GameScreen:RenderBackground( ui, agent )
 	end
 end
 
-function GameScreen:RenderLocationInteractions( ui, agent )
-	for i, verb in agent:PotentialVerbs() do
-		if verb.obj == nil or verb.obj ~= agent:GetFocus() then
-			local ok, details = verb:CanInteract( agent, nil )
-			if verb.COLOUR then
-				ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
-			else
-				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
-			end
-
-			local desc = verb:GetRoomDesc()
-			if agent:IsBusy() then
-				ui.TextColored( 0.5, 0.5, 0.5, 1, desc )
-			elseif ui.Selectable( desc ) then
-				verb:BeginActing( agent )
-			end
-			ui.PopStyleColor()
-		end
-	end
-end
-
 function GameScreen:GetDebugEnv( env )
 	env.player = self.world:GetPlayer()
-end
-
-function GameScreen:RenderAgentFocus( ui, agent )
-	local focus = agent:GetFocus()
-	if focus == nil then
-		return
-	end
-
-	local i = 0
-	for _, verb in agent:PotentialVerbs() do
-		if verb.obj == focus then
-			i = i + 1
-			if i > 1 then
-				ui.SameLine( 0, 5 )
-			end
-			local ok, details = verb:CanInteract( agent, focus )
-			if not ok then
-				ui.TextColored( 0.5, 0.5, 0.5, 1, verb:GetDesc() )
-			else
-				local txt = loc.format( "{1} [{2}]", verb:GetDesc( focus ), verb:GetDC() )
-				if ui.Button( txt ) then
-					verb:BeginActing( agent, agent:GetFocus() )
-				end
-			end
-
-			if ui.IsItemHovered() and details then
-				ui.SetTooltip( details )
-			end
-		end
-	end
-
-	ui.SameLine( 0, 5 )
-	if ui.Button( "Release focus" ) then
-		agent:SetFocus()
-	end
 end
 
 function GameScreen:RenderSenses( ui, agent )

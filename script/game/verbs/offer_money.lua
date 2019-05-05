@@ -2,9 +2,9 @@
 local OfferMoney = class( "Verb.OfferMoney", Verb )
 OfferMoney.STRINGS =
 {
-	"You give {2.name} {3#money}.",
-	"{1.name} gives you {3#money}. Wonderful!",
-	"{1.name} gives {2.name} some money.",
+	"You give {2.id} {3#money}.",
+	"{1.Id} gives you {3#money}. Wonderful!",
+	"{1.Id} gives {2.id} some money.",
 }
 
 

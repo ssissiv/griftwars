@@ -4,6 +4,10 @@ function Location:init()
 	Entity.init( self )
 end
 
+function Location:LocTable()
+	return self
+end
+
 function Location:SetImage( image )
 	self.image = image
 end

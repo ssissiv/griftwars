@@ -2,15 +2,15 @@
 local Intimidate = class( "Verb.Intimidate", Verb )
 Intimidate.SUCCESS_MSG =
 {
-	"You push {2.name} around and enjoy it.",
-	"{1.name} pushes you around roughly. Jerk.",
-	"{1.name} pushes {2.name} around.",
+	"You push {2.id} around and enjoy it.",
+	"{1.Id} pushes you around roughly. Jerk.",
+	"{1.Id} pushes {2.id} around.",
 }
 Intimidate.FAIL_MSG =
 {
-	"You try to intimidate {2.name} around but {2.heshe} knocks you senseless.",
-	"{1.name} tries to intimidate you around but you knock them flat.",
-	"{1.name} tries to intimidate {2.name} around but ends up being knocked around.",
+	"You try to intimidate {2.id} around but {2.heshe} knocks you senseless.",
+	"{1.Id} tries to intimidate you around but you knock them flat.",
+	"{1.Id} tries to intimidate {2.id} around but ends up being knocked around.",
 }
 
 function Intimidate.CollectInteractions( actor, verbs )
@@ -29,9 +29,9 @@ function Intimidate:GetDesc()
 end
 
 function Intimidate:CalculateDC( mods )
-	mods:AddModifier( self.obj:GetPrestige(), loc.format( "{1.name}'s prestige" ))
+	mods:AddModifier( self.obj:GetPrestige(), loc.format( "{1.id}'s prestige", self.obj:LocTable( self.actor )))
 
-	mods:AddModifier( -self.actor:GetPrestige(), loc.format( "{1.name}'s prestige" ))
+	mods:AddModifier( -self.actor:GetPrestige(), loc.format( "{1.id}'s prestige", self.obj:LocTable( self.actor )))
 
 	return 10 + mods:GetValue()
 end

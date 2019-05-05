@@ -5,7 +5,7 @@ function Msg:Action( msgs, actor, target, ... )
 	for i, obj in location:Contents() do
 		if obj == actor and msgs[1] then
 			-- This message goes to the actor 
-			local txt = loc.format( msgs[1], actor:LocTable( actor ), target:LocTable( actor ), ... )
+			local txt = loc.format( msgs[1], actor:LocTable( actor ), target and target:LocTable( actor ), ... )
 			obj:Sense( txt )
 
 		elseif obj == target and msgs[2] then
@@ -15,7 +15,7 @@ function Msg:Action( msgs, actor, target, ... )
 
 		elseif msgs[3] then
 			-- This message goes to everybody else
-			local txt = loc.format( msgs[3], actor:LocTable( obj ), target:LocTable( obj ), ... )
+			local txt = loc.format( msgs[3], actor:LocTable( obj ), target and target:LocTable( obj ), ... )
 			obj:Sense( txt )
 		end
 	end
