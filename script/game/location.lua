@@ -8,6 +8,16 @@ function Location:LocTable()
 	return self
 end
 
+function Location:SetCoordinate( x, y, z )
+	self.x = x
+	self.y = y
+	self.z = z
+end
+
+function Location:GetCoordinate()
+	return self.x, self.y, self.z
+end
+
 function Location:SetImage( image )
 	self.image = image
 end

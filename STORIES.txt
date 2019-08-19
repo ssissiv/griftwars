@@ -1,0 +1,54 @@
+Fren is the 16-year old only daughter of laborer Jeb.
+She met a boy named Terrence who is affiliated with the Rise, and has designs on joining herself.
+To make ends meet, she collects old mecha parts at the Ancient Junkyard unbeknownst to her father,
+and sells them to a shadowy stranger she meets at the Abandoned Trade Post on Slime Corner for coin.
+She's rather tech-savvy, and sometimes cobbles together devices to keep for herself, like her Mech-Eye Flasher
+and her Spark Knife.
+
+Traits: Tinkerer, Young, Female
+
+Cast(Father)
+	IsFamily=true
+	Is( Father, Laborer )
+
+Cast(Shadowy)
+	Shadowy:Wants( MechParts )
+
+Boyfriend: lvl 1 Rise, male, young, likes
+
+Schedule:
+	Dawn: meet w/ shadowy merch, meet w/ Boyfriend
+	Morn: home, scouring ancient junkyard
+	Eve: scouring ancient junkyard, emporium,
+	Night: home
+	Twilight: meet w/ Boyfriend, home
+
+
+Darth is a grizzled veteran of the Aeronaughts. He lost all his belongings in the Docktown Spark Fire,
+and now works as a laborer to make ends meet.
+
+Traits: Gunman, Male, Laborer
+Cast(Role, Who) : not Role.IsFamily
+
+Schedule:
+	Dawn: home
+	Morn: home, working at mill
+	Eve: working at mill
+	Night: working at mill, patron at tavern
+	Twilight: home
+
+
+Gerrin is a middle-aged lumin worker afflicted with lumin veins, a degenerate condition. He has 2 years to live.
+
+Traits: Male, LuminVeins, Laborer, Wants( MedicineIII )
+
+Cast(Doctor)
+	Doctor:HasTrait( Trait.Medical )
+
+Schedule:
+	Dawn: home
+	Morn: home (sick), working at mill
+	Eve: home (sick), working at mill
+	Night: meet w/ Doctor, home
+	Twilight: home (sick)
+
