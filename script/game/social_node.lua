@@ -1,9 +1,11 @@
+
 local SocialNode = class( "SocialNode" )
 
 function SocialNode:init( agent )
 	assert( is_instance( agent, Agent ))
 	self.agent = agent
 	self.relationships = {} -- Map of Agent -> {}
+	self.dialog = Personality.MakeSimpleton( agent )
 end
 
 function SocialNode:CreateRelationship( other )
@@ -50,5 +52,10 @@ end
 function SocialNode:IsUnfriendly( other )
 	return self:GetOpinion( other ) == OPINION.DISLIKE
 end
+
+function SocialNode:OnUpdate( dt )
+
+end
+
 
 

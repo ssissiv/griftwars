@@ -1,11 +1,12 @@
 TODO
 ====
 
-STATS:
-	Add max_value to stats.
-	Have core stats regen to max_stat over time.
+STAT DRAIN?
+	- Or relationship drain?
+	- Or both?
 
-ADD BASIC FOOD / HUNGER cycle
+Relationship model.
+
 
 INFO MODEL:
 	Add verbs for utilizing certain info.

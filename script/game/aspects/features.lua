@@ -9,7 +9,7 @@ end
 
 local Portal = class( "Feature.Portal", Feature )
 
-function Portal:init( dest_location )
+function Portal:init( dest_location, tag )
 	assert( is_instance( dest_location, Location ))
 	self.dest_location = dest_location
 end

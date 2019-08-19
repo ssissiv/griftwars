@@ -17,6 +17,10 @@ function WorldGen:GeneratePlayer( world )
 	start:SetImage( assets.LOCATION_BGS.HOME )
 	world:SpawnLocation( start )
 
+	-- local e = WorldMap.CondensedGrid( 5, 5 )
+	-- e:RandomRoom():Connect( start )
+	-- world:SpawnEnvironment( e )
+
 	local hood = Location()
 	hood:SetDetails( "The Junkyard Strip", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	hood:Connect( start )

@@ -48,6 +48,10 @@ require "game/aspects/traits"
 require "game/aspects/skills"
 require "game/aspects/features"
 
+require "game/dialog_nodes/DialogNode"
+require "game/dialog_nodes/DialogEdge"
+require "game/dialog_nodes/Personality"
+
 -----------------------------------------------------------
 
 require "imgui"
