@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:GetAspect(Aspect.Cowardly))",
-			"print(t:GetAspect(Trait.Cowardly))",
-			"print(t:GetAspect(Trait.Cowardly)._classname)",
 			"print(t)",
 			"print(player)",
 			"print(puppet)",
@@ -33,7 +30,10 @@ return {
 			"print(actor:CheckPrivacy( obj, PRIVACY.LOOKS ))",
 			"print( player.verbs[1] )",
 			"print( player.verbs[1]:CanInteract())",
-			"l"
+			"l",
+			"DBG(player)",
+			"print( loc.format( \"{1#listing}\", { \"what\", \"foo\" } ))",
+			"print( loc.format( \"{1#listing}\", { DIE_FACE.DIPLOMACY } ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

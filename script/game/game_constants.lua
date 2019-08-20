@@ -71,6 +71,15 @@ STAT = MakeEnum
 	"PATIENCE",
 }
 
+DIE_FACE = MakeEnum
+{
+	"NULL",
+	"DIPLOMACY",
+	"DIPLOMACY_2X",
+	"HOSTILITY",
+	"HOSTILITY_2X",
+}
+
 INFO = MakeEnum
 {
 	"NULL",

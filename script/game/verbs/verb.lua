@@ -45,7 +45,7 @@ function Verb:CheckDC()
 	return math.random( 1, 20 ) >= self:GetDC()
 end
 
-function Verb:CanInteract( actor, obj )
+function Verb:CanInteract()
 	return true
 end
 

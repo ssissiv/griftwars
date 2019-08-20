@@ -33,6 +33,7 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Skill.Socialize() )
 	player:GainAspect( Skill.RumourMonger() )
 	player:GainAspect( Trait.Memory() )
+	player:GainAspect( Trait.Player() ):AddDefaultDice()
 	player:GetInventory():DeltaMoney( 1 )
 	world:SpawnAgent( player, start )
 

@@ -1,11 +1,20 @@
 TODO
 ====
 
+CMD LINE
+	- just mud it up.  Fuck the UI.
+
+DIALOG TREE w/ universal dice-based action system -- UDAS
+	- roll dice, get tokens.
+	- show only branches which the given tokens provide for.
+
+Relationship model.
+
+
 STAT DRAIN?
 	- Or relationship drain?
 	- Or both?
 
-Relationship model.
 
 
 INFO MODEL:

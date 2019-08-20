@@ -32,6 +32,25 @@ function GameScreen:RenderInventory( puppet )
 
     ui.Begin( "Inventory", false, flags )
 
+    local player = puppet:GetAspect( Trait.Player )
+	if player and ui.TreeNodeEx( "Dice", "DefaultOpen" ) then
+		for i, die in ipairs( player:GetDice() ) do
+			ui.PushID( tostring(die) )
+			if ui.Button( die:GetName() ) then
+				die:Roll()
+			end
+			if die:GetRoll() then
+				ui.SameLine( 0, 10 )
+				ui.TextColored( 0, 1, 0, 1, tostring( die:GetRoll() ))
+			end
+			if ui.IsItemHovered() then
+				ui.SetTooltip( table.concat( die.faces, "\n" ))
+			end
+			ui.PopID()
+		end
+		ui.TreePop()
+	end
+
     local rumours = puppet:GetAspect( Skill.RumourMonger )
     if rumours and ui.TreeNodeEx( "Knowledge", "DefaultOpen" ) then
     	for e_info, count in rumours:Info() do
@@ -42,6 +61,26 @@ function GameScreen:RenderInventory( puppet )
 
 		ui.TreePop()
 	end
+
+    ui.End()
+end
+
+function GameScreen:RenderObject( viewer, obj )
+	local ui = imgui
+    local flags = { "AlwaysAutoResize", "NoScrollBar", "NoClose"}
+
+	ui.SetNextWindowSize( 400,300 )
+
+	local name = loc.format( "{1.Id}", obj:LocTable( viewer ))
+    ui.Begin( name, false, flags )
+
+    if viewer:GetLocation() == obj:GetLocation() then
+	    ui.Text( obj:GetShortDesc( viewer ))
+	else
+		ui.Text( loc.format( "{1.Id} is not with you.", obj:LocTable( viewer )))
+	end
+
+	-- self:RenderPotentialVerbs( ui, viewer, obj )
 
     ui.End()
 end
@@ -100,6 +139,9 @@ function GameScreen:RenderScreen( gui )
 		self:RenderInventory( puppet )
 	end
 
+	if puppet:GetFocus() then
+		self:RenderObject( puppet, puppet:GetFocus() )
+	end
 end
 
 function GameScreen:RenderAgentDetails( ui, puppet )
@@ -170,38 +212,40 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 	ui.Unindent( 20 )
 end
 
-function GameScreen:RenderPotentialVerbs( ui, agent )
+function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 	ui.Indent( 20 )
 
 	local focus = agent:GetFocus()
-	if focus ~= nil then
+	if focus ~= nil and focus == obj then
 		if ui.Button( "0] Release Focus" ) then
 			agent:SetFocus()
 		end
 	end
 
 	for i, verb in agent:PotentialVerbs() do
-		local ok, details = verb:CanInteract()
-		local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
+		if verb.obj == obj then
+			local ok, details = verb:CanInteract()
+			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 
-		if not ok or agent:IsBusy() then
-			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-		else
-			if verb.COLOUR then
-				ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
+			if not ok or agent:IsBusy() then
+				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
 			else
-				ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+				if verb.COLOUR then
+					ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
+				else
+					ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+				end
+
+				if ui.Selectable( txt ) then
+					verb:BeginActing()
+				end
+
+				ui.PopStyleColor()
 			end
 
-			if ui.Selectable( txt ) then
-				verb:BeginActing()
+			if ui.IsItemHovered() and details then
+				ui.SetTooltip( details )
 			end
-
-			ui.PopStyleColor()
-		end
-
-		if ui.IsItemHovered() and details then
-			ui.SetTooltip( details )
 		end
 	end
 
@@ -259,6 +303,8 @@ end
 function GameScreen:KeyPressed( key )
 	if key == "i" then
 		self.show_inventory = not self.show_inventory
+	elseif key == "f" then
+		self.world:GetPuppet():SetFocus()
 	end
 
 	return false
