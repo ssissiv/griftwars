@@ -209,6 +209,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 		ui.PopID()
 	end
+
 	ui.Unindent( 20 )
 end
 
@@ -223,7 +224,7 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 	end
 
 	for i, verb in agent:PotentialVerbs() do
-		if verb.obj == obj then
+		if verb.obj == obj or is_instance( verb, Verb.Travel) then
 			local ok, details = verb:CanInteract()
 			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 

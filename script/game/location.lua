@@ -2,6 +2,7 @@ local Location = class( "Location", Entity )
 
 function Location:init()
 	Entity.init( self )
+	self.exits = {}
 end
 
 function Location:LocTable()
@@ -46,12 +47,37 @@ function Location:RemoveAgent( agent )
 	table.remove( self.contents, idx )
 end
 
-function Location:Connect( other )
-	assert( is_instance( other, Location ))
-	other:GainAspect( Feature.Portal( self ))
-	self:GainAspect( Feature.Portal( other ))
+function Location:IsConnected( other )
+	for i, exit in ipairs( self.exits ) do
+		if exit:GetDest( self ) == other then
+			return true, exit
+		end
+	end
+
+	return false
 end
 
+function Location:Connect( other )
+	assert( is_instance( other, Location ))
+	assert( not self:IsConnected( other ))
+	assert( not other:IsConnected( self ))
+
+	local exit = Exit()
+	exit:Connect( self, other )
+
+	table.insert( self.exits, exit )
+	table.insert( other.exits, exit )
+
+	if not self:IsSpawned() and other:IsSpawned() then
+		other.world:SpawnLocation( self )
+	elseif self:IsSpawned() and not other:IsSpawned() then
+		self.world:SpawnLocation( other )
+	end
+end
+
+function Location:Exits()
+	return ipairs( self.exits )
+end
 
 function Location:Contents()
 	return ipairs( self.contents )

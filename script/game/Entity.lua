@@ -3,6 +3,10 @@ local Entity = class( "Entity" )
 function Entity:init()
 end
 
+function Entity:IsSpawned()
+	return self.world ~= nil
+end
+
 function Entity:OnSpawn( world )
 	assert( self.world == nil )
 	self.world = world

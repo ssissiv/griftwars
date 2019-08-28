@@ -1,4 +1,4 @@
-local Line = class( "WorldMap.Line" )
+local Line = class( "WorldGen.Line" )
 
 function Line:init( len )
 	self.rooms = {}
@@ -13,18 +13,12 @@ function Line:init( len )
 	end
 end
 
+function Line:SetDetails( title, desc )
+	for i, room in ipairs( self.rooms ) do
+		room:SetDetails( loc.format( "{1} [{2}]", title, i ), desc )
+	end
+end
+
 function Line:RoomAt( i )
 	return self.rooms[ i ]
-end
-
-function Line:MergeAt( i, room )
-	return self.rooms[ i ]:Merge( room )
-end
-
-function Line:Begin()
-	return self.rooms[ 1 ]
-end
-
-function Line:End()
-	return self.rooms[ #self.rooms ]
 end

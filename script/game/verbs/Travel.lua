@@ -26,10 +26,8 @@ Travel.ENTER_STRINGS =
 
 function Travel.CollectInteractions( actor, verbs )
 	if actor.location then
-		for i, aspect in actor.location:Aspects() do
-			if is_instance( aspect, Feature.Portal ) then
-				table.insert( verbs, Verb.Travel( actor, aspect.dest_location ))
-			end
+		for i, exit in actor.location:Exits() do
+			table.insert( verbs, Verb.Travel( actor, exit:GetDest( actor.location ) ))
 		end
 	end
 end

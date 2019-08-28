@@ -166,8 +166,8 @@ end
 function Agent:MoveToLocation( location )
 	if self.location then
 		self.location:RemoveAgent( self )
-		self.location = nil
 		self:SetFocus( nil )
+		self.location = nil
 	end
 
 	if location then
