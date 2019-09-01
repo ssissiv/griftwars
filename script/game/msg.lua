@@ -21,23 +21,23 @@ function Msg:Action( msgs, actor, target, ... )
 	end
 end
 
-function Msg:Speak( msgs, actor, target, ... )
+function Msg:Speak( msg, actor, target, ... )
 	local location = actor:GetLocation()
 	for i, obj in location:Contents() do
-		if obj == actor and msgs[1] then
+		if obj == actor then
 			-- This message goes to the actor 
-			local txt = loc.format( "You say, '{1}'", msgs[1] )
+			local txt = loc.format( "You say, '{1}'", msg )
 			txt = loc.format( txt, actor, target, ... )
 			actor:Sense( txt )
 
-		elseif obj == target and msgs[2] then
-			-- This message goes to the target 
-			local txt = loc.format( "{1.Id} says, '{2}'", actor:LocTable( target ), msgs[2] )
+		elseif obj == target then
+			-- This message is directed to the target 
+			local txt = loc.format( "{1.Id} says to you, '{2}'", actor:LocTable( target ), msg )
 			txt = loc.format( txt, actor, target, ... )
 			target:Sense( txt )
 
-		elseif msgs[3] then
-			local txt = loc.format( "{1.Id} says, '{2}'", actor:LocTable( obj ), msgs[3] )
+		else
+			local txt = loc.format( "{1.Id} says, '{2}'", actor:LocTable( obj ), msg )
 			txt = loc.format( txt, actor, target, ... )
 			obj:Sense( txt )
 		end

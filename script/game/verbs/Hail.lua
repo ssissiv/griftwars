@@ -6,13 +6,6 @@ Hail.STRINGS =
 	"{1.Id} hails you.",
 	"{1.Id} hails {2.id}.",
 }
-local GREETING =
-{
-	"What do you want?",
-	"What do you want?",
-	"What do you want?",
-}
-
 
 function Hail.CollectInteractions( actor, verbs )
 	if actor.location then
@@ -40,5 +33,5 @@ end
 function Hail:Interact( actor, obj )
 	Msg:Action( self.STRINGS, actor, obj )
 	obj:SetFocus( self.actor )
-	Msg:Speak( GREETING, obj, actor )
+	Msg:Speak( "What do you want?", obj, actor )
 end

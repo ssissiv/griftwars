@@ -80,6 +80,11 @@ DIE_FACE = MakeEnum
 	"HOSTILITY_2X",
 }
 
+DLG_REQ = MakeEnum
+{
+	"FACE_COUNT"
+}
+
 INFO = MakeEnum
 {
 	"NULL",

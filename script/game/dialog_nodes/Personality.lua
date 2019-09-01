@@ -20,13 +20,7 @@ local BASIC_EDGE =
 local Personality = class( "Personality" )
 
 function Personality.MakeSimpleton( agent )
-	local root = DialogNode( FIRST_CONTACT, agent )
-	local chat = DialogNode( CHAT, agent )
-
-	local edge = DialogEdge( BASIC_EDGE, agent )
-	root:AddDirectionalEdge( chat, edge )
-
-
+	local root = DialogNode.FirstContact( agent )
 	return root
 end
 

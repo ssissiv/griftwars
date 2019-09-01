@@ -1,5 +1,5 @@
 local DebugDialogNode = class( "DebugDialogNode", DebugTable )
-DebugDialogNode.REGISTERED_CLASS = DialogBase
+DebugDialogNode.REGISTERED_CLASS = DialogNode
 
 function DebugDialogNode:init( node )
 	DebugTable.init( self, node )

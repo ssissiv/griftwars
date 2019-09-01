@@ -81,6 +81,9 @@ function GameScreen:RenderObject( viewer, obj )
 	end
 
 	-- self:RenderPotentialVerbs( ui, viewer, obj )
+	if obj.RenderObject then
+		obj:RenderObject( ui, viewer )
+	end
 
     ui.End()
 end

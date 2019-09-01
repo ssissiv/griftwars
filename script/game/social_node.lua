@@ -5,7 +5,19 @@ function SocialNode:init( agent )
 	assert( is_instance( agent, Agent ))
 	self.agent = agent
 	self.relationships = {} -- Map of Agent -> {}
-	self.dialog = Personality.MakeSimpleton( agent )
+end
+
+function SocialNode:BeginDialog()
+	if self.dialog == nil then
+		self.dialog = Personality.MakeSimpleton( self.agent )
+	end
+	self.dialog:ActivateNode()
+end
+
+function SocialNode:EndDialog()
+	if self.dialog then
+		self.dialog:DeactivateNode()
+	end
 end
 
 function SocialNode:CreateRelationship( other )
@@ -54,8 +66,11 @@ function SocialNode:IsUnfriendly( other )
 end
 
 function SocialNode:OnUpdate( dt )
-
+	error()
 end
 
+function SocialNode:RenderObject( ui, viewer )
+	self.dialog:RenderObject( ui, viewer )
+end
 
 

@@ -276,9 +276,11 @@ function Agent:SetFocus( focus )
 		}
 		Msg:Action( LOSE_FOCUS, self, self.focus )
 
-		if self.focus.OnLoseFocus then
-			self.focus:OnLoseFocus( self )
+		if self.focus.OnLostFocus then
+			self.focus:OnLostFocus( self )
 		end
+
+		self.social_node:EndDialog()
 	end
 
 	self.focus = focus
@@ -291,8 +293,12 @@ function Agent:SetFocus( focus )
 		}
 		Msg:Action( GAIN_FOCUS, self, focus )
 
-		if focus.OnGainFocus then
-			focus:OnGainFocus( self )
+		if focus.OnReceivedFocus then
+			focus:OnReceivedFocus( self )
+		end
+
+		if self:IsPlayer() then
+			focus.social_node:BeginDialog()
 		end
 	end
 
@@ -305,8 +311,13 @@ function Agent:GetFocus()
 	return self.focus
 end
 
-function Agent:OnGainFocus( other )
-	local noticed = false
+function Agent:OnLostFocus( other )
+	-- other stop focussing on us, end any existing dialog
+	self.social_node:EndDialog()
+end
+
+function Agent:OnReceivedFocus( other )
+	local noticed = true
 	if noticed then
 		if self.focus ~= other then
 			local GREETING =
@@ -333,6 +344,10 @@ end
 
 function Agent:DeltaOpinion( other, op, delta )
 	self.social_node:DeltaOpinion( other, op, delta )
+end
+
+function Agent:RenderObject( ui, viewer )
+	self.social_node:RenderObject( ui, viewer )
 end
 
 function Agent:__tostring()

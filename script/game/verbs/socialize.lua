@@ -1,9 +1,5 @@
 
 local Socialize = class( "Verb.Socialize", Verb )
-Socialize.MSG =
-{
-	"Hey there. How's it going?",
-}
 
 function Socialize.CollectInteractions( actor, verbs )
 	if actor.location then
@@ -30,7 +26,7 @@ end
 
 function Socialize:Interact( actor, obj )
 	if self:CheckDC() then
-		Msg:Speak( self.MSG, actor, obj )
+		Msg:Speak( "Hey there, how's it going?", actor, obj )
 		if not actor:CheckPrivacy( obj, PRIVACY.ID ) then
 			actor:GetMemory():AddEngram( Engram.MakeKnown( obj, PRIVACY.ID ))
 			obj:RegenerateLocTable( actor )
@@ -39,7 +35,7 @@ function Socialize:Interact( actor, obj )
 			obj:DeltaOpinion( actor, OPINION.LIKE, 1 )
 		end
 	else
-		Msg:Speak( self.MSG, actor, obj )
+		Msg:Speak( "Hey there, how's it going?", actor, obj )
 		Msg:Echo( actor, "{1.Id} doesn't seem to care much for your attempt at interaction.", obj:LocTable( actor ))
 	end
 end
