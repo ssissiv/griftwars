@@ -22,7 +22,6 @@ function WorldGen:GeneratePlayer( world )
 	hood:RoomAt( 1 ):Connect( start )
 
 	local player = Agent()
-	player:SetFlags( Agent.FLAGS.PLAYER )
 	player:SetDetails( "Han", nil, GENDER.MALE )
 	player:GainAspect( Skill.Scrounge() )
 	player:GainAspect( Skill.Socialize() )

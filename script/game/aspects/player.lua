@@ -8,17 +8,29 @@ function Player:init()
 end
 
 function Player:AddDie( die )
+	assert( is_instance( die, ActionDie ))
 	table.insert( self.dice, die )
 end
 
 function Player:AddDefaultDice()
-	self:AddDie( ActionDie.MakeHostileDie() )
-	self:AddDie( ActionDie.MakeDiplomacyDie() )
-	self:AddDie( ActionDie.MakeDiplomacyDie() )
+	self:AddDie( ActionDie.MakeHostileDie( self.owner ) )
+	self:AddDie( ActionDie.MakeDiplomacyDie( self.owner ) )
+	self:AddDie( ActionDie.MakeDiplomacyDie( self.owner ) )
 end
 
 function Player:GetDice()
 	return self.dice
+end
+
+function Player:CollectDiceWithFace( face, t )
+	t = t or {}
+	for i, die in ipairs( self.dice ) do
+		if die:HasFace( face ) then
+			table.insert_unique( t, die )
+		end
+	end
+
+	return t
 end
 
 function Player:HasDieWithFace( face )

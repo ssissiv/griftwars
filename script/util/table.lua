@@ -81,6 +81,15 @@ function table.arrayfind(t, v)
     return nil
 end
 
+function table.contains(t, val)
+    for k, v in pairs(t) do
+        if v == val then
+            return true
+        end
+    end
+    return false
+end
+
 function table.find(t, v)
     for k, tv in pairs(t) do
         if tv == v then

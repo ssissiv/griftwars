@@ -10,3 +10,12 @@ function Calendar.FormatTime( datetime )
 	local am_pm = hours < 12 and "am" or "pm"
 	return loc.format( "Day: {1} ({2} {3})", days, hour, am_pm )
 end
+
+
+function Calendar.FormatWallTime( datetime )
+	datetime = datetime / WALL_TO_GAME_TIME
+	local minutes = math.floor( datetime / 60 )
+	local seconds = datetime % 60
+	return loc.format( "{1} minutes, {2%.0f} seconds", minutes, seconds )
+end
+

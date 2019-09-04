@@ -1,4 +1,6 @@
 
+local UPDATE_RATE = 0.1 -- period for dialog update ()
+
 local SocialNode = class( "SocialNode" )
 
 function SocialNode:init( agent )
@@ -8,16 +10,32 @@ function SocialNode:init( agent )
 end
 
 function SocialNode:BeginDialog()
-	if self.dialog == nil then
-		self.dialog = Personality.MakeSimpleton( self.agent )
+	if self.dialog_root == nil then
+		self.dialog_root = Personality.MakeSimpleton( self.agent )
+		self.dialog_root:ActivateNode()
 	end
-	self.dialog:ActivateNode()
+
+	assert( self.update_ev == nil )
+	self.update_ev = self.agent.world:SchedulePeriodicFunction( UPDATE_RATE * WALL_TO_GAME_TIME, self.UpdateDialog, self )
 end
 
 function SocialNode:EndDialog()
-	if self.dialog then
-		self.dialog:DeactivateNode()
+	if self.update_ev then
+		self.agent.world:UnscheduleEvent( self.update_ev )
+		self.update_ev = nil
 	end
+end
+
+function SocialNode:AddActivatedNode( node )
+	if self.active_dialog == nil then
+		self.active_dialog = {}
+	end
+	assert( not table.contains( self.active_dialog, node ))
+	table.insert( self.active_dialog, node )
+end
+
+function SocialNode:RemoveActivatedNode( node )
+	table.arrayremove( self.active_dialog, node )
 end
 
 function SocialNode:CreateRelationship( other )
@@ -65,12 +83,16 @@ function SocialNode:IsUnfriendly( other )
 	return self:GetOpinion( other ) == OPINION.DISLIKE
 end
 
-function SocialNode:OnUpdate( dt )
-	error()
+function SocialNode:UpdateDialog()
+	for i, node in ipairs( self.active_dialog ) do
+		node:UpdateDialog( UPDATE_RATE )
+	end
 end
 
 function SocialNode:RenderObject( ui, viewer )
-	self.dialog:RenderObject( ui, viewer )
+	for i, node in ipairs( self.active_dialog or table.empty ) do
+		node:RenderObject( ui, viewer )
+	end
 end
 
 

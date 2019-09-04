@@ -32,7 +32,7 @@ function World:SpawnAgent( agent, location )
 
 	table.insert( self.agents, agent )
 
-	if agent:HasFlag( Agent.FLAGS.PLAYER ) then
+	if agent:IsPlayer() then
 		assert( self.player == nil )
 		self.player = agent
 		self.puppet = agent
@@ -54,10 +54,6 @@ end
 function World:SetPuppet( agent )
 	assert( is_instance( agent, Agent ))
 	self.puppet = agent
-end
-
-function World:GetDateTime()
-	return self.datetime
 end
 
 function World:OnUpdateWorld( dt, world_dt )

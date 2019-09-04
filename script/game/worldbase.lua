@@ -47,6 +47,7 @@ end
 
 function WorldBase:ScheduleEvent( delta, event_name, ... )
 	assert( delta >= 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
+	assert( type(event_name) == "string" )
 	local ev = { when = self.datetime + delta, event_name, ... }
 	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
 	return ev
@@ -66,8 +67,18 @@ function WorldBase:SchedulePeriodicEvent( delta, event_name, ... )
 	return ev
 end
 
+function WorldBase:SchedulePeriodicFunction( delta, fn, ... )
+	local ev = self:ScheduleFunction( delta, fn, ... )
+	ev.period = delta
+	return ev
+end
+
 function WorldBase:UnscheduleEvent( ev )
 	ev.cancel = true
+end
+
+function WorldBase:GetEventTimeLeft( ev )
+	return math.max( 0, ev.when - self.datetime )
 end
 
 function WorldBase:CheckScheduledEvents()
@@ -123,6 +134,10 @@ end
 
 function WorldBase:GetWorldSpeed()
 	return self.world_speed
+end
+
+function WorldBase:GetDateTime()
+	return self.datetime
 end
 
 function WorldBase:UpdateWorld( dt )

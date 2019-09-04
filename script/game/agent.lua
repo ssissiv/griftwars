@@ -40,7 +40,11 @@ function Agent:GetDesc()
 end
 
 function Agent:IsPlayer()
-	return self:HasFlag( FLAGS.PLAYER )
+	return self:HasAspect( Trait.Player )
+end
+
+function Agent:GetPlayer()
+	return self:GetAspect( Trait.Player )
 end
 
 function Agent:IsPuppet()
@@ -268,22 +272,23 @@ function Agent:Senses()
 end
 
 function Agent:SetFocus( focus )
-	if self.focus then
+	local prev_focus = self.focus
+	self.focus = focus
+
+	if prev_focus then
 		local LOSE_FOCUS =
 		{
 			"You turn your attention away from {2.id}",
 			"{1.Id} turns away from you.",
 		}
-		Msg:Action( LOSE_FOCUS, self, self.focus )
+		Msg:Action( LOSE_FOCUS, self, prev_focus )
 
-		if self.focus.OnLostFocus then
-			self.focus:OnLostFocus( self )
+		if prev_focus.OnLostFocus then
+			prev_focus:OnLostFocus( self )
 		end
 
 		self.social_node:EndDialog()
 	end
-
-	self.focus = focus
 
 	if focus then
 		local GAIN_FOCUS =
@@ -314,6 +319,10 @@ end
 function Agent:OnLostFocus( other )
 	-- other stop focussing on us, end any existing dialog
 	self.social_node:EndDialog()
+
+	if self.focus == other then
+		self:SetFocus( nil )
+	end
 end
 
 function Agent:OnReceivedFocus( other )

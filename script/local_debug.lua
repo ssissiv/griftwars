@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t)",
 			"print(player)",
 			"print(puppet)",
 			"print(agent)",
@@ -33,7 +32,8 @@ return {
 			"l",
 			"DBG(player)",
 			"print( loc.format( \"{1#listing}\", { \"what\", \"foo\" } ))",
-			"print( loc.format( \"{1#listing}\", { DIE_FACE.DIPLOMACY } ))"
+			"print( loc.format( \"{1#listing}\", { DIE_FACE.DIPLOMACY } ))",
+			"print(world:GetDateTime())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

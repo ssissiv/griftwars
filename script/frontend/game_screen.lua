@@ -32,21 +32,10 @@ function GameScreen:RenderInventory( puppet )
 
     ui.Begin( "Inventory", false, flags )
 
-    local player = puppet:GetAspect( Trait.Player )
+    local player = puppet:GetPlayer()
 	if player and ui.TreeNodeEx( "Dice", "DefaultOpen" ) then
 		for i, die in ipairs( player:GetDice() ) do
-			ui.PushID( tostring(die) )
-			if ui.Button( die:GetName() ) then
-				die:Roll()
-			end
-			if die:GetRoll() then
-				ui.SameLine( 0, 10 )
-				ui.TextColored( 0, 1, 0, 1, tostring( die:GetRoll() ))
-			end
-			if ui.IsItemHovered() then
-				ui.SetTooltip( table.concat( die.faces, "\n" ))
-			end
-			ui.PopID()
+			die:RenderObject( ui, puppet )
 		end
 		ui.TreePop()
 	end
@@ -83,6 +72,12 @@ function GameScreen:RenderObject( viewer, obj )
 	-- self:RenderPotentialVerbs( ui, viewer, obj )
 	if obj.RenderObject then
 		obj:RenderObject( ui, viewer )
+	end
+
+	if viewer:GetFocus() == obj then
+		if ui.Button( "Break Focus" ) then
+			viewer:SetFocus( nil )
+		end
 	end
 
     ui.End()
