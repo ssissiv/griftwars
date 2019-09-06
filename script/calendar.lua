@@ -14,8 +14,9 @@ end
 
 function Calendar.FormatWallTime( datetime )
 	datetime = datetime / WALL_TO_GAME_TIME
-	local minutes = math.floor( datetime / 60 )
-	local seconds = datetime % 60
-	return loc.format( "{1} minutes, {2%.0f} seconds", minutes, seconds )
+	local hours = math.floor( datetime / (60 * 60) )
+	local minutes = math.floor( datetime / 60 ) - (hours * 60)
+	local seconds = math.floor( datetime % 60 )
+	return loc.format( "{1}:{2%02d}:{3%02d}", hours, minutes, seconds )
 end
 

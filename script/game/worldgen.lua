@@ -21,6 +21,15 @@ function WorldGen:GeneratePlayer( world )
 	hood:SetDetails( "The Junkyard Strip", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	hood:RoomAt( 1 ):Connect( start )
 
+	local shop = Location()
+	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
+	shop:Connect( hood:RoomAt( 2 ))
+	
+	local shopkeep = Agent()
+	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
+	world:SpawnAgent( shopkeep, shop )
+
+
 	local player = Agent()
 	player:SetDetails( "Han", nil, GENDER.MALE )
 	player:GainAspect( Skill.Scrounge() )

@@ -57,6 +57,15 @@ function Location:IsConnected( other )
 	return false
 end
 
+local function SpawnLocation( location, world )
+	if location:IsSpawned() then
+		return false
+	else
+		world:SpawnLocation( location )
+		return true
+	end
+end
+
 function Location:Connect( other )
 	assert( is_instance( other, Location ))
 	assert( not self:IsConnected( other ))
@@ -69,14 +78,32 @@ function Location:Connect( other )
 	table.insert( other.exits, exit )
 
 	if not self:IsSpawned() and other:IsSpawned() then
-		other.world:SpawnLocation( self )
+		self:Visit( SpawnLocation, other.world )
 	elseif self:IsSpawned() and not other:IsSpawned() then
-		self.world:SpawnLocation( other )
+		other:Visit( SpawnLocation, self.world )
 	end
 end
 
 function Location:Exits()
 	return ipairs( self.exits )
+end
+
+local function VisitInternal( visited, location, fn, ... )
+	visited[ location ] = true
+	if not fn( location, ... ) then
+		return
+	end
+
+	for i, exit in ipairs( location.exits ) do
+		local dest = exit:GetDest( location )
+		if visited[ dest ] == nil then
+			VisitInternal( visited, dest, fn, ... )
+		end
+	end
+end
+
+function Location:Visit( fn, ... )
+	VisitInternal( {}, self, fn, ... )
 end
 
 function Location:Contents()

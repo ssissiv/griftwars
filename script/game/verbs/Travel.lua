@@ -1,7 +1,7 @@
 local Travel = class( "Verb.Travel", Verb )
 
 Travel.COLOUR = constants.colours.MAGENTA
-Travel.VERB_DURATION = 5 * ONE_MINUTE
+Travel.VERB_DURATION = 1 * ONE_MINUTE
 
 Travel.ACT_DESC =
 {

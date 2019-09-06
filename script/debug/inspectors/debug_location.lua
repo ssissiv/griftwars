@@ -11,6 +11,12 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
 		self.location.world:GetPuppet():MoveToLocation( self.location )
 	end
     
+    ui.Separator()
+
+    for i, exit in self.location:Exits() do
+    	panel:AppendTable( ui, exit:GetDest( self.location ))
+    end
+
     DebugTable.RenderPanel( self, ui, panel, dbg )
 end
 

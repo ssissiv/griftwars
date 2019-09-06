@@ -160,5 +160,16 @@ function Chat:init( owner )
 	DialogNode.init( self, owner )
 end
 
+function Chat:ActivateNode()
+	Chat._base.ActivateNode( self )
+	
+	local focus = self.owner:GetFocus()
+	if not focus:CheckPrivacy( self.owner, PRIVACY.ID ) then
+		focus:GetMemory():AddEngram( Engram.MakeKnown( self.owner, PRIVACY.ID ))
+		self.owner:RegenerateLocTable( focus )
+		Msg:Speak( "Yo, I'm {1.name}", self.owner, focus )
+	end
+end
+
 
 

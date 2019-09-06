@@ -360,7 +360,7 @@ function Agent:RenderObject( ui, viewer )
 end
 
 function Agent:__tostring()
-	return string.format( "[%s]", self:GetName() )
+	return string.format( "[%s%s]", self:GetName(), self:IsPlayer() and "**" or "" )
 end
 
 

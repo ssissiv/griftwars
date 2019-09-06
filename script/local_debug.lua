@@ -2,15 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(player)",
-			"print(puppet)",
-			"print(agent)",
-			"help()",
-			"print(player)",
-			"print(player:GetFocus())",
-			"print(player)",
-			"print(player.potential_verbs)",
-			"print(tostr(player.potential_verbs))",
 			"Verb:RecurseSubclasses( nil, function(...) print( ... ) end )",
 			"Verb:RecurseSubclasses( nil, function(c) print( c._classname ) end )",
 			"player:CollectInteractions()",
@@ -33,7 +24,16 @@ return {
 			"DBG(player)",
 			"print( loc.format( \"{1#listing}\", { \"what\", \"foo\" } ))",
 			"print( loc.format( \"{1#listing}\", { DIE_FACE.DIPLOMACY } ))",
-			"print(world:GetDateTime())"
+			"print(world:GetDateTime())",
+			"print( Calendar.FormatWallTime( 60 ))",
+			"print( Calendar.FormatWallTime( 1 ))",
+			"print( Calendar.FormatWallTime( 1 / 60 ))",
+			"print( Calendar.FormatWallTime( 10 ))",
+			"print( Calendar.FormatWallTime( 24 ))",
+			"print( Calendar.FormatWallTime( 59 ))",
+			"print( Calendar.FormatWallTime( 60 ))",
+			"print( Calendar.FormatWallTime( 61 ))",
+			"print( Calendar.FormatWallTime( 161 ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
