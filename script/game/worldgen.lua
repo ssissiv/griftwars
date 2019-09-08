@@ -32,23 +32,15 @@ function WorldGen:GeneratePlayer( world )
 
 	local player = Agent()
 	player:SetDetails( "Han", nil, GENDER.MALE )
-	player:GainAspect( Skill.Scrounge() )
-	player:GainAspect( Skill.Socialize() )
-	player:GainAspect( Skill.RumourMonger() )
+	-- player:GainAspect( Skill.Scrounge() )
+	-- player:GainAspect( Skill.Socialize() )
+	-- player:GainAspect( Skill.RumourMonger() )
 	player:GainAspect( Trait.Memory() )
 	player:GainAspect( Trait.Player() ):AddDefaultDice()
 	player:GetInventory():DeltaMoney( 1 )
 	world:SpawnAgent( player, start )
 
-	local NAMES = { "Bodie", "Ger", "Fry" }
-
 	for i = 1, 3 do
-		local other = Agent()
-		other:SetDetails( NAMES[ i ], "Here's a guy.", GENDER.MALE )
-		other:GainAspect( Trait.Cowardly() )
-		other:GainAspect( Trait.Poor() )
-		other:GainAspect( Skill.Scrounge() )
-		other:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
-		world:SpawnAgent( other, start )
+		world:SpawnAgent( Agent.Scavenger(), start )
 	end
 end

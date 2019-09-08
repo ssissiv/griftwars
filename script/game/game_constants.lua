@@ -3,6 +3,8 @@ WALL_TO_GAME_TIME = 1/60.0
 
 PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "GAME" }
 
+CHARACTER_NAMES = LoadLinesFromFile( "data/names.txt" )
+
 -- Note: 'datetime' is a floating point measure of game hours passed.
 ONE_MINUTE = 1/60
 HALF_HOUR = 30/60

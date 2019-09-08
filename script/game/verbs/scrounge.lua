@@ -18,7 +18,7 @@ Scrounge.VERB_DURATION = ONE_HOUR
 
 
 function Scrounge.CollectInteractions( actor, verbs )
-	if actor.location then
+	if actor.location and actor:HasAspect( Skill.Scrounge ) then
 		table.insert( verbs, Verb.Scrounge( actor ))
 	end
 end

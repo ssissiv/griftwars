@@ -35,6 +35,7 @@ require "game/agent"
 require "game/worldbase"
 require "game/world"
 require "game/worldgen"
+require "game/characters/Scavenger"
 require "game/map/Line"
 require "game/verbs/verb"
 require "game/verbs/offer_money"
@@ -91,13 +92,15 @@ function love.load(arg)
 
     assets:LoadAll()
 
+    debug_mgr = DebugManager()
+    debug_mgr:AddBindingGroup( debug_menus.GAME_BINDINGS )
+
     local game = GameScreen()
 
     gui = UI()
     gui:AddScreen( game )
 
-    debug_mgr = DebugManager( game )
-    debug_mgr:AddBindingGroup( debug_menus.GAME_BINDINGS )
+    debug_mgr.game = game
     debug_mgr:ExecuteDebugFile( "script/debug/consolecommands.lua" )
 end
  

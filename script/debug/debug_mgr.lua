@@ -26,10 +26,8 @@ local MAX_CMD_HISTORY = 32
 
 local DebugManager = class( "DebugManager" )
 
-function DebugManager:init( game )
-	assert( game )
+function DebugManager:init()
 	self.debug_flags = DBG_FLAGS.NONE
-	self.game = game
 	self.imgui = imgui
 	self.debug_bindings = {}
 	self.debug_panels = {}
@@ -109,7 +107,7 @@ end
 
 function DebugManager:LoadDebugInspectors()
 	require "debug/debug_nodes"
-
+	
 	local items = love.filesystem.getDirectoryItems( "script/debug/inspectors" )
     for k, filename in ipairs( items ) do
         local name = filename:match( "^(.+)[.]lua$" )

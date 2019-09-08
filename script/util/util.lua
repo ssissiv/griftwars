@@ -334,5 +334,12 @@ function ClearBits( bits, flags )
     return bit32.bor( bits, bit32.bnot( flags ) )
 end
 
+function LoadLinesFromFile( filename )
+    local t = {}
+    for line in io.lines( filename ) do
+        table.insert( t, line )
+    end
+    return t
+end
 
 return util
