@@ -2,7 +2,7 @@
 local Socialize = class( "Verb.Socialize", Verb )
 
 function Socialize.CollectInteractions( actor, verbs )
-	if actor.location then
+	if false then -- actor.location then
 		for i, obj in actor.location:Contents() do
 			if actor:GetFocus() == obj and obj:GetFocus() == actor and is_instance( actor, Agent ) then
 				table.insert( verbs, Verb.Socialize( actor, obj ))

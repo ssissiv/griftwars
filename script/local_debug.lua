@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"Verb:RecurseSubclasses( nil, function(...) print( ... ) end )",
-			"Verb:RecurseSubclasses( nil, function(c) print( c._classname ) end )",
-			"player:CollectInteractions()",
-			"print(world:IsPaused())",
 			"print(tostr(world.pause))",
 			"t:Regen()",
 			"t.value = 0",
@@ -33,7 +29,11 @@ return {
 			"print( Calendar.FormatWallTime( 59 ))",
 			"print( Calendar.FormatWallTime( 60 ))",
 			"print( Calendar.FormatWallTime( 61 ))",
-			"print( Calendar.FormatWallTime( 161 ))"
+			"print( Calendar.FormatWallTime( 161 ))",
+			"t:CollectInteractions()",
+			"ex = t",
+			"print( ex, t )",
+			"print( ex:GetDest( t ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

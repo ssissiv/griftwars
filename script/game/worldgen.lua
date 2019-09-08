@@ -25,6 +25,10 @@ function WorldGen:GeneratePlayer( world )
 	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
 	shop:Connect( hood:RoomAt( 2 ))
 	
+	local dens = Location()
+	dens:SetDetails( "The Dens", "Nobody visits these ruins, for they are overrun with feral vrocs." )
+	dens:Connect( hood:RoomAt( 5 ))
+
 	local shopkeep = Agent()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	world:SpawnAgent( shopkeep, shop )

@@ -72,11 +72,11 @@ end
 function Agent:CollectInteractions()
 	local now = self.world:GetDateTime()
 	if now <= (self.verb_time or 0) then
-		return
+		return self.potential_verbs
 	end
 
 	-- FIXME: figure out a way to avoid churning this search.
-	self.verb_time = now + 10000
+	self.verb_time = now + 1
 
 	local verbs = self.potential_verbs
 	table.clear( verbs )
@@ -146,6 +146,8 @@ function Agent:GenerateLocTable( viewer )
 		t.Id = t.id
 	end
 
+	t.name = self:GetName()
+
 	return t
 end
 
@@ -168,11 +170,15 @@ function Agent:CheckPrivacy( obj, pr_flags )
 end
 
 function Agent:MoveToLocation( location )
+	assert( location )
+
 	if self.location then
 		self.location:RemoveAgent( self )
 		self:SetFocus( nil )
 		self.location = nil
 	end
+
+	self.verb_time = nil
 
 	if location then
 		assert( self.world )
@@ -272,6 +278,10 @@ function Agent:Senses()
 end
 
 function Agent:SetFocus( focus )
+	if focus == self.focus then
+		return
+	end
+	
 	local prev_focus = self.focus
 	self.focus = focus
 

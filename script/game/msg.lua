@@ -21,6 +21,17 @@ function Msg:Action( msgs, actor, target, ... )
 	end
 end
 
+function Msg:ActToRoom( actor, msg, target, ... )
+	-- This message goes to everybody else
+	local location = actor:GetLocation()
+	for i, obj in location:Contents() do
+		if obj ~= actor and obj ~= target then
+			local txt = loc.format( msg, actor:LocTable( obj ), target and target:LocTable( obj ), ... )
+			obj:Sense( txt )
+		end
+	end
+end
+
 function Msg:Speak( msg, actor, target, ... )
 	local location = actor:GetLocation()
 	for i, obj in location:Contents() do

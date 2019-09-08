@@ -14,7 +14,7 @@ Scrounge.STRINGS =
 	nil,
 	"{1.Id} rummages around, looking for something.",
 }
-Scrounge.VERB_DURATION = ONE_HOUR
+Scrounge.VERB_DURATION = ONE_HOUR / 2
 
 
 function Scrounge.CollectInteractions( actor, verbs )
@@ -39,5 +39,6 @@ function Scrounge:Interact( actor )
 		actor:GetInventory():DeltaMoney( coins )
 	else
 		Msg:Echo( actor, "You don't find anything useful." )
+		Msg:ActToRoom( actor, "{1.name} mutters something unhappily." )
 	end
 end
