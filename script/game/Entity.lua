@@ -1,6 +1,28 @@
 local Entity = class( "Entity" )
 
 function Entity:init()
+	self.events = EventSystem()
+	self.pause = {}
+end
+
+function Entity:ListenForAny( listener, fn, priority )
+	self.events:ListenForAny( listener, fn, priority )
+end
+
+function Entity:ListenForEvent( event, listener, fn, priority )
+	self.events:ListenForEvent( event, listener, fn, priority )
+end
+
+function Entity:ListenForEvent( event, listener, fn, priority )
+	self.events:ListenForEvent( event, listener, fn, priority )
+end
+
+function Entity:RemoveListener( listener )
+	self.events:RemoveListener( listener )
+end
+
+function Entity:BroadcastEvent( event_name, ... )
+	self.events:BroadcastEvent( event_name, self, ... )
 end
 
 function Entity:IsSpawned()
@@ -80,11 +102,15 @@ function Entity:GetAspect( arg )
 	local id
 	if type(arg) == "string" then
 		id = arg
-	elseif is_class( arg ) then
-		id = arg._classname
-	end
 
-	if self.aspects_by_id then
+	elseif is_class( arg ) then
+		for id, aspect in ipairs( self.aspects ) do
+			if is_instance( aspect, arg ) then
+				return aspect
+			end
+		end
+
+	elseif self.aspects_by_id then
 		return self.aspects_by_id[ id ]
 	end
 end

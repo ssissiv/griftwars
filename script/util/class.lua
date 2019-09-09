@@ -104,7 +104,7 @@ class = function( name, baseclass )
     return cl
 end
 
-local function base_match(c1, c2)
+function base_match(c1, c2)
     if c1 == c2 then return true end
 
     if c1._base then
@@ -118,20 +118,19 @@ function get_subclasses( class )
     return class._subclasses
 end
 
-is_class = function(class, base)
-    if type(class) == "table" then
-        local _class = rawget( class, "_class" )
-        if _class ~= nil then
-            if _class == (base or class) then
-                return true
-            else
-                return is_class( rawget( class, "_base" ), base )
-            end
+is_class = function(class, base_class)
+    if type(class) == "table" and rawget( class, "_class" ) == class then
+        if base_class == nil then
+            return true -- Is a class: good enough!
+        else
+            return base_match(class, base_class)
         end
-    end
 
-    return false
+    else
+        return false
+    end
 end
+
 
 is_instance = function(inst, class)
     if type(inst) == "table" then

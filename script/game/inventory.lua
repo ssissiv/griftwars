@@ -12,3 +12,7 @@ end
 function Inventory:DeltaMoney( delta )
 	self.money = math.max( self.money + delta, 0 )
 end
+
+function Inventory:CalculateValue()
+	return self.money
+end

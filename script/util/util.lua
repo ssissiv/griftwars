@@ -212,7 +212,7 @@ end
 
 -- Choose a random number in a gaussian distribution.
 -- Based on the polar form of the Box-Muller transformation.
-function math.randomGauss( mean, stddev )
+function math.randomGauss( mean, stddev, min_clamp, max_clamp )
 	local x1, x2, w
 	repeat
 		x1 = 2 * math.random() - 1
@@ -221,7 +221,15 @@ function math.randomGauss( mean, stddev )
 	until w < 1.0
 
 	w = math.sqrt( (-2 * math.log( w ) ) / w )
-	return (x1 * w)*stddev + mean
+
+	local x = (x1 * w)*stddev + mean
+    if min_clamp then
+        x = math.max( min_clamp, x )
+    end
+    if max_clamp then
+        x = math.min( max_clamp, x )
+    end
+    return x
 end
 
 function printf(fmt, ...)

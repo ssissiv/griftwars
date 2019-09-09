@@ -37,6 +37,8 @@ function World:SpawnAgent( agent, location )
 		self.player = agent
 		self.puppet = agent
 	end
+
+	return agent
 end
 
 function World:AllAgents()

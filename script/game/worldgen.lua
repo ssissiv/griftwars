@@ -33,6 +33,9 @@ function WorldGen:GeneratePlayer( world )
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	world:SpawnAgent( shopkeep, shop )
 
+	local collector = Agent.Collector()
+	world:SpawnAgent( collector, shop )
+
 
 	local player = Agent()
 	player:SetDetails( "Han", nil, GENDER.MALE )
@@ -45,6 +48,7 @@ function WorldGen:GeneratePlayer( world )
 	world:SpawnAgent( player, start )
 
 	for i = 1, 3 do
-		world:SpawnAgent( Agent.Scavenger(), start )
+		local scavenger = world:SpawnAgent( Agent.Scavenger(), start )
+		collector:GetAspect( Trait.Collector ):AddFollower( scavenger )
 	end
 end

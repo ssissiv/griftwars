@@ -57,6 +57,10 @@ WORLD_EVENT = MakeEnum{
 	"VERB_FINISH",	
 }
 
+AGENT_EVENT = MakeEnum{
+	"VERB_UNASSIGNED",
+}
+
 STAT = MakeEnum
 {
 	-- Core stats

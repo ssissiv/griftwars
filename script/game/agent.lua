@@ -69,7 +69,17 @@ function Agent:GetShortDesc( viewer )
 	return desc
 end
 
-function Agent:CollectInteractions()
+function Agent:GetLeader()
+	return self.leader
+end
+
+function Agent:SetLeader( leader )
+	assert( is_instance( leader, Agent ))
+	assert( leader:GetAspect( Trait.Leader ))
+	self.leader = leader
+end
+
+function Agent:CollectInteractions( actor, verbs )
 	local now = self.world:GetDateTime()
 	if now <= (self.verb_time or 0) then
 		return self.potential_verbs
@@ -78,8 +88,12 @@ function Agent:CollectInteractions()
 	-- FIXME: figure out a way to avoid churning this search.
 	self.verb_time = now + 1
 
-	local verbs = self.potential_verbs
-	table.clear( verbs )
+	if actor == nil or actor == self then
+		verbs = self.potential_verbs
+		table.clear( verbs )
+	else
+		assert( verbs )
+	end
 
 	Verb.RecurseSubclasses( nil, function( class )
 		if class.CollectInteractions then
@@ -138,7 +152,7 @@ function Agent:GenerateLocTable( viewer )
 		t.HeShe = "It"
 	end
 
-	if viewer:CheckPrivacy( self, PRIVACY.ID ) then
+	if viewer and viewer:CheckPrivacy( self, PRIVACY.ID ) then
 		t.id = loc.format( "[{1}]", self.name )
 		t.Id = t.id
 	else
@@ -211,6 +225,7 @@ function Agent:UnassignVerb( verb )
 	if #self.verbs == 0 then
 		self.verbs = nil
 	end
+	self:BroadcastEvent( AGENT_EVENT.VERB_UNASSIGNED, verb )
 end
 
 function Agent:Verbs()

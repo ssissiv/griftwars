@@ -4,6 +4,8 @@ TODO
 CMD LINE
 	- just mud it up.  Fuck the UI.
 
+WORLD should be an entity with a self-ref world ptr?
+
 DIALOG TREE w/ universal dice-based action system -- UDAS
 	- roll dice, get tokens.
 	- show only branches which the given tokens provide for.

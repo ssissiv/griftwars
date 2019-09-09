@@ -14,7 +14,7 @@ Scrounge.STRINGS =
 	nil,
 	"{1.Id} rummages around, looking for something.",
 }
-Scrounge.VERB_DURATION = ONE_HOUR / 2
+Scrounge.VERB_DURATION = ONE_HOUR
 
 
 function Scrounge.CollectInteractions( actor, verbs )

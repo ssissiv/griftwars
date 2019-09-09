@@ -1,6 +1,7 @@
 local Verb = class( "Verb" )
 
 function Verb:init( actor, obj )
+	assert( is_instance( actor, Agent ))
 	self.actor = actor
 	self.obj = obj
 end
