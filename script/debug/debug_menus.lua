@@ -73,7 +73,7 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="p"},
+        Binding = {key="space"},
         Text = "Toggle Pause",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()

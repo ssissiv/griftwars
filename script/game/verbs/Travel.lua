@@ -7,21 +7,21 @@ Travel.ACT_DESC =
 {
 	"You are traveling through here.",	
 	nil,
-	"{1.name} is here, heading towards {2.title}.",
+	"{1.Id} is heading towards {2.title}.",
 }
 
 Travel.EXIT_STRINGS =
 {
 	"You leave {2.title}.",
 	nil,
-	"{1.name} leaves.",
+	"{1.Id} leaves.",
 }
 
 Travel.ENTER_STRINGS =
 {
 	"You enter {2.title}.",
 	nil,
-	"{1.name} enters."
+	"{1.Id} enters."
 }
 
 function Travel.CollectInteractions( actor, verbs )

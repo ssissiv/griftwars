@@ -3,6 +3,11 @@ local GameScreen = class( "GameScreen" )
 function GameScreen:init()
 	local gen = WorldGen()
 	self.world = gen:GenerateWorld()
+
+	-- List of objects and vergbs in the currently rendered location.
+	self.objects = {}
+	self.verbs = {}
+
 	return self
 end
 
@@ -176,10 +181,14 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 	ui.Indent( 20 )
 
+	table.clear( self.objects )
+
 	-- Can only view location if not focussed on something else
 	for i, obj in location:Contents() do
 		ui.PushID(i)
 		if agent ~= obj then
+			self.objects[ i ] = obj
+
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
 			if is_instance( obj, Agent ) then
 				local op = obj:GetOpinion( agent )
@@ -189,7 +198,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				end
 			end
 
-			local desc = loc.format( "* {1}", obj:GetShortDesc( agent ) )
+			local desc = loc.format( "{1}) {2}", string.char( i + 95 ), obj:GetShortDesc( agent ) )
 			if agent:IsBusy() then
 				ui.Text( desc )
 			elseif ui.Selectable( desc, agent:GetFocus() == obj ) then
@@ -225,10 +234,17 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 		end
 	end
 
+	if self.verbs == nil then
+		self.verbs = {}
+	else
+		table.clear( self.verbs )
+	end
+
 	for i, verb in agent:PotentialVerbs() do
 		if verb.obj == obj or is_instance( verb, Verb.Travel) then
 			local ok, details = verb:CanInteract()
 			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
+			self.verbs[i] = verb
 
 			if not ok or agent:IsBusy() then
 				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
@@ -305,8 +321,26 @@ end
 function GameScreen:KeyPressed( key )
 	if key == "i" then
 		self.show_inventory = not self.show_inventory
+		return true
 	elseif key == "f" then
 		self.world:GetPuppet():SetFocus()
+		return true
+	elseif tonumber(key) then
+		local verb = self.verbs[ tonumber(key) ]
+		if verb then
+			verb:BeginActing()
+		end
+		return true
+	else
+		local obj_idx = string.byte(key) - 96 + 1
+		local obj = self.objects[ obj_idx ]
+		if obj then
+			if self.world:GetPuppet():GetFocus() == obj then
+				self.world:GetPuppet():SetFocus( nil )
+			else
+				self.world:GetPuppet():SetFocus( obj )
+			end
+		end
 	end
 
 	return false

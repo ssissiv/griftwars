@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Calendar.FormatWallTime( 60 ))",
-			"print( Calendar.FormatWallTime( 1 ))",
 			"print( Calendar.FormatWallTime( 1 / 60 ))",
 			"print( Calendar.FormatWallTime( 10 ))",
 			"print( Calendar.FormatWallTime( 24 ))",
@@ -33,7 +31,9 @@ return {
 			"print( is_class( c._class, Trait.Collector ))",
 			"print(t:GetAspect( Trait.Collector ))",
 			"print(t:GetAspect( Trait.Leader ))",
-			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end"
+			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end",
+			"print(string.byte(\"a\"))",
+			"print(string.byte(\"asdf\"))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -130,8 +130,6 @@ function Agent:LocTable( viewer )
 end
 
 function Agent:GenerateLocTable( viewer )
-	assert( viewer )
-
 	local t = { viewer = viewer }
 	if self.gender == GENDER.MALE then
 		t.himher = "him"
@@ -152,7 +150,7 @@ function Agent:GenerateLocTable( viewer )
 		t.HeShe = "It"
 	end
 
-	if viewer and viewer:CheckPrivacy( self, PRIVACY.ID ) then
+	if viewer == nil or viewer:CheckPrivacy( self, PRIVACY.ID ) then
 		t.id = loc.format( "[{1}]", self.name )
 		t.Id = t.id
 	else
