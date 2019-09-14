@@ -95,6 +95,10 @@ function GameScreen:RenderScreen( gui )
 
     -- Render details about the player.
     ui.Text( Calendar.FormatTime( self.world:GetDateTime() ))
+    if self.world:IsPaused() then
+    	ui.SameLine( 0, 10 )
+    	ui.Text( "(PAUSED)" )
+    end
     self:RenderAgentDetails( ui, puppet )
 
     puppet:CollectInteractions()
@@ -256,6 +260,12 @@ function GameScreen:RenderBackground( ui, agent )
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
     love.graphics.setColor( 255, 255, 255 )
 
+	-- Render the background image
+    if agent:GetLocation():GetImage() then
+	    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
+	    love.graphics.draw( agent:GetLocation():GetImage(), 0, h )
+	end
+
 	if is_instance( agent:GetFocus(), Agent ) then
 		-- head
 	    love.graphics.setColor( table.unpack( agent.viz.skin_colour ))
@@ -270,13 +280,6 @@ function GameScreen:RenderBackground( ui, agent )
 		love.graphics.setColor( 0, 60, 90 )
 		love.graphics.circle( "fill", W/2 - 30, h + 150 - 10, 10 )
 		love.graphics.circle( "fill", W/2 + 30, h + 150 - 10, 10 )
-
-	else
-		-- Render the background image
-	    if agent:GetLocation():GetImage() then
-		    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
-		    love.graphics.draw( agent:GetLocation():GetImage(), 0, h )
-		end
 	end
 end
 

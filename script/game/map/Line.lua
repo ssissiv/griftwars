@@ -19,6 +19,12 @@ function Line:SetDetails( title, desc )
 	end
 end
 
+function Line:SetImage( path )
+	for i, room in ipairs( self.rooms ) do
+		room:SetImage( path )
+	end
+end
+
 function Line:RoomAt( i )
 	return self.rooms[ i ]
 end

@@ -19,6 +19,7 @@ function WorldGen:GeneratePlayer( world )
 
 	local hood = WorldGen.Line( 5 )
 	hood:SetDetails( "The Junkyard Strip", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	hood:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 	hood:RoomAt( 1 ):Connect( start )
 
 	local shop = Location()
