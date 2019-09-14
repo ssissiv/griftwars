@@ -59,35 +59,6 @@ function GameScreen:RenderInventory( puppet )
     ui.End()
 end
 
-function GameScreen:RenderObject( viewer, obj )
-	local ui = imgui
-    local flags = { "AlwaysAutoResize", "NoScrollBar", "NoClose"}
-
-	ui.SetNextWindowSize( 400,300 )
-
-	local name = loc.format( "{1.Id}", obj:LocTable( viewer ))
-    ui.Begin( name, false, flags )
-
-    if viewer:GetLocation() == obj:GetLocation() then
-	    ui.Text( obj:GetShortDesc( viewer ))
-	else
-		ui.Text( loc.format( "{1.Id} is not with you.", obj:LocTable( viewer )))
-	end
-
-	-- self:RenderPotentialVerbs( ui, viewer, obj )
-	if obj.RenderObject then
-		obj:RenderObject( ui, viewer )
-	end
-
-	if viewer:GetFocus() == obj then
-		if ui.Button( "Break Focus" ) then
-			viewer:SetFocus( nil )
-		end
-	end
-
-    ui.End()
-end
-
 function GameScreen:RenderScreen( gui )
 
 	local ui = imgui
@@ -144,10 +115,6 @@ function GameScreen:RenderScreen( gui )
 
 	if self.show_inventory then
 		self:RenderInventory( puppet )
-	end
-
-	if puppet:GetFocus() then
-		self:RenderObject( puppet, puppet:GetFocus() )
 	end
 end
 
@@ -211,6 +178,25 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				if ui.Text( "(Focus)" ) then
 					agent:SetFocus( nil )
 				end
+
+				if agent:IsPlayer() then
+					local dice = agent:GetPlayer():GetCommittedDice()
+					ui.Indent( 20 )
+					local count, count_potential = 0, 0
+					for i, aspect in obj:Aspects() do
+						if is_instance( aspect, Interaction ) then
+							count = count + 1
+							if aspect:IsSatisfiable( dice ) then
+								count_potential = count_potential + 1
+							end
+							if aspect:IsSatisfied( dice ) and ui.Button( aspect._classname ) then
+								aspect:SatisfyReqs( agent, dice )
+							end
+						end
+					end
+					ui.TextColored( 0.8, 0.5, 0.5, 1.0, loc.format( "{1} interactions, {2} satisfiable", count, count_potential ))
+					ui.Unindent( 20 )
+				end
 			end
 		end
 		if DEV and Input.IsControl() and ui.IsItemClicked() then
@@ -226,13 +212,6 @@ end
 
 function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 	ui.Indent( 20 )
-
-	local focus = agent:GetFocus()
-	if focus ~= nil and focus == obj then
-		if ui.Button( "0] Release Focus" ) then
-			agent:SetFocus()
-		end
-	end
 
 	if self.verbs == nil then
 		self.verbs = {}
@@ -265,6 +244,16 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 			if ui.IsItemHovered() and details then
 				ui.SetTooltip( details )
 			end
+		end
+	end
+
+	local player = agent:GetPlayer()
+	if player then
+		ui.Separator()
+		ui.Text( "Dice:" )
+		for i, dice in player:Dice() do
+			ui.SameLine( 0, 10 )
+			dice:RenderObject( ui, agent )
 		end
 	end
 

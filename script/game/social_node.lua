@@ -9,35 +9,6 @@ function SocialNode:init( agent )
 	self.relationships = {} -- Map of Agent -> {}
 end
 
-function SocialNode:BeginDialog()
-	if self.dialog_root == nil then
-		self.dialog_root = Personality.MakeSimpleton( self.agent )
-		self.dialog_root:ActivateNode()
-	end
-
-	assert( self.update_ev == nil )
-	self.update_ev = self.agent.world:SchedulePeriodicFunction( UPDATE_RATE * WALL_TO_GAME_TIME, self.UpdateDialog, self )
-end
-
-function SocialNode:EndDialog()
-	if self.update_ev then
-		self.agent.world:UnscheduleEvent( self.update_ev )
-		self.update_ev = nil
-	end
-end
-
-function SocialNode:AddActivatedNode( node )
-	if self.active_dialog == nil then
-		self.active_dialog = {}
-	end
-	assert( not table.contains( self.active_dialog, node ))
-	table.insert( self.active_dialog, node )
-end
-
-function SocialNode:RemoveActivatedNode( node )
-	table.arrayremove( self.active_dialog, node )
-end
-
 function SocialNode:CreateRelationship( other )
 	assert( other ~= self.agent )
 	if self.relationships[ other ] == nil then

@@ -309,8 +309,6 @@ function Agent:SetFocus( focus )
 		if prev_focus.OnLostFocus then
 			prev_focus:OnLostFocus( self )
 		end
-
-		self.social_node:EndDialog()
 	end
 
 	if focus then
@@ -324,10 +322,6 @@ function Agent:SetFocus( focus )
 		if focus.OnReceivedFocus then
 			focus:OnReceivedFocus( self )
 		end
-
-		if self:IsPlayer() then
-			focus.social_node:BeginDialog()
-		end
 	end
 
 	-- Focus probably changes verb eligibility.
@@ -340,9 +334,6 @@ function Agent:GetFocus()
 end
 
 function Agent:OnLostFocus( other )
-	-- other stop focussing on us, end any existing dialog
-	self.social_node:EndDialog()
-
 	if self.focus == other then
 		self:SetFocus( nil )
 	end

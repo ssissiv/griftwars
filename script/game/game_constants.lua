@@ -86,6 +86,14 @@ DIE_FACE = MakeEnum
 	"HOSTILITY_2X",
 }
 
+PIP_COUNT =
+{
+	DIPLOMACY = 1,
+	DIPLOMACY_2X = 2,
+	HOSTILITY = 1,
+	HOSTILITY_2X = 2,
+}
+
 DLG_REQ = MakeEnum
 {
 	"FACE_COUNT"

@@ -23,7 +23,7 @@ function DialogNode:ActivateNode()
 
 	self.visit_count = self.visit_count + 1
 	self.activate_time = self.world:GetDateTime()
-	self.elapsed_time = 0
+	self.elapsed_time = 0i
 
 	self.owner:GetSocialNode():AddActivatedNode( self )
 end
@@ -115,8 +115,8 @@ function DialogNode:RenderObject( ui, viewer )
 			if die:CanRoll() then
 				die:RenderObject( ui, viewer )
 
-				local roll = die:GetRoll()
-				if roll and roll ~= DIE_FACE.NULL then
+				local pip, count = die:GetRoll()
+				if pip and pip ~= DIE_FACE.NULL then
 					self:ModifyFaceCount( roll, 1 )
 				end
 			end

@@ -5,6 +5,7 @@ local Player = class( "Trait.Player", Aspect )
 
 function Player:init()
 	self.dice = {}
+	self.committed_dice = {}
 end
 
 function Player:AddDie( die )
@@ -20,6 +21,31 @@ end
 
 function Player:GetDice()
 	return self.dice
+end
+
+function Player:Dice()
+	return ipairs( self.dice )
+end
+
+function Player:CommitDice( dice )
+	assert( table.contains( self.dice, dice ))
+	table.insert( self.committed_dice, dice )
+end
+
+function Player:UncommitDice( dice )
+	table.arrayremove( self.committed_dice, dice )
+end
+
+function Player:UncommitAll()
+	table.clear( self.committed_dice )
+end
+
+function Player:GetCommittedDice()
+	return self.committed_dice
+end
+
+function Player:HasCommitted( dice )
+	return table.contains( self.committed_dice, dice )
 end
 
 function Player:CollectDiceWithFace( face, t )

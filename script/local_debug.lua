@@ -2,17 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Calendar.FormatWallTime( 1 / 60 ))",
-			"print( Calendar.FormatWallTime( 10 ))",
-			"print( Calendar.FormatWallTime( 24 ))",
-			"print( Calendar.FormatWallTime( 59 ))",
-			"print( Calendar.FormatWallTime( 60 ))",
-			"print( Calendar.FormatWallTime( 61 ))",
-			"print( Calendar.FormatWallTime( 161 ))",
-			"t:CollectInteractions()",
-			"ex = t",
-			"print( ex, t )",
-			"print( ex:GetDest( t ))",
 			"t:RefreshOrders()",
 			"print(t:GetInventory():CalculateValue())",
 			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end",
@@ -33,7 +22,18 @@ return {
 			"print(t:GetAspect( Trait.Leader ))",
 			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end",
 			"print(string.byte(\"a\"))",
-			"print(string.byte(\"asdf\"))"
+			"print(string.byte(\"asdf\"))",
+			"t = { 1, 2, 3, 4, 5 }; print(table.unpack(t, 3, 4 )",
+			")",
+			"t = { 1, 2, 3, 4, 5 }; print(table.unpack(t, 3, 4 ))",
+			"print(t)",
+			"print(t, is_instance( t, Interaction ))",
+			"print( t:CheckPrivacy( player, PRIVACY.ID ))",
+			"t:GenerateLocTable( player )",
+			"print(player)",
+			"print( loc.format( \"{1.Id}\", t:LocTable( player ))",
+			"print( loc.format( \"{1.Id}\", t:LocTable( player )))",
+			"DBG(t)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

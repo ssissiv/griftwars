@@ -52,6 +52,7 @@ require "game/aspects/traits"
 require "game/aspects/Player"
 require "game/aspects/skills"
 require "game/aspects/features"
+require "game/aspects/Interactions"
 require "game/aspects/Leader"
 
 require "game/dialog_nodes/DialogNode"

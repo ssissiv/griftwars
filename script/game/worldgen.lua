@@ -50,6 +50,7 @@ function WorldGen:GeneratePlayer( world )
 
 	for i = 1, 3 do
 		local scavenger = world:SpawnAgent( Agent.Scavenger(), start )
+		-- link to collector
 		collector:GetAspect( Trait.Collector ):AddFollower( scavenger )
 	end
 end
