@@ -183,14 +183,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 				if agent:IsPlayer() then
 					ui.Indent( 20 )
-					local dice = agent:GetPlayer():GetCommittedDice( obj )
-					if #dice > 0 then
-						ui.Text( "Committed:" )
-						for i, die in ipairs( dice ) do
-							ui.SameLine( 0, 10 )
-							die:RenderObject( ui, agent )
-						end
-					end
+					local dice = agent:GetPlayer():GetDice()
 					local count, count_potential = 0, 0
 					for i, aspect in obj:Aspects() do
 						if is_instance( aspect, Interaction ) then
@@ -199,7 +192,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 								count_potential = count_potential + 1
 							end
 							if aspect:IsSatisfied( dice ) and ui.Button( aspect._classname ) then
-								aspect:SatisfyReqs( agent, dice )
+								aspect:SatisfyReqs( agent )
 							end
 						end
 					end
@@ -263,6 +256,16 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 		for i, dice in player:Dice() do
 			ui.SameLine( 0, 10 )
 			dice:RenderObject( ui, agent )
+		end
+		if ui.TreeNode( "Committed Dice" ) then
+			for agent_key, dice in pairs( player:GetCommittedDice() ) do
+				ui.Text( loc.format( "{1.Id}", agent_key:LocTable( agent )))
+				for i, die in ipairs( dice ) do
+					ui.SameLine( 0, 10 )
+					die:RenderObject( ui, agent )
+				end
+			end
+			ui.TreePop()
 		end
 	end
 

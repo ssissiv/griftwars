@@ -113,9 +113,15 @@ function ActionDie:RenderObject( ui, viewer )
 	local focus = viewer:GetFocus()
 	local disabled = (self.last_roll ~= nil) or focus == nil or not self:IsSatisfiable( focus )
 	if disabled then
-		ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
-		ui.PushStyleColor( "ButtonHovered", 0.2, 0.2, 0.2, 1 )
-		ui.PushStyleColor( "ButtonActive", 0.2, 0.2, 0.2, 1 )
+		if self.last_roll then
+			ui.PushStyleColor( "Button", 0.2, 0.5, 0.2, 1 )
+			ui.PushStyleColor( "ButtonHovered", 0.2, 0.5, 0.2, 1 )
+			ui.PushStyleColor( "ButtonActive", 0.2, 0.5, 0.2, 1 )
+		else
+			ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+			ui.PushStyleColor( "ButtonHovered", 0.2, 0.2, 0.2, 1 )
+			ui.PushStyleColor( "ButtonActive", 0.2, 0.2, 0.2, 1 )
+		end
 	end
 
 	local txt
@@ -130,7 +136,7 @@ function ActionDie:RenderObject( ui, viewer )
 		if Input.IsControl() then
 			DBG( self )
 		elseif not disabled then
-			viewer:GetPlayer():CommitDice( self, focus )
+			self:Roll()
 		end
 	end
 	-- if not self.last_roll then

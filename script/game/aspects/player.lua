@@ -38,8 +38,6 @@ function Player:CommitDice( dice, agent )
 	end
 	assert( not table.contains( t, dice ))
 	table.insert( t, dice )
-
-	dice:Roll()
 end
 
 function Player:UncommitDice( dice )
@@ -56,6 +54,10 @@ function Player:UncommitDice( dice )
 end
 
 function Player:GetCommittedDice( agent )
-	return self.committed_dice[ agent ] or table.empty
+	if agent == nil then
+		return self.committed_dice
+	else
+		return self.committed_dice[ agent ] or table.empty
+	end
 end
 

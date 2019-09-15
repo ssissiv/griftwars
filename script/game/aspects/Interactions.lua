@@ -65,6 +65,34 @@ function Interaction:IsReqSatisfied( req, dice )
 	return true
 end
 
+function Interaction:SatisfyReqs( actor )
+	local dice = actor:GetPlayer():GetDice()
+
+	for i, req in ipairs( self.reqs ) do
+		if req.type == DLG_REQ.FACE_COUNT then
+			local count = req.max_count
+			-- FIXME: want to take the "optimal" dice
+			while count > 0 do
+				local found = false
+				for i, die in ipairs( dice ) do
+					local face, pips = die:GetRoll()
+					if face == req.face then
+						count = count - pips
+						found = true
+						actor:GetPlayer():CommitDice( die, self.owner )
+						break
+					end
+				end
+				if not found then
+					break
+				end
+			end
+		end
+	end
+
+	self:OnSatisfied( actor )
+end
+
 function Interaction:RenderObject( ui, viewer )
 	for i, req in ipairs( self.reqs ) do
 		if req.type == DLG_REQ.FACE_COUNT then
@@ -90,7 +118,7 @@ function Acquaint:init()
 	self:ReqFace( DIE_FACE.DIPLOMACY, 1 )
 end
 
-function Acquaint:SatisfyReqs( actor, dice )
+function Acquaint:OnSatisfied( actor, dice )
 	-- We know the actor.
 	actor:GetMemory():AddEngram( Engram.MakeKnown( self.owner, PRIVACY.ID ))
 	self.owner:RegenerateLocTable( actor )
