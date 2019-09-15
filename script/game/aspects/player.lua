@@ -4,8 +4,8 @@
 local Player = class( "Trait.Player", Aspect )
 
 function Player:init()
-	self.dice = {}
-	self.committed_dice = {}
+	self.dice = {} -- Free dice.
+	self.committed_dice = {} -- Map of Agent -> dice
 end
 
 function Player:AddDie( die )
@@ -27,48 +27,35 @@ function Player:Dice()
 	return ipairs( self.dice )
 end
 
-function Player:CommitDice( dice )
+function Player:CommitDice( dice, agent )
 	assert( table.contains( self.dice, dice ))
-	table.insert( self.committed_dice, dice )
+	table.arrayremove( self.dice, dice )
+
+	local t = self.committed_dice[ agent ]
+	if t == nil then
+		t = {}
+		self.committed_dice[ agent ] = t
+	end
+	assert( not table.contains( t, dice ))
+	table.insert( t, dice )
+
+	dice:Roll()
 end
 
 function Player:UncommitDice( dice )
-	table.arrayremove( self.committed_dice, dice )
-end
-
-function Player:UncommitAll()
-	table.clear( self.committed_dice )
-end
-
-function Player:GetCommittedDice()
-	return self.committed_dice
-end
-
-function Player:HasCommitted( dice )
-	return table.contains( self.committed_dice, dice )
-end
-
-function Player:CollectDiceWithFace( face, t )
-	t = t or {}
-	for i, die in ipairs( self.dice ) do
-		if die:HasFace( face ) then
-			table.insert_unique( t, die )
+	for agent, t in pairs( self.committed_dice ) do
+		local idx = table.find( t, dice )
+		if idx then
+			table.remove( t, idx )
+			table.insert( self.dice, dice )
 		end
-	end
-
-	return t
-end
-
-function Player:HasDieWithFace( face )
-	for i, die in ipairs( self.dice ) do
-		if die:HasFace( face ) then
-			return true
+		if #t == 0 then
+			self.committed_dice[ agent ] = nil
 		end
 	end
 end
 
-function Player:ResetDieRolls()
-	for i, die in ipairs( self.dice ) do
-		die:ResetRoll()
-	end
+function Player:GetCommittedDice( agent )
+	return self.committed_dice[ agent ] or table.empty
 end
+

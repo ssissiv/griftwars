@@ -49,9 +49,6 @@ end
 
 function ActionDie:GetShortDesc()
 	local txt = self.name .. (self.last_roll and "*" or "")
-	if self.owner:GetPlayer():HasCommitted( self ) then
-		txt = "<"..txt..">"
-	end
 	return txt
 end
 
@@ -78,7 +75,11 @@ function ActionDie:IsCooldown()
 end
 
 function ActionDie:GetCooldown()
-	return self.owner.world:GetEventTimeLeft( self.cooldown_ev )
+	if self.cooldown_ev then
+		return self.owner.world:GetEventTimeLeft( self.cooldown_ev )
+	else
+		return 0
+	end
 end
 
 function ActionDie:StartCooldown( cooldown )
@@ -94,12 +95,27 @@ function ActionDie:HasFace( face )
 	return table.contains( self.faces, face )
 end
 
+function ActionDie:IsSatisfiable( obj )
+	local dice = { self }
+	for i, aspect in obj:Aspects() do
+		if is_instance( aspect, Interaction ) then
+			if aspect:IsSatisfiable( dice ) then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 -- owner: Agent
 function ActionDie:RenderObject( ui, viewer )
 	ui.PushID( rawstring(self) )
-	local disabled = self.last_roll ~= nil
+	local focus = viewer:GetFocus()
+	local disabled = (self.last_roll ~= nil) or focus == nil or not self:IsSatisfiable( focus )
 	if disabled then
-		ui.PushStyleColor( ui.Style_Button, 0.5, 1.0, 0.5, 1 )
+		ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+		ui.PushStyleColor( "ButtonHovered", 0.2, 0.2, 0.2, 1 )
+		ui.PushStyleColor( "ButtonActive", 0.2, 0.2, 0.2, 1 )
 	end
 
 	local txt
@@ -109,25 +125,24 @@ function ActionDie:RenderObject( ui, viewer )
 	else
 		txt = self:GetName()
 	end
-	if self.owner:GetPlayer():HasCommitted( self ) then
-		txt = "["..txt.."]"
-	end
 
 	if ui.Button( txt ) then
-		if self.owner:GetPlayer():HasCommitted( self ) then
-			self.owner:GetPlayer():UncommitDice( self )
-		else
-			self.owner:GetPlayer():CommitDice( self )
+		if Input.IsControl() then
+			DBG( self )
+		elseif not disabled then
+			viewer:GetPlayer():CommitDice( self, focus )
 		end
 	end
-	if not self.last_roll then
-		ui.SameLine( 0, 2 )
-		if ui.Button( "*" ) then
-			self:Roll()
-		end
-	end
+	-- if not self.last_roll then
+	-- 	ui.SameLine( 0, 2 )
+	-- 	if ui.Button( "*" ) then
+	-- 		self:Roll()
+	-- 	end
+	-- end
 
 	if disabled then
+		ui.PopStyleColor()
+		ui.PopStyleColor()
 		ui.PopStyleColor()
 	end
 

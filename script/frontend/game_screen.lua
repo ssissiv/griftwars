@@ -151,10 +151,12 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 	table.clear( self.objects )
 
 	-- Can only view location if not focussed on something else
+	local count = 0
 	for i, obj in location:Contents() do
 		ui.PushID(i)
 		if agent ~= obj then
-			self.objects[ i ] = obj
+			count = count + 1
+			self.objects[ count ] = obj
 
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
 			if is_instance( obj, Agent ) then
@@ -165,7 +167,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				end
 			end
 
-			local desc = loc.format( "{1}) {2}", string.char( i + 95 ), obj:GetShortDesc( agent ) )
+			local desc = loc.format( "{1}) {2}", string.char( count + 96 ), obj:GetShortDesc( agent ) )
 			if agent:IsBusy() then
 				ui.Text( desc )
 			elseif ui.Selectable( desc, agent:GetFocus() == obj ) then
@@ -180,8 +182,15 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				end
 
 				if agent:IsPlayer() then
-					local dice = agent:GetPlayer():GetCommittedDice()
 					ui.Indent( 20 )
+					local dice = agent:GetPlayer():GetCommittedDice( obj )
+					if #dice > 0 then
+						ui.Text( "Committed:" )
+						for i, die in ipairs( dice ) do
+							ui.SameLine( 0, 10 )
+							die:RenderObject( ui, agent )
+						end
+					end
 					local count, count_potential = 0, 0
 					for i, aspect in obj:Aspects() do
 						if is_instance( aspect, Interaction ) then
@@ -225,13 +234,13 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 			self.verbs[i] = verb
 
-			if not ok or agent:IsBusy() then
+			if not ok or agent:IsBusy() or self.world:IsPaused() then
 				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
 			else
 				if verb.COLOUR then
-					ui.PushStyleColor( ui.Style_Text, Colour4( verb.COLOUR) )
+					ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
 				else
-					ui.PushStyleColor( ui.Style_Text, 1, 1, 0, 1 )
+					ui.PushStyleColor( "Text", 1, 1, 0, 1 )
 				end
 
 				if ui.Selectable( txt ) then
@@ -317,11 +326,14 @@ function GameScreen:KeyPressed( key )
 	elseif tonumber(key) then
 		local verb = self.verbs[ tonumber(key) ]
 		if verb then
-			verb:BeginActing()
+			local ok, details = verb:CanInteract()
+			if ok and not verb.actor:IsBusy() and not self.world:IsPaused() then
+				verb:BeginActing()
+			end
 		end
 		return true
 	else
-		local obj_idx = string.byte(key) - 96 + 1
+		local obj_idx = string.byte(key) - 97 + 1
 		local obj = self.objects[ obj_idx ]
 		if obj then
 			if self.world:GetPuppet():GetFocus() == obj then

@@ -309,6 +309,10 @@ function Agent:SetFocus( focus )
 		if prev_focus.OnLostFocus then
 			prev_focus:OnLostFocus( self )
 		end
+
+		if self:IsPlayer() then
+			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
+		end
 	end
 
 	if focus then
@@ -321,6 +325,10 @@ function Agent:SetFocus( focus )
 
 		if focus.OnReceivedFocus then
 			focus:OnReceivedFocus( self )
+		end
+
+		if self:IsPlayer() then
+			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 		end
 	end
 

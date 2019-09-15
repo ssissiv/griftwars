@@ -55,10 +55,6 @@ require "game/aspects/features"
 require "game/aspects/Interactions"
 require "game/aspects/Leader"
 
-require "game/dialog_nodes/DialogNode"
-require "game/dialog_nodes/DialogEdge"
-require "game/dialog_nodes/Personality"
-
 require "game/characters/Scavenger"
 require "game/characters/Collector"
 

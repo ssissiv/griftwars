@@ -1,7 +1,7 @@
 -- 1 second == 1 game minute.
 WALL_TO_GAME_TIME = 1/60.0
 
-PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "GAME" }
+PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE" }
 
 CHARACTER_NAMES = LoadLinesFromFile( "data/names.txt" )
 

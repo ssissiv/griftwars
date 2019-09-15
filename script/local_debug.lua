@@ -2,16 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"t:RefreshOrders()",
-			"print(t:GetInventory():CalculateValue())",
-			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end",
-			"print(t:IsBusy())",
-			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end",
-			"print(t:GetAspect( Aspect ))",
-			"print(t:GetAspect( Trait.Leader ))",
-			"print( base_match( Trait.Collector, Trait.Leader ))",
-			"print( base_match( Trait.Collector, Trait ))",
-			"print( base_match( Trait.Collector, Aspect ))",
 			"c = Trait.Collector()",
 			"print(c )",
 			"print( is_class( c, Aspect ))",
@@ -33,7 +23,17 @@ return {
 			"print(player)",
 			"print( loc.format( \"{1.Id}\", t:LocTable( player ))",
 			"print( loc.format( \"{1.Id}\", t:LocTable( player )))",
-			"DBG(t)"
+			"DBG(t)",
+			"asp = t",
+			"print(asp)",
+			"agent = t",
+			"print(t:IsSatisfiable(agent))",
+			"print(asp)",
+			"print(t:IsSatisfiable(agent))",
+			"print(t:GetCooldown())",
+			"print(string.char(95))",
+			"print(string.char(96))",
+			"print(string.char(97))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
