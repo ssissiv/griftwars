@@ -191,8 +191,23 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 							if aspect:IsSatisfiable( dice ) then
 								count_potential = count_potential + 1
 							end
-							if aspect:IsSatisfied( dice ) and ui.Button( aspect._classname ) then
-								aspect:SatisfyReqs( agent )
+							if aspect:IsSatisfied( dice ) then
+								local ok, reason = true
+								if aspect.CanInteract then
+									ok, reason = aspect:CanInteract( agent )
+								end
+								if not ok then
+									ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+								end
+								if ui.Button( aspect._classname ) and ok then
+									aspect:SatisfyReqs( agent )
+								end
+								if not ok then
+									ui.PopStyleColor()
+								end
+								if reason and ui.IsItemHovered() then
+									ui.SetTooltip( tostring(reason) )
+								end
 							end
 						end
 					end
@@ -253,12 +268,12 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 	if player then
 		ui.Separator()
 		ui.Text( "Dice:" )
-		for i, dice in player:Dice() do
+		for i, dice in player:GetDice():Dice() do
 			ui.SameLine( 0, 10 )
 			dice:RenderObject( ui, agent )
 		end
 		if ui.TreeNode( "Committed Dice" ) then
-			for agent_key, dice in pairs( player:GetCommittedDice() ) do
+			for agent_key, dice in pairs( player:GetDice():GetCommittedDice() ) do
 				ui.Text( loc.format( "{1.Id}", agent_key:LocTable( agent )))
 				for i, die in ipairs( dice ) do
 					ui.SameLine( 0, 10 )

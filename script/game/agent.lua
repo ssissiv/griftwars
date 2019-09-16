@@ -47,6 +47,10 @@ function Agent:GetPlayer()
 	return self:GetAspect( Trait.Player )
 end
 
+function Agent:GetDice()
+	return self:GetAspect( Trait.Player ):GetDice() -- Only player has dice atm.
+end
+
 function Agent:IsPuppet()
 	return self.world:GetPuppet() == self
 end

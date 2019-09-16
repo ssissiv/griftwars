@@ -1,5 +1,9 @@
 local Skill = class( "Skill", Aspect )
 
+function Skill:GetName()
+	return self.name or self._classname
+end
+
 ---------------------------------------------------------------
 
 local Scrounge = class( "Skill.Scrounge", Skill )

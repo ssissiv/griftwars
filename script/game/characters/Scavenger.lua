@@ -7,6 +7,7 @@ function Agent.Scavenger()
 	ch:GainAspect( Skill.Scrounge() )
 	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	ch:GainAspect( Interaction.Acquaint() )
+	ch:GainAspect( Interaction.Chat() )
 
 	return ch
 end

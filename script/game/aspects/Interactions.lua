@@ -4,6 +4,27 @@ function Interaction:init()
 	self.reqs = {}
 end
 
+
+function Interaction:IsCooldown()
+	return self.cooldown_ev ~= nil
+end
+
+function Interaction:GetCooldown()
+	if self.cooldown_ev then
+		return self.owner.world:GetEventTimeLeft( self.cooldown_ev )
+	else
+		return 0
+	end
+end
+
+function Interaction:StartCooldown( cooldown )
+	self.cooldown_ev = self.owner.world:ScheduleFunction( cooldown, self.StopCooldown, self )
+end
+
+function Interaction:StopCooldown()
+	self.cooldown_ev = nil
+end
+
 -- face: DIE_FACE
 -- max_count: integer (number of faces required to satisfy req)
 function Interaction:ReqFace( face, max_count )
@@ -17,7 +38,7 @@ end
 
 function Interaction:GetFaceCount( face, dice )
 	local count = 0
-	for i, dice in ipairs( dice ) do
+	for i, dice in dice:Dice() do
 		local f, c = dice:GetRoll()
 		if f == face then
 			count = count + c
@@ -40,12 +61,24 @@ function Interaction:IsSatisfiable( dice )
 	for j, req in ipairs( self.reqs ) do
 		local found = false
 		if req.type == DLG_REQ.FACE_COUNT then
-			for i, die in ipairs( dice ) do
-				local face = die:GetRoll()
-				if (face == req.face) or (face == nil and die:HasFace( req.face )) then
+			if is_instance( dice, DiceContainer ) then
+				for i, die in dice:Dice() do
+					local face = die:GetRoll()
+					if (face == req.face) or (face == nil and die:HasFace( req.face )) then
+						found = true
+						break
+					end
+				end
+
+			elseif is_instance( dice, ActionDie ) then
+				local face = dice:GetRoll()
+				if (face == req.face) or (face == nil and dice:HasFace( req.face )) then
 					found = true
 					break
 				end
+
+			else
+				error()
 			end
 		end
 		if not found then
@@ -66,7 +99,7 @@ function Interaction:IsReqSatisfied( req, dice )
 end
 
 function Interaction:SatisfyReqs( actor )
-	local dice = actor:GetPlayer():GetDice()
+	local dice = actor:GetDice()
 
 	for i, req in ipairs( self.reqs ) do
 		if req.type == DLG_REQ.FACE_COUNT then
@@ -74,12 +107,12 @@ function Interaction:SatisfyReqs( actor )
 			-- FIXME: want to take the "optimal" dice
 			while count > 0 do
 				local found = false
-				for i, die in ipairs( dice ) do
+				for i, die in dice:Dice() do
 					local face, pips = die:GetRoll()
 					if face == req.face then
 						count = count - pips
 						found = true
-						actor:GetPlayer():CommitDice( die, self.owner )
+						actor:GetDice():CommitDice( die, self.owner )
 						break
 					end
 				end
@@ -129,3 +162,38 @@ function Acquaint:OnSatisfied( actor, dice )
 end
 
 
+-----------------------------------------------------------------------------------
+
+local Chat = class( "Interaction.Chat", Interaction )
+
+function Chat:CanInteract( actor )
+	if self:IsCooldown() then
+		return false, "On Cooldown"
+	end
+
+	if not actor:CheckPrivacy( self.owner, PRIVACY.ID ) then
+		return false, "Not Acquainted"
+	end
+
+	return true
+end
+
+function Chat:OnSatisfied( actor, dice )
+	Msg:Speak( "There's lots of stuff to find if you know where to look.", self.owner, actor )
+
+	local die = ActionDie( "Local Chat",
+	{
+		DIE_FACE.DIPLOMACY, 1,
+		DIE_FACE.DIPLOMACY, 1,
+		DIE_FACE.DIPLOMACY, 1,
+		DIE_FACE.DISTRICT_MIDGARD, 1,
+		DIE_FACE.DISTRICT_MIDGARD, 1,
+		DIE_FACE.DISTRICT_MIDGARD, 1,
+	})
+	actor:GetDice():AddDie( die )
+
+	local skill= actor:GainAspect( Skill.Scrounge() )
+	Msg:Act( self.owner, actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), skill:GetName() )
+
+	self:StartCooldown( ONE_DAY )
+end

@@ -59,6 +59,7 @@ require "game/characters/Scavenger"
 require "game/characters/Collector"
 
 require "game/ActionDie"
+require "game/DiceContainer"
 
 -----------------------------------------------------------
 

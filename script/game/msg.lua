@@ -1,6 +1,6 @@
 local Msg = class( "Msg" )
 
-function Msg:Action( msgs, actor, target, ... )
+function Msg:Act( msgs, actor, target, ... )
 	local location = actor:GetLocation()
 	for i, obj in location:Contents() do
 		if obj == actor and msgs[1] then
@@ -20,6 +20,8 @@ function Msg:Action( msgs, actor, target, ... )
 		end
 	end
 end
+
+Msg.Action = Msg.Act
 
 function Msg:ActToRoom( actor, msg, target, ... )
 	-- This message goes to everybody else

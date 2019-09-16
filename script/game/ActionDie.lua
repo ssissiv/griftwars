@@ -1,16 +1,26 @@
 local ActionDie = class( "ActionDie" )
 
-function ActionDie:init( name, owner, faces )
+function ActionDie:init( name, faces )
 	assert( self._classname == "ActionDie" )
-	assert( is_instance( owner, Agent ) )
 	assert( type(faces) == "table" )
 	self.name = name
-	self.owner = owner
 	self.faces = faces
 end
 
-function ActionDie.MakeHostileDie( owner )
-	return ActionDie( "Hostility", owner,
+function ActionDie:SetOwner( owner )
+	self.owner = owner
+end
+
+function ActionDie:GetWorld()
+	local owner = self.owner
+	while owner and not owner.world do
+		owner = owner.owner
+	end
+	return owner and owner.world
+end
+
+function ActionDie.MakeHostileDie()
+	return ActionDie( "Hostility",
 	{	
 		DIE_FACE.HOSTILITY, 1,
 		DIE_FACE.HOSTILITY, 1,
@@ -22,8 +32,8 @@ function ActionDie.MakeHostileDie( owner )
 end
 
 
-function ActionDie.MakeDiplomacyDie( owner )
-	return ActionDie( "Diplomacy", owner,
+function ActionDie.MakeDiplomacyDie()
+	return ActionDie( "Diplomacy",
 	{
 		DIE_FACE.DIPLOMACY, 1,
 		DIE_FACE.DIPLOMACY, 1,
@@ -38,8 +48,8 @@ function ActionDie:Roll()
 	local n = math.floor( #self.faces / 2 )
 	local roll = math.random( n )
 	self.last_roll = roll
-	self.last_roll_time = self.owner.world:GetDateTime()
-	self:StartCooldown( 12 * ONE_HOUR )
+	self.last_roll_time = self:GetWorld():GetDateTime()
+	self:StartCooldown( 0.5 )
 	return roll
 end
 
@@ -76,18 +86,19 @@ end
 
 function ActionDie:GetCooldown()
 	if self.cooldown_ev then
-		return self.owner.world:GetEventTimeLeft( self.cooldown_ev )
+		return self:GetWorld():GetEventTimeLeft( self.cooldown_ev )
 	else
 		return 0
 	end
 end
 
 function ActionDie:StartCooldown( cooldown )
-	self.cooldown_ev = self.owner.world:ScheduleFunction( cooldown, self.StopCooldown, self )
+	self.cooldown_ev = self:GetWorld():ScheduleFunction( cooldown, self.StopCooldown, self )
 end
 
 function ActionDie:StopCooldown()
 	self.cooldown_ev = nil
+	self.last_roll = nil
 end
 
 function ActionDie:HasFace( face )
@@ -96,10 +107,9 @@ function ActionDie:HasFace( face )
 end
 
 function ActionDie:IsSatisfiable( obj )
-	local dice = { self }
 	for i, aspect in obj:Aspects() do
 		if is_instance( aspect, Interaction ) then
-			if aspect:IsSatisfiable( dice ) then
+			if aspect:IsSatisfiable( self ) then
 				return true
 			end
 		end
