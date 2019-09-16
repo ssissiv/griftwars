@@ -352,7 +352,7 @@ function Agent:OnLostFocus( other )
 end
 
 function Agent:OnReceivedFocus( other )
-	local noticed = true
+	local noticed = not self:IsBusy()
 	if noticed then
 		if self.focus ~= other then
 			local GREETING =

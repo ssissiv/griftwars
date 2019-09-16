@@ -126,6 +126,14 @@ function Interaction:SatisfyReqs( actor )
 	self:OnSatisfied( actor )
 end
 
+function Interaction:CanInteract( actor )
+	if self:IsCooldown() then
+		return false, "On Cooldown"
+	end
+
+	return true
+end
+
 function Interaction:RenderObject( ui, viewer )
 	for i, req in ipairs( self.reqs ) do
 		if req.type == DLG_REQ.FACE_COUNT then
@@ -151,6 +159,14 @@ function Acquaint:init()
 	self:ReqFace( DIE_FACE.DIPLOMACY, 1 )
 end
 
+function Acquaint:CanInteract( actor )
+	if self.owner:IsBusy() then
+		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
+	end
+
+	return Acquaint._base.CanInteract( self, actor )
+end
+
 function Acquaint:OnSatisfied( actor, dice )
 	-- We know the actor.
 	actor:GetMemory():AddEngram( Engram.MakeKnown( self.owner, PRIVACY.ID ))
@@ -167,15 +183,11 @@ end
 local Chat = class( "Interaction.Chat", Interaction )
 
 function Chat:CanInteract( actor )
-	if self:IsCooldown() then
-		return false, "On Cooldown"
-	end
-
 	if not actor:CheckPrivacy( self.owner, PRIVACY.ID ) then
 		return false, "Not Acquainted"
 	end
 
-	return true
+	return Chat._base.CanInteract( self, actor )
 end
 
 function Chat:OnSatisfied( actor, dice )
@@ -192,7 +204,7 @@ function Chat:OnSatisfied( actor, dice )
 	})
 	actor:GetDice():AddDie( die )
 
-	local skill= actor:GainAspect( Skill.Scrounge() )
+	local skill = actor:GainAspect( Skill.Scrounge() )
 	Msg:Act( self.owner, actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), skill:GetName() )
 
 	self:StartCooldown( ONE_DAY )
