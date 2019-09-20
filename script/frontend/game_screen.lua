@@ -139,6 +139,28 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 	    end
     	i = i + 1
     end
+
+	local player = puppet:GetPlayer()
+	if player then
+		ui.Separator()
+		if ui.Checkbox( self.show_committed_dice and "Committed Dice" or "Dice:", self.show_committed_dice ) then
+			self.show_committed_dice = not self.show_committed_dice
+		end
+		if not self.show_committed_dice then
+			for i, dice in player:GetDice():Dice() do
+				ui.SameLine( 0, 10 )
+				dice:RenderObject( ui, puppet )
+			end
+		else
+			for agent_key, dice in pairs( player:GetDice():GetCommittedDice() ) do
+				ui.Text( loc.format( "{1.Id}", agent_key:LocTable( puppet )))
+				for i, die in ipairs( dice ) do
+					ui.SameLine( 0, 10 )
+					die:RenderObject( ui, puppet )
+				end
+			end
+		end
+	end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, agent )
@@ -261,26 +283,6 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 			if ui.IsItemHovered() and details then
 				ui.SetTooltip( details )
 			end
-		end
-	end
-
-	local player = agent:GetPlayer()
-	if player then
-		ui.Separator()
-		ui.Text( "Dice:" )
-		for i, dice in player:GetDice():Dice() do
-			ui.SameLine( 0, 10 )
-			dice:RenderObject( ui, agent )
-		end
-		if ui.TreeNode( "Committed Dice" ) then
-			for agent_key, dice in pairs( player:GetDice():GetCommittedDice() ) do
-				ui.Text( loc.format( "{1.Id}", agent_key:LocTable( agent )))
-				for i, die in ipairs( dice ) do
-					ui.SameLine( 0, 10 )
-					die:RenderObject( ui, agent )
-				end
-			end
-			ui.TreePop()
 		end
 	end
 

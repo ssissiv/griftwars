@@ -128,7 +128,7 @@ end
 
 function Interaction:CanInteract( actor )
 	if self:IsCooldown() then
-		return false, "On Cooldown"
+		return false, loc.format( "Cooldown: {1#realtime}", self:GetCooldown() )
 	end
 
 	return true
