@@ -149,7 +149,7 @@ function DebugManager:SubmitConsoleCommand( str )
 		setfenv( fn, env )
 		local ok, res = xpcall( fn, generic_error )
 		if not ok then
-			print ("\n\n*****ERROR*****\n"..res.."\n\n")
+			print ("\n\n*****ERROR*****\n"..tostring(res).."\n\n")
 		end
 	end		
 end

@@ -2,15 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"c = Trait.Collector()",
-			"print(c )",
-			"print( is_class( c, Aspect ))",
-			"print( is_class( c, Trait.Leader ))",
-			"print( is_class( c, Trait.Collector ))",
-			"print( is_class( c._class, Trait.Collector ))",
-			"print(t:GetAspect( Trait.Collector ))",
-			"print(t:GetAspect( Trait.Leader ))",
-			"for i = 1, 3 do print( t[1].inventory:CalculateValue() ) end",
 			"print(string.byte(\"a\"))",
 			"print(string.byte(\"asdf\"))",
 			"t = { 1, 2, 3, 4, 5 }; print(table.unpack(t, 3, 4 )",
@@ -33,7 +24,16 @@ return {
 			"print(t:GetCooldown())",
 			"print(string.char(95))",
 			"print(string.char(96))",
-			"print(string.char(97))"
+			"print(string.char(97))",
+			"print(han)",
+			"print(player)",
+			"print(t)",
+			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
+			"sdf",
+			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
+			"print(player:GetLocation())",
+			"print(t:GetLocation())",
+			"p = PathFinder( player, t ); print( tostr(p:GetPath()))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
