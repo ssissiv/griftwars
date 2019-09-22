@@ -23,7 +23,7 @@ end
 
 Msg.Action = Msg.Act
 
-function Msg:ActToRoom( actor, msg, target, ... )
+function Msg:ActToRoom( msg, actor, target, ... )
 	-- This message goes to everybody else
 	local location = actor:GetLocation()
 	for i, obj in location:Contents() do

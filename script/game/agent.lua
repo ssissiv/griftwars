@@ -185,7 +185,8 @@ function Agent:CheckPrivacy( obj, pr_flags )
 	end
 end
 
-function Agent:MoveToLocation( location )
+function Agent:
+function Agent:WarpToLocation( location )
 	assert( location )
 
 	if self.location then
@@ -204,7 +205,7 @@ function Agent:MoveToLocation( location )
 end
 
 function Agent:MoveToAgent( agent )
-	self:MoveToLocation( agent:GetLocation() )
+	self:WarpToLocation( agent:GetLocation() )
 end
 
 function Agent:GetLocation()

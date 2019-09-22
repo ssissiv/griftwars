@@ -36,6 +36,12 @@ function Leader:OnVerbUnassigned( event_name, follower, verb )
 	self:RefreshOrders()
 end
 
+
+function Leader:EvaluateOrders( orders )
+	error() -- subclases should insert Verbs into the order array.
+end
+
+
 function Leader:RefreshOrders()
 	table.clear( self.orders )
 	self:EvaluateOrders( self.orders )

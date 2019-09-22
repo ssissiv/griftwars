@@ -1,28 +1,33 @@
 local Entity = class( "Entity" )
 
 function Entity:init()
-	self.events = EventSystem()
-	self.pause = {}
 end
 
 function Entity:ListenForAny( listener, fn, priority )
-	self.events:ListenForAny( listener, fn, priority )
+	self:GetEvents():ListenForAny( listener, fn, priority )
 end
 
 function Entity:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
+	self:GetEvents():ListenForEvent( event, listener, fn, priority )
 end
 
 function Entity:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
+	self:GetEvents():ListenForEvent( event, listener, fn, priority )
 end
 
 function Entity:RemoveListener( listener )
-	self.events:RemoveListener( listener )
+	self:GetEvents():RemoveListener( listener )
 end
 
 function Entity:BroadcastEvent( event_name, ... )
-	self.events:BroadcastEvent( event_name, self, ... )
+	self:GetEvents():BroadcastEvent( event_name, self, ... )
+end
+
+function Entity:GetEvents()
+	if self.events == nil then
+		self.events = EventSystem()
+	end
+	return self.events
 end
 
 function Entity:IsSpawned()
