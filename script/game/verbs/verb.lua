@@ -61,17 +61,35 @@ function Verb:GetShortDesc( viewer )
 end
 
 function Verb:BeginActing()
+	self.coro = coroutine.create( self.DoInteraction )
+
+	local ok, result = coroutine.resume( self.coro, self, self.actor )
+	if not ok then
+		error( tostring(result) .. "\n" .. tostring(debug.traceback( self.coro )))
+	end
+
+	-- if self.VERB_DURATION then
+	-- 	local world = self.actor.world
+	-- 	self.start_time = world:GetDateTime()
+	-- 	self.start_duration = self.VERB_DURATION
+	-- 	self.start_ev = world:ScheduleFunction( self.start_duration, self.EndActing, self )
+	-- else
+	-- 	self:EndActing()
+	-- end
+end
+
+function Verb:DoInteraction()
 	self.actor:AssignVerb( self )
 
-	if self.VERB_DURATION then
-		local world = self.actor.world
-		self.start_time = world:GetDateTime()
-		self.start_duration = self.VERB_DURATION
-		self.start_ev = world:ScheduleFunction( self.start_duration, self.EndActing, self )
-	else
-		self:EndActing()
-	end
+	self:Interact( self.actor )
+
+	self:EndActing()
 end
+
+function Verb:EndActing()
+	self:Cancel()
+end
+
 
 function Verb:CanCancel()
 	return true
@@ -79,24 +97,38 @@ end
 
 function Verb:Cancel()
 	self.actor:UnassignVerb( self )
-	self.actor.world:UnscheduleEvent( self.start_ev )
-	self.start_ev = nil
-	self.start_duration = nil
-	self.start_time = nil
+	if self.yield_ev then
+		self.actor.world:UnscheduleEvent( self.yield_ev )
+		self.yield_ev = nil
+	end
+	self.yield_ev = nil
+	self.yield_duration = nil
+	self.coro = nil
 end
 
 function Verb:GetActingProgress()
-	if self.start_ev and self.start_duration then
-		return 1.0 - (self.start_ev.when - self.actor.world:GetDateTime()) / self.start_duration
+	if self.yield_ev and self.yield_duration then
+		return 1.0 - (self.yield_ev.when - self.actor.world:GetDateTime()) / self.yield_duration
 	end
 end
 
-function Verb:EndActing()
-	self.actor:UnassignVerb( self )
-	self:Interact( self.actor, self.obj )
-	self.start_ev = nil
-	self.start_duration = nil
-	self.start_time = nil
+
+function Verb:Yield( duration )
+	if duration then
+		self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self )
+		self.yield_duration = duration
+		coroutine.yield()
+	end
+end
+
+function Verb:Resume()
+	self.yield_ev = nil
+	self.yield_duration = nil
+
+	local ok, result = coroutine.resume( self.coro )
+	if not ok then
+		error( result .. debug.traceback( self.coro ))
+	end
 end
 
 function Verb:__tostring()

@@ -28,7 +28,7 @@ end
 
 function World:SpawnAgent( agent, location )
 	agent:OnSpawn( self )
-	agent:MoveToLocation( location )
+	agent:WarpToLocation( location )
 
 	table.insert( self.agents, agent )
 

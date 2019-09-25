@@ -2,15 +2,15 @@ local Trait = class( "Trait", Aspect )
 
 ---------------------------------------------------------------
 
-local Cowardly = class( "Trait.Cowardly", Aspect )
+local Cowardly = class( "Trait.Cowardly", Trait )
 
 ---------------------------------------------------------------
 
-local Poor = class( "Trait.Poor", Aspect )
+local Poor = class( "Trait.Poor", Trait )
 
 ---------------------------------------------------------------
 
-local Memory = class( "Trait.Memory", Aspect )
+local Memory = class( "Trait.Memory", Trait )
 
 function Memory:init()
 	self.engrams = {}

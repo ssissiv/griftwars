@@ -196,6 +196,11 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				agent:SetFocus( obj )
 			end
 			ui.PopStyleColor()
+	
+			if DEV and Input.IsControl() and ui.IsItemClicked() then
+				DBG( obj )
+				break
+			end
 
 			if agent:GetFocus() == obj then
 				ui.SameLine( 0, 10 )
@@ -238,10 +243,6 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				end
 			end
 		end
-		if DEV and Input.IsControl() and ui.IsItemClicked() then
-			DBG( obj )
-			break
-		end
 
 		ui.PopID()
 	end
@@ -259,7 +260,7 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 	end
 
 	for i, verb in agent:PotentialVerbs() do
-		if verb.obj == obj or is_instance( verb, Verb.Travel) then
+		if verb.obj == obj or is_instance( verb, Verb.LeaveLocation) then
 			local ok, details = verb:CanInteract()
 			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 			self.verbs[i] = verb

@@ -8,12 +8,6 @@ Scrounge.ACT_DESC =
 	"{1.Id} is here rummaging around.",
 }
 
-Scrounge.STRINGS =
-{
-	"You scrounge a bit, looking for useful things.",
-	nil,
-	"{1.Id} rummages around, looking for something.",
-}
 Scrounge.VERB_DURATION = ONE_HOUR
 
 
@@ -32,13 +26,17 @@ function Scrounge:GetDesc()
 end
 
 function Scrounge:Interact( actor )
-	Msg:Action( self.STRINGS, actor )
+	Msg:ActToRoom( "{1.Id} begins rummaging around.", actor )
+	Msg:Echo( actor, "You begin to rummage around." )
+
+	self:Yield( HALF_HOUR )
+	
 	if self:CheckDC() then
 		local coins = math.random( 1, 3 )
 		Msg:Echo( actor, "You find {1#money}!", coins )
 		actor:GetInventory():DeltaMoney( coins )
 	else
 		Msg:Echo( actor, "You don't find anything useful." )
-		Msg:ActToRoom( actor, "{1.name} mutters something unhappily." )
+		Msg:ActToRoom( "{1.name} mutters something unhappily.", actor )
 	end
 end

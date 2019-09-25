@@ -64,6 +64,7 @@ WORLD_EVENT = MakeEnum{
 
 AGENT_EVENT = MakeEnum{
 	"VERB_UNASSIGNED",
+	"FOCUS_CHANGED",
 }
 
 STAT = MakeEnum

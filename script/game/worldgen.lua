@@ -30,7 +30,7 @@ function WorldGen:GeneratePlayer( world )
 	dens:SetDetails( "The Dens", "Nobody visits these ruins, for they are overrun with feral vrocs." )
 	dens:Connect( hood:RoomAt( 5 ))
 
-	local shopkeep = Agent()
+	local shopkeep = Agent.GeneralStoreOwner()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	world:SpawnAgent( shopkeep, shop )
 
