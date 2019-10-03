@@ -13,6 +13,8 @@ function GameScreen:init()
 	-- List of window panels.
 	self.windows = {}
 	
+	Msg:SetWorld( self.world )
+
 	return self
 end
 

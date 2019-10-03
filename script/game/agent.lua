@@ -123,7 +123,9 @@ function Agent:SetDetails( name, desc, gender )
 end
 
 function Agent:RegenerateLocTable( viewer )
-	self.loc_table = self:GenerateLocTable( viewer )
+	if self.loc_table and self.loc_table.viewer == viewer then
+		self.loc_table = self:GenerateLocTable( viewer )
+	end
 end
 
 function Agent:LocTable( viewer )
@@ -186,9 +188,9 @@ function Agent:IsAcquainted( agent )
 end
 
 function Agent:Acquaint( agent )
-	print( "ACQUAINT", self, agent, self:IsAcquainted( agent ))
 	if not self:IsAcquainted( agent ) then
 		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
+		agent:RegenerateLocTable( self )
 		return true
 	else
 		return false
