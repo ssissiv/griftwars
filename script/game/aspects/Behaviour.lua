@@ -21,7 +21,7 @@ function Behaviour:TickBehaviour()
 
 		local verb = table.arraypick( verbs )
 		if verb then
-			verb:BeginActing()
+			self.owner:DoVerb( verb )
 		end
 	end
 

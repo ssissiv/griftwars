@@ -2,18 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(string.byte(\"a\"))",
-			"print(string.byte(\"asdf\"))",
-			"t = { 1, 2, 3, 4, 5 }; print(table.unpack(t, 3, 4 )",
-			")",
-			"t = { 1, 2, 3, 4, 5 }; print(table.unpack(t, 3, 4 ))",
-			"print(t)",
-			"print(t, is_instance( t, Interaction ))",
-			"print( t:CheckPrivacy( player, PRIVACY.ID ))",
-			"t:GenerateLocTable( player )",
-			"print(player)",
-			"print( loc.format( \"{1.Id}\", t:LocTable( player ))",
-			"print( loc.format( \"{1.Id}\", t:LocTable( player )))",
 			"DBG(t)",
 			"asp = t",
 			"print(asp)",
@@ -33,7 +21,19 @@ return {
 			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
 			"print(player:GetLocation())",
 			"print(t:GetLocation())",
-			"p = PathFinder( player, t ); print( tostr(p:GetPath()))"
+			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
+			"print( is_class( Interaction.BuyFromStore ))",
+			"print( Interaction.BuyFromStore._classname)",
+			"print( is_class( Interaction.BuyFromShop ))",
+			"print( Interaction.BuyFromShop._classname)",
+			"print( Interaction.BuyFromShop._class)",
+			"print( Interaction.BuyFromShop._bases)",
+			"print( is_instance( Interaction.BuyFromShop(), Verb ))",
+			"print( is_instance( Interaction.BuyFromShop(), Interaction ))",
+			"sdf",
+			"print(han)",
+			"print(player)",
+			"t:RegenerateLocTable( player )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

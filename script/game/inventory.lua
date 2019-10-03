@@ -27,6 +27,19 @@ function Inventory:CalculateValue()
 	return value
 end
 
+function Inventory:AddItem( item )
+	table.insert( self.items, item )
+	item:AssignOwner( self )
+end
+
+function Inventory:RemoveItem( item )
+	table.arrayremove( self.items, item )
+end
+
+function Inventory:GetRandomItem()
+	return table.arraypick( self.items )
+end
+
 function Inventory:Items()
 	return ipairs( self.items )
 end

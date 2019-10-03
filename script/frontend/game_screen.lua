@@ -3,11 +3,16 @@ local GameScreen = class( "GameScreen" )
 function GameScreen:init()
 	local gen = WorldGen()
 	self.world = gen:GenerateWorld()
+	self.nexus = WorldNexus( self.world, self )
+	self.world:SetNexus( self.nexus )
 
 	-- List of objects and vergbs in the currently rendered location.
 	self.objects = {}
 	self.verbs = {}
 
+	-- List of window panels.
+	self.windows = {}
+	
 	return self
 end
 
@@ -54,6 +59,10 @@ function GameScreen:RenderInventory( puppet )
     	end
 
 		ui.TreePop()
+	end
+
+	for i, obj in puppet:GetInventory():Items() do 
+		ui.Selectable( tostring(obj) )
 	end
 
     ui.End()
@@ -116,6 +125,18 @@ function GameScreen:RenderScreen( gui )
 	if self.show_inventory then
 		self:RenderInventory( puppet )
 	end
+
+	for i, window in ipairs( self.windows ) do
+		window:RenderImGuiWindow( ui, self )
+	end
+end
+
+function GameScreen:AddWindow( window )
+	table.insert( self.windows, window )
+end
+
+function GameScreen:RemoveWindow( window )
+	table.arrayremove( self.windows, window )
 end
 
 function GameScreen:RenderAgentDetails( ui, puppet )
@@ -275,7 +296,7 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 				end
 
 				if ui.Selectable( txt ) then
-					verb:BeginActing()
+					agent:DoVerb( verb )
 				end
 
 				ui.PopStyleColor()
@@ -349,7 +370,7 @@ function GameScreen:KeyPressed( key )
 		if verb then
 			local ok, details = verb:CanInteract()
 			if ok and not verb.actor:IsBusy() and not self.world:IsPaused() then
-				verb:BeginActing()
+				self.world:GetPuppet():DoVerb( verb )
 			end
 		end
 		return true

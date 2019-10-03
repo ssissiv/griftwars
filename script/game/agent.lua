@@ -176,7 +176,23 @@ function Agent:GetInventory()
 end
 
 function Agent:GetMemory()
-	return self.memory
+	return self.memory -- Assigned by Trait.Memory when attained.
+end
+
+function Agent:IsAcquainted( agent )
+	if not self:CheckPrivacy( agent, PRIVACY.ID ) then
+		return false
+	end
+end
+
+function Agent:Acquaint( agent )
+	print( "ACQUAINT", self, agent, self:IsAcquainted( agent ))
+	if not self:IsAcquainted( agent ) then
+		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
+		return true
+	else
+		return false
+	end
 end
 
 function Agent:CheckPrivacy( obj, pr_flags )
@@ -215,14 +231,15 @@ function Agent:IsBusy()
 	return self.verbs and #self.verbs > 0
 end
 
-function Agent:AssignVerb( verb )
+function Agent:DoVerb( verb )
 	if self.verbs == nil then
 		self.verbs = {}
 	end
 	table.insert( self.verbs, verb )
+	verb:_BeginActing( self )
 end
 
-function Agent:UnassignVerb( verb )
+function Agent:_RemoveVerb( verb )
 	table.arrayremove( self.verbs, verb )
 	if #self.verbs == 0 then
 		self.verbs = nil

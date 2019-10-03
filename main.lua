@@ -12,7 +12,11 @@ require "debug/debug_mgr"
 debug_menus = require "debug/debug_menus"
 loc = require "locstring"
 Shaders = require "render/shader_defs"
+
 GameScreen = require "frontend/game_screen"
+require "frontend/Nexus"
+require "frontend/ShopWindow"
+
 Camera = require "camera"
 bit32 = require "bit"
 require "calendar"
@@ -58,6 +62,8 @@ require "game/aspects/features"
 require "game/aspects/Interactions"
 require "game/aspects/Leader"
 require "game/aspects/Shopkeep"
+
+require "game/objects/Jerky"
 
 require "game/characters/Scavenger"
 require "game/characters/Collector"

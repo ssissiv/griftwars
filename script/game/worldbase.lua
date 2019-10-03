@@ -11,6 +11,10 @@ function WorldBase:init()
 	self.pause = {}
 end
 
+function WorldBase:SetNexus( nexus )
+	self.nexus = nexus
+end
+
 function WorldBase:IsGameOver()
 	return false
 end

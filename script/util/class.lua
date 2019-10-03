@@ -6,7 +6,7 @@ local function readonly_err( t, k, v )
     error( "can't assign to instance" )
 end
 
-class = function( name, baseclass )
+class = function( name, ... )
     -- Break down class name into "."-delimited sub-parts. 
     local fullname = name
     local name_parts = {}
@@ -39,10 +39,31 @@ class = function( name, baseclass )
 
     cl._class = cl
     cl._classname = fullname
-    cl.__index = cl
-    cl._base = baseclass
+    local baseclasses = select( "#", ... )
+    if baseclasses > 1 then
+        cl._bases = { ... }
+    --     cl.__index = function( t, k )
+    --         local v = rawget( cl, k )
+    --         if v ~= nil then
+    --             return v
+    --         end
+    --         for i, baseclass in ipairs( cl._bases ) do
+    --             local v = baseclass[ k ]
+    --             if v ~= nil then
+    --                 return v
+    --             end
+    --         end
+    --     end
+        cl.__index = cl
+    else
+        cl._base = select( 1, ... )
+        cl.__index = cl
+    end
+
     cl._subclasses = table.empty
-    if baseclass then
+
+    for i = 1, baseclasses do
+        local baseclass = select( i, ... )
         if baseclass._subclasses == table.empty then
             baseclass._subclasses = {}
         end
@@ -60,6 +81,25 @@ class = function( name, baseclass )
     cl.strictify = function( self )
         self.__newindex = readonly_err
         return self
+    end
+
+    cl.init_bases = function( self, ... )
+        local base = rawget( cl, "_base" )
+        if base then
+            if base.init then
+                base.init( self, ... )
+            end
+            return
+        end
+
+        local bases = rawget( cl, "_bases" )
+        if bases then
+            for i, base in ipairs( bases ) do
+                if base.init then
+                    base.init( self, ... )
+                end
+            end
+        end
     end
 
     cl.new = function(self, ...)
@@ -86,7 +126,8 @@ class = function( name, baseclass )
         return inst    
     end
 
-    if baseclass then
+    if baseclasses == 1 then
+        local baseclass = select( 1, ... )
         --metamethods are looked up with rawget, so we have to copy tostring forward manually
         cl.__tostring = baseclass.__tostring
 
@@ -95,6 +136,19 @@ class = function( name, baseclass )
         end
 
         setmetatable( cl, { __index = baseclass, __call = cl.new})
+
+    elseif baseclasses > 1 then
+        local function __index( t, k )
+            for i, base in ipairs( t._bases ) do
+                local v = base[k]
+                if v ~= nil then
+                    return v
+                end
+            end
+        end
+
+        setmetatable( cl, { __index = __index, __call = cl.new })
+
     else
         setmetatable( cl, { __call = cl.new})
     end
@@ -109,6 +163,12 @@ function base_match(c1, c2)
 
     if c1._base then
         return base_match(c1._base, c2)
+    elseif c1._bases then
+        for i, base in ipairs( cl._bases) do
+            if base_match(base, c2) then
+                return true
+            end
+        end
     end
 
     return false
@@ -140,6 +200,12 @@ is_instance = function(inst, class)
             end
             if inst._base and base_match(inst._base, class) then
                 return true
+            elseif inst._bases then
+                for i, base in ipairs( inst._bases ) do
+                    if base_match(base, class) then
+                        return true
+                    end
+                end
             end
         end
     end

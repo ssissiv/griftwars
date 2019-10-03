@@ -169,10 +169,9 @@ end
 
 function Acquaint:OnSatisfied( actor, dice )
 	-- We know the actor.
-	actor:GetMemory():AddEngram( Engram.MakeKnown( self.owner, PRIVACY.ID ))
-	self.owner:RegenerateLocTable( actor )
-
-	Msg:Speak( "Yo, I'm {1.name}", self.owner, actor )
+	if actor:Acquaint( actor ) then
+		Msg:Speak( "Yo, I'm {1.name}", self.owner, actor )
+	end
 
 	self.owner:LoseAspect( self )
 end
@@ -209,3 +208,42 @@ function Chat:OnSatisfied( actor, dice )
 
 	self:StartCooldown( ONE_DAY )
 end
+
+
+-----------------------------------------------------------------------------------
+-- TODO: have Shopkeep own this implementation
+
+local BuyFromShop = class( "Interaction.BuyFromShop", Interaction, Verb )
+
+function BuyFromShop:init()
+	self:init_bases()
+	assert( self.reqs )
+end
+
+-- Verb.GetDesc
+function BuyFromShop:GetDesc()
+	return "Buy/Sell"
+end
+
+function BuyFromShop:CanInteract( actor )
+	if self.owner:IsBusy() then
+		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
+	end
+
+	return true
+end
+
+function BuyFromShop:OnSatisfied( actor, dice )
+	actor:DoVerb( self )
+end
+
+function BuyFromShop:Interact( actor )
+	assert( actor )
+	-- local item = self.owner:GetInventory():GetRandomItem()
+	local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )
+	if item then
+		self.owner:GetAspect( Aspect.Shopkeep ):SellToBuyer( item, actor )
+	end
+end
+
+

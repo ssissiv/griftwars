@@ -1,7 +1,7 @@
 local Verb = class( "Verb" )
 
 function Verb:init( actor, obj )
-	assert( is_instance( actor, Agent ))
+	-- assert( is_instance( actor, Agent ))
 	self.actor = actor
 	self.obj = obj
 end
@@ -60,10 +60,18 @@ function Verb:GetShortDesc( viewer )
 	end
 end
 
-function Verb:BeginActing()
-	self.coro = coroutine.create( self.DoInteraction )
 
-	local ok, result = coroutine.resume( self.coro, self, self.actor )
+local function DoInteraction( self, actor )
+	self:Interact( actor )
+
+	self:EndActing( actor )
+end
+
+
+function Verb:_BeginActing( actor )
+	self.coro = coroutine.create( DoInteraction )
+
+	local ok, result = coroutine.resume( self.coro, self, actor or self.actor )
 	if not ok then
 		error( tostring(result) .. "\n" .. tostring(debug.traceback( self.coro )))
 	end
@@ -78,25 +86,16 @@ function Verb:BeginActing()
 	-- end
 end
 
-function Verb:DoInteraction()
-	self.actor:AssignVerb( self )
-
-	self:Interact( self.actor )
-
+function Verb:Cancel()
 	self:EndActing()
 end
-
-function Verb:EndActing()
-	self:Cancel()
-end
-
 
 function Verb:CanCancel()
 	return true
 end
 
-function Verb:Cancel()
-	self.actor:UnassignVerb( self )
+function Verb:EndActing( actor )
+	actor:_RemoveVerb( self )
 	if self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.yield_ev = nil
