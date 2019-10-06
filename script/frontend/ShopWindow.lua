@@ -10,7 +10,8 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 	ui.SetNextWindowSize( 500,300 )
 
-    local shown, close, c = ui.Begin( "Inventory", false, flags )
+	local txt = loc.format( "{1.Id}'s Shop", self.owner:LocTable())
+    local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
     	local shopkeep = self.owner:GetAspect( Aspect.Shopkeep )
 		ui.Columns( 2 )
@@ -24,6 +25,9 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 			ui.NextColumn()
 		end
 		ui.Columns( 1 )
+		ui.Separator()
+
+		ui.Text( loc.format( "You have {1#money}.", self.buyer:GetInventory():GetMoney() ))
 		ui.Separator()
 
 		if ui.Button( "Close" ) then

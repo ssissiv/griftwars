@@ -129,6 +129,10 @@ function Agent:RegenerateLocTable( viewer )
 end
 
 function Agent:LocTable( viewer )
+	if viewer == nil and self.world then
+		viewer = self.world:GetPuppet()
+	end
+
 	if self.loc_table == nil or self.loc_table.viewer ~= viewer  then
 		self.loc_table = self:GenerateLocTable( viewer )
 	end
@@ -156,7 +160,10 @@ function Agent:GenerateLocTable( viewer )
 		t.HeShe = "It"
 	end
 
-	if viewer == nil or viewer:CheckPrivacy( self, PRIVACY.ID ) then
+	if viewer == nil then
+		t.id = loc.format( "[[{1}]]", self.name )
+		t.Id = t.id
+	elseif viewer:CheckPrivacy( self, PRIVACY.ID ) then
 		t.id = loc.format( "[{1}]", self.name )
 		t.Id = t.id
 	else
