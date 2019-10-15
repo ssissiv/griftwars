@@ -1,5 +1,6 @@
----------------------------------------------------------------
--- Behaviours make agents do things.
+--------------------------------------------------------------------
+-- Behaviours schedule Verb evaluation & execution every ONE_HOUR
+--    CollectInteractions -> DoVerb
 
 local Behaviour = class( "Aspect.Behaviour", Aspect )
 
@@ -17,9 +18,7 @@ end
 
 function Behaviour:TickBehaviour()
 	if not self.owner:IsBusy() then
-		local verbs = self.owner:CollectInteractions()
-
-		local verb = table.arraypick( verbs )
+		local verb = self.owner:GetPotentialVerbs():PickRandom()
 		if verb then
 			self.owner:DoVerb( verb )
 		end

@@ -8,15 +8,6 @@ Scrounge.ACT_DESC =
 	"{1.Id} is here rummaging around.",
 }
 
-Scrounge.VERB_DURATION = ONE_HOUR
-
-
-function Scrounge.CollectInteractions( actor, verbs )
-	if actor.location and actor:HasAspect( Skill.Scrounge ) then
-		table.insert( verbs, Verb.Scrounge( actor ))
-	end
-end
-
 function Scrounge:CalculateDC( mods )
 	return 10
 end
@@ -29,7 +20,7 @@ function Scrounge:Interact( actor )
 	Msg:ActToRoom( "{1.Id} begins rummaging around.", actor )
 	Msg:Echo( actor, "You begin to rummage around." )
 
-	self:Yield( HALF_HOUR )
+	self:YieldForTime( HALF_HOUR )
 	
 	if self:CheckDC() then
 		local coins = math.random( 1, 3 )

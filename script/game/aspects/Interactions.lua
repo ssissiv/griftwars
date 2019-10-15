@@ -246,4 +246,19 @@ function BuyFromShop:Interact( actor )
 	end
 end
 
+-----------------------------------------------------------------------------------
+-- Learn about Relationship
+
+local LearnRelationship = class( "Interaction.LearnRelationship", Interaction )
+
+function LearnRelationship:CanInteract( actor )
+	return not self.owner:HasAgent( actor ) and not self.owner:IsKnownBy( actor )
+end
+
+function LearnRelationship:OnSatisfied( actor, dice )
+	self.owner:AddKnownBy( actor )
+end
+
+
+
 

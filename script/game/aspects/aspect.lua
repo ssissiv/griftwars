@@ -1,15 +1,36 @@
 local Aspect = class( "Aspect" )
 
-
 function Aspect:GetID()
 	return self._classname
+end
+
+function Aspect:GetWorld()
+	local owner = self.owner
+	while owner do
+		if owner.world then
+			return owner.world
+		end
+		owner = owner.owner
+	end
 end
 
 function Aspect:OnGainAspect( owner )
 	self.owner = owner
 	if self.event_handlers then
 		for event, fn in pairs( self.event_handlers ) do
-			owner:ListenForEvent( event, self, fn )
+			if not IsEnum( event, WORLD_EVENT ) then
+				owner:ListenForEvent( event, self, fn )
+			end
+		end
+	end
+end
+
+function Aspect:OnSpawn( world )
+	if self.event_handlers then
+		for event, fn in pairs( self.event_handlers ) do
+			if IsEnum( event, WORLD_EVENT ) then
+				self.owner.world:ListenForEvent( event, self, fn )
+			end
 		end
 	end
 end
@@ -17,6 +38,10 @@ end
 function Aspect:OnLoseAspect( owner )
 	self.owner:RemoveListener( self )
 	self.owner = nil
+end
+
+function Aspect:OnDespawn()
+	self.owner.world:RemoveListener( self )
 end
 
 function Aspect:RegisterHandler( event, fn )

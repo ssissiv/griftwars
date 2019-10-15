@@ -1,7 +1,6 @@
 local LeaveLocation = class( "Verb.LeaveLocation", Verb )
 
 LeaveLocation.COLOUR = constants.colours.MAGENTA
-LeaveLocation.VERB_DURATION = 1 * ONE_MINUTE
 
 LeaveLocation.ACT_DESC =
 {
@@ -24,21 +23,19 @@ LeaveLocation.ENTER_STRINGS =
 	"{1.Id} enters."
 }
 
-function LeaveLocation.CollectInteractions( actor, verbs )
-	if actor.location then
-		for i, exit in actor.location:Exits() do
-			local dest = exit:GetDest( actor.location )
-			assert( dest ~= actor.location )
-			table.insert( verbs, Verb.LeaveLocation( actor, dest ))
-		end
-	end
-end
-
 function LeaveLocation:GetShortDesc( viewer )
-	if self.actor:IsPuppet() then
-		return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), self.obj and self.obj:LocTable( viewer ))
+	if self.obj then
+		if self.actor:IsPuppet() then
+			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), elf.obj:LocTable( viewer ))
+		else
+			return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.obj:LocTable( viewer ))
+		end
 	else
-		return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.obj and self.obj:LocTable( viewer ))
+		if self.actor:IsPuppet() then
+			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ) )
+		else
+			return loc.format( "{1.Id} is here, leaving.", self.actor:LocTable( viewer ) )
+		end
 	end
 end
 
@@ -49,9 +46,22 @@ end
 function LeaveLocation:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
-	actor:WarpToLocation( self.obj )
+	local dest = self.obj
+	if dest == nil then
+		local dests = {}
+		for i, exit in actor.location:Exits() do
+			local dest = exit:GetDest( actor.location )
+			assert( dest ~= actor.location )
+			table.insert( dests, dest )
+		end
 
-	Msg:Action( self.ENTER_STRINGS, actor, self.obj )
+		dest = table.arraypick( dests )
+	end
+
+	self:YieldForTime( ONE_MINUTE )
+	actor:WarpToLocation( dest )
+
+	Msg:Action( self.ENTER_STRINGS, actor, dest )
 end
 
 ---------------------------------------------------------------

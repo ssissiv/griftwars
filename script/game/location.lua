@@ -33,18 +33,30 @@ function Location:SetDetails( title, desc )
 	self.contents = {}
 end
 
-function Location:AddAgent( agent )
+function Location:_AddAgent( agent )
 	assert( is_instance( agent, Agent ))
 	assert( table.arrayfind( self.contents, agent ) == nil )
 
 	table.insert( self.contents, agent )
+	agent:ListenForEvent( AGENT_EVENT.COLLECT_VERBS, self, self.OnCollectVerbs )
+
+	self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, agent )
 end
 
-function Location:RemoveAgent( agent )
+function Location:_RemoveAgent( agent )
 	assert( is_instance( agent, Agent ))
 
+	agent:RemoveListener( self )
 	local idx = table.arrayfind( self.contents, agent )
 	table.remove( self.contents, idx )
+
+	self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, agent )
+end
+
+function Location:OnCollectVerbs( event_name, agent, verbs )
+	for i, exit in ipairs( self.exits ) do
+		verbs:AddVerb( Verb.LeaveLocation( agent, exit:GetDest( self )))
+	end
 end
 
 function Location:IsConnected( other )

@@ -52,6 +52,7 @@ end
 
 function Verb:GetShortDesc( viewer )
 	if self.ACT_DESC then
+		assert( self.actor:LocTable(viewer ))
 		if self.actor:IsPuppet() then
 			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), self.obj and self.obj:LocTable( viewer ))
 		else
@@ -62,6 +63,8 @@ end
 
 
 local function DoInteraction( self, actor )
+	self.actor = actor
+	
 	self:Interact( actor )
 
 	self:EndActing( actor )
@@ -69,21 +72,12 @@ end
 
 
 function Verb:_BeginActing( actor )
-	self.coro = coroutine.create( DoInteraction )
+	local coro = coroutine.create( DoInteraction )
 
-	local ok, result = coroutine.resume( self.coro, self, actor or self.actor )
+	local ok, result = coroutine.resume( coro, self, actor or self.actor )
 	if not ok then
-		error( tostring(result) .. "\n" .. tostring(debug.traceback( self.coro )))
+		error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
 	end
-
-	-- if self.VERB_DURATION then
-	-- 	local world = self.actor.world
-	-- 	self.start_time = world:GetDateTime()
-	-- 	self.start_duration = self.VERB_DURATION
-	-- 	self.start_ev = world:ScheduleFunction( self.start_duration, self.EndActing, self )
-	-- else
-	-- 	self:EndActing()
-	-- end
 end
 
 function Verb:Cancel()
@@ -102,7 +96,6 @@ function Verb:EndActing( actor )
 	end
 	self.yield_ev = nil
 	self.yield_duration = nil
-	self.coro = nil
 end
 
 function Verb:GetActingProgress()
@@ -112,10 +105,12 @@ function Verb:GetActingProgress()
 end
 
 
-function Verb:Yield( duration )
+function Verb:YieldForTime( duration )
 	if duration then
 		self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self )
 		self.yield_duration = duration
+		assert( self.coro == nil )
+		self.coro = coroutine.running()
 		coroutine.yield()
 	end
 end
@@ -123,10 +118,17 @@ end
 function Verb:Resume()
 	self.yield_ev = nil
 	self.yield_duration = nil
+	local coro = self.coro
 
-	local ok, result = coroutine.resume( self.coro )
+	local ok, result = coroutine.resume( coro )
 	if not ok then
-		error( result .. debug.traceback( self.coro ))
+		error( result .. debug.traceback( coro ))
+	elseif coroutine.status( coro ) == "suspended" then
+		assert( self.coro == coro )
+	else
+		-- Done!
+		-- print( "DONE", self, coroutine.status(self.coro))
+		self.coro = nil
 	end
 end
 

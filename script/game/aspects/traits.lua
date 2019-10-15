@@ -37,7 +37,7 @@ end
 function Memory:CheckPrivacy( target, flag )
 	local pr_flags = 0
 	for i, engram in ipairs( self.engrams ) do
-		if engram.pr_flags and target:MatchTarget( engram.obj ) then
+		if engram.pr_flags and target == engram.obj then
 			pr_flags = SetBits( pr_flags, engram.pr_flags )
 		end
 	end

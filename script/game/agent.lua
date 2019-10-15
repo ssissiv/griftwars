@@ -11,7 +11,7 @@ function Agent:init()
 	self.flags = {}
 	self.stats = {}
 	self.sense_log = {} -- array of strings
-	self.potential_verbs = {}
+	self.potential_verbs = VerbContainer()
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
@@ -83,37 +83,49 @@ function Agent:SetLeader( leader )
 	self.leader = leader
 end
 
-function Agent:CollectInteractions( actor, verbs )
+function Agent:CalculateSchedule()
+	if self.schedule == nil then
+		self.schedule = Schedule()
+	end
+	self.schedule:CalculateSchedule()
+end
+
+function Agent:CollectPotentialVerbs()
 	local now = self.world:GetDateTime()
 	if now <= (self.verb_time or 0) then
-		return self.potential_verbs
+		return
 	end
 
 	-- FIXME: figure out a way to avoid churning this search.
 	self.verb_time = now + 1
 
-	if actor == nil or actor == self then
-		verbs = self.potential_verbs
-		table.clear( verbs )
-	else
-		assert( verbs )
-	end
+	-- if actor == nil or actor == self then
+	-- 	verbs = self.potential_verbs
+	-- 	table.clear( verbs )
+	-- else
+	-- 	assert( verbs )
+	-- end
 
-	Verb.RecurseSubclasses( nil, function( class )
-		if class.CollectInteractions then
-			class.CollectInteractions( self, verbs )
-		end
-	end )
+	self.potential_verbs:ClearVerbs()
+	self:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self.potential_verbs )
+
+	-- Verb.RecurseSubclasses( nil, function( class )
+	-- 	if class.CollectInteractions then
+	-- 		class.CollectInteractions( self, verbs )
+	-- 	end
+	-- end )
 
 	return self.potential_verbs
 end
 
-function Agent:PotentialVerbs()
-	return ipairs( self.potential_verbs )
+function Agent:GetPotentialVerbs()
+	self:CollectPotentialVerbs()
+	return self.potential_verbs
 end
 
-function Agent:MatchTarget( target )
-	return target == self
+function Agent:PotentialVerbs()
+	self:CollectPotentialVerbs()
+	return self.potential_verbs:Verbs()
 end
 
 function Agent:SetDetails( name, desc, gender )
@@ -195,7 +207,7 @@ function Agent:IsAcquainted( agent )
 end
 
 function Agent:Acquaint( agent )
-	if not self:IsAcquainted( agent ) then
+	if self.memory and not self:IsAcquainted( agent ) then
 		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
 		agent:RegenerateLocTable( self )
 		return true
@@ -213,9 +225,10 @@ end
 function Agent:WarpToLocation( location )
 	assert( location )
 
+	local prev_location = self.location
 	if self.location then
-		self.location:RemoveAgent( self )
 		self:SetFocus( nil )
+		self.location:_RemoveAgent( self )
 		self.location = nil
 	end
 
@@ -224,8 +237,10 @@ function Agent:WarpToLocation( location )
 	if location then
 		assert( self.world )
 		self.location = location
-		location:AddAgent( self )
+		location:_AddAgent( self )
 	end
+
+	self:BroadcastEvent( AGENT_EVENT.LOCATION_CHANGED, prev_location, self.location )
 end
 
 function Agent:MoveToAgent( agent )
@@ -238,6 +253,10 @@ end
 
 function Agent:IsBusy()
 	return self.verbs and #self.verbs > 0
+end
+
+function Agent:IsDoing( verb )
+	return self.verbs and table.contains( self.verbs, verb )
 end
 
 function Agent:DoVerb( verb )
@@ -270,7 +289,6 @@ function Agent:CancelInvalidVerbs()
 		end
 	end
 end
-
 
 function Agent:CreateStat( stat, value, max_value )
 	assert( self:GetAspect( stat ) == nil )

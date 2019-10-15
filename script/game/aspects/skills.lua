@@ -1,5 +1,9 @@
 local Skill = class( "Skill", Aspect )
 
+function Skill:init()
+	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectActions )
+end
+
 function Skill:GetName()
 	return self.name or self._classname
 end
@@ -8,9 +12,11 @@ end
 
 local Scrounge = class( "Skill.Scrounge", Skill )
 
----------------------------------------------------------------
+function Scrounge:OnCollectActions( event_name, agent, actions )
+	-- if working...
+	actions:AddVerb( Verb.Scrounge() )
+end
 
-local Socialize = class( "Skill.Socialize", Skill )
 
 ---------------------------------------------------------------
 

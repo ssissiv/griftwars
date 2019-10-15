@@ -59,12 +59,21 @@ PRIVACY = MakeBitField
 
 WORLD_EVENT = MakeEnum{
 	"LOG",
+	"START", -- Start() occurs after all entities have been spawned.
 	"VERB_FINISH",	
 }
 
 AGENT_EVENT = MakeEnum{
 	"VERB_UNASSIGNED",
 	"FOCUS_CHANGED",
+	"COLLECT_VERBS",
+	"CALC_AGENDA",
+	"LOCATION_CHANGED",
+}
+
+LOCATION_EVENT = MakeEnum{
+	"AGENT_ADDED",
+	"AGENT_REMOVED",
 }
 
 STAT = MakeEnum

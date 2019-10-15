@@ -5,6 +5,7 @@ function GameScreen:init()
 	self.world = gen:GenerateWorld()
 	self.nexus = WorldNexus( self.world, self )
 	self.world:SetNexus( self.nexus )
+	self.world:Start()
 
 	-- List of objects and vergbs in the currently rendered location.
 	self.objects = {}
@@ -12,8 +13,6 @@ function GameScreen:init()
 
 	-- List of window panels.
 	self.windows = {}
-	
-	Msg:SetWorld( self.world )
 
 	return self
 end
@@ -87,8 +86,6 @@ function GameScreen:RenderScreen( gui )
     	ui.Text( "(PAUSED)" )
     end
     self:RenderAgentDetails( ui, puppet )
-
-    puppet:CollectInteractions()
 
     -- Render what the player is doing...
     for i, verb in puppet:Verbs() do
@@ -233,6 +230,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 
 				if agent:IsPlayer() then
 					ui.Indent( 20 )
+					-- Make a verb.
 					local dice = agent:GetPlayer():GetDice()
 					local count, count_potential = 0, 0
 					for i, aspect in obj:Aspects() do

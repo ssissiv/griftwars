@@ -7,6 +7,11 @@ function World:init()
 	self.locations = {}
 	self.agents = {}
 	self.stats = {}
+	self.relationships = {}
+end
+
+function World:Start()
+	self:BroadcastEvent( WORLD_EVENT.START, self )
 end
 
 function World:SpawnLocation( location )
@@ -43,6 +48,11 @@ end
 
 function World:AllAgents()
 	return ipairs( self.agents )
+end
+
+function World:SpawnRelationship( rel )
+	assert( is_instance( rel, Relationship ))
+	table.insert( self.relationships, rel )
 end
 
 function World:GetPlayer()

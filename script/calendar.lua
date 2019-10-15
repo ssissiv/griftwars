@@ -1,6 +1,10 @@
 local Calendar = class( "Calendar" )
 
 function Calendar.FormatTime( datetime )
+	if datetime == nil then
+		return "nil"
+	end
+	
 	local days =  math.floor( datetime / 24 )
 	local hours = math.floor( datetime % 24 )
 	local minutes = math.floor( (datetime - math.floor( datetime )) * 60 )
@@ -19,5 +23,10 @@ function Calendar.FormatWallTime( datetime )
 	local minutes = math.floor( datetime / 60 ) - (hours * 60)
 	local seconds = math.floor( datetime % 60 )
 	return loc.format( "{1}:{2%02d}:{3%02d}", hours, minutes, seconds )
+end
+
+function Calendar.GetHour( datetime )
+	local hours = math.floor( datetime % 24 )
+	return hours
 end
 

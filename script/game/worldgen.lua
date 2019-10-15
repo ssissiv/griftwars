@@ -6,6 +6,8 @@ end
 function WorldGen:GenerateWorld()
 	self.world = World()
 
+	Msg:SetWorld( self.world )
+
 	self:GeneratePlayer( self.world )
 
 	return self.world
@@ -32,10 +34,17 @@ function WorldGen:GeneratePlayer( world )
 
 	local shopkeep = Agent.GeneralStoreOwner()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
+	shopkeep:GetAspect( Aspect.Shopkeep ):AssignShop( shop )
 	world:SpawnAgent( shopkeep, shop )
 
+
 	local collector = Agent.Collector()
+	shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
 	world:SpawnAgent( collector, shop )
+
+	-- Gerin meets Armitage to identify any unknown items he's scavenged.
+	-- Armitage gets free Scrap.
+	world:SpawnRelationship( Relationship.ArmitageGerin( shopkeep, collector ) )
 
 
 	local player = Agent()

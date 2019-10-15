@@ -15,6 +15,7 @@ Travel.ENTER_STRINGS =
 }
 
 function Travel.CollectInteractions( actor, verbs )
+	error()
 	if actor.location then
 	end
 end

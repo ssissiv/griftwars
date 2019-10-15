@@ -281,7 +281,7 @@ end
 
 function IsEnum( val, enum )
     assert( getmetatable( enum ) == _ENUM_META )
-    return val and enum[val] == val
+    return val and rawget( enum, val ) == val
 end
 
 function MakeBitField(args)
