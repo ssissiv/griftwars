@@ -14,12 +14,6 @@ Travel.ENTER_STRINGS =
 	"{1.Id} enters."
 }
 
-function Travel.CollectInteractions( actor, verbs )
-	error()
-	if actor.location then
-	end
-end
-
 function Travel:GetDesc()
 	return loc.format( "Travel to {1}", self.obj:GetTitle() )
 end

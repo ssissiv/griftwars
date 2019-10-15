@@ -52,7 +52,6 @@ end
 
 function Verb:GetShortDesc( viewer )
 	if self.ACT_DESC then
-		assert( self.actor:LocTable(viewer ))
 		if self.actor:IsPuppet() then
 			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), self.obj and self.obj:LocTable( viewer ))
 		else
