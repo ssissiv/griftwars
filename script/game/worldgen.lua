@@ -4,16 +4,11 @@ function WorldGen:init()
 end
 
 function WorldGen:GenerateWorld()
-	self.world = World()
+	local world = World()
+	self.world = world
 
-	Msg:SetWorld( self.world )
+	Msg:SetWorld( world )
 
-	self:GeneratePlayer( self.world )
-
-	return self.world
-end
-
-function WorldGen:GeneratePlayer( world )
 	local start = Location()
 	start:SetDetails( "Your Home", "This is your home. It's pretty chill." )
 	start:SetImage( assets.LOCATION_BGS.HOME )
@@ -46,6 +41,18 @@ function WorldGen:GeneratePlayer( world )
 	-- Armitage gets free Scrap.
 	world:SpawnRelationship( Relationship.ArmitageGerin( shopkeep, collector ) )
 
+	for i = 1, 3 do
+		local scavenger = world:SpawnAgent( Agent.Scavenger(), start )
+		world:SpawnRelationship( Relationship.Subordinate( collector, scavenger ))
+	end
+
+	local player = self:GeneratePlayer( self.world )
+	world:SpawnAgent( player, start )
+
+	return self.world
+end
+
+function WorldGen:GeneratePlayer( world )
 
 	local player = Agent()
 	player:SetDetails( "Han", nil, GENDER.MALE )
@@ -55,11 +62,5 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Trait.Memory() )
 	player:GainAspect( Trait.Player() ):AddDefaultDice()
 	player:GetInventory():DeltaMoney( 1 )
-	world:SpawnAgent( player, start )
-
-	for i = 1, 3 do
-		local scavenger = world:SpawnAgent( Agent.Scavenger(), start )
-		-- link to collector
-		collector:GetAspect( Trait.Collector ):AddFollower( scavenger )
-	end
+	return player
 end

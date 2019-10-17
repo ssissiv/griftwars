@@ -1,18 +1,6 @@
 
 local OrderGive = class( "Verb.OrderGive", Verb )
 
-function OrderGive.CollectInteractions( actor, verbs )
-	local leader = actor:GetLeader()
-	if leader then
-		local order = leader:GetAspect( Trait.Leader ):FindOrder( function( order )
-				return order._class == OrderGive and order.obj == actor
-			end )
-		if order then
-			table.insert( verbs, order )
-		end
-	end
-end
-
 function OrderGive:Interact( actor )
 	Msg:ActToRoom( "{1.Id} gives something to {2.Id}.", actor, target )
 	for i, item in self.owner:GetInventory():Items() do		

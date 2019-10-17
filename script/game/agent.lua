@@ -222,6 +222,17 @@ function Agent:CheckPrivacy( obj, pr_flags )
 	end
 end
 
+function Agent:_AddRelationship( r )
+	if self.relationships == nil then
+		self.relationships = {}
+	end
+	table.insert( self.relationships, r )
+end
+
+function Agent:Relationships()
+	return ipairs( self.relationships or table.empty )
+end
+
 function Agent:WarpToLocation( location )
 	assert( location )
 

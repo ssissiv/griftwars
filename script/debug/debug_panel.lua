@@ -190,7 +190,7 @@ end
 -- Helper wrappers for composite imgui rendering.
 
 function DebugPanel:CollapsingHeader( ui, title, flags )
-    return ui.CollapsingHeader( title, flags or "ImGuiTreeFlags_DefaultOpen" )
+    return ui.CollapsingHeader( title, flags or "DefaultOpen" )
 end
 
 function DebugPanel:AddDebugMenu( dbg, ui, menu, menu_params )

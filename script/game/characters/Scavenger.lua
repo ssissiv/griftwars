@@ -33,6 +33,8 @@ function Scavenge:Interact( actor )
 	self.verb:Interact( actor )
 end
 
+---------------------------------------------------------------------
+
 local Scavenger = class( "Agenda.Scavenger", Aspect.Agenda )
 
 function Scavenger:init()

@@ -45,6 +45,7 @@ require "game/map/Line"
 
 require "game/relationships/Relationship"
 require "game/relationships/ArmitageGerin"
+require "game/relationships/Subordinate"
 
 require "game/VerbContainer"
 require "game/verbs/verb"

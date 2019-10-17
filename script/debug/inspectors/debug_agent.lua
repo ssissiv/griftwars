@@ -32,7 +32,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 	end
 
 	local agenda = self.agent:GetAspect( Aspect.Agenda )
-	if agenda and ui.CollapsingHeader( "Agenda" ) then
+	if agenda and ui.CollapsingHeader( "Agenda", "DefaultOpen" ) then
 		ui.Columns( 3 )
 		for i, task in ipairs( agenda.tasks ) do
 			if self.agent:IsDoing( task.verb ) then

@@ -14,7 +14,9 @@ function Relationship:HasAgent( agent )
 end
 
 function Relationship:AddAgent( agent )
+	agent:_AddRelationship( self )
 	table.insert( self.agents, agent )
+	return agent
 end
 
 function Relationship:IsKnownBy( agent )
