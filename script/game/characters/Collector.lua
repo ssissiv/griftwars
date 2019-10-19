@@ -1,12 +1,5 @@
-local Collector = class( "Agenda.Collector", Aspect.Agenda )
 
-function Collector:OnCollectAgenda( orders )
-	for i, follower in ipairs( self.followers ) do
-		if follower:GetInventory():CalculateValue() > 0 then
-			table.insert( orders, Verb.OrderGive( self.owner, follower ))
-		end
-	end
-end
+local Collector = class( "Agenda.Collector", Aspect.Agenda )
 
 function Collector:init()
 	Aspect.Agenda.init( self )
@@ -15,14 +8,15 @@ end
 
 function Collector:OnCalculateAgenda( event_name, agent, agenda )
 	local subordinate
-	for i, other in self.owner:Relationships() do
-		if other:HasAspect( Aspect.Scavenger ) then
-			subordinate = other
+	for i, r in self.owner:Relationships() do
+		if is_instance( r, Relationship.Subordinate ) then
+			subordinate = r.subordinate
 			break
 		end
 	end
 	if subordinate then
-		agenda:ScheduleTaskForAgenda( Verb.CollectorExchange( agent, subordinate ), 9, 10 )
+		agenda:ScheduleTaskForAgenda( Verb.Idle( agent ), 21, 22, self )
+		subordinate:GetAspect( Aspect.Agenda ):ScheduleTaskForAgenda( Verb.Deliver( subordinate, agent ), 14, 22, self )
 	end
 end
 
@@ -32,7 +26,6 @@ function Agent.Collector()
 	local ch = Agent()
 	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
 	ch:GainAspect( Agenda.Collector() )
-	ch:GainAspect( Aspect.Behaviour() )
  	return ch
 end
 

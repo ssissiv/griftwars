@@ -6,6 +6,10 @@ function Verb:init( actor, obj )
 	self.obj = obj
 end
 
+function Verb:SetEndTime( end_time )
+	self.end_time = end_time
+end
+
 function Verb.RecurseSubclasses( class, fn )
 	class = class or Verb
 	fn( class )
@@ -13,15 +17,6 @@ function Verb.RecurseSubclasses( class, fn )
 	for i, subclass in ipairs( class._subclasses ) do
 		Verb.RecurseSubclasses( subclass, fn )
 	end
-end
-
-function Verb:AssignActor( actor )
-	assert( self.actor == nil or actor == self.actor )
-	self.actor = actor
-end
-
-function Verb:AssignObj( obj )
-	self.obj = obj
 end
 
 function Verb:GetRoomDesc()
@@ -66,6 +61,10 @@ local function DoInteraction( self, actor )
 	
 	self:Interact( actor )
 
+	if self.end_time then
+		self:YieldForTime( self.end_time - actor.world:GetDateTime() )
+	end
+	
 	self:EndActing( actor )
 end
 
@@ -105,29 +104,25 @@ end
 
 
 function Verb:YieldForTime( duration )
-	if duration then
-		self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self )
-		self.yield_duration = duration
-		assert( self.coro == nil )
-		self.coro = coroutine.running()
-		coroutine.yield()
-	end
+	assert( duration > 0 )
+
+	self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self, coroutine.running() )
+	self.yield_duration = duration
+	coroutine.yield()
 end
 
-function Verb:Resume()
+function Verb:Resume( coro )
 	self.yield_ev = nil
 	self.yield_duration = nil
-	local coro = self.coro
 
 	local ok, result = coroutine.resume( coro )
 	if not ok then
-		error( result .. debug.traceback( coro ))
+		error( tostring(result) .. "\n" .. debug.traceback( coro ))
 	elseif coroutine.status( coro ) == "suspended" then
-		assert( self.coro == coro )
+		-- Waiting.
 	else
 		-- Done!
-		-- print( "DONE", self, coroutine.status(self.coro))
-		self.coro = nil
+		-- print( "DONE", self, coroutine.status(coro))
 	end
 end
 

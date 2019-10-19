@@ -19,7 +19,7 @@ function Shopkeep:OnGainAspect( owner )
 end
 
 function Shopkeep:OnCalculateAgenda( event_name, agent, agenda )
-	agenda:ScheduleTaskForAgenda( Verb.Travel( agent, self.shop ), 6, 17 )
+	agenda:ScheduleTaskForAgenda( Verb.Travel( agent, self.shop ), 6, 17, self )
 end
 
 function Shopkeep:OnLocationChanged( event_name, agent, prev_location, location )

@@ -43,7 +43,8 @@ function Scavenger:init()
 end
 
 function Scavenger:OnCalculateAgenda( event_name, agent, agenda )
-	agenda:ScheduleTaskForAgenda( Verb.Scavenge( agent ), 7, 12 )
+	assert( agenda == self )
+	agenda:ScheduleTaskForAgenda( Verb.Scavenge( agent ), 7, 12, self )
 end
 
 ---------------------------------------------------------------------

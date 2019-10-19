@@ -266,6 +266,13 @@ function Agent:IsBusy()
 	return self.verbs and #self.verbs > 0
 end
 
+function Agent:AssertNotBusy()
+	if self:IsBusy() then
+		print( self, " is busy: ", tostr(self.verbs))
+		error()
+	end
+end
+
 function Agent:IsDoing( verb )
 	return self.verbs and table.contains( self.verbs, verb )
 end
@@ -275,6 +282,7 @@ function Agent:DoVerb( verb )
 		self.verbs = {}
 	end
 	table.insert( self.verbs, verb )
+	assert( #self.verbs == 1 )
 	verb:_BeginActing( self )
 end
 

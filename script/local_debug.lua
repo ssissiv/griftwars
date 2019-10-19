@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(t)",
 			"asp = t",
 			"print(asp)",
 			"agent = t",
@@ -33,7 +32,8 @@ return {
 			"sdf",
 			"print(han)",
 			"print(player)",
-			"t:RegenerateLocTable( player )"
+			"t:RegenerateLocTable( player )",
+			"print(t:GetAspect(Aspect.Agenda))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

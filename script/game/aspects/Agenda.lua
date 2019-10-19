@@ -18,25 +18,60 @@ function Agenda:OnVerbUnassigned( verb )
 end
 
 function Agenda:CalculateAgenda()
-	self:ClearAgenda()
-	self.last_agenda = self:GetWorld():GetDateTime()
+	-- self:ClearAgenda()
+	self.owner:AssertNotBusy()
+	assert( not self.owner:IsBusy() )
+
+	local world = self:GetWorld()
+	self.last_agenda = world:GetDateTime()
+	self.next_agenda = nil
 	self.owner:BroadcastEvent( AGENT_EVENT.CALC_AGENDA, self )
 
-	local hour = Calendar.GetHour( self.owner.world:GetDateTime() )
+	local now = world:GetDateTime()
+	local tod = Calendar.GetTimeOfDay( now )
+	local next_task, min_time_to_task
 	for i, task in ipairs( self.tasks ) do
-		if hour >= task.start_time and hour <= task.end_time then
+		if tod >= task.start_time and tod < task.end_time then
 			if task.verb:CanInteract() then
+				task.verb:SetEndTime( task.end_time )
 				self.owner:DoVerb( task.verb )
+				next_task = nil
 				break
 			end
 		end
+
+		local start_datetime = task.start_time + (now - tod)
+		if start_datetime < now then
+			start_datetime = start_datetime + ONE_DAY
+		end
+		local time_to_task = start_datetime - now
+		if next_task == nil or time_to_task < min_time_to_task then
+			next_task, min_time_to_task = task, time_to_task
+		end
+	end
+
+	-- ok, schedule for the next verb.
+	if next_task then
+		assert( self.next_agenda == nil )
+		self.next_agenda = self:GetWorld():ScheduleFunction( min_time_to_task, self.CalculateAgenda, self )
 	end
 end
 
-function Agenda:ScheduleTaskForAgenda( verb, start_time, end_time )
+function Agenda:ScheduleTaskForAgenda( verb, start_time, end_time, source )
 	assert( is_instance( verb, Verb ))
+	assert( source ~= nil )
+
+	-- First remove any tasks currently assigned by source.
+	for i = #self.tasks, 1, -1 do
+		local task = self.tasks[ i ]
+		if task.source == source then
+			table.remove( self.tasks, i )
+		end
+	end
+
 	local task = {
 		verb = verb,
+		source = source,
 		start_time = start_time,
 		end_time = end_time
 	}

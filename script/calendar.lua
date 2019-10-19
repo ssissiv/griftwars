@@ -25,8 +25,15 @@ function Calendar.FormatWallTime( datetime )
 	return loc.format( "{1}:{2%02d}:{3%02d}", hours, minutes, seconds )
 end
 
+-- Integral hour of the specified datetime in the range [0, 23]
 function Calendar.GetHour( datetime )
 	local hours = math.floor( datetime % 24 )
 	return hours
 end
 
+
+-- Return the floating point time in the current day in the range [0.0, 24.0)
+function Calendar.GetTimeOfDay( datetime )
+	local days = math.floor( datetime / 24 )
+	return datetime - days * 24
+end

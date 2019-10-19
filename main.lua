@@ -58,7 +58,7 @@ require "game/verbs/socialize"
 require "game/verbs/LeaveLocation"
 require "game/verbs/Travel"
 require "game/verbs/ExchangeRumours"
-require "game/verbs/OrderGive"
+require "game/verbs/Deliver"
 
 require "game/aspects/aspect"
 require "game/aspects/statvalue"

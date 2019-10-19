@@ -28,6 +28,6 @@ function Scrounge:Interact( actor )
 		actor:GetInventory():DeltaMoney( coins )
 	else
 		Msg:Echo( actor, "You don't find anything useful." )
-		Msg:ActToRoom( "{1.name} mutters something unhappily.", actor )
+		Msg:ActToRoom( "{1.Id} mutters something unhappily.", actor )
 	end
 end
