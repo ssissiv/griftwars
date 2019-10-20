@@ -31,6 +31,10 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
+	if ui.CollapsingHeader( "Inventory" ) then
+		self.agent:GetInventory():RenderDebugPanel( ui, panel, dbg )
+	end
+
 	local agenda = self.agent:GetAspect( Aspect.Agenda )
 	if agenda and ui.CollapsingHeader( "Agenda", "DefaultOpen" ) then
 		ui.Columns( 3 )

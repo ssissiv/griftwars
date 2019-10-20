@@ -3,8 +3,16 @@
 
 local Deliver = class( "Verb.Deliver", Verb )
 
+Deliver.ACT_DESC =
+{
+	"You are here delivering to {2.Id}.",	
+	"{1.Id} is here delivering something to you.",
+	"{1.Id} is here delivering something to {2.Id}.",
+}
+
+
 function Deliver:init( giver, receiver )
-	Verb.init( giver, receiver )
+	Verb.init( self, giver, receiver )
 	self.giver = giver
 	self.receiver = receiver
 end

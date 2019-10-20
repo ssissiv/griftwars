@@ -115,6 +115,13 @@ DLG_REQ = MakeEnum
 	"FACE_COUNT"
 }
 
+VERB_FLAGS = MakeBitField
+{
+	"MOVEMENT",
+	"ATTENTION",
+	"HANDS",
+}
+
 INFO = MakeEnum
 {
 	"NULL",

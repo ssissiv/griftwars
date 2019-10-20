@@ -160,7 +160,7 @@ function Acquaint:init()
 end
 
 function Acquaint:CanInteract( actor )
-	if self.owner:IsBusy() then
+	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then
 		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
 	end
 
@@ -169,7 +169,7 @@ end
 
 function Acquaint:OnSatisfied( actor, dice )
 	-- We know the actor.
-	if actor:Acquaint( actor ) then
+	if actor:Acquaint( self.owner ) then
 		Msg:Speak( "Yo, I'm {1.name}", self.owner, actor )
 	end
 

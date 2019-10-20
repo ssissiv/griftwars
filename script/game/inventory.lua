@@ -43,3 +43,9 @@ end
 function Inventory:Items()
 	return ipairs( self.items )
 end
+
+function Inventory:RenderDebugPanel( ui, panel, dbg )
+	for i, item in ipairs( self.items ) do
+		panel:AppendTable( ui, item )
+	end
+end

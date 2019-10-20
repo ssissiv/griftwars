@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"asp = t",
-			"print(asp)",
-			"agent = t",
 			"print(t:IsSatisfiable(agent))",
 			"print(asp)",
 			"print(t:IsSatisfiable(agent))",
@@ -33,7 +30,10 @@ return {
 			"print(han)",
 			"print(player)",
 			"t:RegenerateLocTable( player )",
-			"print(t:GetAspect(Aspect.Agenda))"
+			"print(t:GetAspect(Aspect.Agenda))",
+			"print(t:IsBusy())",
+			"print(t:IsBusy(VERB_FLAGS.MOVEMENT))",
+			"print(t:IsBusy(VERB_FLAGS.ATTENTION))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

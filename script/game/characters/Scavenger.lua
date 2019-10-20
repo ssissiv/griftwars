@@ -39,12 +39,15 @@ local Scavenger = class( "Agenda.Scavenger", Aspect.Agenda )
 
 function Scavenger:init()
 	Aspect.Agenda.init( self )
-	self:RegisterHandler( AGENT_EVENT.CALC_AGENDA, self.OnCalculateAgenda )
+	self:RegisterHandler( AGENT_EVENT.CALC_AGENDA, self.OnCalculateAgenda, self )
 end
 
 function Scavenger:OnCalculateAgenda( event_name, agent, agenda )
 	assert( agenda == self )
-	agenda:ScheduleTaskForAgenda( Verb.Scavenge( agent ), 7, 12, self )
+	if self.scavenge == nil then
+		self.scavenge = Verb.Scavenge( agent )
+	end
+	agenda:ScheduleTaskForAgenda( self.scavenge, 7, 12, self )
 end
 
 ---------------------------------------------------------------------

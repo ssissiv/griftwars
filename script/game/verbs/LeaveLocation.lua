@@ -2,6 +2,8 @@ local LeaveLocation = class( "Verb.LeaveLocation", Verb )
 
 LeaveLocation.COLOUR = constants.colours.MAGENTA
 
+LeaveLocation.FLAGS = VERB_FLAGS.MOVEMENT
+
 LeaveLocation.ACT_DESC =
 {
 	"You are travelling through here.",	

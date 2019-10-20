@@ -262,8 +262,15 @@ function Agent:GetLocation()
 	return self.location
 end
 
-function Agent:IsBusy()
-	return self.verbs and #self.verbs > 0
+function Agent:IsBusy( flags )
+	if self.verbs then
+		for i, v in ipairs( self.verbs ) do
+			if v:IsBusy( flags ) then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 function Agent:AssertNotBusy()

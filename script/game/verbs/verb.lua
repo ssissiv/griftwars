@@ -10,6 +10,22 @@ function Verb:SetEndTime( end_time )
 	self.end_time = end_time
 end
 
+function Verb:GetFlags()
+	if self.verb then
+		return self.verb:GetFlags()
+	else
+		return bit32.bor( self.FLAGS or 0, self.flags or 0 )
+	end
+end
+
+function Verb:IsBusy( flags )
+	if flags == nil then
+		return true
+	else
+		return bit32.band( self:GetFlags(), flags ) == flags
+	end
+end
+
 function Verb.RecurseSubclasses( class, fn )
 	class = class or Verb
 	fn( class )
@@ -45,6 +61,10 @@ function Verb:CanInteract()
 	return true
 end
 
+function Verb:GetDesc()
+	return self._classname
+end
+
 function Verb:GetShortDesc( viewer )
 	if self.ACT_DESC then
 		if self.actor:IsPuppet() then
@@ -61,7 +81,7 @@ local function DoInteraction( self, actor )
 	
 	self:Interact( actor )
 
-	if self.end_time then
+	if self.end_time and self.end_time > actor.world:GetDateTime() then
 		self:YieldForTime( self.end_time - actor.world:GetDateTime() )
 	end
 	
@@ -79,7 +99,7 @@ function Verb:_BeginActing( actor )
 end
 
 function Verb:Cancel()
-	self:EndActing()
+	self:EndActing( self.actor )
 end
 
 function Verb:CanCancel()
