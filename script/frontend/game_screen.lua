@@ -160,26 +160,26 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     	i = i + 1
     end
 
-	local player = puppet:GetPlayer()
-	if player then
-		ui.Separator()
-		if ui.Checkbox( self.show_committed_dice and "Committed Dice" or "Dice:", self.show_committed_dice ) then
-			self.show_committed_dice = not self.show_committed_dice
-		end
-		if not self.show_committed_dice then
-			for i, dice in player:GetDice():Dice() do
-				ui.SameLine( 0, 10 )
-				dice:RenderObject( ui, puppet )
-			end
-		else
-			for agent_key, dice in pairs( player:GetDice():GetCommittedDice() ) do
-				ui.Text( loc.format( "{1.Id}", agent_key:LocTable( puppet )))
-				for i, die in ipairs( dice ) do
-					ui.SameLine( 0, 10 )
-					die:RenderObject( ui, puppet )
-				end
-			end
-		end
+    local tokens = puppet:GetAspect( Aspect.TokenHolder )
+    if tokens then
+    	local count, max_count = tokens:GetTokenCount()
+    	for i = 1, max_count do
+	    	ui.SameLine( 0, 15 )
+	    	local token = tokens:GetTokenAt( i )
+	    	if token then
+	    		ui.Text( "[" )
+	   			ui.SameLine( 0, 5 )
+	   			if token:IsCommitted() then
+			    	ui.TextColored( 0.4, 0.4, 0.4, 1.0, tostring(token) )
+	   			else
+			    	ui.TextColored( 0.7, 0.7, 0.2, 1.0, tostring(token) )
+			    end
+	   			ui.SameLine( 0, 5 )
+	    		ui.Text( "]" )
+		    else
+		    	ui.Text( "[ ]" )
+		    end
+	    end
 	end
 end
 
@@ -231,35 +231,41 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				if agent:IsPlayer() then
 					ui.Indent( 20 )
 					-- Make a verb.
-					local dice = agent:GetPlayer():GetDice()
 					local count, count_potential = 0, 0
 					for i, aspect in obj:Aspects() do
 						if is_instance( aspect, Interaction ) then
 							count = count + 1
-							if aspect:IsSatisfiable( dice ) then
-								count_potential = count_potential + 1
-							end
-							if aspect:IsSatisfied( dice ) then
+							-- if aspect:IsSatisfied( agent ) then
 								local ok, reason = true
 								if aspect.CanInteract then
 									ok, reason = aspect:CanInteract( agent )
 								end
-								if not ok then
-									ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+								if ok or reason then
+									if not ok then
+										ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+									end
+									if ui.Button( aspect._classname ) and ok then
+										aspect:SatisfyReqs( agent )
+									end
+									if not ok then
+										ui.PopStyleColor()
+									end
+									if ui.IsItemHovered() then
+										ui.BeginTooltip()
+										local tt = aspect:GetToolTip()
+										if tt then
+											ui.Text( tostring(tt) )
+										end
+										if reason then
+											ui.TextColored( 1, 0, 0, 1, tostring(reason))
+										end
+
+										ui.EndTooltip()
+									end
 								end
-								if ui.Button( aspect._classname ) and ok then
-									aspect:SatisfyReqs( agent )
-								end
-								if not ok then
-									ui.PopStyleColor()
-								end
-								if reason and ui.IsItemHovered() then
-									ui.SetTooltip( tostring(reason) )
-								end
-							end
+							-- end
 						end
 					end
-					ui.TextColored( 0.8, 0.5, 0.5, 1.0, loc.format( "{1} interactions, {2} satisfiable", count, count_potential ))
 					ui.Unindent( 20 )
 				end
 			end

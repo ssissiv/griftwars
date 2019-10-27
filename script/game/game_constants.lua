@@ -80,7 +80,7 @@ STAT = MakeEnum
 {
 	-- Core stats
 	"STATURE",
-	"MENTALITY",
+	"MIND",
 	"CHARISMA",
 
 	-- Dynamic stats
@@ -91,6 +91,15 @@ STAT = MakeEnum
 	-- Transient stats
 	"PATIENCE",
 }
+
+-- Challenge ratings
+CR0 = 0
+CR1 = 1
+CR2 = 2
+CR3 = 3
+CR4 = 4
+CR5 = 5
+
 
 DIE_FACE = MakeEnum
 {
@@ -112,6 +121,7 @@ PIP_COUNT =
 
 DLG_REQ = MakeEnum
 {
+	"NULL",
 	"FACE_COUNT"
 }
 
@@ -121,6 +131,35 @@ VERB_FLAGS = MakeBitField
 	"ATTENTION",
 	"HANDS",
 }
+
+TOKEN = MakeEnum
+{
+	"DIPLOMACY_1",
+	"DIPLOMACY_2",
+	"DIPLOMACY_5",
+
+	"POWER_1",
+	"POWER_2",
+	"POWER_5",
+
+	"STEALTH_1",
+}
+
+TOKEN_TO_FACE =
+{
+	[ DIE_FACE.DIPLOMACY ] =
+	{
+		[ TOKEN.DIPLOMACY_1 ] = 1,
+		[ TOKEN.DIPLOMACY_2 ] = 2,
+		[ TOKEN.DIPLOMACY_5 ] = 5,
+	},
+
+	[ DIE_FACE.HOSTILITY ] =
+	{
+
+	},
+}
+
 
 INFO = MakeEnum
 {

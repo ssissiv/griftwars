@@ -17,7 +17,7 @@ function Agent:init()
 	self.viz = AgentViz()
 
 	self:CreateStat( STAT.STATURE, 1, 1 ):DeltaRegen( 1 )
-	self:CreateStat( STAT.MENTALITY, 1, 1 ):DeltaRegen( 1 )
+	self:CreateStat( STAT.MIND, 1, 1 ):DeltaRegen( 1 )
 	self:CreateStat( STAT.CHARISMA, 1, 1 ):DeltaRegen( 1 )
 end
 

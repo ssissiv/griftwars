@@ -104,6 +104,7 @@ function Entity:LoseAspect( aspect )
 end
 
 function Entity:GetAspect( arg )
+	assert( arg ~= nil )
 	local id
 	if type(arg) == "string" then
 		id = arg

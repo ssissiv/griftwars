@@ -121,7 +121,7 @@ end
 function ActionDie:RenderObject( ui, viewer )
 	ui.PushID( rawstring(self) )
 	local focus = viewer:GetFocus()
-	local disabled = (self.last_roll ~= nil) or focus == nil or not self:IsSatisfiable( focus )
+	local disabled = (self.last_roll ~= nil) or focus == nil --or not self:IsSatisfiable( focus )
 	if disabled then
 		if self.last_roll then
 			ui.PushStyleColor( "Button", 0.2, 0.5, 0.2, 1 )

@@ -1,7 +1,19 @@
 TODO
 ====
 
-MULTICLASSING.
+You have max token slots, and tokens in them.  You commit them to certain requirement sets (embedded in social Interactions, etc.), which typically unlocks something.
+
+Diplo 1 can unlock lvl 1. Acquintances, who will reveal knowledge.
+
+Knowledge gains you xp.
+
+When you sleep, you convert XP to charge your stats.  (See punch club.)  When stats exceed a level, you can add a token, upgrade a token, roll for a token, etc.  Stat drain is locked in at integers (won't drain past a level).
+
+Stats drain over time, and take increasingly more XP to increase.
+
+You must find where your tokens best fit to optimize for XP gain in a cycle of growth.
+
+
 
 CMD LINE
 	- just mud it up.  Fuck the UI.

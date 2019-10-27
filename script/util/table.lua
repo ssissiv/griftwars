@@ -14,6 +14,16 @@ function table.deepcopy(t)
    return t2
 end
 
+function table.copykeys( t, t2 )
+    if t2 == nil then
+        t2 = {}
+    end
+    for k, v in pairs( t ) do
+        table.insert( t2, k )
+    end
+    return t2
+end
+
 function table.unpack(...)
     return unpack(...)
 end

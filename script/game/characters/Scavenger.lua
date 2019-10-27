@@ -25,8 +25,10 @@ function Scavenge:GetShortDesc( viewer )
 end
 
 function Scavenge:Interact( actor )
-	if math.random() < 0.5 then
+	if math.random() < 0.35 then
 		self.verb = Verb.Scrounge( actor )
+	elseif math.random() < 0.5 then
+		self.verb = Verb.Idle( actor )
 	else
 		self.verb = Verb.LeaveLocation( actor )
 	end
@@ -59,7 +61,7 @@ function Agent.Scavenger()
 	ch:GainAspect( Agenda.Scavenger() )
 	-- ch:GainAspect( Skill.Scrounge() )
 	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
-	ch:GainAspect( Interaction.Acquaint() )
+	ch:GainAspect( Interaction.Acquaint( CR1 ) )
 	ch:GainAspect( Interaction.Chat() )
 
 	return ch

@@ -61,6 +61,7 @@ function WorldGen:GeneratePlayer( world )
 	-- player:GainAspect( Skill.RumourMonger() )
 	player:GainAspect( Trait.Memory() )
 	player:GainAspect( Trait.Player() ):AddDefaultDice()
+	player:GainAspect( Aspect.TokenHolder() )
 	player:GetInventory():DeltaMoney( 1 )
 	return player
 end

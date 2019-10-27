@@ -2,15 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:IsSatisfiable(agent))",
-			"print(asp)",
-			"print(t:IsSatisfiable(agent))",
-			"print(t:GetCooldown())",
-			"print(string.char(95))",
-			"print(string.char(96))",
-			"print(string.char(97))",
-			"print(han)",
-			"print(player)",
 			"print(t)",
 			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
 			"sdf",
@@ -33,7 +24,16 @@ return {
 			"print(t:GetAspect(Aspect.Agenda))",
 			"print(t:IsBusy())",
 			"print(t:IsBusy(VERB_FLAGS.MOVEMENT))",
-			"print(t:IsBusy(VERB_FLAGS.ATTENTION))"
+			"print(t:IsBusy(VERB_FLAGS.ATTENTION))",
+			"print(puppet)",
+			"print(player)",
+			"print(t:IsSatisfied( player ))",
+			"print(player:GeAspect( Aspect.TokenHolder ).tokens )",
+			"print(player:GetAspect( Aspect.TokenHolder ).tokens )",
+			"print(tostr(player:GetAspect( Aspect.TokenHolder ).tokens) )",
+			"print(tostr(player:GetAspect( Aspect.TokenHolder ).tokens[1]:IsCommitted() )",
+			"print(player:GetAspect( Aspect.TokenHolder ).tokens[1]:IsCommitted() )",
+			"print(player:GetAspect( Aspect.TokenHolder ):GetFaceCount( DIE_FACE.DIPLOMACY ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
