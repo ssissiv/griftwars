@@ -22,11 +22,12 @@ function Token:GetFaceCount( face )
 end
 
 function Token:IsCommitted()
-	return self.committed == true
+	return self.committed ~= nil
 end
 
-function Token:CommitToken()
-	self.committed = true
+function Token:CommitToken( target )
+	assert( target == nil or target.owner )
+	self.committed = target or true
 end
 
 function Token:__tostring()

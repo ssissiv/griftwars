@@ -75,7 +75,12 @@ end
 
 function Interaction:SatisfyReqs( actor )
 	local tokens = actor:GetAspect( Aspect.TokenHolder )
-	tokens:CommitReqTokens( self.reqs )
+	tokens:CommitReqTokens( self )
+
+	if self.satisfied_by == nil then
+		self.satisfied_by = {}
+	end
+	table.insert( self.satisfied_by, actor )
 
 	self:OnSatisfied( actor )
 end
@@ -83,6 +88,10 @@ end
 function Interaction:CanInteract( actor )
 	if self:IsCooldown() then
 		return false, loc.format( "Cooldown: {1#realtime}", self:GetCooldown() )
+	end
+
+	if self.satisfied_by and table.contains( self.satisfied_by, actor ) then
+		return false -- Already satisfied
 	end
 
 	local reasons
@@ -139,8 +148,6 @@ function Acquaint:OnSatisfied( actor, dice )
 	if actor:Acquaint( self.owner ) then
 		Msg:Speak( "Yo, I'm {1.name}", self.owner, actor )
 	end
-
-	self.owner:LoseAspect( self )
 end
 
 

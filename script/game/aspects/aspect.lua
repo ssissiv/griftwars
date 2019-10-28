@@ -15,6 +15,7 @@ function Aspect:GetWorld()
 end
 
 function Aspect:OnGainAspect( owner )
+	assert( owner )
 	self.owner = owner
 	if self.event_handlers then
 		for event, fn in pairs( self.event_handlers ) do

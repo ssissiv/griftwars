@@ -27,9 +27,11 @@ function TokenHolder:GetTokenCount()
 	return #self.tokens, self.max_tokens
 end
 
-function TokenHolder:CommitReqTokens( reqs )
+function TokenHolder:CommitReqTokens( target )
+	assert( target.reqs ~= nil )
+
 	local tokens = {}
-	reqs = table.shallowcopy( reqs )
+	local reqs = table.shallowcopy( target.reqs )
 	
 	-- Create a map of tokens to requirements they satisfy.
 	for i, req in ipairs( reqs ) do
@@ -50,7 +52,7 @@ function TokenHolder:CommitReqTokens( reqs )
 	table.sort( sorted_tokens, function( a, b ) return #tokens[ a ] > #tokens[ b ] end )
 
 	for i, token in ipairs( sorted_tokens ) do
-		token:CommitToken()
+		token:CommitToken( target )
 		for i, req in ipairs( tokens[ token ] ) do
 			table.arrayremove( reqs, req )
 		end

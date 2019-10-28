@@ -8,7 +8,7 @@ Scrounge.ACT_DESC =
 	"{1.Id} is here rummaging around.",
 }
 
-Scrounge.FLAGS = VERB_FLAGS.ATTENTION
+-- Scrounge.FLAGS = VERB_FLAGS.ATTENTION
 
 function Scrounge:CalculateDC( mods )
 	return 10

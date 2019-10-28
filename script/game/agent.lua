@@ -458,6 +458,16 @@ function Agent:RenderObject( ui, viewer )
 	self.social_node:RenderObject( ui, viewer )
 end
 
+function Agent.GetAgentOwner( obj )
+	while obj do
+		if is_instance( obj, Agent ) then
+			return obj
+		else
+			obj = obj.owner
+		end
+	end
+end
+
 function Agent:__tostring()
 	return string.format( "[%s%s%s]",
 		self:IsPlayer() and "@" or "",
