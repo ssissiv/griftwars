@@ -3,7 +3,7 @@ DebugAgent.REGISTERED_CLASS = Agent
 
 function DebugAgent:init( agent )
 	DebugTable.init( self, agent )
-    self.agent = agent
+	self.agent = agent
 end
 
 function DebugAgent:RenderPanel( ui, panel, dbg )
@@ -35,6 +35,27 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		self.agent:GetInventory():RenderDebugPanel( ui, panel, dbg )
 	end
 
+	if ui.CollapsingHeader( "Stats" ) then
+		for stat, aspect in puppet:Stats() do
+			local value, max_value = aspect:GetValue()
+			if max_value then
+				ui.Text( loc.format( "{1}: {2}/{3}", stat, value, max_value ))
+			else
+				ui.Text( loc.format( "{1}: {2}", stat, value ))
+			end
+
+			ui.SameLine( 100 )
+			if ui.Button( "+" ) then
+				puppet:DeltaStat( stat, Input.IsShift() and 10 or 1 )
+			end
+
+			ui.SameLine( 0, 5 )
+			if ui.Button( "-" ) then
+				puppet:DeltaStat( stat, Input.IsShift() and -10 or -1 )
+			end
+		end
+	end
+
 	local agenda = self.agent:GetAspect( Aspect.Agenda )
 	if agenda and ui.CollapsingHeader( "Agenda", "DefaultOpen" ) then
 		ui.Columns( 3 )
@@ -55,8 +76,8 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		ui.Columns( 1 )
 		ui.Text( string.format( "Last Agenda: %s", Calendar.FormatTime( agenda.last_agenda )))
 	end
-    
-    DebugTable.RenderPanel( self, ui, panel, dbg )
+	
+	DebugTable.RenderPanel( self, ui, panel, dbg )
 end
 
  

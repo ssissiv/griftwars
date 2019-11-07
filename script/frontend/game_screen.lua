@@ -91,7 +91,7 @@ function GameScreen:RenderScreen( gui )
     for i, verb in puppet:Verbs() do
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
     	ui.SameLine( 0, 10 )
-    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc(), verb:GetActingProgress() ))
+    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc(), verb:GetActingProgress() or 1.0 ))
 
     	if verb:CanCancel() then
     		ui.SameLine( 0, 10 )
@@ -157,6 +157,13 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 	    else
 	    	ui.Text( loc.format( "{1}: {2}", stat, value ))
 	    end
+	
+		local growth = aspect:GetGrowth()
+		if growth > 0 then
+			ui.SameLine( 0, 5 )
+			ui.TextColored( 0, 0.5, 0, 1, loc.format( "({1#percent})", growth ))
+		end
+
     	i = i + 1
     end
 
@@ -382,7 +389,7 @@ function GameScreen:KeyPressed( key )
 		local verb = self.verbs[ tonumber(key) ]
 		if verb then
 			local ok, details = verb:CanInteract()
-			if ok and not verb.actor:IsBusy() and not self.world:IsPaused() then
+			if ok and not self.world:IsPaused() then
 				self.world:GetPuppet():DoVerb( verb )
 			end
 		end

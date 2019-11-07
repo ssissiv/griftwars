@@ -1,7 +1,7 @@
 -- 1 second == 1 game minute.
 WALL_TO_GAME_TIME = 1/60.0
 
-PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE" }
+PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS" }
 
 CHARACTER_NAMES = LoadLinesFromFile( "data/names.txt" )
 
@@ -14,6 +14,8 @@ HALF_DAY = ONE_HOUR * 12
 ONE_DAY = ONE_HOUR * 24
 
 ONE_WEEK = ONE_DAY * 7
+
+SLEEP_SPEED_RATE = 16.0
 
 -- 6 am.
 DATETIME_START = 7
@@ -87,6 +89,8 @@ STAT = MakeEnum
 	"CRUELTY",
 	"GRIT",
 	"CRAFT",
+	
+	"XP",
 
 	-- Transient stats
 	"PATIENCE",

@@ -128,7 +128,7 @@ function Verb:YieldForTime( duration )
 
 	self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self, coroutine.running() )
 	self.yield_duration = duration
-	coroutine.yield()
+	return coroutine.yield()
 end
 
 function Verb:Resume( coro )

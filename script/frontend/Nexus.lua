@@ -19,4 +19,17 @@ function WorldNexus:ChooseBuyItem( owner, buyer )
 	return window:ChooseBuyItem()
 end
 
+function WorldNexus:Sleep( agent )
+	assert( is_instance( agent, Agent ))
 
+	local window = SleepWindow( agent )
+	self.screen:AddWindow( window )
+
+	self.world:TogglePause( PAUSE_TYPE.NEXUS )
+
+	local stat_xp = window:DoSleep()
+
+	self.world:TogglePause( PAUSE_TYPE.NEXUS )
+
+	return stat_xp
+end

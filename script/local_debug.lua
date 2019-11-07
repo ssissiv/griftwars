@@ -2,13 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t)",
-			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
-			"sdf",
-			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
-			"print(player:GetLocation())",
-			"print(t:GetLocation())",
-			"p = PathFinder( player, t ); print( tostr(p:GetPath()))",
 			"print( is_class( Interaction.BuyFromStore ))",
 			"print( Interaction.BuyFromStore._classname)",
 			"print( is_class( Interaction.BuyFromShop ))",
@@ -33,7 +26,14 @@ return {
 			"print(tostr(player:GetAspect( Aspect.TokenHolder ).tokens) )",
 			"print(tostr(player:GetAspect( Aspect.TokenHolder ).tokens[1]:IsCommitted() )",
 			"print(player:GetAspect( Aspect.TokenHolder ).tokens[1]:IsCommitted() )",
-			"print(player:GetAspect( Aspect.TokenHolder ):GetFaceCount( DIE_FACE.DIPLOMACY ))"
+			"print(player:GetAspect( Aspect.TokenHolder ):GetFaceCount( DIE_FACE.DIPLOMACY ))",
+			"player:GainXP(10)",
+			"print( player:GetStat( STAT.XP ))",
+			"for k, v in player:Stats() do print(k,v) end",
+			"print(tostr(player.stats))",
+			"print( player:GetStat( STAT.XP ))",
+			"print( player:GetStat( STAT.MIND ))",
+			"print( 3.523 % 2 )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

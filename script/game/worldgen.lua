@@ -48,6 +48,7 @@ function WorldGen:GenerateWorld()
 
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, start )
+	start:GainAspect( Feature.Home( player ) )
 
 	return self.world
 end
@@ -62,6 +63,8 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Trait.Memory() )
 	player:GainAspect( Trait.Player() ):AddDefaultDice()
 	player:GainAspect( Aspect.TokenHolder() )
+	player:CreateStat( STAT.XP, 0, 100 )
+
 	player:GetInventory():DeltaMoney( 1 )
 	return player
 end

@@ -51,7 +51,14 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
 
     if self.game then
         panel:AppendTable( ui, self.game, "Game" )
+
+        ui.SameLine( 0, 5 )
         panel:AppendTable( ui, self.game.world, "World" )
+
+        if self.game.world:GetPuppet() then
+            ui.SameLine( 0, 5 )
+            panel:AppendTable( ui, self.game.world:GetPuppet() )
+        end
 
         if ui.TreeNodeEx( "Locations", "DefaultOpen" ) then
             for i, location in self.game.world:AllLocations() do

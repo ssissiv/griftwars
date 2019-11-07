@@ -18,7 +18,23 @@ function StatValue:OnDespawn()
 	self.owner.world:UnregisterStatValue( self )
 end
 
-function StatValue:DeltaValue( delta )
+function StatValue:OnGainAspect( owner )
+	Aspect.OnGainAspect( self, owner )
+	assert( owner.stats[ self.stat ] == nil )
+	owner.stats[ self.stat ] = self
+end
+
+function StatValue:OnLoseAspect( owner )
+	Aspect.OnLoseAspect( self, owner )
+	assert( owner.stats[ self.stat ] == self )
+	owner.stats[ self.stat ] = nil
+end
+
+function StatValue:DeltaValue( delta, max_delta )
+	if max_delta then
+		self.max_value = self.max_value + max_delta
+	end
+
 	if self.max_value then
 		self.value = math.min( self.max_value, self.value + delta )
 	else
@@ -46,3 +62,23 @@ function StatValue:Regen( dt )
 	end
 end
 
+function StatValue:SetGrowthRate( rate )
+	self.growth_rate = rate
+end
+
+function StatValue:GetGrowthRate()
+	return self.growth_rate
+end
+
+function StatValue:GetGrowth()
+	return self.growth or 0
+end
+
+function StatValue:GainXP( xp )
+	self.growth = (self.growth or 0) + (self.growth_rate * xp)
+	local delta = math.floor( self.growth )
+	if delta ~= 0 then
+		self.growth = self.growth - delta
+		self:DeltaValue( delta, delta )
+	end
+end

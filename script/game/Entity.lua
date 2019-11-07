@@ -71,9 +71,6 @@ function Entity:GainAspect( aspect )
 	table.insert( self.aspects, aspect )
 	assert( self.aspects_by_id[ id ] == nil )
 	self.aspects_by_id[ id ] = aspect
-	if is_instance( aspect, Aspect.StatValue ) then
-		self.stats[ id ] = aspect
-	end
 	aspect:OnGainAspect( self )
 
 	if self.world and aspect.OnSpawn then
@@ -88,9 +85,6 @@ function Entity:LoseAspect( aspect )
 	assert( self.aspects_by_id[ id ] == aspect )
 	table.arrayremove( self.aspects, aspect )
 	self.aspects_by_id[ id ] = nil
-	if is_instance( aspect, Aspect.StatValue ) then
-		self.stats[ id ] = nil
-	end
 
 	if self.world and aspect.OnDespawn then
 		aspect:OnDespawn()
@@ -109,7 +103,7 @@ function Entity:GetAspect( arg )
 	if type(arg) == "string" then
 		id = arg
 
-	elseif is_class( arg ) then
+	elseif is_class( arg ) and self.aspects then
 		for id, aspect in ipairs( self.aspects ) do
 			if is_instance( aspect, arg ) then
 				return aspect

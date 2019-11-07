@@ -37,3 +37,14 @@ function Calendar.GetTimeOfDay( datetime )
 	local days = math.floor( datetime / 24 )
 	return datetime - days * 24
 end
+
+-- Gets the duration from datetime to the next time the given hour of the day [0, 24) occurs.
+function Calendar.GetTimeUntilHour( datetime, hour )
+	local hour_now = datetime % 24
+	if hour_now < hour then
+		return hour - hour_now
+	else
+		return 24 - hour_now + hour
+	end
+end
+

@@ -16,9 +16,9 @@ function Agent:init()
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
 
-	self:CreateStat( STAT.STATURE, 1, 1 ):DeltaRegen( 1 )
-	self:CreateStat( STAT.MIND, 1, 1 ):DeltaRegen( 1 )
-	self:CreateStat( STAT.CHARISMA, 1, 1 ):DeltaRegen( 1 )
+	self:CreateStat( STAT.STATURE, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.MIND, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
 end
 
 function Agent:SetFlags( ... )
@@ -109,11 +109,11 @@ function Agent:CollectPotentialVerbs()
 	self.potential_verbs:ClearVerbs()
 	self:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self.potential_verbs )
 
-	-- Verb.RecurseSubclasses( nil, function( class )
-	-- 	if class.CollectInteractions then
-	-- 		class.CollectInteractions( self, verbs )
-	-- 	end
-	-- end )
+	Verb.RecurseSubclasses( nil, function( class )
+		if class.CollectInteractions then
+			class.CollectInteractions( self, self.potential_verbs )
+		end
+	end )
 
 	return self.potential_verbs
 end
@@ -210,6 +210,9 @@ function Agent:Acquaint( agent )
 	if self.memory and not self:IsAcquainted( agent ) then
 		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
 		agent:RegenerateLocTable( self )
+
+		self:GainXP( 10 )
+
 		return true
 	else
 		return false
@@ -326,22 +329,16 @@ function Agent:CreateStat( stat, value, max_value )
 end
 
 function Agent:DeltaStat( stat, delta )
-	local aspect = self:GetAspect( stat )
-	if aspect == nil then
-		aspect = Aspect.StatValue( stat )
-		self:GainAspect( aspect )
+	local aspect = self.stats[ stat ]
+	if aspect then
+		aspect:DeltaValue( delta )
 	end
-
-	aspect:DeltaValue( delta )
 end
 
 function Agent:GetStat( stat )
-	local aspect = self:GetAspect( stat )
-	if aspect then
-		return aspect:GetValue()
+	if self.stats[ stat ] then
+		return self.stats[ stat ]:GetValue()
 	end
-	
-	return 0
 end
 
 function Agent:Stats()
@@ -448,6 +445,21 @@ end
 
 function Agent:GetOpinion( other )
 	return self.social_node:GetOpinion( other )
+end
+
+function Agent:GainXP( xp )
+	if self:GetStat( STAT.XP ) then
+		self:DeltaStat( STAT.XP, xp )
+	end
+end
+
+function Agent:AssignXP( xp, stat )
+	if self.stats[ STAT.XP ] then
+		self:DeltaStat( STAT.XP, -xp )
+	end
+	if self.stats[ stat ] then
+		self.stats[ stat ]:GainXP( xp )
+	end
 end
 
 function Agent:DeltaOpinion( other, op, delta )

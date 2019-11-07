@@ -54,6 +54,12 @@ return
 		return loc.format( "{1} {1*coin|coins}", num )
 	end,
 
+	location = function( location )
+		if location.GetTitle then
+			return location:GetTitle()
+		end
+	end,
+
 	realtime = function( datetime )
 		return Calendar.FormatWallTime( datetime )
 	end,
