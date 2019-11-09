@@ -22,9 +22,9 @@ function Object:Clone()
 end
 
 function Object:GetValue()
-	return 0
+	return self.value
 end
--- 
+
 function Object:DeltaValue( delta )
 	self.value = math.max( self.value + delta, 0 )
 end

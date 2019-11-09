@@ -33,6 +33,7 @@ function Inventory:AddItem( item )
 end
 
 function Inventory:RemoveItem( item )
+	assert( item ~= self.money )
 	table.arrayremove( self.items, item )
 end
 

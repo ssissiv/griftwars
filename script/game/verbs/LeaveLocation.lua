@@ -61,6 +61,8 @@ function LeaveLocation:Interact( actor )
 	end
 
 	self:YieldForTime( ONE_MINUTE )
+
+	actor:DeltaStat( STAT.FATIGUE, 5 )
 	actor:WarpToLocation( dest )
 
 	Msg:Action( self.ENTER_STRINGS, actor, dest )

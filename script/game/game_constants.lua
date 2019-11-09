@@ -84,8 +84,11 @@ LOCATION_EVENT = MakeEnum{
 }
 
 STAT = MakeEnum
-{
+{	
 	-- Core stats
+	"FATIGUE",
+
+	-- Trainable stats.
 	"STATURE",
 	"MIND",
 	"CHARISMA",

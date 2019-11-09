@@ -16,9 +16,11 @@ function Agent:init()
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
 
-	self:CreateStat( STAT.STATURE, 1, 1 ):SetGrowthRate( 0.1 )
-	self:CreateStat( STAT.MIND, 1, 1 ):SetGrowthRate( 0.1 )
-	self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
+
+	-- self:CreateStat( STAT.STATURE, 1, 1 ):SetGrowthRate( 0.1 )
+	-- self:CreateStat( STAT.MIND, 1, 1 ):SetGrowthRate( 0.1 )
+	-- self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
 end
 
 function Agent:SetFlags( ... )
@@ -336,10 +338,14 @@ function Agent:DeltaStat( stat, delta )
 	end
 end
 
-function Agent:GetStat( stat )
+function Agent:GetStatValue( stat )
 	if self.stats[ stat ] then
 		return self.stats[ stat ]:GetValue()
 	end
+end
+
+function Agent:GetStat( stat )
+	return self.stats[ stat ]
 end
 
 function Agent:Stats()
@@ -449,7 +455,7 @@ function Agent:GetOpinion( other )
 end
 
 function Agent:GainXP( xp )
-	if self:GetStat( STAT.XP ) then
+	if self.stats[ STAT.XP ] then
 		self:DeltaStat( STAT.XP, xp )
 	end
 end

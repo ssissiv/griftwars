@@ -38,7 +38,7 @@ function ExchangeRumours:SpendCost()
 end
 
 function ExchangeRumours:CanInteract()
-	if self.actor:GetStat( STAT.CHARISMA ) <= 0 then
+	if self.actor:GetStatValue( STAT.CHARISMA ) <= 0 then
 		return false, "Requires Charisma"
 	end
 	if self.actor:GetFocus() ~= self.obj then

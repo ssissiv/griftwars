@@ -4,7 +4,7 @@ function SleepWindow:init( agent )
 	assert( agent )
 	self.agent = agent
 	self.stat_xp = {}
-	self.xp = self.agent:GetStat( STAT.XP )
+	self.xp = self.agent:GetStatValue( STAT.XP )
 	self.xp_used = 0
 end
 
