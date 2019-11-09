@@ -59,6 +59,11 @@ PRIVACY = MakeBitField
 	"INTENT", -- Goals, AI status.
 }
 
+SENSOR = MakeEnum
+{
+	"ECHO", -- Meta sense. Game logging.
+	"VISION", -- in-game vision
+}
 WORLD_EVENT = MakeEnum{
 	"LOG",
 	"START", -- Start() occurs after all entities have been spawned.

@@ -332,6 +332,7 @@ function Agent:DeltaStat( stat, delta )
 	local aspect = self.stats[ stat ]
 	if aspect then
 		aspect:DeltaValue( delta )
+		Msg:Echo( self, "You gain {1} {2}!", delta, stat )
 	end
 end
 
@@ -350,11 +351,11 @@ function Agent:CanSee( obj )
 end
 
 function Agent:Sense( txt )
-	table.insert( self.sense_log, txt )
+	table.insert( self.sense_log, { desc = txt, sensor_type = SENSOR.VISION, when = self.world:GetDateTime() } )
 end
 
 function Agent:Echo( txt )
-	table.insert( self.sense_log, txt )
+	table.insert( self.sense_log, { desc = txt, sensor_type = SENSOR.ECHO, when = self.world:GetDateTime() } )
 end
 
 function Agent:Senses()

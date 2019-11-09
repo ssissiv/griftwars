@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( is_class( Interaction.BuyFromStore ))",
 			"print( Interaction.BuyFromStore._classname)",
 			"print( is_class( Interaction.BuyFromShop ))",
 			"print( Interaction.BuyFromShop._classname)",
@@ -33,7 +32,8 @@ return {
 			"print(tostr(player.stats))",
 			"print( player:GetStat( STAT.XP ))",
 			"print( player:GetStat( STAT.MIND ))",
-			"print( 3.523 % 2 )"
+			"print( 3.523 % 2 )",
+			"print(world:GetDateTime() - t.when )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

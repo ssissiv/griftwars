@@ -364,8 +364,29 @@ function GameScreen:GetDebugEnv( env )
 end
 
 function GameScreen:RenderSenses( ui, agent )
-	for i, txt in agent:Senses() do
-		ui.Text( txt )
+	local now = self.world:GetDateTime()
+	for i, sense in agent:Senses() do
+		if sense.when then
+			local elapsed = now - sense.when
+			local duration, r, g, b, a
+
+			if sense.sensor_type == SENSOR.ECHO then
+				duration = HALF_HOUR
+				r, g, b = 1, 1, 1
+			else
+				duration = 10 * ONE_MINUTE
+				r, g, b = 1, 1, 0.4
+			end
+
+			if duration then
+				a = 1.0 - clamp( elapsed / duration, 0, 1.0 )
+			else
+				a = 1.0
+			end
+			if a > 0.0 then
+				ui.TextColored( r, g, b, a, tostring(sense.desc))
+			end
+		end
 	end
 end
 
