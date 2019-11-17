@@ -23,7 +23,9 @@ end
 
 function DebugUtil.FindRegisteredClass( v, base_class )
     for i, class in ipairs( get_subclasses( base_class or DebugNode )) do
-        if class.REGISTERED_CLASS and is_instance( v, class.REGISTERED_CLASS ) then
+        if class.REGISTERED_TYPE == type(v) then
+            return class
+        elseif class.REGISTERED_CLASS and is_instance( v, class.REGISTERED_CLASS ) then
             return class
         else
             local found_class = DebugUtil.FindRegisteredClass( v, class )
@@ -40,6 +42,8 @@ function DebugUtil.CreateDebugNode( v, offset )
         return DebugNil()
     elseif type(v) == "function" then
         return DebugCustom( v )
+    elseif type(v) == "thread" then
+        return DebugCoroutine( v )
     else
         assert( type(v) == "table" )
         -- Try to link this table to a specialized DebugNode.

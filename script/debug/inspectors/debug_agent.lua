@@ -31,6 +31,18 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
+	if ui.CollapsingHeader( "Actions" ) then
+		ui.Columns( 2 )
+		for i, action in self.agent:Verbs() do
+			panel:AppendTable( ui, action.verb )
+			ui.NextColumn()
+
+			panel:AppendTable( ui, action.coro )
+			ui.NextColumn()
+		end
+		ui.Columns( 1 )
+	end
+
 	if ui.CollapsingHeader( "Inventory" ) then
 		self.agent:GetInventory():RenderDebugPanel( ui, panel, dbg )
 	end
@@ -57,7 +69,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 	end
 
 	local agenda = self.agent:GetAspect( Aspect.Agenda )
-	if agenda and ui.CollapsingHeader( "Agenda", "DefaultOpen" ) then
+	if agenda and ui.CollapsingHeader( "Agenda" ) then -- "DefaultOpen" ) then
 		ui.Columns( 3 )
 		for i, task in ipairs( agenda.tasks ) do
 			if self.agent:IsDoing( task.verb ) then
@@ -75,6 +87,11 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 		ui.Columns( 1 )
 		ui.Text( string.format( "Last Agenda: %s", Calendar.FormatTime( agenda.last_agenda )))
+	end
+
+	local behaviour = self.agent:GetAspect( Aspect.Behaviour )
+	if behaviour and ui.CollapsingHeader( "Behaviour", "DefaultOpen" ) then
+		behaviour:RenderDebugPanel( ui, panel. dbg )
 	end
 	
 	DebugTable.RenderPanel( self, ui, panel, dbg )

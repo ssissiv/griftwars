@@ -20,6 +20,10 @@ function WorldNexus:ChooseBuyItem( owner, buyer )
 end
 
 function WorldNexus:Sleep( agent )
+	if agent ~= self.world:GetPuppet() then
+		return
+	end
+	
 	assert( is_instance( agent, Agent ))
 
 	local window = SleepWindow( agent )

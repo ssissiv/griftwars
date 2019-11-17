@@ -46,6 +46,14 @@ function StatValue:GetValue()
 	return self.value, self.max_value
 end
 
+function StatValue:GetPercent()
+	if self.max_value then
+		return self.value / self.max_value
+	else
+		return 0
+	end
+end
+
 function StatValue:DeltaRegen( regen )
 	self.regen_delta = (self.regen_delta or 0) + regen
 	self.regen_value = 0

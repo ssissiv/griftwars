@@ -8,7 +8,7 @@ Scrounge.ACT_DESC =
 	"{1.Id} is here rummaging around.",
 }
 
--- Scrounge.FLAGS = VERB_FLAGS.ATTENTION
+Scrounge.FLAGS = VERB_FLAGS.HANDS
 
 function Scrounge:CalculateDC( mods )
 	return 10
@@ -16,6 +16,13 @@ end
 
 function Scrounge:GetDesc()
 	return "Scrounge"
+end
+
+function Scrounge:CanInteract( actor )
+	if actor:IsBusy( self.FLAGS ) then
+		return false, "Busy"
+	end
+	return true
 end
 
 function Scrounge:Interact( actor )
@@ -26,6 +33,10 @@ function Scrounge:Interact( actor )
 		self:YieldForTime( 10 * ONE_MINUTE )
 		actor:DeltaStat( STAT.FATIGUE, 2 )
 
+		if self:IsCancelled() then
+			break
+		end
+		
 		if self:CheckDC() then
 			local coins = math.random( 1, 3 )
 			Msg:Echo( actor, "You find {1#money}!", coins )

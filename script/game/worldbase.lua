@@ -81,6 +81,15 @@ function WorldBase:UnscheduleEvent( ev )
 	ev.cancel = true
 end
 
+function WorldBase:TriggerEvent( ev )
+	if type( ev[1] ) == "function" then
+		local fn = ev[1]
+		fn( table.unpack( ev, 2 ))
+	else
+		self:BroadcastEvent( table.unpack( ev ) )
+	end
+end
+
 function WorldBase:GetEventTimeLeft( ev )
 	return math.max( 0, ev.when - self.datetime )
 end
@@ -93,12 +102,7 @@ function WorldBase:CheckScheduledEvents()
 		table.remove( self.scheduled_events, 1 )
 
 		if not ev.cancel then
-			if type( ev[1] ) == "function" then
-				local fn = ev[1]
-				fn( table.unpack( ev, 2 ))
-			else
-				self:BroadcastEvent( table.unpack( ev ) )
-			end
+			self:TriggerEvent( ev )
 		end
 
 		if not ev.cancel then

@@ -35,9 +35,9 @@ function Shopkeep:OnLocationEvent( event_name, location, ... )
 	if event_name == LOCATION_EVENT.AGENT_ADDED and location == self.owner:GetLocation() and location == self.shop then
 		local agent = ...
 		if agent:Acquaint( self.owner ) then
-			Msg:Speak( "Welcome, welcome! I'm {1.Id}.", self.owner )
+			Msg:Speak( self.owner, "Welcome, welcome! I'm {1.Id}." )
 		else
-			Msg:Speak( "Good deals today.", self.owner )
+			Msg:Speak( self.owner, "Good deals today." )
 		end
 	end
 end

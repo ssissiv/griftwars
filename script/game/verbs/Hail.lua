@@ -33,5 +33,5 @@ end
 function Hail:Interact( actor, obj )
 	Msg:Action( self.STRINGS, actor, obj )
 	obj:SetFocus( self.actor )
-	Msg:Speak( "What do you want?", obj, actor )
+	Msg:Speak( obj, "What do you want?", actor )
 end

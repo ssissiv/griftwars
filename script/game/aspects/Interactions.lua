@@ -146,7 +146,7 @@ end
 function Acquaint:OnSatisfied( actor, dice )
 	-- We know the actor.
 	if actor:Acquaint( self.owner ) then
-		Msg:Speak( "Yo, I'm {1.name}", self.owner, actor )
+		Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
 	end
 end
 
@@ -164,7 +164,7 @@ function Chat:CanInteract( actor )
 end
 
 function Chat:OnSatisfied( actor, dice )
-	Msg:Speak( "There's lots of stuff to find if you know where to look.", self.owner, actor )
+	Msg:Speak( self.owner, "There's lots of stuff to find if you know where to look.", actor )
 
 	local die = ActionDie( "Local Chat",
 	{

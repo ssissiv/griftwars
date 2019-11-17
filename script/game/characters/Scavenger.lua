@@ -54,11 +54,43 @@ end
 
 ---------------------------------------------------------------------
 
+local Scavenge = class( "Behaviour.Scavenge", Aspect.Behaviour )
+
+function Scavenge:init()
+	Scavenge._base.init( self )
+
+	self.scrounge = Verb.Scrounge()
+end
+
+function Scavenge:CalculatePriority( world )
+	-- How broke am I?
+	local value = self.owner:GetInventory():CalculateValue()
+	if value <= WEALTH.DESTITUTE then
+		return PRIORITY.OBLIGATION
+	else
+		return 1
+	end
+end
+
+function Scavenge:CanRun()
+	return self.scrounge:CanInteract( self.owner )
+end
+
+function Scavenge:RunBehaviour()
+	self.owner:DoVerb( self.scrounge )
+end
+
+---------------------------------------------------------------------
+
 
 function Agent.Scavenger()
 	local ch = Agent()
 	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Here's a guy.", GENDER.MALE )
-	ch:GainAspect( Agenda.Scavenger() )
+	-- ch:GainAspect( Agenda.Scavenger() )
+	ch:GainAspect( Aspect.Behaviour() ):AddBehaviours{
+		Behaviour.ManageFatigue(),
+		Behaviour.Scavenge()
+	}
 	-- ch:GainAspect( Skill.Scrounge() )
 	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	ch:GainAspect( Interaction.Acquaint( CR1 ) )

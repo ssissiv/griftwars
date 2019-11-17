@@ -1,6 +1,10 @@
 TODO
 ====
 
+SENSELOG:
+eneds to keep parameters, to so newly learned identities change logs from the past.
+
+
 You have max token slots, and tokens in them.  You commit them to certain requirement sets (embedded in social Interactions, etc.), which typically unlocks something.
 
 Diplo 1 can unlock lvl 1. Acquintances, who will reveal knowledge.

@@ -42,7 +42,8 @@ function Msg:ActToRoom( msg, actor, target, ... )
 	end
 end
 
-function Msg:Speak( msg, actor, target, ... )
+function Msg:Speak( actor, msg, target, ... )
+	assert( is_instance( actor, Agent ))
 	local location = actor:GetLocation()
 	for i, obj in location:Contents() do
 		if obj == actor then

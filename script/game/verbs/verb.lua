@@ -57,7 +57,7 @@ function Verb:CheckDC()
 	return math.random( 1, 20 ) >= self:GetDC()
 end
 
-function Verb:CanInteract()
+function Verb:CanInteract( ... )
 	return true
 end
 
@@ -76,7 +76,7 @@ function Verb:GetShortDesc( viewer )
 end
 
 
-local function DoInteraction( self, actor )
+function Verb:_BeginActing( actor )
 	self.actor = actor
 	
 	self:Interact( actor )
@@ -88,18 +88,15 @@ local function DoInteraction( self, actor )
 	self:EndActing( actor )
 end
 
-
-function Verb:_BeginActing( actor )
-	local coro = coroutine.create( DoInteraction )
-
-	local ok, result = coroutine.resume( coro, self, actor or self.actor )
-	if not ok then
-		error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
-	end
+function Verb:IsCancelled()
+	return self.cancelled == true
 end
 
 function Verb:Cancel()
-	self:EndActing( self.actor )
+	self.cancelled = true
+
+	self.actor.world:UnscheduleEvent( self.yield_ev )
+	self.actor.world:TriggerEvent( self.yield_ev )
 end
 
 function Verb:CanCancel()
@@ -108,11 +105,12 @@ end
 
 function Verb:EndActing( actor )
 	actor:_RemoveVerb( self )
+	
 	if self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.yield_ev = nil
 	end
-	self.yield_ev = nil
+
 	self.yield_duration = nil
 end
 

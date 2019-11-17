@@ -35,6 +35,15 @@ GENDER = MakeEnum
 	"NEUTRAL",
 }
 
+MSTATE = MakeEnum
+{
+	"ALERT",
+	"STUNNED",
+	"SLEEPING",
+	"KO",
+	"DEAD",
+}
+
 OPINION_STRINGS =
 {
 	[ OPINION.FEAR ] =
@@ -81,6 +90,14 @@ AGENT_EVENT = MakeEnum{
 LOCATION_EVENT = MakeEnum{
 	"AGENT_ADDED",
 	"AGENT_REMOVED",
+}
+
+PRIORITY =
+{
+	EMERGENCY = 100,
+	OBLIGATION = 50,
+	HABIT = 30,
+	FUN = 25,
 }
 
 STAT = MakeEnum

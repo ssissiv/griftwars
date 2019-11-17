@@ -111,10 +111,6 @@ function DebugTable:init( t, name, offset )
     self.menu_params = { t }
 end
 
-function DebugTable:GetSubject()
-    return self.t
-end
-
 function DebugTable:GetName()
     return self.name or rawstring(self.t)
 end
@@ -141,6 +137,27 @@ function DebugTable:RenderPanel( ui, panel )
     ui.Columns(1)
 
     panel:AppendKeyValues( ui, self.t, self.offset )
+end
+
+
+ --------------------------------------------------------------------
+-- A debug source for a coroutine. table
+
+local DebugCoroutine = class( "DebugCoroutine", DebugNode )
+
+DebugCoroutine.REGISTERED_TYPE = "thread"
+
+function DebugCoroutine:init( c )
+    self.c = c
+end
+
+function DebugCoroutine:GetName()
+    return "coroutine"
+end
+
+function DebugCoroutine:RenderPanel( ui, panel )
+    ui.TextColored( 0, 1, 1, 1, coroutine.status( self.c ))
+    ui.Text( debug.traceback( self.c ))
 end
 
 --------------------------------------------------------------------

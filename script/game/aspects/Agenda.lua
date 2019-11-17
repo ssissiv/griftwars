@@ -25,6 +25,7 @@ function Agenda:CalculateAgenda()
 	local world = self:GetWorld()
 	self.last_agenda = world:GetDateTime()
 	self.next_agenda = nil
+
 	self.owner:BroadcastEvent( AGENT_EVENT.CALC_AGENDA, self )
 
 	local now = world:GetDateTime()

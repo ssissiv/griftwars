@@ -15,6 +15,7 @@ function Agent:init()
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
+	self.mental_state = MSTATE.ALERT
 
 	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
 
@@ -27,6 +28,15 @@ function Agent:SetFlags( ... )
 	for i, flag in ipairs({...}) do
 		self.flags[ flag ] = true
 	end
+end
+
+function Agent:SetMentalState( state )
+	assert( IsEnum( state, MSTATE ))
+	self.mental_state = state
+end
+
+function Agent:IsAlert()
+	return self.mental_state == MSTATE.ALERT
 end
 
 function Agent:HasFlag( flag )
@@ -61,11 +71,15 @@ function Agent:GetShortDesc( viewer )
 	local desc
 	if self.verbs and #self.verbs > 0 then
 		-- TODO: primary verb?
-		desc = self.verbs[1]:GetShortDesc( viewer )
+		desc = self.verbs[1].verb:GetShortDesc( viewer )
 	end
 
 	if desc == nil then
-		desc = loc.format( "{1.Id} is standing here.", self:LocTable( viewer ) )
+		if self.mental_state ~= MSTATE.ALERT then
+			desc = loc.format( "{1.Id} is here. [{2}]", self:LocTable( viewer ), self.mental_state )
+		else
+			desc = loc.format( "{1.Id} is here.", self:LocTable( viewer ) )
+		end
 	end
 
 	if self.focus == self.world:GetPuppet() then
@@ -83,13 +97,6 @@ function Agent:SetLeader( leader )
 	assert( is_instance( leader, Agent ))
 	assert( leader:GetAspect( Trait.Leader ))
 	self.leader = leader
-end
-
-function Agent:CalculateSchedule()
-	if self.schedule == nil then
-		self.schedule = Schedule()
-	end
-	self.schedule:CalculateSchedule()
 end
 
 function Agent:CollectPotentialVerbs()
@@ -269,8 +276,8 @@ end
 
 function Agent:IsBusy( flags )
 	if self.verbs then
-		for i, v in ipairs( self.verbs ) do
-			if v:IsBusy( flags ) then
+		for i, action in ipairs( self.verbs ) do
+			if action.verb:IsBusy( flags ) then
 				return true
 			end
 		end
@@ -280,30 +287,62 @@ end
 
 function Agent:AssertNotBusy()
 	if self:IsBusy() then
-		print( self, " is busy: ", tostr(self.verbs))
+		print( self, " is busy: ", tostr(self.verbs, 2))
 		error()
 	end
 end
 
+-- DEPRECATED
 function Agent:IsDoing( verb )
-	return self.verbs and table.contains( self.verbs, verb )
+	for i, action in ipairs( self.verbs or table.empty ) do
+		if action.verb == verb then
+			return true
+		end
+	end
+	return false
 end
 
 function Agent:DoVerb( verb )
-	if self.verbs == nil then
-		self.verbs = {}
+	local ok, reason = verb:CanInteract( self )
+	if ok then
+		if self.verbs == nil then
+			self.verbs = {}
+		else
+			assert( not self:IsDoing( verb ), tostring(self)..tostring(verb))
+		end
+		local action =
+		{
+			verb = verb,
+			coro = coroutine.create( verb._BeginActing )
+		}
+		table.insert( self.verbs, action )
+	--	assert( #self.verbs == 1 )
+
+		local ok, result = coroutine.resume( action.coro, action.verb, self )
+		if not ok then
+			error( tostring(result) .. "\n" .. tostring(debug.traceback( action.coro )))
+		end
+
+		-- if coroutine.status( action.coro ) ~= "suspended" then
+
+
+
+	else
+		print( "cant do", self, verb, reason )
 	end
-	table.insert( self.verbs, verb )
-	assert( #self.verbs == 1 )
-	verb:_BeginActing( self )
 end
 
 function Agent:_RemoveVerb( verb )
-	table.arrayremove( self.verbs, verb )
-	if #self.verbs == 0 then
-		self.verbs = nil
+	for i, action in ipairs( self.verbs ) do
+		if verb == action.verb then
+			table.remove( self.verbs, i )
+			if #self.verbs == 0 then
+				self.verbs = nil
+			end
+			self:BroadcastEvent( AGENT_EVENT.VERB_UNASSIGNED, verb )
+			break
+		end
 	end
-	self:BroadcastEvent( AGENT_EVENT.VERB_UNASSIGNED, verb )
 end
 
 function Agent:Verbs()
@@ -313,7 +352,7 @@ end
 function Agent:CancelInvalidVerbs()
 	if self.verbs then
 		for i = #self.verbs, 1, -1 do
-			local verb = self.verbs[i]
+			local verb = self.verbs[i].verb
 			if not verb:CanInteract() then
 				verb:Cancel()
 			end

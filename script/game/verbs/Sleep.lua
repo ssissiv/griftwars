@@ -21,15 +21,35 @@ function Sleep.CollectInteractions( agent, verbs )
 	end
 end
 
+function Sleep:CanInteract( actor )
+	if not actor:IsAlert() then
+		return false, "Not Alert"
+	end
+	if actor:IsBusy() then
+		return false, "Busy"
+	end
+	return true
+end
+
 function Sleep:Interact( actor )
 	Msg:ActToRoom( "{1.Id} goes to sleep.", actor )
 	Msg:Echo( actor, "You go to sleep." )
 	
-	actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() * SLEEP_SPEED_RATE )
+	if actor:IsPuppet() then
+		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() * SLEEP_SPEED_RATE )
+	end
+
+	actor:SetMentalState( MSTATE.SLEEPING )
+	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -1 )
 
    	self:YieldForTime( 1 ) --Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
 
-	actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / SLEEP_SPEED_RATE )
+	if actor:IsPuppet() then
+		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / SLEEP_SPEED_RATE )
+	end
+
+	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 1 )
+	actor:SetMentalState( MSTATE.ALERT )
 
 	local stat_xp = actor.world.nexus:Sleep( actor )
 	if stat_xp then
@@ -38,5 +58,6 @@ function Sleep:Interact( actor )
 		end
 	end
 
-	Msg:Echo( actor, "You awaken." )	
+	Msg:Echo( actor, "You awaken." )
+	Msg:ActToRoom( "{1.Id} wakes up.", actor )
 end

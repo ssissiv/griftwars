@@ -116,16 +116,7 @@ function Entity:GetAspect( arg )
 end
 
 function Entity:HasAspect( arg )
-	local id
-	if type(arg) == "string" then
-		id = arg
-	elseif is_class( arg ) then
-		id = arg._classname
-	end
-
-	if self.aspects_by_id then
-		return self.aspects_by_id[ id ] ~= nil
-	end
+	return self:GetAspect( arg ) ~= nil
 end
 
 function Entity:Aspects()

@@ -6,7 +6,7 @@ end
 
 function Idle:Interact( actor )
 	-- Idling.
-	Msg:Speak( "Just idling!", actor )
+	Msg:Speak( actor, "Just idling!" )
 	self:YieldForTime( ONE_HOUR )
 end
 
