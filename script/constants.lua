@@ -2,6 +2,11 @@ DEV = true
 
 DBG_FLAGS = MakeBitField{ "RENDER" }
 
+IMGUI =
+{
+	DEFAULT_OPEN = { "DefaultOpen" }
+}
+
 
 local colours =
 {

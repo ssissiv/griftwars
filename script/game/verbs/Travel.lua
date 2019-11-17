@@ -35,9 +35,11 @@ function Travel:Interact( actor )
 		if path then
 			Msg:Action( self.EXIT_STRINGS, actor, path[2] )
 			self:YieldForTime( ONE_MINUTE )
-			actor:WarpToLocation( path[2] )
 			print( "Travel:", actor, path[2] )
+			actor:WarpToLocation( path[2] )
 			Msg:Action( self.ENTER_STRINGS, actor, path[2] )
+		else
+			self:YieldForTime( ONE_MINUTE )
 		end
 	end
 end

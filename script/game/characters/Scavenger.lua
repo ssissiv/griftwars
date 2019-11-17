@@ -19,23 +19,6 @@
 --]]
 ---------------------------------------------------------------------
 
-local Scavenger = class( "Agenda.Scavenger", Aspect.Agenda )
-
-function Scavenger:init()
-	Aspect.Agenda.init( self )
-	self:RegisterHandler( AGENT_EVENT.CALC_AGENDA, self.OnCalculateAgenda, self )
-end
-
-function Scavenger:OnCalculateAgenda( event_name, agent, agenda )
-	assert( agenda == self )
-	if self.scavenge == nil then
-		self.scavenge = Verb.Scavenge( agent )
-	end
-	agenda:ScheduleTaskForAgenda( self.scavenge, 7, 12, self )
-end
-
----------------------------------------------------------------------
-
 local Scavenge = class( "Behaviour.Scavenge", Aspect.Behaviour )
 
 function Scavenge:init()
@@ -73,7 +56,6 @@ end
 function Agent.Scavenger()
 	local ch = Agent()
 	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Here's a guy.", GENDER.MALE )
-	-- ch:GainAspect( Agenda.Scavenger() )
 	ch:GainAspect( Aspect.Behaviour() ):AddBehaviours{
 		Behaviour.ManageFatigue(),
 		Behaviour.Scavenge()

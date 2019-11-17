@@ -26,10 +26,14 @@ function Deliver:CanStart()
 	if self.owner:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Moving"
 	end
+	-- if self.owner:GetInventory():CalculateValue() < 5 then
+	-- 	return false, "Nothing to deliver"
+	-- end
 	return self._base.CanStart( self )
 end
 
 function Deliver:RunBehaviour()
+	self.priority = -10
 	self.owner:DoVerb( self.travel )
 
 	if self.giver:GetLocation() == self.receiver:GetLocation() then

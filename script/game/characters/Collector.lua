@@ -1,24 +1,33 @@
 
-local Collector = class( "Agenda.Collector", Aspect.Agenda )
+local Collector = class( "Behaviour.Collector", Aspect.Behaviour )
 
 function Collector:init()
-	Aspect.Agenda.init( self )
-	self:RegisterHandler( AGENT_EVENT.CALC_AGENDA, self.OnCalculateAgenda )
+	Aspect.Behaviour.init( self )
 end
 
-function Collector:OnCalculateAgenda( event_name, agent, agenda )
-	local subordinate
+function Collector:RunBehaviour()
+	if self.deliver_behaviour then
+		if self.deliver_behaviour.owner then
+			return -- Still delivering
+		end
+		self.deliver_behaviour = nil
+	end
+
+	-- Find a subordinate and give them a Deliver behaviour.
+	local subordinates = ObtainWorkTable()
 	for i, r in self.owner:Relationships() do
 		if is_instance( r, Relationship.Subordinate ) and r.boss == self.owner and r.subordinate:HasAspect( Aspect.Behaviour ) then
-			subordinate = r.subordinate
-			break
+			table.insert( subordinates, r.subordinate )
 		end
 	end
+
+	local subordinate = table.arraypick( subordinates )
 	if subordinate then
-		-- agenda:ScheduleTaskForAgenda( Verb.Idle( agent ), 21, 22, self )
-		-- subordinate:GetAspect( Aspect.Agenda ):ScheduleTaskForAgenda( Verb.Deliver( subordinate, agent ), 14, 22, self )
-		subordinate:GetAspect( Aspect.Behaviour ):AddBehaviour( Behaviour.Deliver( subordinate, agent ))
+		self.deliver_behaviour = Behaviour.Deliver( subordinate, self.owner )
+		subordinate:GetAspect( Aspect.Behaviour ):AddBehaviour( self.deliver_behaviour )
 	end
+
+	ReleaseWorkTable( subordinates )
 end
 
 --------------------------------------------------------------------------------
@@ -26,7 +35,7 @@ end
 function Agent.Collector()
 	local ch = Agent()
 	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
-	ch:GainAspect( Agenda.Collector() )
+	ch:GainAspect( Behaviour.Collector() )
  	return ch
 end
 

@@ -13,6 +13,7 @@ function PathFinder:CalculatePath()
 	assert( end_room )
 	local from_to = {} -- map of room -> next room back to start
 	local path
+	local sanity = 0
 
 	while #queue > 0 do
 		local room = table.remove( queue, 1 )
@@ -38,6 +39,8 @@ function PathFinder:CalculatePath()
 				table.insert( queue, dest )
 			end
 		end
+		sanity = sanity + 1
+		assert( sanity < 1000 )
 	end
 
 	return path

@@ -242,7 +242,7 @@ function Agent:Relationships()
 end
 
 function Agent:WarpToLocation( location )
-	assert( location )
+	assert( is_instance( location, Location ))
 
 	local prev_location = self.location
 	if self.location then
@@ -312,16 +312,16 @@ function Agent:DoVerb( verb, ... )
 			coro = coroutine.create( verb._BeginActing )
 		}
 		table.insert( self.verbs, action )
-	--	assert( #self.verbs == 1 )
+		assert( #self.verbs < 10, "Too many verbs: " ..tostring(self) )
 
 		local ok, result = coroutine.resume( action.coro, action.verb, self, ... )
 		if not ok then
 			error( tostring(result) .. "\n" .. tostring(debug.traceback( action.coro )))
 		end
 
-		-- if coroutine.status( action.coro ) ~= "suspended" then
-
-
+		if coroutine.status( action.coro ) ~= "suspended" then
+			assert( not self:IsDoing( verb ))
+		end
 
 	else
 		print( "cant do", self, verb, reason )
@@ -339,7 +339,7 @@ function Agent:_RemoveVerb( verb )
 			return
 		end
 	end
-	error()
+	error( "No verb to remove: " .. tostring(verb))
 end
 
 function Agent:Verbs()

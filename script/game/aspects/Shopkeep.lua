@@ -5,7 +5,6 @@ local Shopkeep = class( "Aspect.Shopkeep", Aspect )
 
 function Shopkeep:init()
 	self:RegisterHandler( AGENT_EVENT.LOCATION_CHANGED, self.OnLocationChanged )
-	self:RegisterHandler( AGENT_EVENT.CALC_AGENDA, self.OnCalculateAgenda )
 end
 
 function Shopkeep:AssignShop( shop )
@@ -16,10 +15,6 @@ end
 function Shopkeep:OnGainAspect( owner )
 	Aspect.OnGainAspect( self, owner )
 	owner:GainAspect( Interaction.BuyFromShop() )
-end
-
-function Shopkeep:OnCalculateAgenda( event_name, agent, agenda )
-	agenda:ScheduleTaskForAgenda( Verb.Travel( agent, self.shop ), 6, 17, self )
 end
 
 function Shopkeep:OnLocationChanged( event_name, agent, prev_location, location )

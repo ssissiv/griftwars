@@ -2,14 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Calendar.GetNormalizedTimeOfDay( 0 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 0 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 7 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 19 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 22 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 24 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 4 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 7 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 7.01 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 10 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 7 ))",
@@ -33,7 +25,15 @@ return {
 			"print(t:IsBusy())",
 			"print(t:IsBusy( VERB_FLAGS.HANDS ))",
 			"s = Verb.Scrounge(); print( s:CanInteract( t ))",
-			"print( is_instance( t, Skill ))"
+			"print( is_instance( t, Skill ))",
+			"print(t.owner:GetStatValue( STAT.FATIGUE ))",
+			"print(t.owner:GetStat(STAT.FATIGUE):GetPercent())",
+			"print( Easing.outQuad( 0.16, 0, PRIORITY_EMERGENCY, 1.0 ))",
+			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ))",
+			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ) + PRIORITY.FUN )",
+			"for i = 0, 1, 0.1 do print( easing.outQuad( t, 0, 1.0, 1.0 )) end",
+			"for i = 0, 1, 0.1 do print( i, easing.outQuad( i, 0, 1.0, 1.0 )) end",
+			"for i = 0, 1, 0.1 do print( i, Easing.outQuad( i, 0, 1.0, 1.0 )) end"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

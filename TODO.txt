@@ -1,6 +1,9 @@
 TODO
 ====
 
+DEBUG LOGGIN:
+pls.
+
 SENSELOG:
 eneds to keep parameters, to so newly learned identities change logs from the past.
 

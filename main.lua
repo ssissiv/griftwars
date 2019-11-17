@@ -67,7 +67,6 @@ require "game/verbs/Sleep"
 
 require "game/aspects/aspect"
 require "game/aspects/statvalue"
-require "game/aspects/Agenda"
 require "game/aspects/traits"
 require "game/aspects/Memory"
 require "game/aspects/Player"

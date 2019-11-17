@@ -94,6 +94,10 @@ function Behaviour:CanStart()
 	if self:IsRunning() then
 		return false, "Already running"
 	end
+	if self.priority < 0 then
+		return false, "Priority: "..tostring(self.priority)
+	end
+
 	for i, verb in ipairs( self.verbs ) do
 		local ok, reason = verb:CanInteract( self.owner )
 		if not ok then
@@ -123,8 +127,10 @@ end
 
 function Behaviour:RenderDebugPanel( ui, panel, dbg )
 	ui.PushID( rawstring( self ))
-	if ui.TreeNode( self:GetName() ) then
-		if self:IsRunning() then
+
+	local is_running = self:IsRunning()
+	if ui.TreeNodeEx( self:GetName(), is_running and IMGUI.DEFAULT_OPEN ) then
+		if is_running then
 			ui.SameLine( 0, 5 )
 			ui.TextColored( 0, 1, 0, 1, "**" )
 		end
