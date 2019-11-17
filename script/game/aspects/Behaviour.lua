@@ -6,6 +6,7 @@ local Behaviour = class( "Aspect.Behaviour", Aspect )
 
 function Behaviour:init()
 	self.behaviours = {}
+	self.verbs = {}
 	self.priority = 0
 
 	self:RegisterHandler( AGENT_EVENT.VERB_UNASSIGNED, self.OnVerbUnassigned )
@@ -17,6 +18,25 @@ end
 
 function Behaviour:OnSpawn( world )
 	self:ScheduleNextTick()
+end
+
+function Behaviour:AddVerb( verb )
+	table.insert( self.verbs, verb )
+	return verb
+end
+
+function Behaviour:IsRunning()
+	for i, verb in ipairs( self.verbs ) do
+		if self.owner:IsDoing( verb ) then
+			return true
+		end
+	end
+	for i, behaviour in ipairs( self.behaviours ) do
+		if behaviour:IsRunning() then
+			return true
+		end
+	end
+	return false
 end
 
 function Behaviour:OnVerbUnassigned( verb )
@@ -70,7 +90,16 @@ function Behaviour:OnTickBehaviour()
 	self:ScheduleNextTick()
 end
 
-function Behaviour:CanRun()
+function Behaviour:CanStart()
+	if self:IsRunning() then
+		return false, "Already running"
+	end
+	for i, verb in ipairs( self.verbs ) do
+		local ok, reason = verb:CanInteract( self.owner )
+		if not ok then
+			return false, reason
+		end
+	end
 	return true
 end
 
@@ -86,7 +115,7 @@ function Behaviour:RunSubBehaviours()
 
 	--
 	for i, behaviour in ipairs( self.behaviours ) do
-		if behaviour:CanRun() then
+		if behaviour:CanStart() then
 			behaviour:RunBehaviour( world )
 		end
 	end
@@ -95,6 +124,11 @@ end
 function Behaviour:RenderDebugPanel( ui, panel, dbg )
 	ui.PushID( rawstring( self ))
 	if ui.TreeNode( self:GetName() ) then
+		if self:IsRunning() then
+			ui.SameLine( 0, 5 )
+			ui.TextColored( 0, 1, 0, 1, "**" )
+		end
+
 		local world = self:GetWorld()
 		ui.Text( loc.format( "Priority: {1}", self.priority ))
 		if self.tick_ev then
@@ -108,7 +142,12 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 			behaviour:RenderDebugPanel( ui, panel, dbg )
 		end
 		ui.TreePop()
+
+	elseif self:IsRunning() then
+		ui.SameLine( 0, 5 )
+		ui.TextColored( 0, 1, 0, 1, "**" )
 	end
+
 	ui.PopID()
 end
 

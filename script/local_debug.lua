@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(world:GetDateTime() - t.when )",
 			"print( Calendar.GetNormalizedTimeOfDay( 0 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 0 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 7 ))",
@@ -33,7 +32,8 @@ return {
 			"print(t)",
 			"print(t:IsBusy())",
 			"print(t:IsBusy( VERB_FLAGS.HANDS ))",
-			"s = Verb.Scrounge(); print( s:CanInteract( t ))"
+			"s = Verb.Scrounge(); print( s:CanInteract( t ))",
+			"print( is_instance( t, Skill ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -4,7 +4,7 @@
 local Player = class( "Trait.Player", Aspect )
 
 function Player:init()
-	self.dice = DiceContainer( self )
+	-- self.dice = DiceContainer( self )
 end
 
 function Player:AddDefaultDice()

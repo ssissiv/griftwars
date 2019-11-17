@@ -33,11 +33,23 @@ function Interaction:StopCooldown()
 	self.cooldown_ev = nil
 end
 
+function Interaction:CanInteract( actor )
+	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then
+		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
+	end
+	return true
+end
+
+
 -- face: DIE_FACE
 -- max_count: integer (number of faces required to satisfy req)
 function Interaction:ReqFace( face, max_count )
 	table.insert( self.reqs, Req.MakeFaceReq( face, max_count ))
 	return self
+end
+
+function Interaction:Req( req )
+	table.insert( self.reqs, req )
 end
 
 function Interaction:Reqs()
@@ -46,16 +58,6 @@ end
 
 function Interaction:GetFaceCount( face, viewer )
 	local count = 0
-	local dice = viewer:GetDice()
-	if dice then
-		for i, dice in dice:Dice() do
-			local f, c = dice:GetRoll()
-			if f == face then
-				count = count + c
-			end
-		end
-	end
-
 	local tokens = viewer:GetAspect( Aspect.TokenHolder )
 	if tokens then
 		count = count + tokens:GetFaceCount( face )
@@ -135,14 +137,6 @@ function Acquaint:init( cr )
 	self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
 end
 
-function Acquaint:CanInteract( actor )
-	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then
-		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
-	end
-
-	return Acquaint._base.CanInteract( self, actor )
-end
-
 function Acquaint:OnSatisfied( actor, dice )
 	-- We know the actor.
 	if actor:Acquaint( self.owner ) then
@@ -150,6 +144,42 @@ function Acquaint:OnSatisfied( actor, dice )
 	end
 end
 
+-----------------------------------------------------------------------------------
+
+local TrainSkill = class( "Interaction.TrainSkill", Interaction )
+
+function TrainSkill:init( skill )
+	assert( skill )
+	Interaction.init( self )
+	self.skill = skill
+	for i, req in skill:TrainingReqs() do
+		self:Req( req )
+	end
+end
+
+function TrainSkill:CanInteract( actor )
+	if actor:HasAspect( self.skill._class ) then
+		return false, "Already known."
+	end
+
+	for i, req in self.skill:TrainingReqs() do
+		local ok, reason = req:IsSatisfied( actor )
+		if not ok then
+			return false, reason
+		end
+	end
+
+	return TrainSkill._base.CanInteract( self, actor )
+end
+
+function TrainSkill:OnSatisfied( actor )
+	Msg:Echo( actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), self.skill:GetName() )
+	Msg:ActToRoom( "{I.Id{} learns the {2} skill!", actor )
+
+	actor:GainAspect( self.skill:Clone() )
+
+	self:StartCooldown( 3 * ONE_HOUR )
+end
 
 -----------------------------------------------------------------------------------
 
@@ -164,23 +194,23 @@ function Chat:CanInteract( actor )
 end
 
 function Chat:OnSatisfied( actor, dice )
-	Msg:Speak( self.owner, "There's lots of stuff to find if you know where to look.", actor )
+	local t = ObtainWorkTable()
+	for i, aspect in self.owner:Aspects() do
+		if is_instance( aspect, Skill ) then
+			table.insert( t, aspect )
+		end
+	end
 
-	local die = ActionDie( "Local Chat",
-	{
-		DIE_FACE.DIPLOMACY, 1,
-		DIE_FACE.DIPLOMACY, 1,
-		DIE_FACE.DIPLOMACY, 1,
-		DIE_FACE.DISTRICT_MIDGARD, 1,
-		DIE_FACE.DISTRICT_MIDGARD, 1,
-		DIE_FACE.DISTRICT_MIDGARD, 1,
-	})
-	actor:GetDice():AddDie( die )
+	local skill = table.arraypick( t )
+	if skill then
+		Msg:Speak( self.owner, "There's lots of stuff to find if you know where to look.", actor )
 
-	local skill = actor:GainAspect( Skill.Scrounge() )
-	Msg:Act( self.owner, actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), skill:GetName() )
+		self.owner:GainAspect( Interaction.TrainSkill( skill ))
 
-	self:StartCooldown( ONE_DAY )
+		self:StartCooldown( ONE_DAY )
+	else
+		Msg:Speak( self.owner, "Nothing to say, really.", actor )
+	end
 end
 
 
@@ -197,14 +227,6 @@ end
 -- Verb.GetDesc
 function BuyFromShop:GetDesc()
 	return "Buy/Sell"
-end
-
-function BuyFromShop:CanInteract( actor )
-	if self.owner:IsBusy() then
-		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
-	end
-
-	return true
 end
 
 function BuyFromShop:OnSatisfied( actor, dice )
@@ -226,7 +248,11 @@ end
 local LearnRelationship = class( "Interaction.LearnRelationship", Interaction )
 
 function LearnRelationship:CanInteract( actor )
-	return not self.owner:HasAgent( actor ) and not self.owner:IsKnownBy( actor )
+	if self.owner:HasAgent( actor ) or self.owner:IsKnownBy( actor ) then
+		return false, "Relationship already known"
+	end
+
+	return LearnRelationship._base.CanInteract( self, actor )
 end
 
 function LearnRelationship:OnSatisfied( actor, dice )

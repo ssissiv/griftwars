@@ -109,6 +109,21 @@ function rawstring( t )
     end
 end
 
+local TABLE_POOL = {}
+function ObtainWorkTable( t )
+    local t = table.remove( TABLE_POOL )
+    if t then
+        table.clear( t )
+    else
+        t = {}
+    end
+    return t
+end
+
+function ReleaseWorkTable( t )
+    table.insert( TABLE_POOL, t )
+end
+
 local pow = math.pow 
 local floor = math.floor
 local fmod = math.fmod

@@ -15,11 +15,18 @@ function Deliver:init( giver, receiver )
 	Deliver._base.init( self )
 	self.giver = giver
 	self.receiver = receiver
-	self.travel = Verb.Travel( self.giver, self.receiver )
+	self.travel = self:AddVerb( Verb.Travel( self.giver, self.receiver ))
 end
 
 function Deliver:CalculatePriority()
 	return self.priority + 1
+end
+
+function Deliver:CanStart()
+	if self.owner:IsBusy( VERB_FLAGS.MOVEMENT ) then
+		return false, "Moving"
+	end
+	return self._base.CanStart( self )
 end
 
 function Deliver:RunBehaviour()

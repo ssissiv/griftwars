@@ -1,5 +1,8 @@
 local Travel = class( "Verb.Travel", Verb )
 
+Travel.FLAGS = VERB_FLAGS.MOVEMENT
+
+
 Travel.EXIT_STRINGS =
 {
 	"You leave {2.title}.",

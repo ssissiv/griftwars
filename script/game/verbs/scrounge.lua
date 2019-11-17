@@ -8,6 +8,8 @@ Scrounge.ACT_DESC =
 	"{1.Id} is here rummaging around.",
 }
 
+Scrounge.ACT_RATE = 8.0
+
 Scrounge.FLAGS = VERB_FLAGS.HANDS
 
 function Scrounge:CalculateDC( mods )
@@ -30,8 +32,8 @@ function Scrounge:Interact( actor )
 	Msg:Echo( actor, "You begin to rummage around." )
 
 	while true do
-		self:YieldForTime( 10 * ONE_MINUTE )
-		actor:DeltaStat( STAT.FATIGUE, 2 )
+		self:YieldForTime( 30 * ONE_MINUTE )
+		actor:DeltaStat( STAT.FATIGUE, 5 )
 
 		if self:IsCancelled() then
 			break

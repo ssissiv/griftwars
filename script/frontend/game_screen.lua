@@ -44,13 +44,6 @@ function GameScreen:RenderInventory( puppet )
     ui.Begin( "Inventory", false, flags )
 
     local player = puppet:GetPlayer()
-	if player and ui.TreeNodeEx( "Dice", "DefaultOpen" ) then
-		for i, die in ipairs( player:GetDice() ) do
-			die:RenderObject( ui, puppet )
-		end
-		ui.TreePop()
-	end
-
     local rumours = puppet:GetAspect( Skill.RumourMonger )
     if rumours and ui.TreeNodeEx( "Knowledge", "DefaultOpen" ) then
     	for e_info, count in rumours:Info() do
@@ -172,7 +165,9 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     if tokens then
     	local count, max_count = tokens:GetTokenCount()
     	for i = 1, max_count do
-	    	ui.SameLine( 0, 15 )
+    		if i > 1 then
+		    	ui.SameLine( 0, 15 )
+		    end
 	    	local token = tokens:GetTokenAt( i )
 	    	if token then
 	    		ui.Text( "[" )

@@ -7,7 +7,6 @@ function TokenHolder:init()
 	self.tokens = {}
 	self.commited_tokens = {}
 	self.max_tokens = 3
-	self:AddToken( Token( DIE_FACE.DIPLOMACY, 1 ) )
 end
 
 function TokenHolder:Tokens()

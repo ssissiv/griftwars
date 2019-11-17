@@ -19,9 +19,9 @@ function Agent:init()
 
 	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
 
-	-- self:CreateStat( STAT.STATURE, 1, 1 ):SetGrowthRate( 0.1 )
-	-- self:CreateStat( STAT.MIND, 1, 1 ):SetGrowthRate( 0.1 )
-	-- self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.STATURE, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.MIND, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
 end
 
 function Agent:SetFlags( ... )
@@ -57,10 +57,6 @@ end
 
 function Agent:GetPlayer()
 	return self:GetAspect( Trait.Player )
-end
-
-function Agent:GetDice()
-	return self:GetAspect( Trait.Player ):GetDice() -- Only player has dice atm.
 end
 
 function Agent:IsPuppet()
@@ -277,7 +273,7 @@ end
 function Agent:IsBusy( flags )
 	if self.verbs then
 		for i, action in ipairs( self.verbs ) do
-			if action.verb:IsBusy( flags ) then
+			if action.verb:HasBusyFlag( flags ) then
 				return true
 			end
 		end

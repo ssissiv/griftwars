@@ -14,6 +14,7 @@ function DebugPanel:init( dbg, node )
     self.uid = next_uid
     next_uid = next_uid + 1
     self.dbg = dbg
+    self.init_trace = debug.traceback()
 
     if node then
         self:PushNode( node )
@@ -95,6 +96,14 @@ function DebugPanel:RenderPanel( dbg )
                 end
                 if ui.MenuItem( "View Root" ) then
                     self:PushNode( DebugRoot( self.dbg ) )
+                end
+                if ui.MenuItem( "Init stack" ) then                
+                end
+                if ui.IsItemHovered() then
+                    ui.SetTooltip( tostring(self.init_trace) )
+                end
+                if ui.MenuItem( "Debug Panel" ) then
+                    DBG( self )
                 end
                 ui.Separator()
                 if ui.MenuItem( "Close" ) then

@@ -59,7 +59,7 @@ local Scavenge = class( "Behaviour.Scavenge", Aspect.Behaviour )
 function Scavenge:init()
 	Scavenge._base.init( self )
 
-	self.scrounge = Verb.Scrounge()
+	self.scrounge = self:AddVerb( Verb.Scrounge())
 end
 
 function Scavenge:CalculatePriority( world )
@@ -70,10 +70,6 @@ function Scavenge:CalculatePriority( world )
 	else
 		return 1
 	end
-end
-
-function Scavenge:CanRun()
-	return self.scrounge:CanInteract( self.owner )
 end
 
 function Scavenge:RunBehaviour()
@@ -91,7 +87,7 @@ function Agent.Scavenger()
 		Behaviour.ManageFatigue(),
 		Behaviour.Scavenge()
 	}
-	-- ch:GainAspect( Skill.Scrounge() )
+	ch:GainAspect( Skill.Scrounge() )
 	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	ch:GainAspect( Interaction.Acquaint( CR1 ) )
 	ch:GainAspect( Interaction.Chat() )

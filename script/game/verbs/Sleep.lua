@@ -8,6 +8,8 @@ Sleep.ACT_DESC =
 	"{1.Id} is here sleeping.",
 }
 
+Sleep.ACT_RATE = SLEEP_SPEED_RATE
+
 Sleep.FLAGS = bit32.bor( VERB_FLAGS.ATTENTION, VERB_FLAGS.MOVEMENT, VERB_FLAGS.HANDS )
 
 function Sleep:GetDesc()
@@ -35,18 +37,12 @@ function Sleep:Interact( actor )
 	Msg:ActToRoom( "{1.Id} goes to sleep.", actor )
 	Msg:Echo( actor, "You go to sleep." )
 	
-	if actor:IsPuppet() then
-		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() * SLEEP_SPEED_RATE )
-	end
-
 	actor:SetMentalState( MSTATE.SLEEPING )
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -1 )
 
-   	self:YieldForTime( 1 ) --Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
-
-	if actor:IsPuppet() then
-		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / SLEEP_SPEED_RATE )
-	end
+	-- TEMP
+   	self:YieldForTime( 1 )
+   	-- self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 1 )
 	actor:SetMentalState( MSTATE.ALERT )

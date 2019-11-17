@@ -2,7 +2,7 @@ local ManageFatigue = class( "Behaviour.ManageFatigue", Aspect.Behaviour )
 
 function ManageFatigue:init()
 	ManageFatigue._base.init( self )
-	self.sleep = Verb.Sleep()
+	self.sleep = self:AddVerb( Verb.Sleep())
 end
 
 function ManageFatigue:CalculatePriority( world )
@@ -17,10 +17,6 @@ function ManageFatigue:CalculatePriority( world )
 	local t = self.owner:GetStat( STAT.FATIGUE ):GetPercent()
 	priority = priority + Easing.outQuad( t, 0, PRIORITY.EMERGENCY, 1.0 )
 	return priority
-end
-
-function ManageFatigue:CanRun()
-	return self.sleep:CanInteract( self.owner )
 end
 
 function ManageFatigue:RunBehaviour()

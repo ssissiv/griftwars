@@ -135,6 +135,8 @@ DIE_FACE = MakeEnum
 	"NULL",
 	"DIPLOMACY",
 	"HOSTILITY",
+	"POWER",
+	"STEALTH",
 
 	-- Districts
 	"DISTRICT_MIDGARD",
@@ -151,7 +153,7 @@ PIP_COUNT =
 DLG_REQ = MakeEnum
 {
 	"NULL",
-	"FACE_COUNT"
+	"FACE_COUNT",
 }
 
 VERB_FLAGS = MakeBitField

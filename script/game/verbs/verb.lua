@@ -18,7 +18,7 @@ function Verb:GetFlags()
 	end
 end
 
-function Verb:IsBusy( flags )
+function Verb:HasBusyFlag( flags )
 	if flags == nil then
 		return true
 	else
@@ -79,12 +79,16 @@ end
 function Verb:_BeginActing( actor )
 	self.actor = actor
 	
+	if actor:IsPuppet() and self.ACT_RATE then
+		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() * self.ACT_RATE )
+	end
+
 	self:Interact( actor )
 
 	if self.end_time and self.end_time > actor.world:GetDateTime() then
 		self:YieldForTime( self.end_time - actor.world:GetDateTime() )
 	end
-	
+
 	self:EndActing( actor )
 end
 
@@ -106,6 +110,10 @@ end
 function Verb:EndActing( actor )
 	actor:_RemoveVerb( self )
 	
+	if actor:IsPuppet() and self.ACT_RATE then
+		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / self.ACT_RATE )
+	end
+
 	if self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.yield_ev = nil

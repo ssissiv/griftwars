@@ -4,6 +4,23 @@ function Skill:init()
 	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectActions )
 end
 
+function Skill:TrainingReqs()
+	return pairs( self.training_reqs or table.empty )
+end
+
+function Skill:AddTrainingReq( req )
+	if self.training_reqs == nil then
+		self.training_reqs = {}
+	end
+	table.insert( self.training_reqs, req )
+end
+
+function Skill:Clone()
+	local clone = setmetatable( table.shallowcopy( self ), self._class )
+	clone.owner = nil -- Not transferrable.
+	return clone
+end
+
 function Skill:GetName()
 	return self.name or self._classname
 end
@@ -11,6 +28,12 @@ end
 ---------------------------------------------------------------
 
 local Scrounge = class( "Skill.Scrounge", Skill )
+
+function Scrounge:init()
+	self._base.init( self )
+	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.STEALTH, 1 ))
+	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.POWER, 1 ))
+end
 
 function Scrounge:OnCollectActions( event_name, agent, actions )
 	-- if working...
@@ -24,6 +47,7 @@ local RumourMonger = class( "Skill.RumourMonger", Skill )
 
 function RumourMonger:init()
 	self.info = {}
+	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.STEALTH, 2 ))
 end
 
 function RumourMonger:GainInfo( e_info, delta )
