@@ -17,24 +17,6 @@
 		
 
 --]]
-
-local Scavenge = class( "Verb.Scavenge", Verb )
-
-function Scavenge:GetShortDesc( viewer )
-	return self.verb:GetShortDesc( viewer )
-end
-
-function Scavenge:Interact( actor )
-	if math.random() < 0.35 then
-		self.verb = Verb.Scrounge( actor )
-	elseif math.random() < 0.5 then
-		self.verb = Verb.Idle( actor )
-	else
-		self.verb = Verb.LeaveLocation( actor )
-	end
-	self.verb:Interact( actor )
-end
-
 ---------------------------------------------------------------------
 
 local Scavenger = class( "Agenda.Scavenger", Aspect.Agenda )
@@ -60,6 +42,8 @@ function Scavenge:init()
 	Scavenge._base.init( self )
 
 	self.scrounge = self:AddVerb( Verb.Scrounge())
+	self.idle = self:AddVerb( Verb.Idle())
+	self.leave = self:AddVerb( Verb.LeaveLocation())
 end
 
 function Scavenge:CalculatePriority( world )
@@ -73,7 +57,14 @@ function Scavenge:CalculatePriority( world )
 end
 
 function Scavenge:RunBehaviour()
-	self.owner:DoVerb( self.scrounge )
+	assert( not self:IsRunning() )
+	if math.random() < 0.35 then
+		self.owner:DoVerb( self.scrounge )
+	elseif math.random() < 0.5 then
+		self.owner:DoVerb( self.idle )
+	else
+		self.owner:DoVerb( self.leave )
+	end
 end
 
 ---------------------------------------------------------------------

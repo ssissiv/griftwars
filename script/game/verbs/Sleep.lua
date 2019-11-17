@@ -38,13 +38,13 @@ function Sleep:Interact( actor )
 	Msg:Echo( actor, "You go to sleep." )
 	
 	actor:SetMentalState( MSTATE.SLEEPING )
-	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -1 )
+	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -10 )
 
 	-- TEMP
    	self:YieldForTime( 1 )
    	-- self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
 
-	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 1 )
+	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 10 )
 	actor:SetMentalState( MSTATE.ALERT )
 
 	local stat_xp = actor.world.nexus:Sleep( actor )

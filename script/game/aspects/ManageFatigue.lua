@@ -15,7 +15,7 @@ function ManageFatigue:CalculatePriority( world )
 	end
 
 	local t = self.owner:GetStat( STAT.FATIGUE ):GetPercent()
-	priority = priority + Easing.outQuad( t, 0, PRIORITY.EMERGENCY, 1.0 )
+	priority = priority + Easing.outQuad( t, 0, PRIORITY.EMERGENCY - priority, 1.0 )
 	return priority
 end
 

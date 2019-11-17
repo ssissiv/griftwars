@@ -99,7 +99,8 @@ end
 function Verb:Cancel()
 	self.cancelled = true
 
-	self.actor.world:UnscheduleEvent( self.yield_ev )
+	error()
+	self.actor.world:UnscheduleEvent( self.yield_ev )	
 	self.actor.world:TriggerEvent( self.yield_ev )
 end
 
@@ -107,9 +108,7 @@ function Verb:CanCancel()
 	return true
 end
 
-function Verb:EndActing( actor )
-	actor:_RemoveVerb( self )
-	
+function Verb:EndActing( actor )	
 	if actor:IsPuppet() and self.ACT_RATE then
 		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / self.ACT_RATE )
 	end
@@ -120,6 +119,8 @@ function Verb:EndActing( actor )
 	end
 
 	self.yield_duration = nil
+
+	actor:_RemoveVerb( self )
 end
 
 function Verb:GetActingProgress()

@@ -298,7 +298,7 @@ function Agent:IsDoing( verb )
 	return false
 end
 
-function Agent:DoVerb( verb )
+function Agent:DoVerb( verb, ... )
 	local ok, reason = verb:CanInteract( self )
 	if ok then
 		if self.verbs == nil then
@@ -314,7 +314,7 @@ function Agent:DoVerb( verb )
 		table.insert( self.verbs, action )
 	--	assert( #self.verbs == 1 )
 
-		local ok, result = coroutine.resume( action.coro, action.verb, self )
+		local ok, result = coroutine.resume( action.coro, action.verb, self, ... )
 		if not ok then
 			error( tostring(result) .. "\n" .. tostring(debug.traceback( action.coro )))
 		end
@@ -336,9 +336,10 @@ function Agent:_RemoveVerb( verb )
 				self.verbs = nil
 			end
 			self:BroadcastEvent( AGENT_EVENT.VERB_UNASSIGNED, verb )
-			break
+			return
 		end
 	end
+	error()
 end
 
 function Agent:Verbs()

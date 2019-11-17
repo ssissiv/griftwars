@@ -36,9 +36,9 @@ function StatValue:DeltaValue( delta, max_delta )
 	end
 
 	if self.max_value then
-		self.value = math.min( self.max_value, self.value + delta )
+		self.value = math.max( 0, math.min( self.max_value, self.value + delta ))
 	else
-		self.value = self.value + delta
+		self.value = math.max( 0, self.value + delta )
 	end
 end
 
@@ -90,3 +90,30 @@ function StatValue:GainXP( xp )
 		self:DeltaValue( delta, delta )
 	end
 end
+
+function StatValue:RenderDebugPanel( ui, panel, dbg )
+	local value, max_value = self:GetValue()
+	local stat = self.stat
+	if max_value then
+		ui.Text( loc.format( "{1}: {2}/{3}", stat, value, max_value ))
+	else
+		ui.Text( loc.format( "{1}: {2}", stat, value ))
+	end
+
+	if self.regen_delta then
+		ui.SameLine( 0, 10 )
+		ui.TextColored( 0, 1, 0, 1, string.format( "%+.2f", self.regen_delta ))
+	end
+
+	ui.SameLine( 200 )
+	if ui.Button( "+" ) then
+		puppet:DeltaStat( stat, Input.IsShift() and 10 or 1 )
+	end
+
+	ui.SameLine( 0, 5 )
+	if ui.Button( "-" ) then
+		puppet:DeltaStat( stat, Input.IsShift() and -10 or -1 )
+	end
+end
+
+

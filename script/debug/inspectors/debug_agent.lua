@@ -49,22 +49,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	if ui.CollapsingHeader( "Stats" ) then
 		for stat, aspect in puppet:Stats() do
-			local value, max_value = aspect:GetValue()
-			if max_value then
-				ui.Text( loc.format( "{1}: {2}/{3}", stat, value, max_value ))
-			else
-				ui.Text( loc.format( "{1}: {2}", stat, value ))
-			end
-
-			ui.SameLine( 100 )
-			if ui.Button( "+" ) then
-				puppet:DeltaStat( stat, Input.IsShift() and 10 or 1 )
-			end
-
-			ui.SameLine( 0, 5 )
-			if ui.Button( "-" ) then
-				puppet:DeltaStat( stat, Input.IsShift() and -10 or -1 )
-			end
+			aspect:RenderDebugPanel( ui, panel, dbg )
 		end
 	end
 
@@ -91,7 +76,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	local behaviour = self.agent:GetAspect( Aspect.Behaviour )
 	if behaviour and ui.CollapsingHeader( "Behaviour", "DefaultOpen" ) then
-		behaviour:RenderDebugPanel( ui, panel. dbg )
+		behaviour:RenderDebugPanel( ui, panel, dbg )
 	end
 	
 	DebugTable.RenderPanel( self, ui, panel, dbg )

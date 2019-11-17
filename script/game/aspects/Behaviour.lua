@@ -138,6 +138,14 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 			ui.TextColored( 0, 1, 1, 1, txt )
 		end
 
+		for i, verb in ipairs( self.verbs ) do
+			panel:AppendTable( ui, verb )
+			if self.owner:IsDoing( verb ) then
+				ui.SameLine( 0, 5 )
+				ui.TextColored( 0, 1, 0, 1, "**" )
+			end
+		end
+
 		for i, behaviour in ipairs( self.behaviours ) do
 			behaviour:RenderDebugPanel( ui, panel, dbg )
 		end

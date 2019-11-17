@@ -45,6 +45,13 @@ function LeaveLocation:GetDesc()
 	return loc.format( "Leave to {1}", self.obj:GetTitle() )
 end
 
+function LeaveLocation:CanInteract( actor )
+	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
+		return false, "Moving"
+	end
+	return true
+end
+
 function LeaveLocation:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 

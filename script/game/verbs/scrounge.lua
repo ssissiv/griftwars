@@ -31,7 +31,7 @@ function Scrounge:Interact( actor )
 	Msg:ActToRoom( "{1.Id} begins rummaging around.", actor )
 	Msg:Echo( actor, "You begin to rummage around." )
 
-	while true do
+	while actor:IsPuppet() do
 		self:YieldForTime( 30 * ONE_MINUTE )
 		actor:DeltaStat( STAT.FATIGUE, 5 )
 
