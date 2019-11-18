@@ -27,7 +27,7 @@ function Hail:CanInteract()
 		return false, loc.format( "{1.Id} is busy.", self.obj:LocTable( self.actor ) )
 	end
 
-	return true
+	return self._base.CanInteract( self, actor )
 end
 
 function Hail:Interact( actor, obj )

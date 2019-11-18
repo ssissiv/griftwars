@@ -37,7 +37,7 @@ function Interaction:CanInteract( actor )
 	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then
 		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
 	end
-	return true
+	return self._base.CanInteract( self, actor )
 end
 
 
@@ -230,7 +230,7 @@ function BuyFromShop:GetDesc()
 end
 
 function BuyFromShop:OnSatisfied( actor, dice )
-	actor:DoVerb( self )
+	self:DoVerb( actor )
 end
 
 function BuyFromShop:Interact( actor )

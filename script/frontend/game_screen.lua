@@ -81,8 +81,7 @@ function GameScreen:RenderScreen( gui )
     self:RenderAgentDetails( ui, puppet )
 
     -- Render what the player is doing...
-    for i, action in puppet:Verbs() do
-    	local verb = action.verb
+    for i, verb in puppet:Verbs() do
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
     	ui.SameLine( 0, 10 )
     	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc(), verb:GetActingProgress() or 1.0 ))
@@ -312,7 +311,7 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 				end
 
 				if ui.Selectable( txt ) then
-					agent:DoVerb( verb )
+					agent:DoVerbAsync( verb )
 				end
 
 				ui.PopStyleColor()
@@ -407,7 +406,7 @@ function GameScreen:KeyPressed( key )
 		if verb then
 			local ok, details = verb:CanInteract( self.world:GetPuppet() )
 			if ok and not self.world:IsPaused() then
-				self.world:GetPuppet():DoVerb( verb )
+				self.world:GetPuppet():DoVerbAsync( verb )
 			end
 		end
 		return true

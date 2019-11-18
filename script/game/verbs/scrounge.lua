@@ -20,11 +20,20 @@ function Scrounge:GetDesc()
 	return "Scrounge"
 end
 
+function Scrounge:GetShortDesc( viewer )
+	if viewer == self.actor then
+		return loc.format( self.ACT_DESC[1] )
+	else
+		return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ) )
+	end
+end
+
+
 function Scrounge:CanInteract( actor )
 	if actor:IsBusy( self.FLAGS ) then
 		return false, "Busy"
 	end
-	return true
+	return self._base.CanInteract( self, actor )
 end
 
 function Scrounge:Interact( actor )

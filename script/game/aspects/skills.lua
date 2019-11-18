@@ -1,7 +1,7 @@
 local Skill = class( "Skill", Aspect )
 
 function Skill:init()
-	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectActions )
+	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectVerbs )
 end
 
 function Skill:TrainingReqs()
@@ -35,7 +35,7 @@ function Scrounge:init()
 	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.POWER, 1 ))
 end
 
-function Scrounge:OnCollectActions( event_name, agent, actions )
+function Scrounge:OnCollectVerbs( event_name, agent, actions )
 	-- if working...
 	actions:AddVerb( Verb.Scrounge() )
 end

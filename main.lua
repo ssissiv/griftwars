@@ -64,6 +64,7 @@ require "game/verbs/Travel"
 require "game/verbs/ExchangeRumours"
 require "game/verbs/Deliver"
 require "game/verbs/Sleep"
+require "game/verbs/ManageFatigue"
 
 require "game/aspects/aspect"
 require "game/aspects/statvalue"
@@ -77,8 +78,6 @@ require "game/aspects/Leader"
 require "game/aspects/Shopkeep"
 
 require "game/aspects/behaviour"
-require "game/aspects/ManageFatigue"
-require "game/aspects/Deliver"
 
 require "game/aspects/features"
 require "game/aspects/Home"

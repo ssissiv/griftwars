@@ -21,25 +21,17 @@ function Travel:GetDesc()
 	return loc.format( "Travel to {1}", self.obj:GetTitle() )
 end
 
-function Travel:CanInteract( actor )
-	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
-		return false, "Moving"
-	end
-	return true
-end
-
 function Travel:Interact( actor )
 	local pather = PathFinder( actor, self.obj )
 	while actor:GetLocation() ~= pather:GetEndRoom() do
+
+		self:YieldForTime( 2 * ONE_MINUTE )
+
 		local path = pather:CalculatePath()
-		if path then
+		if path and not actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 			Msg:Action( self.EXIT_STRINGS, actor, path[2] )
-			self:YieldForTime( ONE_MINUTE )
-			print( "Travel:", actor, path[2] )
 			actor:WarpToLocation( path[2] )
 			Msg:Action( self.ENTER_STRINGS, actor, path[2] )
-		else
-			self:YieldForTime( ONE_MINUTE )
 		end
 	end
 end

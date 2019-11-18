@@ -19,19 +19,19 @@
 --]]
 ---------------------------------------------------------------------
 
-local Scavenge = class( "Behaviour.Scavenge", Aspect.Behaviour )
+local Scavenge = class( "Verb.Scavenge", Verb )
 
 function Scavenge:init()
 	Scavenge._base.init( self )
 
-	self.scrounge = self:AddVerb( Verb.Scrounge())
-	self.idle = self:AddVerb( Verb.Idle())
-	self.leave = self:AddVerb( Verb.LeaveLocation())
+	self.scrounge = Verb.Scrounge()
+	self.idle = Verb.Idle()
+	self.leave = Verb.LeaveLocation()
 end
 
-function Scavenge:CalculatePriority( world )
+function Scavenge:UpdatePriority( actor, priority )
 	-- How broke am I?
-	local value = self.owner:GetInventory():CalculateValue()
+	local value = actor:GetInventory():CalculateValue()
 	if value <= WEALTH.DESTITUTE then
 		return PRIORITY.OBLIGATION
 	else
@@ -39,14 +39,13 @@ function Scavenge:CalculatePriority( world )
 	end
 end
 
-function Scavenge:RunBehaviour()
-	assert( not self:IsRunning() )
+function Scavenge:Interact( actor )
 	if math.random() < 0.35 then
-		self.owner:DoVerb( self.scrounge )
+		self.scrounge:DoVerb( actor )
 	elseif math.random() < 0.5 then
-		self.owner:DoVerb( self.idle )
+		self.idle:DoVerb( actor )
 	else
-		self.owner:DoVerb( self.leave )
+		self.leave:DoVerb( actor )
 	end
 end
 
@@ -56,9 +55,9 @@ end
 function Agent.Scavenger()
 	local ch = Agent()
 	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Here's a guy.", GENDER.MALE )
-	ch:GainAspect( Aspect.Behaviour() ):AddBehaviours{
-		Behaviour.ManageFatigue(),
-		Behaviour.Scavenge()
+	ch:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
+		Verb.ManageFatigue(),
+		Verb.Scavenge()
 	}
 	ch:GainAspect( Skill.Scrounge() )
 	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )

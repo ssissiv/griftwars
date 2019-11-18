@@ -6,16 +6,8 @@ function Verb:init( actor, obj )
 	self.obj = obj
 end
 
-function Verb:SetEndTime( end_time )
-	self.end_time = end_time
-end
-
 function Verb:GetFlags()
-	if self.verb then
-		return self.verb:GetFlags()
-	else
-		return bit32.bor( self.FLAGS or 0, self.flags or 0 )
-	end
+	return bit32.bor( self.FLAGS or 0, self.flags or 0 )
 end
 
 function Verb:HasBusyFlag( flags )
@@ -58,6 +50,10 @@ function Verb:CheckDC()
 end
 
 function Verb:CanInteract( ... )
+	if self.coro then
+		return false, "Already executing"
+	end
+
 	return true
 end
 
@@ -66,30 +62,47 @@ function Verb:GetDesc()
 end
 
 function Verb:GetShortDesc( viewer )
-	if self.ACT_DESC then
-		if self.actor:IsPuppet() then
-			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), self.obj and self.obj:LocTable( viewer ))
-		else
-			return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.obj and self.obj:LocTable( viewer ))
-		end
-	end
+	return loc.format( "{1} is here doing {2}", self.actor:LocTable( viewer ), tostring(self))
 end
 
+function Verb:DidWithinTime( actor, dt )
+	if self.time_finished then
+		return actor.world:GetDateTime() - self.time_finished <= dt
+	end
 
-function Verb:_BeginActing( actor )
+	return false
+end
+
+function Verb:DoVerb( actor, ... )
+	if not actor:_AddVerb( self ) then
+		return
+	end
+
 	self.actor = actor
-	
+	self.coro = coroutine.running()
+	assert( self.coro )
+	self.time_started = actor.world:GetDateTime()
+
 	if actor:IsPuppet() and self.ACT_RATE then
 		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() * self.ACT_RATE )
 	end
 
-	self:Interact( actor )
-
-	if self.end_time and self.end_time > actor.world:GetDateTime() then
-		self:YieldForTime( self.end_time - actor.world:GetDateTime() )
+	self:Interact( actor, ... )
+	
+	if actor:IsPuppet() and self.ACT_RATE then
+		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / self.ACT_RATE )
 	end
 
-	self:EndActing( actor )
+	if self.yield_ev then
+		self.actor.world:UnscheduleEvent( self.yield_ev )
+		self.yield_ev = nil
+	end
+
+	self.yield_duration = nil
+	self.coro = nil
+	self.time_finished = actor.world:GetDateTime()
+
+	actor:_RemoveVerb( self )
 end
 
 function Verb:IsCancelled()
@@ -106,21 +119,6 @@ end
 
 function Verb:CanCancel()
 	return true
-end
-
-function Verb:EndActing( actor )	
-	if actor:IsPuppet() and self.ACT_RATE then
-		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / self.ACT_RATE )
-	end
-
-	if self.yield_ev then
-		self.actor.world:UnscheduleEvent( self.yield_ev )
-		self.yield_ev = nil
-	end
-
-	self.yield_duration = nil
-
-	actor:_RemoveVerb( self )
 end
 
 function Verb:GetActingProgress()
@@ -151,6 +149,19 @@ function Verb:Resume( coro )
 		-- Done!
 		-- print( "DONE", self, coroutine.status(coro))
 	end
+end
+
+function Verb:RenderDebugPanel( ui, panel, dbg )
+	ui.Columns( 2 )
+	panel:AppendTable( ui, self )
+	ui.NextColumn()
+
+	if self.coro then
+		panel:AppendTable( ui, self.coro )
+	end
+	ui.NextColumn()
+
+	ui.Columns( 1 )
 end
 
 function Verb:__tostring()

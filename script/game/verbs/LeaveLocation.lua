@@ -49,7 +49,7 @@ function LeaveLocation:CanInteract( actor )
 	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Moving"
 	end
-	return true
+	return self._base.CanInteract( self, actor )
 end
 
 function LeaveLocation:Interact( actor )

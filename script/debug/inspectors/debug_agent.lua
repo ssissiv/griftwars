@@ -31,16 +31,10 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
-	if ui.CollapsingHeader( "Actions" ) then
-		ui.Columns( 2 )
-		for i, action in self.agent:Verbs() do
-			panel:AppendTable( ui, action.verb )
-			ui.NextColumn()
-
-			panel:AppendTable( ui, action.coro )
-			ui.NextColumn()
+	if ui.CollapsingHeader( "Verbs" ) then
+		for i, verb in self.agent:Verbs() do
+			verb:RenderDebugPanel( ui, panel, dbg )
 		end
-		ui.Columns( 1 )
 	end
 
 	if ui.CollapsingHeader( "Inventory" ) then

@@ -45,7 +45,7 @@ function ExchangeRumours:CanInteract()
 		return false, "Requires focus"
 	end
 
-	return true
+	return self._base.CanInteract( self, actor )
 end
 
 

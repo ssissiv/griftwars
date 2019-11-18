@@ -67,7 +67,7 @@ function Agent:GetShortDesc( viewer )
 	local desc
 	if self.verbs and #self.verbs > 0 then
 		-- TODO: primary verb?
-		desc = self.verbs[1].verb:GetShortDesc( viewer )
+		desc = self.verbs[1]:GetShortDesc( viewer )
 	end
 
 	if desc == nil then
@@ -272,8 +272,8 @@ end
 
 function Agent:IsBusy( flags )
 	if self.verbs then
-		for i, action in ipairs( self.verbs ) do
-			if action.verb:HasBusyFlag( flags ) then
+		for i, verb in ipairs( self.verbs ) do
+			if verb:HasBusyFlag( flags ) then
 				return true
 			end
 		end
@@ -288,49 +288,45 @@ function Agent:AssertNotBusy()
 	end
 end
 
--- DEPRECATED
 function Agent:IsDoing( verb )
-	for i, action in ipairs( self.verbs or table.empty ) do
-		if action.verb == verb then
+	for i, v in ipairs( self.verbs or table.empty ) do
+		if v == verb then
 			return true
 		end
 	end
 	return false
 end
 
-function Agent:DoVerb( verb, ... )
-	local ok, reason = verb:CanInteract( self )
-	if ok then
-		if self.verbs == nil then
-			self.verbs = {}
-		else
-			assert( not self:IsDoing( verb ), tostring(self)..tostring(verb))
-		end
-		local action =
-		{
-			verb = verb,
-			coro = coroutine.create( verb._BeginActing )
-		}
-		table.insert( self.verbs, action )
-		assert( #self.verbs < 10, "Too many verbs: " ..tostring(self) )
-
-		local ok, result = coroutine.resume( action.coro, action.verb, self, ... )
-		if not ok then
-			error( tostring(result) .. "\n" .. tostring(debug.traceback( action.coro )))
-		end
-
-		if coroutine.status( action.coro ) ~= "suspended" then
-			assert( not self:IsDoing( verb ))
-		end
-
-	else
-		print( "cant do", self, verb, reason )
+function Agent:DoVerbAsync( verb, ... )
+	local coro = coroutine.create( verb.DoVerb )
+	local ok, result = coroutine.resume( coro, verb, self, ... )
+	if not ok then
+		error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
 	end
 end
 
+function Agent:_AddVerb( verb, ... )
+	local ok, reason = verb:CanInteract( self )
+	if not ok then
+		return false
+	end
+	if self:IsDoing( verb ) then
+		return false
+	end
+
+	if self.verbs == nil then
+		self.verbs = {}
+	end
+
+	table.insert( self.verbs, verb )
+	assert( #self.verbs < 10, "Too many verbs: " ..tostring(self) )
+
+	return true
+end
+
 function Agent:_RemoveVerb( verb )
-	for i, action in ipairs( self.verbs ) do
-		if verb == action.verb then
+	for i, v in ipairs( self.verbs ) do
+		if verb == v then
 			table.remove( self.verbs, i )
 			if #self.verbs == 0 then
 				self.verbs = nil

@@ -5,12 +5,14 @@ function Collector:init()
 	Aspect.Behaviour.init( self )
 end
 
-function Collector:RunBehaviour()
-	if self.deliver_behaviour then
-		if self.deliver_behaviour.owner then
+function Collector:OnTickBehaviour()
+	Collector._base.OnTickBehaviour( self )
+	
+	if self.deliver then
+		if not self.deliver.removed then
 			return -- Still delivering
 		end
-		self.deliver_behaviour = nil
+		self.deliver = nil
 	end
 
 	-- Find a subordinate and give them a Deliver behaviour.
@@ -23,8 +25,8 @@ function Collector:RunBehaviour()
 
 	local subordinate = table.arraypick( subordinates )
 	if subordinate then
-		self.deliver_behaviour = Behaviour.Deliver( subordinate, self.owner )
-		subordinate:GetAspect( Aspect.Behaviour ):AddBehaviour( self.deliver_behaviour )
+		self.deliver = Verb.Deliver( subordinate, self.owner )
+		subordinate:GetAspect( Aspect.Behaviour ):RegisterVerb( self.deliver )
 	end
 
 	ReleaseWorkTable( subordinates )
