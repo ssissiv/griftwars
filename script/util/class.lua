@@ -147,6 +147,13 @@ class = function( name, ... )
             end
         end
 
+        for i, baseclass in ipairs( cl._bases ) do
+            if baseclass.__tostring ~= nil then
+                cl.__tostring = baseclass.__tostring
+                break
+            end
+        end
+
         setmetatable( cl, { __index = __index, __call = cl.new })
 
     else
