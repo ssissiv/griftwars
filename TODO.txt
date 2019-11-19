@@ -1,6 +1,9 @@
 TODO
 ====
 
+BEHAVIOUR:
+figure out how behaviours run in parallel without stepping on eachothers toes.
+
 DEBUG LOGGIN:
 pls.
 

@@ -33,15 +33,18 @@ function Behaviour:RegisterVerbs( verbs )
 end
 
 function Behaviour:OnVerbUnassigned( verb )
-	self:OnTickBehaviour()
+	self:ScheduleNextTick( ONE_MINUTE ) -- uh, this granularity is kinda awkward...
 end
 
-function Behaviour:ScheduleNextTick()
-	if self.tick_ev then
-		self.owner.world:UnscheduleEvent( self.tick_ev )
+function Behaviour:ScheduleNextTick( delta )
+	if delta == nil then
+		delta = math.randomGauss( 0.1 * ONE_HOUR, 0.1 * ONE_HOUR, ONE_HOUR / 60 )
 	end
-	local delta = math.randomGauss( 0.1 * ONE_HOUR, 0.1 * ONE_HOUR, ONE_HOUR / 60 )
-	self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self )
+	if self.tick_ev then
+		self.owner.world:RescheduleEvent( self.tick_ev, delta )
+	else
+		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self )
+	end
 end
 
 function Behaviour.SortVerbs( a, b )
@@ -52,9 +55,21 @@ function Behaviour:OnTickBehaviour()
 	
 	self:UpdatePriorities()
 
+	local active_verb
 	for i, t in ipairs( self.verbs ) do
-		if t.verb:CanInteract( self.owner ) then
-			self.owner:DoVerbAsync( t.verb )
+		if not active_verb then
+			if self.owner:IsDoing( t.verb ) then
+				active_verb = t.verb
+
+			elseif t.verb:CanInteract( self.owner ) then
+				self.owner:DoVerbAsync( t.verb )
+				active_verb = t.verb
+			end
+
+		else
+			if self.owner:IsDoing( t.verb ) then
+				t.verb:Cancel()
+			end
 		end
 	end
 

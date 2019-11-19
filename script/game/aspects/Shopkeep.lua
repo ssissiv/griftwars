@@ -44,8 +44,12 @@ end
 --------------------------------------------------------------
 
 function Shopkeep:SellToBuyer( item, buyer )
+	local cost = self:GetBuyCost( item, buyer )
+	buyer:DeltaMoney( -cost )
+
 	local clone = item:Clone()
 	buyer:GetInventory():AddItem( clone )
+
 	Msg:Echo( buyer, "You bought a {1} from {2}.", item:GetName(), self.owner )
 	Msg:Echo( self.owner, "You sell a {1} to {2}.", item, buyer )
 end

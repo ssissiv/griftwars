@@ -26,6 +26,15 @@ function TokenHolder:GetTokenCount()
 	return #self.tokens, self.max_tokens
 end
 
+function TokenHolder:IsCommitted( target )
+	assert( target ~= nil )
+	for i, token in ipairs( tokens ) do
+		if token:IsCommitted( target ) then
+			return true
+		end
+	end
+end
+
 function TokenHolder:CommitReqTokens( target )
 	assert( target.reqs ~= nil )
 
@@ -39,7 +48,7 @@ function TokenHolder:CommitReqTokens( target )
 				if not token:IsCommitted() and token:GetFaceCount( req.face ) >= req.max_count then
 					--
 					if tokens[ token ] == nil then
-						tokens[ token ] = { token }
+						tokens[ token ] = {}
 					end
 					table.insert( tokens[ token ], req )
 				end

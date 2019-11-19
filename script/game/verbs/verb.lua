@@ -62,7 +62,7 @@ function Verb:GetDesc()
 end
 
 function Verb:GetShortDesc( viewer )
-	return loc.format( "{1} is here doing {2}", self.actor:LocTable( viewer ), tostring(self))
+	return loc.format( "{1.Id} is here doing {2}", self.actor:LocTable( viewer ), tostring(self))
 end
 
 function Verb:DidWithinTime( actor, dt )
@@ -112,9 +112,10 @@ end
 function Verb:Cancel()
 	self.cancelled = true
 
-	error()
-	self.actor.world:UnscheduleEvent( self.yield_ev )	
-	self.actor.world:TriggerEvent( self.yield_ev )
+	if self.yield_ev then
+		self.actor.world:UnscheduleEvent( self.yield_ev )	
+		self.actor.world:TriggerEvent( self.yield_ev )
+	end
 end
 
 function Verb:CanCancel()

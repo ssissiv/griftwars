@@ -14,20 +14,27 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
     	local shopkeep = self.owner:GetAspect( Aspect.Shopkeep )
+    	local money = self.buyer:GetInventory():GetMoney()
+
 		ui.Columns( 2 )
 		for i, obj in self.owner:GetInventory():Items() do
-			if ui.Selectable( tostring(obj), nil, "SpanAllColumns") then
-				coroutine.resume( self.coro, obj )
+			local cost = shopkeep:GetBuyCost( obj, self.buyer )
+			if cost < money then
+				if ui.Selectable( tostring(obj), nil, "SpanAllColumns") then
+					coroutine.resume( self.coro, obj )
+				end
+			else
+				ui.TextColored( 0.5, 0.5, 0.5, 1, tostring(obj) )
 			end
 			ui.NextColumn()
 
-			ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", shopkeep:GetBuyCost( obj, self.buyer ) ))
+			ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", cost ))
 			ui.NextColumn()
 		end
 		ui.Columns( 1 )
 		ui.Separator()
 
-		ui.Text( loc.format( "You have {1#money}.", self.buyer:GetInventory():GetMoney() ))
+		ui.Text( loc.format( "You have {1#money}.", money ))
 		ui.Separator()
 
 		if ui.Button( "Close" ) then

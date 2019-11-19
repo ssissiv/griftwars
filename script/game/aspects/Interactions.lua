@@ -33,14 +33,6 @@ function Interaction:StopCooldown()
 	self.cooldown_ev = nil
 end
 
-function Interaction:CanInteract( actor )
-	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then
-		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
-	end
-	return self._base.CanInteract( self, actor )
-end
-
-
 -- face: DIE_FACE
 -- max_count: integer (number of faces required to satisfy req)
 function Interaction:ReqFace( face, max_count )
@@ -79,10 +71,12 @@ function Interaction:SatisfyReqs( actor )
 	local tokens = actor:GetAspect( Aspect.TokenHolder )
 	tokens:CommitReqTokens( self )
 
-	if self.satisfied_by == nil then
-		self.satisfied_by = {}
+	if not self.can_repeat then
+		if self.satisfied_by == nil then
+			self.satisfied_by = {}
+		end
+		table.insert( self.satisfied_by, actor )
 	end
-	table.insert( self.satisfied_by, actor )
 
 	self:OnSatisfied( actor )
 end
@@ -93,7 +87,11 @@ function Interaction:CanInteract( actor )
 	end
 
 	if self.satisfied_by and table.contains( self.satisfied_by, actor ) then
-		return false -- Already satisfied
+		return false -- "Already satisfied"
+	end
+
+	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then
+		return false, loc.format( "{1.Id} is busy.", self.owner:LocTable( actor ))
 	end
 
 	local reasons
@@ -109,7 +107,7 @@ function Interaction:CanInteract( actor )
 		return false, table.concat( reasons, "\n" )
 	end
 
-	return true
+	return Verb.CanInteract( self, actor )
 end
 
 function Interaction:RenderObject( ui, viewer )
@@ -219,23 +217,23 @@ end
 
 local BuyFromShop = class( "Interaction.BuyFromShop", Interaction, Verb )
 
+BuyFromShop.can_repeat = true -- This interaction can take place multiple times.
+
 function BuyFromShop:init()
 	self:init_bases()
 	assert( self.reqs )
 end
 
--- Verb.GetDesc
 function BuyFromShop:GetDesc()
 	return "Buy/Sell"
 end
 
 function BuyFromShop:OnSatisfied( actor, dice )
-	self:DoVerb( actor )
+	actor:DoVerbAsync( self )
 end
 
 function BuyFromShop:Interact( actor )
 	assert( actor )
-	-- local item = self.owner:GetInventory():GetRandomItem()
 	local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )
 	if item then
 		self.owner:GetAspect( Aspect.Shopkeep ):SellToBuyer( item, actor )

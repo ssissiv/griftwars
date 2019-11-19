@@ -77,6 +77,14 @@ function WorldBase:SchedulePeriodicFunction( delta, fn, ... )
 	return ev
 end
 
+function WorldBase:RescheduleEvent( ev, delta )
+	assert( delta >= 0 or error( string.format( "Rescheduling in the past: %s with delta %d", tostr(ev), delta )))
+	ev.cancel = nil
+	ev.when = self.datetime + delta
+	table.arrayremove( self.scheduled_events, ev )
+	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
+end
+
 function WorldBase:UnscheduleEvent( ev )
 	ev.cancel = true
 end
@@ -99,7 +107,7 @@ function WorldBase:CheckScheduledEvents()
 	local ev = self.scheduled_events[ 1 ]
 
 	while ev and ev.when <= self.datetime do
-		table.remove( self.scheduled_events, 1 )
+		table.remove( self.scheduled_events, 1 ) -- TODO: this is terrible, rewrite as a linked list
 
 		if not ev.cancel then
 			self:TriggerEvent( ev )
