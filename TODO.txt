@@ -4,6 +4,9 @@ TODO
 BEHAVIOUR:
 figure out how behaviours run in parallel without stepping on eachothers toes.
 
+INTERACTIONS:
+arent these just verbs?
+
 DEBUG LOGGIN:
 pls.
 

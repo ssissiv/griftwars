@@ -62,7 +62,6 @@ function Verb:GetDesc()
 end
 
 function Verb:GetShortDesc( viewer )
-	return loc.format( "{1.Id} is here doing {2}", self.actor:LocTable( viewer ), tostring(self))
 end
 
 function Verb:DidWithinTime( actor, dt )

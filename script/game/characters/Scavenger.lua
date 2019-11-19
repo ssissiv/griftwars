@@ -40,7 +40,7 @@ function Scavenge:UpdatePriority( actor, priority )
 end
 
 function Scavenge:Interact( actor )
-	if math.random() < 0.35 then
+	if math.random() < 0.4 then
 		self.scrounge:DoVerb( actor )
 	elseif math.random() < 0.5 then
 		self.idle:DoVerb( actor )

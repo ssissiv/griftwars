@@ -65,9 +65,13 @@ end
 
 function Agent:GetShortDesc( viewer )
 	local desc
-	if self.verbs and #self.verbs > 0 then
-		-- TODO: primary verb?
-		desc = self.verbs[1]:GetShortDesc( viewer )
+	if self.verbs then
+		for i, verb in ipairs( self.verbs ) do
+			desc = verb:GetShortDesc( viewer )
+			if desc ~= nil then
+				break
+			end
+		end
 	end
 
 	if desc == nil then
