@@ -2,16 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Calendar.GetNormalizedTimeOfDay( now, 7.01 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 10 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 7 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 8 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 7 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 6 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 9 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 3 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 11 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 18 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 19 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 20 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 22 ))",
@@ -33,7 +23,17 @@ return {
 			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ) + PRIORITY.FUN )",
 			"for i = 0, 1, 0.1 do print( easing.outQuad( t, 0, 1.0, 1.0 )) end",
 			"for i = 0, 1, 0.1 do print( i, easing.outQuad( i, 0, 1.0, 1.0 )) end",
-			"for i = 0, 1, 0.1 do print( i, Easing.outQuad( i, 0, 1.0, 1.0 )) end"
+			"for i = 0, 1, 0.1 do print( i, Easing.outQuad( i, 0, 1.0, 1.0 )) end",
+			"print( Easing.inQuad( 0.8, 0, 75, 1.0 ))",
+			"print(t:GetStat( STAT.FATIGUE ):GetPercent())",
+			"print(t:GetStat( STAT.FATIGUE ):GetValue())",
+			"print(t)",
+			"verb = t",
+			"print(verb:CanInteract(t))",
+			"print(t:IsBusy())",
+			"print(t:IsBusy(VERB_FLAGS.MOVEMENT))",
+			"agent = t",
+			"print(t:CanInteract(agent))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -42,7 +42,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 	end
 
 	if ui.CollapsingHeader( "Stats" ) then
-		for stat, aspect in puppet:Stats() do
+		for stat, aspect in self.agent:Stats() do
 			aspect:RenderDebugPanel( ui, panel, dbg )
 		end
 	end

@@ -107,12 +107,12 @@ function StatValue:RenderDebugPanel( ui, panel, dbg )
 
 	ui.SameLine( 200 )
 	if ui.Button( "+" ) then
-		puppet:DeltaStat( stat, Input.IsShift() and 10 or 1 )
+		self.owner:DeltaStat( stat, Input.IsShift() and 10 or 1 )
 	end
 
 	ui.SameLine( 0, 5 )
 	if ui.Button( "-" ) then
-		puppet:DeltaStat( stat, Input.IsShift() and -10 or -1 )
+		self.owner:DeltaStat( stat, Input.IsShift() and -10 or -1 )
 	end
 end
 

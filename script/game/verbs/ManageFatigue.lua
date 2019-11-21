@@ -20,6 +20,6 @@ end
 
 function ManageFatigue:Interact( actor )
 	Msg:Speak( actor, "I'm sleepy..." )
-	self:YieldForTime( 1 )
 	self.sleep:DoVerb( actor )
+	self:YieldForTime( ONE_MINUTE )
 end

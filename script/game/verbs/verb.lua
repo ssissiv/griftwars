@@ -154,6 +154,10 @@ end
 function Verb:RenderDebugPanel( ui, panel, dbg )
 	ui.Columns( 2 )
 	panel:AppendTable( ui, self )
+	if self.cancelled then
+		ui.SameLine( 0, 5 )
+		ui.TextColored( 1, 0, 0, 1, "Cancelled" )
+	end
 	ui.NextColumn()
 
 	if self.coro then

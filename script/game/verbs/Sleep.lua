@@ -27,7 +27,7 @@ function Sleep:CanInteract( actor )
 	if not actor:IsAlert() then
 		return false, "Not Alert"
 	end
-	if actor:IsBusy() then
+	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Busy"
 	end
 	return true

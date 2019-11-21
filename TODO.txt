@@ -1,6 +1,9 @@
 TODO
 ====
 
+CANCEL:
+  Cancel behaviour. should funnel down to child verbs...somehow.
+
 BEHAVIOUR:
 figure out how behaviours run in parallel without stepping on eachothers toes.
 

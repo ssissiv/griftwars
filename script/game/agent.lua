@@ -450,7 +450,7 @@ function Agent:SetFocus( focus )
 	self:CancelInvalidVerbs()
 	self.verb_time = nil
 
-	print( "CHANGE FOCUS", self, self.focus )
+	-- print( "CHANGE FOCUS", self, self.focus )
 	self:BroadcastEvent( AGENT_EVENT.FOCUS_CHANGED, prev_focus, self.focus )
 end
 

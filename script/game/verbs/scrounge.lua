@@ -58,6 +58,9 @@ function Scrounge:Interact( actor )
 		end
 
 		actor:GainXP( 1 )
-		break
+		
+		if math.random() < 0.5 then
+			break
+		end
 	end
 end
