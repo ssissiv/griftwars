@@ -9,7 +9,6 @@ function GameScreen:init()
 
 	-- List of objects and vergbs in the currently rendered location.
 	self.objects = {}
-	self.verbs = {}
 
 	-- List of window panels.
 	self.windows = {}
@@ -237,44 +236,45 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 					agent:SetFocus( nil )
 				end
 
-				if agent:IsPlayer() then
+				if agent:IsPuppet() then
 					ui.Indent( 20 )
 					-- Make a verb.
-					local count, count_potential = 0, 0
-					for i, aspect in obj:Aspects() do
-						if is_instance( aspect, Interaction ) then
-							count = count + 1
-							-- if aspect:IsSatisfied( agent ) then
-								local ok, reason = true
-								if aspect.CanInteract then
-									ok, reason = aspect:CanInteract( agent )
-								end
-								if ok or reason then
-									if not ok then
-										ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
-									end
-									if ui.Button( aspect._classname ) and ok then
-										aspect:SatisfyReqs( agent )
-									end
-									if not ok then
-										ui.PopStyleColor()
-									end
-									if ui.IsItemHovered() then
-										ui.BeginTooltip()
-										local tt = aspect:GetToolTip()
-										if tt then
-											ui.Text( tostring(tt) )
-										end
-										if reason then
-											ui.TextColored( 1, 0, 0, 1, tostring(reason))
-										end
+					self:RenderPotentialVerbs( ui, agent, obj )
+					-- local count, count_potential = 0, 0
+					-- for i, aspect in obj:Aspects() do
+					-- 	if is_instance( aspect, Interaction ) then
+					-- 		count = count + 1
+					-- 		-- if aspect:IsSatisfied( agent ) then
+					-- 			local ok, reason = true
+					-- 			if aspect.CanInteract then
+					-- 				ok, reason = aspect:CanInteract( agent )
+					-- 			end
+					-- 			if ok or reason then
+					-- 				if not ok then
+					-- 					ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+					-- 				end
+					-- 				if ui.Button( aspect._classname ) and ok then
+					-- 					aspect:SatisfyReqs( agent )
+					-- 				end
+					-- 				if not ok then
+					-- 					ui.PopStyleColor()
+					-- 				end
+					-- 				if ui.IsItemHovered() then
+					-- 					ui.BeginTooltip()
+					-- 					local tt = aspect:GetToolTip()
+					-- 					if tt then
+					-- 						ui.Text( tostring(tt) )
+					-- 					end
+					-- 					if reason then
+					-- 						ui.TextColored( 1, 0, 0, 1, tostring(reason))
+					-- 					end
 
-										ui.EndTooltip()
-									end
-								end
-							-- end
-						end
-					end
+					-- 					ui.EndTooltip()
+					-- 				end
+					-- 			end
+					-- 		-- end
+					-- 	end
+					-- end
 					ui.Unindent( 20 )
 				end
 			end
@@ -289,20 +289,22 @@ end
 function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 	ui.Indent( 20 )
 
-	if self.verbs == nil then
-		self.verbs = {}
-	else
-		table.clear( self.verbs )
-	end
-
 	for i, verb in agent:PotentialVerbs() do
-		if verb.obj == obj or is_instance( verb, Verb.LeaveLocation) then
+		if verb.obj == obj or (obj == nil and is_instance( verb, Verb.LeaveLocation)) then
 			local ok, details = verb:CanInteract( agent )
 			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
-			self.verbs[i] = verb
 
-			if not ok or agent:IsBusy() or self.world:IsPaused() then
+			if agent:IsBusy() then
 				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+				if ui.IsItemHovered() then
+					ui.SetTooltip( "You are already busy" )
+				end
+
+			elseif not ok then
+				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+				if ui.IsItemHovered() then
+					ui.SetTooltip( details or "Can't do" )
+				end
 			else
 				if verb.COLOUR then
 					ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
@@ -402,10 +404,10 @@ function GameScreen:KeyPressed( key )
 		self.world:GetPuppet():SetFocus()
 		return true
 	elseif tonumber(key) then
-		local verb = self.verbs[ tonumber(key) ]
+		local verb = self.world:GetPuppet():GetPotentialVerbs():VerbAt( tonumber(key) )
 		if verb then
 			local ok, details = verb:CanInteract( self.world:GetPuppet() )
-			if ok and not self.world:IsPaused() then
+			if ok then
 				self.world:GetPuppet():DoVerbAsync( verb )
 			end
 		end

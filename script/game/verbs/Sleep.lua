@@ -40,17 +40,18 @@ function Sleep:Interact( actor )
 	actor:SetMentalState( MSTATE.SLEEPING )
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -10 )
 
-	-- TEMP
-   	self:YieldForTime( 1 )
-   	-- self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
+   	-- self:YieldForTime( 1 )
+   	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 10 )
 	actor:SetMentalState( MSTATE.ALERT )
 
-	local stat_xp = actor.world.nexus:Sleep( actor )
-	if stat_xp then
-		for stat, xp in pairs( stat_xp ) do
-			actor:AssignXP( xp, stat )
+	if not self:IsCancelled() then
+		local stat_xp = actor.world.nexus:Sleep( actor )
+		if stat_xp then
+			for stat, xp in pairs( stat_xp ) do
+				actor:AssignXP( xp, stat )
+			end
 		end
 	end
 

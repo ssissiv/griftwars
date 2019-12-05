@@ -8,6 +8,10 @@ function VerbContainer:AddVerb( v )
 	table.insert( self.verbs, v )
 end
 
+function VerbContainer:VerbAt( idx )
+	return self.verbs[ idx ]
+end
+
 function VerbContainer:Verbs()
 	return ipairs( self.verbs )
 end

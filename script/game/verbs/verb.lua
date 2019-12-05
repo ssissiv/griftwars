@@ -38,6 +38,10 @@ function Verb:GetRoomDesc()
 	end
 end
 
+-- Shown when viewing this verb in the UI
+function Verb:GetDetailsDesc( viewer )
+end
+
 function Verb:GetDC()
 	if self.dc == nil and self.CalculateDC then
 		self.dc = self:CalculateDC( Modifiers() )
@@ -102,6 +106,10 @@ function Verb:DoVerb( actor, ... )
 	self.time_finished = actor.world:GetDateTime()
 
 	actor:_RemoveVerb( self )
+end
+
+function Verb:IsDoing()
+	return self.coro ~= nil
 end
 
 function Verb:IsCancelled()

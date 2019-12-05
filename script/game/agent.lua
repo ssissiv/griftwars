@@ -99,10 +99,12 @@ function Agent:SetLeader( leader )
 	self.leader = leader
 end
 
-function Agent:CollectPotentialVerbs()
+function Agent:CollectPotentialVerbs( force )
 	local now = self.world:GetDateTime()
-	if now <= (self.verb_time or 0) then
-		return
+	if not force then
+		if now <= (self.verb_time or 0) then
+			return
+		end
 	end
 
 	-- FIXME: figure out a way to avoid churning this search.
@@ -163,12 +165,14 @@ end
 function Agent:GenerateLocTable( viewer )
 	local t = { viewer = viewer }
 	if self.gender == GENDER.MALE then
+		t.gender = "male"
 		t.himher = "him"
 		t.hishers = "his"
 		t.heshe = "he"
 		t.HeShe = "He"
 
 	elseif self.gender == GENDER.FEMALE then
+		t.gender = "female"
 		t.himher = "her"
 		t.hishers = "hers"
 		t.heshe = "she"
@@ -220,6 +224,10 @@ function Agent:Acquaint( agent )
 		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
 		agent:RegenerateLocTable( self )
 
+		if self:IsPuppet() then
+			self.world.nexus:ShowAgentDetails( self, agent )
+		end
+
 		self:GainXP( 10 )
 
 		return true
@@ -227,6 +235,15 @@ function Agent:Acquaint( agent )
 		return false
 	end
 end
+
+function Agent:CanSee( obj )
+	if self.location and self.location == obj:GetLocation() then
+		return true
+	end
+
+	return false
+end
+
 
 function Agent:CheckPrivacy( obj, pr_flags )
 	if self.memory then

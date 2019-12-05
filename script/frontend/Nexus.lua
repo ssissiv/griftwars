@@ -37,3 +37,14 @@ function WorldNexus:Sleep( agent )
 
 	return stat_xp
 end
+
+function WorldNexus:ShowAgentDetails( viewer, agent )
+	if viewer ~= self.world:GetPuppet() then
+		return
+	end
+
+	local window = AgentDetailsWindow( viewer, agent )
+	self.screen:AddWindow( window )
+end
+
+

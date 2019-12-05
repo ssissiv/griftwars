@@ -29,6 +29,14 @@ function Scavenge:init()
 	self.leave = Verb.LeaveLocation()
 end
 
+function Scavenge:GetDetailsDesc( viewer )
+	if viewer:CheckPrivacy( self.owner, PRIVACY.INTENT ) then
+		return "Scavenging for valuables"
+	else
+		return "???"
+	end
+end
+
 function Scavenge:UpdatePriority( actor, priority )
 	-- How broke am I?
 	local value = actor:GetInventory():CalculateValue()

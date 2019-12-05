@@ -20,6 +20,13 @@ function Scrounge:GetDesc()
 	return "Scrounge"
 end
 
+function Scrounge:GetDetailsDesc( viewer )
+	if viewer:CanSee( self.owner ) then
+		return "Busy scrounging"
+	end
+end
+
+
 function Scrounge:GetShortDesc( viewer )
 	if viewer == self.actor then
 		return loc.format( self.ACT_DESC[1] )

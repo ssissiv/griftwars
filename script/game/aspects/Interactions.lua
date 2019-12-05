@@ -1,4 +1,5 @@
-local Interaction = class( "Interaction", Aspect )
+
+local Interaction = class( "Aspect.Interaction", Aspect )
 
 function Interaction:init()
 	self.reqs = {}
@@ -57,6 +58,34 @@ function Interaction:GetFaceCount( face, viewer )
 	return count
 end
 
+function Interaction:OnCollectVerbs( event_name, agent, verbs )
+	if actor:GetFocus() then
+		local ok, reason = true
+		if self.CanInteract then
+			ok, reason = self:CanInteract( agent )
+		end
+		if ok or reason then
+			verbs:AddVerb( Verb.Interact( agent, self ))
+		end
+	end
+
+
+					-- 	if is_instance( aspect, Interaction ) then
+					-- 		count = count + 1
+					-- 		-- if aspect:IsSatisfied( agent ) then
+					-- 			local ok, reason = true
+					-- 			if aspect.CanInteract then
+					-- 				ok, reason = aspect:CanInteract( agent )
+					-- 			end
+					-- 			if ok or reason then
+					-- 				if not ok then
+					-- 					ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
+					-- 				end
+					-- 				if ui.Button( aspect._classname ) and ok then
+					-- 					aspect:SatisfyReqs( agent )
+					-- 				end
+end
+
 function Interaction:IsSatisfied( viewer )
 	for i, req in ipairs( self.reqs ) do
 		if not req:IsSatisfied( viewer ) then
@@ -77,8 +106,6 @@ function Interaction:SatisfyReqs( actor )
 		end
 		table.insert( self.satisfied_by, actor )
 	end
-
-	self:OnSatisfied( actor )
 end
 
 function Interaction:CanInteract( actor )
@@ -107,7 +134,7 @@ function Interaction:CanInteract( actor )
 		return false, table.concat( reasons, "\n" )
 	end
 
-	return Verb.CanInteract( self, actor )
+	return true
 end
 
 function Interaction:RenderObject( ui, viewer )
@@ -128,6 +155,55 @@ end
 
 -----------------------------------------------------------------------------------
 
+local Interact = class( "Verb.Interact", Verb )
+
+function Interact:init( actor, aspect )
+	assert( is_instance( aspect, Aspect.Interaction ))
+	Verb.init( self, actor, actor:GetFocus() )
+	self.interaction = aspect
+end
+
+function Interact:GetDesc()
+	return tostring(self.interaction)
+end
+
+function Interact.CollectInteractions( actor, verbs )
+	local focus = actor:GetFocus()
+	if focus then
+		for i, aspect in focus:Aspects() do
+			if is_instance( aspect, Aspect.Interaction ) then
+				local ok, reason = true
+				if aspect.CanInteract then
+					ok, reason = aspect:CanInteract( actor )
+				end
+				if ok or reason then
+					verbs:AddVerb( Verb.Interact( actor, aspect ))
+				end
+			end
+		end
+	end
+end
+
+function Interact:CanInteract( actor, ... )
+	local ok, reason = self.interaction:CanInteract( actor )
+	if not ok then
+		return false, reason
+	end
+
+	return Verb.CanInteract( self, actor, ... )
+end
+
+function Interact:Interact( actor )
+	self.interaction:SatisfyReqs( actor )
+	self.interaction:Interact( actor )
+end
+
+function Interact:__tostring()
+	return string.format( "Interact: %s", tostring(self.interaction))
+end
+
+-----------------------------------------------------------------------------------
+
 local Acquaint = class( "Interaction.Acquaint", Interaction )
 
 function Acquaint:init( cr )
@@ -135,10 +211,11 @@ function Acquaint:init( cr )
 	self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
 end
 
-function Acquaint:OnSatisfied( actor, dice )
+function Acquaint:Interact( actor )
 	-- We know the actor.
 	if actor:Acquaint( self.owner ) then
 		Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
+		actor:CollectPotentialVerbs( true )
 	end
 end
 
@@ -170,7 +247,7 @@ function TrainSkill:CanInteract( actor )
 	return TrainSkill._base.CanInteract( self, actor )
 end
 
-function TrainSkill:OnSatisfied( actor )
+function TrainSkill:Interact( actor )
 	Msg:Echo( actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), self.skill:GetName() )
 	Msg:ActToRoom( "{I.Id{} learns the {2} skill!", actor )
 
@@ -191,7 +268,7 @@ function Chat:CanInteract( actor )
 	return Chat._base.CanInteract( self, actor )
 end
 
-function Chat:OnSatisfied( actor, dice )
+function Chat:Interact( actor )
 	local t = ObtainWorkTable()
 	for i, aspect in self.owner:Aspects() do
 		if is_instance( aspect, Skill ) then
@@ -203,7 +280,7 @@ function Chat:OnSatisfied( actor, dice )
 	if skill then
 		Msg:Speak( self.owner, "There's lots of stuff to find if you know where to look.", actor )
 
-		self.owner:GainAspect( Interaction.TrainSkill( skill ))
+		self.owner:GainAspect( TrainSkill( skill ))
 
 		self:StartCooldown( ONE_DAY )
 	else
@@ -215,22 +292,9 @@ end
 -----------------------------------------------------------------------------------
 -- TODO: have Shopkeep own this implementation
 
-local BuyFromShop = class( "Interaction.BuyFromShop", Interaction, Verb )
+local BuyFromShop = class( "Interaction.BuyFromShop", Interaction )
 
 BuyFromShop.can_repeat = true -- This interaction can take place multiple times.
-
-function BuyFromShop:init()
-	self:init_bases()
-	assert( self.reqs )
-end
-
-function BuyFromShop:GetDesc()
-	return "Buy/Sell"
-end
-
-function BuyFromShop:OnSatisfied( actor, dice )
-	actor:DoVerbAsync( self )
-end
 
 function BuyFromShop:Interact( actor )
 	assert( actor )
@@ -253,7 +317,7 @@ function LearnRelationship:CanInteract( actor )
 	return LearnRelationship._base.CanInteract( self, actor )
 end
 
-function LearnRelationship:OnSatisfied( actor, dice )
+function LearnRelationship:Interact( actor, dice )
 	self.owner:AddKnownBy( actor )
 end
 
