@@ -14,7 +14,7 @@ function Behaviour:GetName()
 end
 
 function Behaviour:OnSpawn( world )
-	self:ScheduleNextTick()
+	self:ScheduleNextTick( 0 )
 end
 
 function Behaviour:RegisterVerb( verb )
