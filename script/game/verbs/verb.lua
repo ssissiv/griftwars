@@ -1,9 +1,23 @@
 local Verb = class( "Verb" )
 
 function Verb:init( actor, obj )
-	-- assert( is_instance( actor, Agent ))
+	assert( is_instance( actor, Agent ))
 	self.actor = actor
 	self.obj = obj
+end
+
+function Verb:GetWorld()
+	return self.actor.world
+end
+
+function Verb:AddChildVerb( verb )
+	if self.children == nil then
+		self.children = {}
+	end
+	table.insert( self.children, verb )
+
+	verb.owner = self
+	return verb
 end
 
 function Verb:GetFlags()
@@ -81,6 +95,7 @@ function Verb:DoVerb( actor, ... )
 		return
 	end
 
+	self.cancelled = nil
 	self.actor = actor
 	self.coro = coroutine.running()
 	assert( self.coro )
@@ -123,6 +138,12 @@ function Verb:Cancel()
 		self.actor.world:UnscheduleEvent( self.yield_ev )	
 		self.actor.world:TriggerEvent( self.yield_ev )
 	end
+
+	if self.children then
+		for i, child in ipairs( self.children ) do
+			child:Cancel()
+		end
+	end
 end
 
 function Verb:CanCancel()
@@ -160,20 +181,38 @@ function Verb:Resume( coro )
 end
 
 function Verb:RenderDebugPanel( ui, panel, dbg )
-	ui.Columns( 2 )
 	panel:AppendTable( ui, self )
+
+	ui.Indent( 20 )
+	if self.time_started then
+		ui.Text( "Started:" )
+		ui.SameLine( 0, 10 )
+		Calendar.RenderDatetime( ui, self.time_started, self:GetWorld() )
+	end
+
+	if self.coro then
+		ui.Text( "Thread:" )
+		ui.SameLine( 0, 10 )
+		panel:AppendTable( ui, self.coro )
+	end
+
 	if self.cancelled then
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 1, 0, 0, 1, "Cancelled" )
+	
+	elseif self:IsDoing() then
+		if ui.Button( "Cancel" ) then
+			self:Cancel()
+		end
+	else
+		local ok, reason = self:CanInteract( self.actor )
+		if ok then
+			ui.TextColored( 0, 1, 0, 1, reason or "OK" )
+		else
+			ui.TextColored( 1, 0, 0, 1, reason or "Invalid" )
+		end
 	end
-	ui.NextColumn()
-
-	if self.coro then
-		panel:AppendTable( ui, self.coro )
-	end
-	ui.NextColumn()
-
-	ui.Columns( 1 )
+	ui.Unindent( 20 )
 end
 
 function Verb:__tostring()

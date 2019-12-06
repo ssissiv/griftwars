@@ -1,20 +1,20 @@
 TODO
 ====
 
+AGENTS:
+	
+
 CANCEL:
   Cancel behaviour. should funnel down to child verbs...somehow.
 
 BEHAVIOUR:
 figure out how behaviours run in parallel without stepping on eachothers toes.
 
-INTERACTIONS:
-arent these just verbs?
-
-DEBUG LOGGIN:
+DEBUG LOG FILE:
 pls.
 
 SENSELOG:
-eneds to keep parameters, to so newly learned identities change logs from the past.
+needs to keep parameters, not just text, to so newly learned identities change logs from the past.
 
 
 You have max token slots, and tokens in them.  You commit them to certain requirement sets (embedded in social Interactions, etc.), which typically unlocks something.
@@ -35,19 +35,6 @@ CMD LINE
 	- just mud it up.  Fuck the UI.
 
 WORLD should be an entity with a self-ref world ptr?
-
-DIALOG TREE w/ universal dice-based action system -- UDAS
-	- roll dice, get tokens.
-	- show only branches which the given tokens provide for.
-
-Relationship model.
-
-
-STAT DRAIN?
-	- Or relationship drain?
-	- Or both?
-
-
 
 INFO MODEL:
 	Add verbs for utilizing certain info.

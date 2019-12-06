@@ -1,8 +1,8 @@
 local ManageFatigue = class( "Verb.ManageFatigue", Verb )
 
-function ManageFatigue:init()
-	ManageFatigue._base.init( self )
-	self.sleep = Verb.Sleep()
+function ManageFatigue:init( actor )
+	ManageFatigue._base.init( self, actor )
+	self.sleep = self:AddChildVerb( Verb.Sleep( actor ))
 end
 
 function ManageFatigue:UpdatePriority( actor, priority )

@@ -12,10 +12,10 @@ Deliver.ACT_DESC =
 
 
 function Deliver:init( giver, receiver )
-	Deliver._base.init( self )
+	Deliver._base.init( self, giver )
 	self.giver = giver
 	self.receiver = receiver
-	self.travel = Verb.Travel( self.giver, self.receiver )
+	self.travel = self:AddChildVerb( Verb.Travel( self.giver, self.receiver ))
 end
 
 function Deliver:GetShortDesc( viewer )

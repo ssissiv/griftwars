@@ -66,3 +66,19 @@ function Calendar.GetNormalizedTimeOfDay( datetime, target_time )
 	return modulus
 end
 
+function Calendar.RenderDatetime( ui, datetime, world )
+	local txt = Calendar.FormatTime( datetime )
+	ui.Text( txt )
+	if ui.IsItemHovered() and world then
+		local now = world:GetDateTime()
+		local tt
+		if now > datetime then
+			tt = loc.format( "{1} ago", Calendar.FormatDuration( now - datetime ))
+		else
+			tt = loc.format( "in {1}", Calendar.FormatDuration( datetime - now ))
+		end
+		ui.SetTooltip( tt )
+	end
+end
+
+

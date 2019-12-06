@@ -21,12 +21,12 @@
 
 local Scavenge = class( "Verb.Scavenge", Verb )
 
-function Scavenge:init()
-	Scavenge._base.init( self )
+function Scavenge:init( actor )
+	Scavenge._base.init( self, actor )
 
-	self.scrounge = Verb.Scrounge()
-	self.idle = Verb.Idle()
-	self.leave = Verb.LeaveLocation()
+	self.scrounge = self:AddChildVerb( Verb.Scrounge( actor ) )
+	self.idle = self:AddChildVerb( Verb.Idle( actor ) )
+	self.leave = self:AddChildVerb( Verb.LeaveLocation( actor ) )
 end
 
 function Scavenge:GetDetailsDesc( viewer )
@@ -64,8 +64,8 @@ function Agent.Scavenger()
 	local ch = Agent()
 	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Here's a guy.", GENDER.MALE )
 	ch:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
-		Verb.ManageFatigue(),
-		Verb.Scavenge()
+		Verb.ManageFatigue( ch ),
+		Verb.Scavenge( ch )
 	}
 	ch:GainAspect( Skill.Scrounge() )
 	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
