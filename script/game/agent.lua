@@ -369,9 +369,12 @@ end
 function Agent:CancelInvalidVerbs()
 	if self.verbs then
 		for i = #self.verbs, 1, -1 do
-			local verb = self.verbs[i].verb
-			if not verb:CanInteract() then
+			local verb = self.verbs[i]
+			if not verb:CanInteract( self ) then
 				verb:Cancel()
+			end
+			if self.verbs == nil then
+				break
 			end
 		end
 	end
@@ -444,7 +447,7 @@ function Agent:SetFocus( focus )
 			prev_focus:OnLostFocus( self )
 		end
 
-		if self:IsPlayer() then
+		if self:IsPuppet() then
 			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 		end
 	end
@@ -461,7 +464,7 @@ function Agent:SetFocus( focus )
 			focus:OnReceivedFocus( self )
 		end
 
-		if self:IsPlayer() then
+		if self:IsPuppet() then
 			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 		end
 	end

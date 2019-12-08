@@ -138,7 +138,7 @@ end
 
 function WorldBase:IsPaused( pause_type )
 	if pause_type then
-		return table.arraycontains( pause_type )
+		return table.arraycontains( self.pause, pause_type )
 	else
 		return #self.pause > 0 or self:IsGameOver()
 	end

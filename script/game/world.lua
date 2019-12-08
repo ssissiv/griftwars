@@ -66,6 +66,10 @@ end
 function World:SetPuppet( agent )
 	assert( is_instance( agent, Agent ))
 	self.puppet = agent
+
+	if self:IsPaused( PAUSE_TYPE.FOCUS_MODE ) ~= (agent:GetFocus() ~= nil) then
+		self:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
+	end
 end
 
 function World:OnUpdateWorld( dt, world_dt )

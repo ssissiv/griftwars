@@ -42,7 +42,11 @@ function LeaveLocation:GetShortDesc( viewer )
 end
 
 function LeaveLocation:GetDesc()
-	return loc.format( "Leave to {1}", self.obj:GetTitle() )
+	if self.obj then
+		return loc.format( "Leave to {1}", self.obj:GetTitle() )
+	else
+		return "Leave somewhere"
+	end
 end
 
 function LeaveLocation:CanInteract( actor )

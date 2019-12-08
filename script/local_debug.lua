@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Calendar.GetNormalizedTimeOfDay( now, 19 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 20 ))",
 			"print( Calendar.GetNormalizedTimeOfDay( now, 22 ))",
 			"print(t:CanInteract())",
@@ -33,7 +32,8 @@ return {
 			"print(t:IsBusy())",
 			"print(t:IsBusy(VERB_FLAGS.MOVEMENT))",
 			"agent = t",
-			"print(t:CanInteract(agent))"
+			"print(t:CanInteract(agent))",
+			"print(tostr(world.pause))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
