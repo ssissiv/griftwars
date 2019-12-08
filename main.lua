@@ -64,6 +64,7 @@ require "game/verbs/Travel"
 require "game/verbs/ExchangeRumours"
 require "game/verbs/Deliver"
 require "game/verbs/Sleep"
+require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
 
 require "game/aspects/aspect"

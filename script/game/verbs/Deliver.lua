@@ -48,13 +48,14 @@ function Deliver:Interact( actor )
 	self.travel:DoVerb( actor )
 
 	if self.giver:GetLocation() == self.receiver:GetLocation() then
+		Msg:Speak( self.giver, "Delivery.", self.receiver )
 		Msg:ActToRoom( "{1.Id} gives something to {2.Id}.", self.giver, self.receiver )
 		for i, item in self.giver:GetInventory():Items() do
-			Msg:Echo( self.giver, "You give {1} to {2.Id}.", item, self.receiver )
+			Msg:Echo( self.giver, "You give {1} to {2.Id}.", item, self.receiver:LocTable() )
 			Msg:Echo( self.receiver, "{1.Id} gives you {2}.", self.giver, item )
 		end
 	end
 
-	actor:GetAspect( Aspect.Behaviour ):RemoveVerb( self )
+	actor:GetAspect( Aspect.Behaviour ):UnregisterVerb( self )
 	self.removed = true -- FIXME.
 end

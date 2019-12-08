@@ -100,9 +100,13 @@ function Verb:DidWithinTime( actor, dt )
 end
 
 function Verb:DoVerb( actor, ... )
-	if not actor:_AddVerb( self ) then
-		return
+	local ok, reason = self:CanInteract( actor, ... )
+	if not ok then
+		print( "CANT DO", actor, self, reason )
+		return false
 	end
+	
+	actor:_AddVerb( self )
 
 	self.cancelled = nil
 	self.actor = actor
@@ -110,15 +114,7 @@ function Verb:DoVerb( actor, ... )
 	assert( self.coro )
 	self.time_started = actor.world:GetDateTime()
 
-	if actor:IsPuppet() and self.ACT_RATE then
-		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() * self.ACT_RATE )
-	end
-
 	self:Interact( actor, ... )
-	
-	if actor:IsPuppet() and self.ACT_RATE then
-		actor.world:SetWorldSpeed( actor.world:GetWorldSpeed() / self.ACT_RATE )
-	end
 
 	if self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )

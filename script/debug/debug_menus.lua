@@ -59,8 +59,8 @@ local SHARED_BINDINGS =
         Text = "Speed Up",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
-            local speed = dbg_env.game.world:GetWorldSpeed()
-            dbg_env.game.world:SetWorldSpeed( speed * 2.0 )
+            dbg_env.debug_world_speed = (dbg_env.debug_world_speed or 1.0) * 2
+            dbg_env.game.world:SetDebugTimeSpeed( dbg_env.debug_world_speed )
         end
     },
     {
@@ -68,8 +68,8 @@ local SHARED_BINDINGS =
         Text = "Speed Down",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
-            local speed = dbg_env.game.world:GetWorldSpeed()
-            dbg_env.game.world:SetWorldSpeed( speed * 0.5 )
+            dbg_env.debug_world_speed = (dbg_env.debug_world_speed or 1.0) * 0.5
+            dbg_env.game.world:SetDebugTimeSpeed( dbg_env.debug_world_speed )
         end
     },
     {

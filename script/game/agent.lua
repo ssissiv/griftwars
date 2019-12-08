@@ -330,20 +330,17 @@ function Agent:DoVerbAsync( verb, ... )
 end
 
 function Agent:_AddVerb( verb, ... )
-	local ok, reason = verb:CanInteract( self )
-	if not ok then
-		return false
-	end
-	if self:IsDoing( verb ) then
-		return false
-	end
-
 	if self.verbs == nil then
 		self.verbs = {}
 	end
 
+	assert( not self:IsDoing( verb ))
 	table.insert( self.verbs, verb )
 	assert( #self.verbs < 10, "Too many verbs: " ..tostring(self) )
+
+	if self:IsPuppet() then
+		self.world:RefreshTimeSpeed()
+	end
 
 	return true
 end
@@ -356,6 +353,10 @@ function Agent:_RemoveVerb( verb )
 				self.verbs = nil
 			end
 			self:BroadcastEvent( AGENT_EVENT.VERB_UNASSIGNED, verb )
+
+			if self:IsPuppet() then
+				self.world:RefreshTimeSpeed()
+			end
 			return
 		end
 	end
@@ -378,6 +379,16 @@ function Agent:CancelInvalidVerbs()
 			end
 		end
 	end
+end
+
+function Agent:CalculateTimeSpeed()
+	local rate = 1.0
+	if self.verbs then
+		for i, verb in ipairs( self.verbs ) do
+			rate = math.max( verb.ACT_RATE or rate, rate )
+		end
+	end
+	return rate
 end
 
 function Agent:CreateStat( stat, value, max_value )

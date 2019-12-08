@@ -66,6 +66,15 @@ function Calendar.GetNormalizedTimeOfDay( datetime, target_time )
 	return modulus
 end
 
+function Calendar.IsNight( datetime )
+	local hour = Calendar.GetHour( datetime )
+	return hour >= 20 or hour < 5
+end
+
+function Calendar.IsDay( datetime )
+	return not Calendar.IsNight( datetime )
+end
+
 function Calendar.RenderDatetime( ui, datetime, world )
 	local txt = Calendar.FormatTime( datetime )
 	ui.Text( txt )

@@ -26,6 +26,16 @@ function Behaviour:RegisterVerb( verb )
 	table.insert( self.verbs, t )
 end
 
+function Behaviour:UnregisterVerb( verb )
+	for i, t in ipairs( self.verbs ) do
+		if t.verb == verb then
+			table.remove( self.verbs, i )
+			break
+		end
+	end
+end
+
+
 function Behaviour:RegisterVerbs( verbs )
 	for i, verb in ipairs( verbs ) do
 		self:RegisterVerb( verb )

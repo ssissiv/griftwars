@@ -65,11 +65,21 @@ end
 
 function World:SetPuppet( agent )
 	assert( is_instance( agent, Agent ))
+
 	self.puppet = agent
+	self:RefreshTimeSpeed()
 
 	if self:IsPaused( PAUSE_TYPE.FOCUS_MODE ) ~= (agent:GetFocus() ~= nil) then
 		self:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 	end
+end
+
+function World:RefreshTimeSpeed()
+	self.puppet_time_speed = self.puppet:CalculateTimeSpeed()
+end
+
+function World:CalculateTimeElapsed( dt )
+	return dt * (self.puppet_time_speed or 1.0)
 end
 
 function World:OnUpdateWorld( dt, world_dt )

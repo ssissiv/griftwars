@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Calendar.GetNormalizedTimeOfDay( now, 20 ))",
-			"print( Calendar.GetNormalizedTimeOfDay( now, 22 ))",
-			"print(t:CanInteract())",
-			"sdf",
 			"print(t:HasAspect( Aspect.Behaviour ))",
 			"print( Aspect.Behaviour )",
 			"print( is_class( Behaviour.ManageFatigue ))",
@@ -33,7 +29,11 @@ return {
 			"print(t:IsBusy(VERB_FLAGS.MOVEMENT))",
 			"agent = t",
 			"print(t:CanInteract(agent))",
-			"print(tostr(world.pause))"
+			"print(tostr(world.pause))",
+			"print(puppet)",
+			"print(player)",
+			"print(world:GetPuppet())",
+			"print(world:GetPuppet():IsBusy( VERB_FLAGS.MOVEMENT ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

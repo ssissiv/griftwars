@@ -1,6 +1,6 @@
 local Travel = class( "Verb.Travel", Verb )
 
-Travel.FLAGS = VERB_FLAGS.MOVEMENT
+-- Travel.FLAGS = VERB_FLAGS.MOVEMENT
 
 
 Travel.EXIT_STRINGS =
@@ -18,7 +18,17 @@ Travel.ENTER_STRINGS =
 }
 
 function Travel:GetDesc()
-	return loc.format( "Travel to {1}", self.obj:GetTitle() )
+	return loc.format( "Travel to {1}", tostring(self.obj) )
+end
+
+function Travel:GetDetailsDesc( viewer )
+	if viewer:CanSee( self.owner ) then
+		if viewer:CheckPrivacy( self.owner, PRIVACY.INTENT ) then
+			return loc.format( "Traveling to {1}", tostring(self.obj))
+		else
+			return "Traveling somewhere"
+		end
+	end
 end
 
 function Travel:CanInteract( actor )

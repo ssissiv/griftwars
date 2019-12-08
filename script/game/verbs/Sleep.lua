@@ -16,6 +16,13 @@ function Sleep:GetDesc()
 	return "Sleep"
 end
 
+function Sleep:GetDetailsDesc( viewer )
+	if viewer:CanSee( self.owner ) then
+		return "Sleeping"
+	end
+end
+
+
 function Sleep.CollectInteractions( agent, verbs )
 	local home = agent:GetLocation():GetAspect( Feature.Home )
 	if home and home:GetHomeOwner() == agent then
