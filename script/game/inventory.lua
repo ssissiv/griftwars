@@ -2,7 +2,7 @@ local Inventory = class( "Inventory" )
 
 function Inventory:init( owner )
 	self.owner = owner
-	self.money = Object()
+	self.money = Object.Creds()
 	self.items = {}
 end
 

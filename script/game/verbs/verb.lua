@@ -67,11 +67,20 @@ function Verb:CheckDC()
 	return math.random( 1, 20 ) >= self:GetDC()
 end
 
-function Verb:CanInteract( ... )
+function Verb:CanDo( ... )
 	if self.coro then
 		return false, "Already executing"
 	end
 
+	local ok, reason = self:CanInteract( ... )
+	if not ok then
+		return false, reason
+	end
+
+	return true
+end
+
+function Verb:CanInteract( ... )
 	return true
 end
 

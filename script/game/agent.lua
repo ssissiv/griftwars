@@ -31,8 +31,11 @@ function Agent:SetFlags( ... )
 end
 
 function Agent:SetMentalState( state )
-	assert( IsEnum( state, MSTATE ))
-	self.mental_state = state
+	if state ~= self.mental_state then
+		assert( IsEnum( state, MSTATE ))
+		self.mental_state = state
+		self:CancelInvalidVerbs()
+	end
 end
 
 function Agent:IsAlert()
@@ -524,10 +527,6 @@ end
 
 function Agent:DeltaOpinion( other, op, delta )
 	self.social_node:DeltaOpinion( other, op, delta )
-end
-
-function Agent:RenderObject( ui, viewer )
-	self.social_node:RenderObject( ui, viewer )
 end
 
 function Agent.GetAgentOwner( obj )

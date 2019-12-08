@@ -53,17 +53,3 @@ end
 function SocialNode:IsUnfriendly( other )
 	return self:GetOpinion( other ) == OPINION.DISLIKE
 end
-
-function SocialNode:UpdateDialog()
-	for i, node in ipairs( self.active_dialog ) do
-		node:UpdateDialog( UPDATE_RATE )
-	end
-end
-
-function SocialNode:RenderObject( ui, viewer )
-	for i, node in ipairs( self.active_dialog or table.empty ) do
-		node:RenderObject( ui, viewer )
-	end
-end
-
-

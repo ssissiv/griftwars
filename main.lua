@@ -17,6 +17,7 @@ GameScreen = require "frontend/game_screen"
 require "frontend/Nexus"
 require "frontend/ShopWindow"
 require "frontend/SleepWindow"
+require "frontend/InventoryWindow"
 require "frontend/AgentDetailsWindow"
 
 Camera = require "camera"
@@ -82,6 +83,7 @@ require "game/aspects/features"
 require "game/aspects/Home"
 
 require "game/objects/Jerky"
+require "game/objects/Creds"
 
 require "game/characters/Scavenger"
 require "game/characters/Collector"

@@ -21,6 +21,14 @@ function Travel:GetDesc()
 	return loc.format( "Travel to {1}", self.obj:GetTitle() )
 end
 
+function Travel:CanInteract( actor )
+	if not actor:IsAlert() then
+		return false, "Not Alert"
+	end
+	
+	return true
+end
+
 function Travel:Interact( actor )
 	local pather = PathFinder( actor, self.obj )
 	while actor:GetLocation() ~= pather:GetEndRoom() do

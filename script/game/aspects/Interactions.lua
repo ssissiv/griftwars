@@ -137,16 +137,14 @@ function Interaction:CanInteract( actor )
 	return true
 end
 
-function Interaction:RenderObject( ui, viewer )
+function Interaction:RenderTooltip( ui, viewer )
 	for i, req in ipairs( self.reqs ) do
 		if req.type == DLG_REQ.FACE_COUNT then
-			local txt = loc.format( "[{1}] : {2}/{3} {4}", self.to:GetName(), self:GetFaceCount( req.face, viewer ), req.max_count, req.face )
+			local txt = loc.format( "[{1}] : {2}/{3} {4}", tostring(viewer), self:GetFaceCount( req.face, viewer ), req.max_count, req.face )
 			if not req:IsSatisfied( viewer ) then
 				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-
-			elseif ui.Selectable( txt ) then
-				self.parent:DeactivateNode()
-				self.to:ActivateNode()
+			else
+				ui.Text( txt )
 			end
 		end
 	end
@@ -165,6 +163,10 @@ end
 
 function Interact:GetDesc()
 	return tostring(self.interaction)
+end
+
+function Interact:RenderTooltip( ui, viewer )
+	self.interaction:RenderTooltip( ui, viewer )
 end
 
 function Interact.CollectInteractions( actor, verbs )

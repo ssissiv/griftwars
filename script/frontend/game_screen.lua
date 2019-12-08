@@ -34,33 +34,6 @@ function GameScreen:RenderDebug()
 	imgui.Text( string.format( "Debug" ))
 end
 
-function GameScreen:RenderInventory( puppet )
-	local ui = imgui
-    local flags = { "AlwaysAutoResize", "NoScrollBar" }
-
-	ui.SetNextWindowSize( 400,300 )
-
-    ui.Begin( "Inventory", false, flags )
-
-    local player = puppet:GetPlayer()
-    local rumours = puppet:GetAspect( Skill.RumourMonger )
-    if rumours and ui.TreeNodeEx( "Knowledge", "DefaultOpen" ) then
-    	for e_info, count in rumours:Info() do
-    		local txt = loc.format( "{1}: {2}", e_info, count )
-    		if ui.Button( txt ) then
-    		end
-    	end
-
-		ui.TreePop()
-	end
-
-	for i, obj in puppet:GetInventory():Items() do 
-		ui.Selectable( tostring(obj) )
-	end
-
-    ui.End()
-end
-
 function GameScreen:RenderScreen( gui )
 
 	local ui = imgui
@@ -113,16 +86,22 @@ function GameScreen:RenderScreen( gui )
 	ui.SetScrollHere()
     ui.End()
 
-	if self.show_inventory then
-		self:RenderInventory( puppet )
-	end
-
 	for i, window in ipairs( self.windows ) do
 		window:RenderImGuiWindow( ui, self )
 	end
 end
 
 function GameScreen:AddWindow( window )
+	for i, w in ipairs( self.windows ) do
+		if w._class == window._class then
+			if window.IsEqual == nil or window:IsEqual( w ) then
+				table.remove( self.windows, i )
+				table.insert( self.windows, w )
+				return
+			end
+		end
+	end
+
 	table.insert( self.windows, window )
 end
 
@@ -240,41 +219,6 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 					ui.Indent( 20 )
 					-- Make a verb.
 					self:RenderPotentialVerbs( ui, agent, obj )
-					-- local count, count_potential = 0, 0
-					-- for i, aspect in obj:Aspects() do
-					-- 	if is_instance( aspect, Interaction ) then
-					-- 		count = count + 1
-					-- 		-- if aspect:IsSatisfied( agent ) then
-					-- 			local ok, reason = true
-					-- 			if aspect.CanInteract then
-					-- 				ok, reason = aspect:CanInteract( agent )
-					-- 			end
-					-- 			if ok or reason then
-					-- 				if not ok then
-					-- 					ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
-					-- 				end
-					-- 				if ui.Button( aspect._classname ) and ok then
-					-- 					aspect:SatisfyReqs( agent )
-					-- 				end
-					-- 				if not ok then
-					-- 					ui.PopStyleColor()
-					-- 				end
-					-- 				if ui.IsItemHovered() then
-					-- 					ui.BeginTooltip()
-					-- 					local tt = aspect:GetToolTip()
-					-- 					if tt then
-					-- 						ui.Text( tostring(tt) )
-					-- 					end
-					-- 					if reason then
-					-- 						ui.TextColored( 1, 0, 0, 1, tostring(reason))
-					-- 					end
-
-					-- 					ui.EndTooltip()
-					-- 				end
-					-- 			end
-					-- 		-- end
-					-- 	end
-					-- end
 					ui.Unindent( 20 )
 				end
 			end
@@ -291,20 +235,17 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 
 	for i, verb in agent:PotentialVerbs() do
 		if verb.obj == obj or (obj == nil and is_instance( verb, Verb.LeaveLocation)) then
-			local ok, details = verb:CanInteract( agent )
+			local ok, details = verb:CanDo( agent )
 			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 
 			if agent:IsBusy() then
 				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-				if ui.IsItemHovered() then
-					ui.SetTooltip( "You are already busy" )
-				end
+				details = "You are already busy."
 
 			elseif not ok then
 				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-				if ui.IsItemHovered() then
-					ui.SetTooltip( details or "Can't do" )
-				end
+				details = details or "Can't do."
+
 			else
 				if verb.COLOUR then
 					ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
@@ -319,8 +260,15 @@ function GameScreen:RenderPotentialVerbs( ui, agent, obj )
 				ui.PopStyleColor()
 			end
 
-			if ui.IsItemHovered() and details then
-				ui.SetTooltip( details )
+			if ui.IsItemHovered() and (details or verb.RenderTooltip) then
+				ui.BeginTooltip()
+				if verb.RenderTooltip then
+					verb:RenderTooltip( ui, agent )
+				end
+				if details then
+					ui.TextColored( 1, 1, 0.5, 1, details )
+				end
+				ui.EndTooltip()
 			end
 		end
 	end
@@ -398,7 +346,14 @@ end
 
 function GameScreen:KeyPressed( key )
 	if key == "i" then
-		self.show_inventory = not self.show_inventory
+		if self.inventory_window then
+			self:RemoveWindow( self.inventory_window )
+			self.inventory_window = nil
+		else
+			local puppet = self.world:GetPuppet()
+			self.inventory_window = InventoryWindow( puppet, puppet )
+			self:AddWindow( self.inventory_window )
+		end
 		return true
 	elseif key == "f" then
 		self.world:GetPuppet():SetFocus()
@@ -406,7 +361,7 @@ function GameScreen:KeyPressed( key )
 	elseif tonumber(key) then
 		local verb = self.world:GetPuppet():GetPotentialVerbs():VerbAt( tonumber(key) )
 		if verb then
-			local ok, details = verb:CanInteract( self.world:GetPuppet() )
+			local ok, details = verb:CanDo( self.world:GetPuppet() )
 			if ok then
 				self.world:GetPuppet():DoVerbAsync( verb )
 			end

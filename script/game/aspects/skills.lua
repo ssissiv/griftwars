@@ -37,7 +37,7 @@ end
 
 function Scrounge:OnCollectVerbs( event_name, agent, actions )
 	-- if working...
-	actions:AddVerb( Verb.Scrounge() )
+	actions:AddVerb( Verb.Scrounge( agent ) )
 end
 
 
