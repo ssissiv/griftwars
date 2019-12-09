@@ -50,6 +50,11 @@ function GameScreen:RenderScreen( gui )
     	ui.SameLine( 0, 10 )
     	ui.Text( "(PAUSED)" )
     end
+    if (self.world.debug_world_speed or 1.0) ~= 1.0 then
+    	ui.SameLine( 0, 10 )
+    	ui.Text( string.format( "(x%.2f)", self.world.debug_world_speed ))
+    end
+
     self:RenderAgentDetails( ui, puppet )
 
     -- Render what the player is doing...
