@@ -2,16 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:HasAspect( Aspect.Behaviour ))",
-			"print( Aspect.Behaviour )",
-			"print( is_class( Behaviour.ManageFatigue ))",
-			"print( is_class( Behaviour.ManageFatigue, Aspect.Behaviour ))",
-			"print(t)",
-			"print(t:IsBusy())",
-			"print(t:IsBusy( VERB_FLAGS.HANDS ))",
-			"s = Verb.Scrounge(); print( s:CanInteract( t ))",
-			"print( is_instance( t, Skill ))",
-			"print(t.owner:GetStatValue( STAT.FATIGUE ))",
 			"print(t.owner:GetStat(STAT.FATIGUE):GetPercent())",
 			"print( Easing.outQuad( 0.16, 0, PRIORITY_EMERGENCY, 1.0 ))",
 			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ))",
@@ -33,7 +23,17 @@ return {
 			"print(puppet)",
 			"print(player)",
 			"print(world:GetPuppet())",
-			"print(world:GetPuppet():IsBusy( VERB_FLAGS.MOVEMENT ))"
+			"print(world:GetPuppet():IsBusy( VERB_FLAGS.MOVEMENT ))",
+			"print(t)",
+			"kevin = t",
+			"print(kevin:IsAcquainted(t))",
+			"kevin:Acquaint( t )",
+			"print(kevin:IsAcquainted(t))",
+			"print(kevin.memory)",
+			"a = t",
+			"print(a:CheckPrivacy( PRIVACY.ID, t ))",
+			"print(a,t)",
+			"print(a:CheckPrivacy( t, PRIVACY.ID ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

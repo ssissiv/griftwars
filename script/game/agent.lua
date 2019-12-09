@@ -252,6 +252,15 @@ function Agent:CheckPrivacy( obj, pr_flags )
 	if self.memory then
 		return self.memory:CheckPrivacy( obj, pr_flags )
 	end
+	if self.relationships then
+		for i, r in ipairs( self.relationships ) do
+			if r:CheckPrivacy( self, obj, pr_flags ) then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 function Agent:_AddRelationship( r )

@@ -1,6 +1,12 @@
 
 local DebugUtil = class( "DebugUtil" )
 
+function PAUSE()
+    local world = GetDbg():GetDebugEnv().world
+    if world and not world:IsPaused( PAUSE_TYPE.DEBUG ) then
+        world:TogglePause( PAUSE_TYPE.DEBUG )
+    end
+end
 
 function DBG( v )
     local debug_node = DebugUtil.CreateDebugNode( v )

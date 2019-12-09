@@ -67,6 +67,8 @@ PRIVACY = MakeBitField
 	"STATS", -- Detailed status.
 	"INTENT", -- Goals, AI status.
 }
+PRIVACY_ALL = 0xFFFFFFFF
+
 
 SENSOR = MakeEnum
 {

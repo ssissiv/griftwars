@@ -1,20 +1,18 @@
 TODO
 ====
-
-AGENTS:
-	
-
-CANCEL:
-  Cancel behaviour. should funnel down to child verbs...somehow.
+RELATIONSHIPS:
+	should be aspects?
+	are linked into world in constructor - bad.
 
 BEHAVIOUR:
-figure out how behaviours run in parallel without stepping on eachothers toes.
+	figure out how behaviours run in parallel without stepping on eachothers toes.
 
 DEBUG LOG FILE:
-pls.
+	pls.
 
 SENSELOG:
-needs to keep parameters, not just text, to so newly learned identities change logs from the past.
+	needs to keep parameters, not just text, to so newly learned identities change logs from the past.
+
 
 
 You have max token slots, and tokens in them.  You commit them to certain requirement sets (embedded in social Interactions, etc.), which typically unlocks something.

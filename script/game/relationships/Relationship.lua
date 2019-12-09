@@ -19,6 +19,10 @@ function Relationship:AddAgent( agent )
 	return agent
 end
 
+function Relationship:CheckPrivacy( target, flag )
+	return false
+end
+
 function Relationship:IsKnownBy( agent )
 	return false
 end
