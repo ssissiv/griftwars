@@ -1,11 +1,41 @@
 TODO
 ====
-RELATIONSHIPS:
-	should be aspects?
-	are linked into world in constructor - bad.
+
+NEW AGENTS:
+	Bio-Agriculture Farmers.
+		work behaviour: wander in field, work it, use robots randomly
+		* Source: nutri-pallets
+	Engis.
+		* Craft hi-tech gadgets.
+		Needs: E.Parts, or is a frustrated worker
+		* Source: gadgets, Sink: E.Parts
+	Factory Mgr.
+		* [KINGPIN] Has his subordinate meet w/ Engis to do exchanges.
+		* Source: [E.Parts]
+	Toolers
+		* Make weapons out of [Metal], [E.Parts], [Battery]
+		
+
+
+LOCALES:
+	* Places to go while agents are relaxing.
+	The Neon Strip - engis lurk here, gaming parlours, etc.
+	Bio Domes - farmers work here, commute from the 'burbs
+	Flesh Road - for all that stuff.
 
 BEHAVIOUR:
 	figure out how behaviours run in parallel without stepping on eachothers toes.
+	* Think of behaviour as a 'fourier analysis'. Start with the basic 'spine' of
+	the behaviour, the basest default, eg. "Diurnal".
+	* Then layer on complexity, whose times/etc vary dpeending on agent state.
+	* Not dissimilar to what we have now, biggest problem is figuring out the correct priority. I think priority
+	is actually a vector; firstly time scale, and secondly importance. (how important is this behaviour is on the order of this time unit).  So for example, "running from enemy" is on the short time scale (seconds), and very improtant.  "obtaining the killswitch" is very important but on a large time scale.
+	* behaviours are also dynamic:
+		"Stay alive" isn't always there, it's only there under certain criteria/when certain things happen, like
+		getting in combat.  Once out of combat, the behaviour removes itself.
+	
+	Are behaviours what we should have a DSL for?  Want to basically work in these units of game data.
+
 
 DEBUG LOG FILE:
 	pls.
@@ -13,7 +43,15 @@ DEBUG LOG FILE:
 SENSELOG:
 	needs to keep parameters, not just text, to so newly learned identities change logs from the past.
 
-
+AI/PLANNING:
+Structuring Access to resources and planning relationships:
+	track gain/loss of resources within Verbs for an agent for a week, say.
+	agent becomes a sink or source of these.
+	* relationships dictate a resource flow (specified in broad categories) that are permitted.
+	* a well-connected agent has broad access to sinks or sources as the need may be, and then
+	wish to construct a particular relationsihp with the target.
+	* An given agent has paritcular Verbs avilaalbe for constructing these relationships.
+	* A given agent might even have a relationship (subordinate) who's job is to construct these relationships for him.
 
 You have max token slots, and tokens in them.  You commit them to certain requirement sets (embedded in social Interactions, etc.), which typically unlocks something.
 

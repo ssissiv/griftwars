@@ -8,13 +8,25 @@ function Relationship:init()
 	self.agents = {}
 end
 
+function Relationship:OnSpawn( world )
+	Entity.OnSpawn( self, world )
+	for i, agent in ipairs( self.agents ) do
+		agent:_AddRelationship( self )
+	end
+end
 
 function Relationship:HasAgent( agent )
 	return table.contains( self.agents, agent )
 end
 
+function Relationship:Agents()
+	return pairs( self.agents )
+end
+
 function Relationship:AddAgent( agent )
-	agent:_AddRelationship( self )
+	if self.world then
+		agent:_AddRelationship( self )
+	end
 	table.insert( self.agents, agent )
 	return agent
 end

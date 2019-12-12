@@ -66,6 +66,7 @@ require "game/verbs/Deliver"
 require "game/verbs/Sleep"
 require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
+require "game/verbs/Strategize"
 
 require "game/aspects/aspect"
 require "game/aspects/statvalue"
@@ -88,6 +89,7 @@ require "game/objects/Creds"
 
 require "game/characters/Scavenger"
 require "game/characters/Collector"
+require "game/characters/MilitiaCaptain"
 require "game/characters/GeneralStoreOwner"
 
 require "game/ActionDie"

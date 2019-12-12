@@ -7,6 +7,8 @@ function DebugAgent:init( agent )
 end
 
 function DebugAgent:RenderPanel( ui, panel, dbg )
+	ui.Text( tostring(self.agent) )
+	
 	if not self.agent:IsPuppet() then
 		if self.agent:GetLocation() then
 			if ui.Button( "Warp To" ) then
@@ -39,6 +41,24 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	if ui.CollapsingHeader( "Inventory" ) then
 		self.agent:GetInventory():RenderDebugPanel( ui, panel, dbg )
+	end
+
+	if self.agent:CountRelationships() > 0 and ui.CollapsingHeader( "Relationships" ) then
+		ui.Columns( 2 )
+		for i, rel in self.agent:Relationships() do
+			ui.Text( tostring(rel) )
+			ui.NextColumn()
+
+			for k, v in pairs( rel ) do
+				if is_instance( v, Agent ) then
+					ui.TextColored( 0.2, 1, 1, 1, tostring(k) )
+					ui.SameLine( 0, 5 )
+					panel:AppendTable( ui, v )
+				end
+			end
+			ui.NextColumn()
+		end
+		ui.Columns( 1 )
 	end
 
 	if ui.CollapsingHeader( "Stats" ) then

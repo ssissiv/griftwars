@@ -43,7 +43,7 @@ function Behaviour:RegisterVerbs( verbs )
 end
 
 function Behaviour:OnVerbUnassigned( verb )
-	self:ScheduleNextTick( ONE_MINUTE ) -- uh, this granularity is kinda awkward...
+	self:ScheduleNextTick( 0 )
 end
 
 function Behaviour:ScheduleNextTick( delta )

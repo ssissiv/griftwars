@@ -46,11 +46,21 @@ function WorldGen:GenerateWorld()
 		world:SpawnRelationship( Relationship.Subordinate( collector, scavenger ))
 	end
 
+	self:GenerateMilitary( world )
+
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, start )
 	start:GainAspect( Feature.Home( player ) )
 
 	return self.world
+end
+
+function WorldGen:GenerateMilitary( world )
+	local room = Location()
+	room:SetDetails( "Command Room", "An open room crammed with old tech and metal debris.")
+
+	local commander = world:SpawnAgent( Agent.MilitiaCaptain(), room )
+	DBG(commander)
 end
 
 function WorldGen:GeneratePlayer( world )

@@ -270,6 +270,10 @@ function Agent:_AddRelationship( r )
 	table.insert( self.relationships, r )
 end
 
+function Agent:CountRelationships()
+	return self.relationships and #self.relationships or 0
+end
+
 function Agent:Relationships()
 	return ipairs( self.relationships or table.empty )
 end

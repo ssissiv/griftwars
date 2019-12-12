@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t.owner:GetStat(STAT.FATIGUE):GetPercent())",
 			"print( Easing.outQuad( 0.16, 0, PRIORITY_EMERGENCY, 1.0 ))",
 			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ))",
 			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ) + PRIORITY.FUN )",
@@ -33,7 +32,8 @@ return {
 			"a = t",
 			"print(a:CheckPrivacy( PRIVACY.ID, t ))",
 			"print(a,t)",
-			"print(a:CheckPrivacy( t, PRIVACY.ID ))"
+			"print(a:CheckPrivacy( t, PRIVACY.ID ))",
+			"print( now )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
