@@ -1,6 +1,12 @@
 TODO
 ====
 
+ECON-CENTRIC AGENTS:
+	Agents Import and Export resources.
+	Imports/Exports are linked to eachother to satisfy requirements.
+	They can have multiple links.
+	Some must satisfy their entire requirement at once, while others can be served out piecemeal.
+	
 NEW AGENTS:
 	Bio-Agriculture Farmers.
 		work behaviour: wander in field, work it, use robots randomly

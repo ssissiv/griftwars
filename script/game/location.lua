@@ -79,6 +79,7 @@ local function SpawnLocation( location, world )
 end
 
 function Location:Connect( other )
+	assert( other ~= nil )
 	assert( is_instance( other, Location ))
 	assert( not self:IsConnected( other ))
 	assert( not other:IsConnected( self ))

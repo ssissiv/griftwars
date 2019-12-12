@@ -24,6 +24,15 @@ function Agent:init()
 	self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
 end
 
+function Agent:OnSpawn( world )
+	Entity.OnSpawn( self, world )
+
+	local home = world:FindVacantHome()
+	if home then
+		home:SetHomeOwner( self )
+	end
+end
+
 function Agent:SetFlags( ... )
 	for i, flag in ipairs({...}) do
 		self.flags[ flag ] = true

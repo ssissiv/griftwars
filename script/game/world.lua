@@ -53,7 +53,7 @@ end
 function World:SpawnRelationship( rel )
 	assert( is_instance( rel, Relationship ))
 	rel:OnSpawn( self )
-	
+
 	table.insert( self.relationships, rel )
 end
 

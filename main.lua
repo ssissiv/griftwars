@@ -47,7 +47,9 @@ require "game/world"
 require "game/PathFinder"
 require "game/worldgen"
 require "game/Req"
+
 require "game/map/Line"
+require "game/map/City"
 
 require "game/relationships/Relationship"
 require "game/relationships/ArmitageGerin"

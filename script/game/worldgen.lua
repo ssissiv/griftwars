@@ -14,18 +14,16 @@ function WorldGen:GenerateWorld()
 	start:SetImage( assets.LOCATION_BGS.HOME )
 	world:SpawnLocation( start )
 
-	local hood = WorldGen.Line( 5 )
-	hood:SetDetails( "The Junkyard Strip", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	hood:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	hood:RoomAt( 1 ):Connect( start )
-
+	local city = WorldGen.City()
+	city:RoomAt( 1 ):Connect( start )
+	
 	local shop = Location()
 	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
-	shop:Connect( hood:RoomAt( 2 ))
+	shop:Connect( city:RandomRoom() )
 	
 	local dens = Location()
 	dens:SetDetails( "The Dens", "Nobody visits these ruins, for they are overrun with feral vrocs." )
-	dens:Connect( hood:RoomAt( 5 ))
+	dens:Connect( city:RandomRoom() )
 
 	local shopkeep = Agent.GeneralStoreOwner()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )

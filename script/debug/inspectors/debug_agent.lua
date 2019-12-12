@@ -22,6 +22,11 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
+	local home = self.agent:GetHome()
+	if home then
+		panel:AppendTable( ui, home )
+	end
+	
 	local puppet = self.agent.world:GetPuppet()
 	if not puppet:IsAcquainted( self.agent ) and ui.Button( "Acquaint" ) then
 		puppet:Acquaint( self.agent )

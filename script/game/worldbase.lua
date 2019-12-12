@@ -8,6 +8,7 @@ function WorldBase:init()
 	self.events:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
 
+	self.buckets = {}
 	self.pause = {}
 end
 
@@ -150,6 +151,24 @@ end
 
 function WorldBase:GetDateTime()
 	return self.datetime
+end
+
+function WorldBase:RegisterToBucket( key, obj )
+	local bucket = self.buckets[ key ]
+	if bucket == nil then
+		bucket = {}
+		self.buckets[ key ] = bucket
+	end
+	table.insert( bucket, obj )
+end
+
+function WorldBase:UnregisterFromBucket( key, obj )
+	local bucket = self.buckets[ key ]
+	table.arrayremove( bucket, obj )
+end
+
+function WorldBase:Bucket( key )
+	return pairs( self.buckets[ key ] or table.empty )
 end
 
 function WorldBase:UpdateWorld( dt )
