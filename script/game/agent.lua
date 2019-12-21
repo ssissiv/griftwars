@@ -31,6 +31,8 @@ function Agent:OnSpawn( world )
 	if home then
 		home:SetHomeOwner( self )
 	end
+
+	world:Log( "Spawned: {1}", self )
 end
 
 function Agent:SetFlags( ... )

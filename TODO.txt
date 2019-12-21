@@ -1,6 +1,8 @@
 TODO
 ====
 
+* Global log.
+
 * Show time in current vocation/avocation.
 
 ECON-CENTRIC AGENTS:

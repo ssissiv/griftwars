@@ -16,7 +16,6 @@ function Calendar.FormatTime( datetime )
 	return loc.format( "Day: {1} ({2}:{3%02d} {4})", days, hour, minutes, am_pm )
 end
 
-
 function Calendar.FormatWallTime( datetime )
 	datetime = datetime / WALL_TO_GAME_TIME
 	local hours = math.floor( datetime / (60 * 60) )

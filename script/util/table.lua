@@ -131,6 +131,16 @@ function table.count( t )
     return count
 end
 
+function table.maxn( t )
+    local n = 0
+    for i, v in pairs( t ) do
+        if type(i) == "number" then
+            n = math.max( i, n )
+        end
+    end
+    return n
+end
+
 function table.shuffle(array, start_index, end_index)
     
     start_index = start_index or 1

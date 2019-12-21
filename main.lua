@@ -62,6 +62,7 @@ require "game/verbs/verb"
 --------------------------------------------------------------------
 -- Aspects
 
+require "game/aspects/History"
 require "game/aspects/NamePool"
 require "game/aspects/statvalue"
 require "game/aspects/traits"

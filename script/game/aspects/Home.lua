@@ -16,7 +16,7 @@ end
 --
 
 function Agent:GetHome()
-	return self.home
+	return self.home and self.home:GetLocation()
 end
 
 --------------------------------------------------------------

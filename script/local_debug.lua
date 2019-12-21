@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"for i = 0, 1, 0.1 do print( i, Easing.outQuad( i, 0, 1.0, 1.0 )) end",
-			"print( Easing.inQuad( 0.8, 0, 75, 1.0 ))",
-			"print(t:GetStat( STAT.FATIGUE ):GetPercent())",
-			"print(t:GetStat( STAT.FATIGUE ):GetValue())",
-			"print(t)",
 			"verb = t",
 			"print(verb:CanInteract(t))",
 			"print(t:IsBusy())",
@@ -33,7 +28,12 @@ return {
 			"print(t:CanInteract( t.actor ))",
 			"puppet:GainAspect( Skill.Scrounge() )",
 			"player:GainAspect( Skill.Scrounge() )",
-			"puppet:GainAspect( Skill.Scrounge() )"
+			"puppet:GainAspect( Skill.Scrounge() )",
+			"print( table.unpack( { 1, nil, 3 } ))",
+			"print( table.maxn( { 1, nil, 3 } ))",
+			"print( table.unpack( { 1, nil, 3 }, 3 ))",
+			"print(t)",
+			"print(t:GetLocation(), t:GetHome())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -78,6 +78,7 @@ function Behaviour:OnTickBehaviour()
 
 		else
 			if self.owner:IsDoing( t.verb ) then
+				self:GetWorld():Log( "{1} aborts {2} (doing {3})", self.owner, t.verb, active_verb )
 				t.verb:Cancel()
 			end
 		end

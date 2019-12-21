@@ -34,6 +34,10 @@ function ManageFatigue:Interact( actor )
 			self.travel:DoVerb( actor, home )
 		end
 
+		if home and actor:GetLocation() == home then
+			self:GetWorld():Log( "{1} is sleeping at home.", actor )
+		end
+
 		self.sleep:DoVerb( actor )
 	else
 		self.rest:DoVerb( actor )

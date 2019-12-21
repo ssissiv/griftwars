@@ -14,6 +14,28 @@ function DebugWorld:RenderPanel( ui, panel, dbg )
         self.world:AdvanceTime( ONE_HOUR )
     end
 
+    if ui.TreeNode( "History" ) then
+        local changed, filter = ui.InputText( "Filter", self.history_filter or "", 512 )
+        if filter and filter ~= self.history_filter then
+            self.history_filter = filter
+        end
+        local filter_obj = DBQ( self.history_filter )
+        if filter_obj ~= nil then
+            ui.TextColored( 0, 1, 1, 1, "Filtering on: " .. tostring(filter_obj))
+        end
+        ui.Indent( 10 )
+        for i, v in self.world:GetAspect( Aspect.History ):Items() do
+            if filter_obj == nil or table.contains( v, filter_obj ) then
+                local txt = loc.format( table.unpack( v, 1, table.maxn( v ) ))
+                if ui.Selectable( txt ) then
+                    DBG(v)
+                end
+            end
+        end
+        ui.Unindent( 10 )
+        ui.TreePop()
+    end
+
     if ui.TreeNode( "Scheduled Events" ) then
     	for i, ev in ipairs( self.world.scheduled_events ) do
     		local txt = string.format( "%.2f - %s", ev.when - self.world.datetime, tostring(ev[1]))

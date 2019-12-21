@@ -9,10 +9,16 @@ function World:init()
 	self.stats = {}
 	self.relationships = {}
 
+	self.history = self:GainAspect( Aspect.History() )
 	self:GainAspect( Aspect.NamePool() )
 end
 
+function World:Log( fmt, ... )
+	self.history:Log( loc.format( "{1}: {2}", Calendar.FormatTime( self.datetime ), fmt ), ... )
+end
+
 function World:Start()
+	self:Log( "World started!" )
 	self:BroadcastEvent( WORLD_EVENT.START, self )
 end
 
