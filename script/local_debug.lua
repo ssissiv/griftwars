@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( Easing.outQuad( 0.16, 0, PRIORITY_EMERGENCY, 1.0 ))",
-			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ))",
-			"print( Easing.outQuad( 0.16, 0, PRIORITY.EMERGENCY, 1.0 ) + PRIORITY.FUN )",
-			"for i = 0, 1, 0.1 do print( easing.outQuad( t, 0, 1.0, 1.0 )) end",
-			"for i = 0, 1, 0.1 do print( i, easing.outQuad( i, 0, 1.0, 1.0 )) end",
 			"for i = 0, 1, 0.1 do print( i, Easing.outQuad( i, 0, 1.0, 1.0 )) end",
 			"print( Easing.inQuad( 0.8, 0, 75, 1.0 ))",
 			"print(t:GetStat( STAT.FATIGUE ):GetPercent())",
@@ -33,7 +28,12 @@ return {
 			"print(a:CheckPrivacy( PRIVACY.ID, t ))",
 			"print(a,t)",
 			"print(a:CheckPrivacy( t, PRIVACY.ID ))",
-			"print( now )"
+			"print( now )",
+			"print(t:CanAct())",
+			"print(t:CanInteract( t.actor ))",
+			"puppet:GainAspect( Skill.Scrounge() )",
+			"player:GainAspect( Skill.Scrounge() )",
+			"puppet:GainAspect( Skill.Scrounge() )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

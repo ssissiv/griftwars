@@ -3,8 +3,6 @@ WALL_TO_GAME_TIME = 1/60.0
 
 PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS" }
 
-CHARACTER_NAMES = LoadLinesFromFile( "data/names.txt" )
-
 -- Note: 'datetime' is a floating point measure of game hours passed.
 ONE_MINUTE = 1/60
 HALF_HOUR = 30/60
@@ -15,7 +13,7 @@ ONE_DAY = ONE_HOUR * 24
 
 ONE_WEEK = ONE_DAY * 7
 
-SLEEP_SPEED_RATE = 16.0
+SLEEP_SPEED_RATE = 64.0
 
 -- 6 am.
 DATETIME_START = 7

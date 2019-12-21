@@ -4,6 +4,7 @@ function ManageFatigue:init( actor )
 	ManageFatigue._base.init( self, actor )
 	self.rest = self:AddChildVerb( Verb.ShortRest( actor ))
 	self.sleep = self:AddChildVerb( Verb.Sleep( actor ))
+	self.travel = self:AddChildVerb( Verb.Travel( actor ))
 end
 
 function ManageFatigue:UpdatePriority( actor, priority )
@@ -27,6 +28,12 @@ end
 function ManageFatigue:Interact( actor )
 	Msg:Speak( actor, "I'm sleepy..." )
 	if Calendar.IsNight( actor.world:GetDateTime() ) then
+		local home = actor:GetHome()
+		if home then
+			Msg:Speak( actor, "I'm going home." )
+			self.travel:DoVerb( actor, home )
+		end
+
 		self.sleep:DoVerb( actor )
 	else
 		self.rest:DoVerb( actor )

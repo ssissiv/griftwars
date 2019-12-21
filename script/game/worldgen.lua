@@ -58,7 +58,6 @@ function WorldGen:GenerateMilitary( world )
 	room:SetDetails( "Command Room", "An open room crammed with old tech and metal debris.")
 
 	local commander = world:SpawnAgent( Agent.MilitiaCaptain(), room )
-	DBG(commander)
 end
 
 function WorldGen:GeneratePlayer( world )

@@ -139,6 +139,7 @@ end
 function Verb:Cancel()
 	self.cancelled = true
 
+	print ( "CANCEL", self, self.actor, debug.traceback())
 	if self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )	
 		self.actor.world:TriggerEvent( self.yield_ev )

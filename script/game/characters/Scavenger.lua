@@ -59,18 +59,24 @@ end
 
 ---------------------------------------------------------------------
 
+local Scavenger = class( "Agent.Scavenger", Agent )
 
-function Agent.Scavenger()
-	local ch = Agent()
-	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Here's a guy.", GENDER.MALE )
-	ch:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
-		Verb.ManageFatigue( ch ),
-		Verb.Scavenge( ch )
+function Scavenger:init()
+	Agent.init( self )
+
+	self:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
+		Verb.ManageFatigue( self ),
+		Verb.Scavenge( self )
 	}
-	ch:GainAspect( Skill.Scrounge() )
-	ch:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
-	ch:GainAspect( Interaction.Acquaint( CR1 ) )
-	ch:GainAspect( Interaction.Chat() )
-
-	return ch
+	self:GainAspect( Skill.Scrounge() )
+	self:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
+	self:GainAspect( Interaction.Acquaint( CR1 ) )
+	self:GainAspect( Interaction.Chat() )
 end
+
+function Scavenger:OnSpawn( world )
+	Agent.OnSpawn( self, world )
+	local name = world:GetAspect( Aspect.NamePool ):PickName()
+	self:SetDetails( name, "Here's a guy.", GENDER.MALE )
+end
+

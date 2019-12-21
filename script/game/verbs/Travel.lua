@@ -39,8 +39,9 @@ function Travel:CanInteract( actor )
 	return true
 end
 
-function Travel:Interact( actor )
-	local pather = PathFinder( actor, self.obj )
+function Travel:Interact( actor, dest )
+	local dest = dest or self.obj
+	local pather = PathFinder( actor, dest )
 	while actor:GetLocation() ~= pather:GetEndRoom() do
 
 		self:YieldForTime( 2 * ONE_MINUTE )

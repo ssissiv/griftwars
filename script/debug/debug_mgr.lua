@@ -73,6 +73,8 @@ function DebugManager:GetDebugEnv()
     dbg_env.world = self.game.world
     if dbg_env.world then
 	    dbg_env.now = dbg_env.world:GetDateTime()
+	    dbg_env.player = dbg_env.world:GetPlayer()
+	    dbg_env.puppet = dbg_env.world:GetPuppet()
 	end
     dbg_env.mx, dbg_env.my = love.mouse.getPosition()
     dbg_env.gui = GetGUI()

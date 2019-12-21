@@ -34,10 +34,17 @@ end
 
 --------------------------------------------------------------------------------
 
-function Agent.Collector()
-	local ch = Agent()
-	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
-	ch:GainAspect( Behaviour.Collector() )
- 	return ch
+local Collector = class( "Agent.Collector", Agent )
+
+function Collector:init()
+	Agent.init( self )
+	self:GainAspect( Behaviour.Collector() )
 end
+
+function Collector:OnSpawn( world )
+	Agent.OnSpawn( self, world )
+	local name = world:GetAspect( Aspect.NamePool ):PickName()
+	self:SetDetails( name, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
+end
+
 

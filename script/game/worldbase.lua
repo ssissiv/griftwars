@@ -1,11 +1,10 @@
-local WorldBase = class( "WorldBase" )
+local WorldBase = class( "WorldBase", Entity )
 
 function WorldBase:init()
 	self.datetime = 0
 	self.debug_world_speed = 1.0
 
-	self.events = EventSystem()
-	self.events:ListenForAny( self, self.OnWorldEvent )
+	self:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
 
 	self.buckets = {}
@@ -18,26 +17,6 @@ end
 
 function WorldBase:IsGameOver()
 	return false
-end
-
-function WorldBase:ListenForAny( listener, fn, priority )
-	self.events:ListenForAny( listener, fn, priority )
-end
-
-function WorldBase:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
-end
-
-function WorldBase:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
-end
-
-function WorldBase:RemoveListener( listener )
-	self.events:RemoveListener( listener )
-end
-
-function WorldBase:BroadcastEvent( event_name, ... )
-	self.events:BroadcastEvent( event_name, ... )
 end
 
 function WorldBase:OnWorldEvent( event_name, ... )
@@ -153,6 +132,11 @@ function WorldBase:GetDateTime()
 	return self.datetime
 end
 
+function WorldBase:AdvanceTime( dt )
+	self.datetime = self.datetime + dt
+	self:CheckScheduledEvents()
+end
+
 function WorldBase:RegisterToBucket( key, obj )
 	local bucket = self.buckets[ key ]
 	if bucket == nil then
@@ -174,8 +158,7 @@ end
 function WorldBase:UpdateWorld( dt )
 	if not self:IsPaused() then
 		local world_dt = self:CalculateTimeElapsed( dt * WALL_TO_GAME_TIME * self.debug_world_speed )
-		self.datetime = self.datetime + world_dt
-		self:CheckScheduledEvents()
+		self:AdvanceTime( world_dt )
 
 		if self.OnUpdateWorld then
 			self:OnUpdateWorld( dt, world_dt )

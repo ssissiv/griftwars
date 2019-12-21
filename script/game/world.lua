@@ -8,6 +8,8 @@ function World:init()
 	self.agents = {}
 	self.stats = {}
 	self.relationships = {}
+
+	self:GainAspect( Aspect.NamePool() )
 end
 
 function World:Start()

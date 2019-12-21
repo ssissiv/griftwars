@@ -66,7 +66,7 @@ end
 
 function PathFinder:GetEndRoom()
 	if is_instance( self.target, Location ) then
-		return self.target
+		return self.target		
 	elseif self.target.GetLocation then
 		return self.target:GetLocation()
 	end

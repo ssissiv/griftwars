@@ -1,13 +1,26 @@
 TODO
 ====
 
+* Show time in current vocation/avocation.
+
 ECON-CENTRIC AGENTS:
 	Agents Import and Export resources.
 	Imports/Exports are linked to eachother to satisfy requirements.
 	They can have multiple links.
 	Some must satisfy their entire requirement at once, while others can be served out piecemeal.
 	
+INTEL:
+	* How much to bribe this person? Who you can bribe?
+	* Wanna make someone disappear? Need permission. (all deaths within a region...)
+
+
 NEW AGENTS:
+	Controllers:
+		* Regional warlords.
+		* "Mayors" of specific areas -- have all the top connections.
+		* Look to import intell, or money, or warfare.
+	CEOs
+		* 3rd tier person who controls a specific economy (a business)
 	Bio-Agriculture Farmers.
 		work behaviour: wander in field, work it, use robots randomly
 		* Source: nutri-pallets

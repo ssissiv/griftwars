@@ -49,3 +49,12 @@ function Home:GetHomeOwner()
 	return self.home_owner
 end
 
+function Home:__tostring()
+	if self.owner then
+		return string.format( "[%s: %s]", self._classname, self.owner:GetTitle() )
+	else
+		return string.format( "[%s]", self._classname )
+	end
+end
+
+

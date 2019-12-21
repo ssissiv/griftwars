@@ -47,6 +47,7 @@ require "game/world"
 require "game/PathFinder"
 require "game/worldgen"
 require "game/Req"
+require "game/VerbContainer"
 
 require "game/map/Line"
 require "game/map/City"
@@ -55,22 +56,13 @@ require "game/relationships/Relationship"
 require "game/relationships/ArmitageGerin"
 require "game/relationships/Subordinate"
 
-require "game/VerbContainer"
-require "game/verbs/verb"
-require "game/verbs/Idle"
-require "game/verbs/Hail"
-require "game/verbs/Inspect"
-require "game/verbs/scrounge"
-require "game/verbs/LeaveLocation"
-require "game/verbs/Travel"
-require "game/verbs/ExchangeRumours"
-require "game/verbs/Deliver"
-require "game/verbs/Sleep"
-require "game/verbs/ShortRest"
-require "game/verbs/ManageFatigue"
-require "game/verbs/Strategize"
-
 require "game/aspects/aspect"
+require "game/verbs/verb"
+
+--------------------------------------------------------------------
+-- Aspects
+
+require "game/aspects/NamePool"
 require "game/aspects/statvalue"
 require "game/aspects/traits"
 require "game/aspects/Memory"
@@ -86,16 +78,33 @@ require "game/aspects/behaviour"
 require "game/aspects/features"
 require "game/aspects/Home"
 
+--------------------------------------------------------------------
+-- Objects
+
 require "game/objects/Jerky"
 require "game/objects/Creds"
+
+--------------------------------------------------------------------
+-- Verbs
+
+require "game/verbs/Idle"
+require "game/verbs/Hail"
+require "game/verbs/Inspect"
+require "game/verbs/scrounge"
+require "game/verbs/LeaveLocation"
+require "game/verbs/Travel"
+require "game/verbs/ExchangeRumours"
+require "game/verbs/Deliver"
+require "game/verbs/Sleep"
+require "game/verbs/Interact"
+require "game/verbs/ShortRest"
+require "game/verbs/ManageFatigue"
+require "game/verbs/Strategize"
 
 require "game/characters/Scavenger"
 require "game/characters/Collector"
 require "game/characters/MilitiaCaptain"
 require "game/characters/GeneralStoreOwner"
-
-require "game/ActionDie"
-require "game/DiceContainer"
 
 -----------------------------------------------------------
 

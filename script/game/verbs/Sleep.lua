@@ -31,8 +31,10 @@ function Sleep.CollectInteractions( agent, verbs )
 end
 
 function Sleep:CanInteract( actor )
-	if not actor:IsAlert() then
-		return false, "Not Alert"
+	if not self:IsDoing() then
+		if not actor:IsAlert() then
+			return false, "Not Alert"
+		end
 	end
 	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Busy"

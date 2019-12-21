@@ -10,15 +10,21 @@
 
 ---------------------------------------------------------------------
 
+local MilitiaCaptain = class( "Agent.MilitiaCaptain", Agent )
 
-function Agent.MilitiaCaptain()
-	local ch = Agent()
-	ch:SetDetails( table.arraypick( CHARACTER_NAMES ), "Commander of the militia.", GENDER.MALE )
-	ch:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
-		Verb.Strategize( ch )
+function MilitiaCaptain:init()
+	Agent.init( self )
+	
+	self:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
+		Verb.Strategize( self )
 	}
-	ch:GainAspect( Interaction.Acquaint( CR1 ) )
-	ch:GainAspect( Interaction.Chat() )
-
-	return ch
+	self:GainAspect( Interaction.Acquaint( CR1 ) )
+	self:GainAspect( Interaction.Chat() )
 end
+
+function MilitiaCaptain:OnSpawn( world )
+	Agent.OnSpawn( self, world )
+	local name = world:GetAspect( Aspect.NamePool ):PickName()
+	self:SetDetails( name, "Commander of the militia.", GENDER.MALE )
+end
+

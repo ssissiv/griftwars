@@ -10,7 +10,9 @@ function DebugWorld:init( world )
 end
 
 function DebugWorld:RenderPanel( ui, panel, dbg )
-    DebugTable.RenderPanel( self, ui, panel, dbg )
+    if ui.Button( "+One Hour" ) then
+        self.world:AdvanceTime( ONE_HOUR )
+    end
 
     if ui.TreeNode( "Scheduled Events" ) then
     	for i, ev in ipairs( self.world.scheduled_events ) do
@@ -23,6 +25,8 @@ function DebugWorld:RenderPanel( ui, panel, dbg )
     	ui.TreePop()
     end
    	ui.Separator()
+
+    DebugTable.RenderPanel( self, ui, panel, dbg )
 end
 
  

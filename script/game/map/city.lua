@@ -8,21 +8,33 @@ function City:init()
 	local left = WorldGen.Line( math.random( 8, 12 ), 0, 1 )
 	left:SetDetails( "The Junkyard West", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	left:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	for i, room in left:Rooms() do
+		room:GainAspect( Aspect.ScroungeTarget() )
+	end
 	table.arrayadd( self.rooms, left.rooms )
 
 	local top = WorldGen.Line( math.random( 8, 12 ), 1, 0 )
 	top:SetDetails( "The Junkyard North", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	top:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	for i, room in top:Rooms() do
+		room:GainAspect( Aspect.ScroungeTarget() )
+	end
 	table.arrayadd( self.rooms, top.rooms )
 	
 	local right = WorldGen.Line( math.random( 8, 12 ), 0, 1 )
 	right:SetDetails( "The Junkyard East", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	right:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	for i, room in right:Rooms() do
+		room:GainAspect( Aspect.ScroungeTarget() )
+	end
 	table.arrayadd( self.rooms, right.rooms )
 	
 	local bottom = WorldGen.Line( math.random( 8, 12 ), 1, 0 )
 	bottom:SetDetails( "The Junkyard South", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	bottom:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	for i, room in bottom:Rooms() do
+		room:GainAspect( Aspect.ScroungeTarget() )
+	end
 	table.arrayadd( self.rooms, bottom.rooms )
 	
 	-- Connect left and top
@@ -56,7 +68,7 @@ function City:ConnectHomes( line, block )
 	for i, room in line:Rooms() do
 		if math.random() < 0.3 then
 			local home = Location()
-			home:SetDetails( loc.format( "Resident #{1}{2}", block, i ), "This is somebody's residence." )
+			home:SetDetails( loc.format( "Residence #{1}{2}", block, i ), "This is somebody's residence." )
 			home:SetImage( assets.LOCATION_BGS.HOME )
 			home:GainAspect( Feature.Home( nil ) )
 			home:Connect( room )
