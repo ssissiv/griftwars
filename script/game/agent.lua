@@ -202,7 +202,7 @@ function Agent:GenerateLocTable( viewer )
 	if viewer == nil then
 		t.id = loc.format( "[[{1}]]", self.name )
 		t.Id = t.id
-	elseif viewer:CheckPrivacy( self, PRIVACY.ID ) then
+	elseif viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
 		t.id = loc.format( "[{1}]", self.name )
 		t.Id = t.id
 	else
@@ -231,6 +231,7 @@ function Agent:IsAcquainted( agent )
 	if not self:CheckPrivacy( agent, PRIVACY.ID ) then
 		return false
 	end
+	return true
 end
 
 function Agent:Acquaint( agent )

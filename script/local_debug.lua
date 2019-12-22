@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"verb = t",
-			"print(verb:CanInteract(t))",
-			"print(t:IsBusy())",
-			"print(t:IsBusy(VERB_FLAGS.MOVEMENT))",
 			"agent = t",
 			"print(t:CanInteract(agent))",
 			"print(tostr(world.pause))",
@@ -33,7 +29,11 @@ return {
 			"print( table.maxn( { 1, nil, 3 } ))",
 			"print( table.unpack( { 1, nil, 3 }, 3 ))",
 			"print(t)",
-			"print(t:GetLocation(), t:GetHome())"
+			"print(t:GetLocation(), t:GetHome())",
+			"print(player:GetAspect( t ))",
+			"print(player:GetAspect( \"foo\" ))",
+			"print(player:GetAspect( t ))",
+			"print(player:GetAspect( t ), t)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

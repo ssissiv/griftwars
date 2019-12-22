@@ -69,5 +69,7 @@ function PathFinder:GetEndRoom()
 		return self.target		
 	elseif self.target.GetLocation then
 		return self.target:GetLocation()
+	else
+		error()
 	end
 end

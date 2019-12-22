@@ -62,6 +62,8 @@ require "game/verbs/verb"
 --------------------------------------------------------------------
 -- Aspects
 
+require "game/aspects/job"
+
 require "game/aspects/History"
 require "game/aspects/NamePool"
 require "game/aspects/statvalue"
@@ -101,6 +103,7 @@ require "game/verbs/Interact"
 require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
 require "game/verbs/Strategize"
+require "game/verbs/WorkJob"
 
 require "game/characters/Scavenger"
 require "game/characters/Collector"

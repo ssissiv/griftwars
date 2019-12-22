@@ -58,34 +58,6 @@ function Interaction:GetFaceCount( face, viewer )
 	return count
 end
 
-function Interaction:OnCollectVerbs( event_name, agent, verbs )
-	if actor:GetFocus() then
-		local ok, reason = true
-		if self.CanInteract then
-			ok, reason = self:CanInteract( agent )
-		end
-		if ok or reason then
-			verbs:AddVerb( Verb.Interact( agent, self ))
-		end
-	end
-
-
-					-- 	if is_instance( aspect, Interaction ) then
-					-- 		count = count + 1
-					-- 		-- if aspect:IsSatisfied( agent ) then
-					-- 			local ok, reason = true
-					-- 			if aspect.CanInteract then
-					-- 				ok, reason = aspect:CanInteract( agent )
-					-- 			end
-					-- 			if ok or reason then
-					-- 				if not ok then
-					-- 					ui.PushStyleColor( "Button", 0.2, 0.2, 0.2, 1 )
-					-- 				end
-					-- 				if ui.Button( aspect._classname ) and ok then
-					-- 					aspect:SatisfyReqs( agent )
-					-- 				end
-end
-
 function Interaction:IsSatisfied( viewer )
 	for i, req in ipairs( self.reqs ) do
 		if not req:IsSatisfied( viewer ) then
@@ -206,6 +178,47 @@ end
 
 -----------------------------------------------------------------------------------
 
+local OfferJob = class( "Interaction.OfferJob", Interaction )
+
+function OfferJob:init( job )
+	assert( is_instance( job, Job ), tostring(job))
+	OfferJob._base.init( self )
+	self.job = job
+	for i, req in job:TrainingReqs() do
+		self:Req( req )
+	end
+end
+
+function OfferJob:CanInteract( actor )
+	if self.job.owner == actor then
+		return false, "Already has this job."
+	elseif self.job.owner then
+		return false, loc.format( "This job is already taken by {1.Id}", self.job.owner:LocTable() )
+	end
+
+	if not actor:IsAcquainted( self.owner ) then
+		return "Not acquainted"
+	end
+	
+	for i, req in self.job:TrainingReqs() do
+		local ok, reason = req:IsSatisfied( actor )
+		if not ok then
+			return false, reason
+		end
+	end
+
+	return OfferJob._base.CanInteract( self, actor )
+end
+
+function OfferJob:Interact( actor )
+	Msg:Echo( actor, "{1.Id} gives you a new job: {2}", self.owner:LocTable( actor ), self.job:GetName() )
+	Msg:ActToRoom( "{I.Id} gives {2} a new job.", self.owner, actor )
+
+	actor:GainAspect( self.job )
+end
+
+-----------------------------------------------------------------------------------
+
 local Chat = class( "Interaction.Chat", Interaction )
 
 function Chat:CanInteract( actor )
@@ -268,7 +281,6 @@ end
 function LearnRelationship:Interact( actor, dice )
 	self.owner:AddKnownBy( actor )
 end
-
 
 
 

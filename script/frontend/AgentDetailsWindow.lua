@@ -18,6 +18,13 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 0, 1, 1, 1, tostring(self.agent.gender) )
 
+		local job = self.agent:GetAspect( Job )
+		if job then
+			ui.Text( "Job:" )
+			ui.SameLine( 0, 5 )
+			ui.Text( loc.format( "{1} for {2.Id}", job:GetName(), job.employer:LocTable( self.viewer )))
+		end
+
 		ui.Text( "Doing:" )
 		ui.Indent( 20 )
 		for i, verb in self.agent:Verbs() do

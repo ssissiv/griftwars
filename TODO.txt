@@ -1,6 +1,12 @@
 TODO
 ====
 
+* JOBS.
+	- leaving
+	- getting fired
+	- NPC hires
+	- salary, job verbs, ...
+
 * Show time in current vocation/avocation.
 
 ECON-CENTRIC AGENTS:

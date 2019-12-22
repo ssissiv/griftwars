@@ -101,6 +101,8 @@ function Entity:GetAspect( arg )
 	assert( arg ~= nil )
 	local id
 	if type(arg) == "string" then
+
+	elseif type(arg) == "string" then
 		id = arg
 
 	elseif is_class( arg ) and self.aspects then
