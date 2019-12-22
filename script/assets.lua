@@ -14,6 +14,7 @@ local assets =
 	LOCATION_BGS =
 	{
 		HOME = "home.png",
+		INSIDE = "inside.png",
 		JUNKYARD_STRIP = "junkyard_strip.png",
 	},
 

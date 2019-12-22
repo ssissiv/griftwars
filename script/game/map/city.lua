@@ -69,7 +69,7 @@ function City:ConnectHomes( line, block )
 		if math.random() < 0.3 then
 			local home = Location()
 			home:SetDetails( loc.format( "Residence #{1}{2}", block, i ), "This is somebody's residence." )
-			home:SetImage( assets.LOCATION_BGS.HOME )
+			home:SetImage( assets.LOCATION_BGS.INSIDE )
 			home:GainAspect( Feature.Home( nil ) )
 			home:Connect( room )
 		end
