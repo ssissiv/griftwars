@@ -91,6 +91,12 @@ LOCATION_EVENT = MakeEnum{
 	"AGENT_REMOVED",
 }
 
+SHOP_TYPE = MakeEnum{
+	"GENERAL",
+	"FOOD",
+	"EQUIPMENT",
+}
+
 PRIORITY =
 {
 	EMERGENCY = 100,

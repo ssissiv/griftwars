@@ -27,12 +27,17 @@ end
 function Agent:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
+	if self.name == nil then
+		self.name = world:GetAspect( Aspect.NamePool ):PickName()
+	end
+	
 	local home = world:FindVacantHome()
 	if home then
 		home:SetHomeOwner( self )
 	end
 
 	world:Log( "Spawned: {1}", self )
+	print( self.name )
 end
 
 function Agent:SetFlags( ... )
@@ -154,9 +159,15 @@ function Agent:PotentialVerbs()
 end
 
 function Agent:SetDetails( name, desc, gender )
-	self.name = name
-	self.desc = desc
-	self.gender = gender
+	if name then
+		self.name = name
+	end
+	if desc then
+		self.desc = desc
+	end
+	if gender then
+		self.gender = gender
+	end
 end
 
 function Agent:RegenerateLocTable( viewer )
@@ -296,16 +307,15 @@ function Agent:WarpToLocation( location )
 	local prev_location = self.location
 	if self.location then
 		self:SetFocus( nil )
-		self.location:_RemoveAgent( self )
+		self.location:RemoveAgent( self )
 		self.location = nil
 	end
 
 	self.verb_time = nil
 
 	if location then
-		assert( self.world )
 		self.location = location
-		location:_AddAgent( self )
+		location:AddAgent( self )
 	end
 
 	self:BroadcastEvent( AGENT_EVENT.LOCATION_CHANGED, prev_location, self.location )

@@ -2,7 +2,8 @@ local City = class( "WorldGen.City" )
 
 function City:init()
 	self.rooms = {}
-
+	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )
+	self.nouns = Aspect.NamePool( "data/nouns.txt" )
 	self.home_count = 0
 
 	local left = WorldGen.Line( math.random( 8, 12 ), 0, 1 )
@@ -62,6 +63,7 @@ function City:init()
 	self:ConnectHomes( top, 2 )
 	self:ConnectHomes( right, 3 )
 	self:ConnectHomes( bottom, 4 )
+	self:ConnectShops()
 end
 
 function City:ConnectHomes( line, block )
@@ -72,6 +74,40 @@ function City:ConnectHomes( line, block )
 			home:SetImage( assets.LOCATION_BGS.INSIDE )
 			home:GainAspect( Feature.Home( nil ) )
 			home:Connect( room )
+		end
+	end
+end
+
+
+function City:ConnectShops()
+	for i = 1, 10 do
+		local room = self:RandomRoom()
+		if room:HasAspect( Feature.Home ) then
+			--
+		else
+			local shop = Location()
+			shop:SetImage( assets.LOCATION_BGS.SHOP )
+			shop:Connect( room )
+			local adj = self.adjectives:PickName()
+			local noun = self.nouns:PickName()
+
+			local shop_type = table.pick( SHOP_TYPE )
+			if shop_type == SHOP_TYPE.GENERAL then
+				local name = loc.format( "The {1} {2} General Store", adj, noun )
+				shop:SetDetails( name, "A general store." )
+
+			elseif shop_type == SHOP_TYPE.FOOD then
+				local name = loc.format( "The {1} {2} Restaurant", adj, noun )
+				shop:SetDetails( name, "A restaurant." )
+
+			elseif shop_type == SHOP_TYPE.EQUIPMENT then
+				local name = loc.format( "The {1} {2} Weapons n Arms", adj, noun )
+				shop:SetDetails( name, "An equipment store." )
+			end
+
+			local shopkeep = Agent.Shopkeeper()
+			shopkeep:GetAspect( Aspect.Shopkeep ):AssignShop( shop )
+			shopkeep:WarpToLocation( shop )
 		end
 	end
 end

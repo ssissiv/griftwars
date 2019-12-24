@@ -1,7 +1,8 @@
 local NamePool = class( "Aspect.NamePool", Aspect )
 
-function NamePool:init()
-	self.names = LoadLinesFromFile( "data/names.txt" )
+function NamePool:init( filename )
+	assert( filename )
+	self.names = LoadLinesFromFile( filename )
 end
 
 function NamePool:PickName()

@@ -108,7 +108,7 @@ require "game/verbs/WorkJob"
 require "game/characters/Scavenger"
 require "game/characters/Collector"
 require "game/characters/MilitiaCaptain"
-require "game/characters/GeneralStoreOwner"
+require "game/characters/Shopkeeper"
 
 -----------------------------------------------------------
 

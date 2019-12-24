@@ -10,7 +10,7 @@ function World:init()
 	self.relationships = {}
 
 	self.history = self:GainAspect( Aspect.History() )
-	self:GainAspect( Aspect.NamePool() )
+	self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
 end
 
 function World:Log( fmt, ... )
@@ -41,7 +41,11 @@ end
 
 function World:SpawnAgent( agent, location )
 	agent:OnSpawn( self )
-	agent:WarpToLocation( location )
+	if location then
+		agent:WarpToLocation( location )
+	else
+		assert( agent.location )
+	end
 
 	table.insert( self.agents, agent )
 

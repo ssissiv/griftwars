@@ -5,6 +5,18 @@ function Location:init()
 	self.exits = {}
 end
 
+function Location:OnSpawn( world )
+	Entity.OnSpawn( self, world )
+
+	if self.contents then
+		for i, v in ipairs( self.contents ) do
+			world:SpawnAgent( v )
+			assert( v.name )
+			print( v, self )
+		end
+	end
+end
+
 function Location:LocTable()
 	return self
 end
@@ -30,12 +42,21 @@ end
 function Location:SetDetails( title, desc )
 	self.title = title
 	self.desc = desc
-	self.contents = {}
 end
 
-function Location:_AddAgent( agent )
+function Location:SpawnAgent( agent )
+	self.world:SpawnAgent( agent, self )
+end
+
+function Location:AddAgent( agent )
 	assert( is_instance( agent, Agent ))
-	assert( table.arrayfind( self.contents, agent ) == nil )
+	assert( self.contents == nil or table.arrayfind( self.contents, agent ) == nil )
+	assert( agent.world == self.world, tostring(agent.world))
+	assert( agent.location == self )
+	
+	if self.contents == nil then
+		self.contents = {}
+	end
 
 	table.insert( self.contents, agent )
 	agent:ListenForEvent( AGENT_EVENT.COLLECT_VERBS, self, self.OnCollectVerbs )
@@ -43,7 +64,7 @@ function Location:_AddAgent( agent )
 	self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, agent )
 end
 
-function Location:_RemoveAgent( agent )
+function Location:RemoveAgent( agent )
 	assert( is_instance( agent, Agent ))
 
 	agent:RemoveListener( self )
@@ -120,7 +141,7 @@ function Location:Visit( fn, ... )
 end
 
 function Location:Contents()
-	return ipairs( self.contents )
+	return ipairs( self.contents or table.empty )
 end
 
 function Location:GetTitle()

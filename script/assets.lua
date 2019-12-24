@@ -15,6 +15,7 @@ local assets =
 	{
 		HOME = "home.png",
 		INSIDE = "inside.png",
+		SHOP = "shop.png",
 		JUNKYARD_STRIP = "junkyard_strip.png",
 	},
 

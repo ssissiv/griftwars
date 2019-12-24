@@ -1,0 +1,10 @@
+Octopus
+Leg
+Arm
+Trunk
+Boot
+Chit
+Shield
+Visor
+Bone
+Skull

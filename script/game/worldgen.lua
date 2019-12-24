@@ -25,11 +25,10 @@ function WorldGen:GenerateWorld()
 	dens:SetDetails( "The Dens", "Nobody visits these ruins, for they are overrun with feral vrocs." )
 	dens:Connect( city:RandomRoom() )
 
-	local shopkeep = Agent.GeneralStoreOwner()
+	local shopkeep = Agent.Shopkeeper()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	shopkeep:GetAspect( Aspect.Shopkeep ):AssignShop( shop )
 	world:SpawnAgent( shopkeep, shop )
-
 
 	local collector = Agent.Collector()
 	shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
@@ -56,8 +55,10 @@ end
 function WorldGen:GenerateMilitary( world )
 	local room = Location()
 	room:SetDetails( "Command Room", "An open room crammed with old tech and metal debris.")
+	world:SpawnLocation( room )
 
-	local commander = world:SpawnAgent( Agent.MilitiaCaptain(), room )
+	local commander = Agent.MilitiaCaptain()
+	room:SpawnAgent( commander )
 end
 
 function WorldGen:GeneratePlayer( world )
