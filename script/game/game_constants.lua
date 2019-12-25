@@ -67,6 +67,15 @@ PRIVACY = MakeBitField
 }
 PRIVACY_ALL = 0xFFFFFFFF
 
+EQ_SLOT = MakeEnum
+{
+	"HAND",
+	"LHAND",
+	"RHAND",
+	"HEAD",
+	"BODY",
+	"FEET",
+}
 
 SENSOR = MakeEnum
 {

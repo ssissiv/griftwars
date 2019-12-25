@@ -76,7 +76,7 @@ function GameScreen:RenderScreen( gui )
     -- Render the things at the player's location.
     self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
 
-    self:RenderPotentialVerbs( ui, puppet )
+    self:RenderPotentialVerbs( ui, puppet, "room" )
 
     self:RenderBackground( ui, puppet )
 
@@ -227,7 +227,7 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				if agent:IsPuppet() then
 					ui.Indent( 20 )
 					-- Make a verb.
-					self:RenderPotentialVerbs( ui, agent, obj )
+					self:RenderPotentialVerbs( ui, agent, "focus", obj )
 					ui.Unindent( 20 )
 				end
 			end
@@ -239,46 +239,44 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 	ui.Unindent( 20 )
 end
 
-function GameScreen:RenderPotentialVerbs( ui, agent, obj )
+function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )
 	ui.Indent( 20 )
 
-	for i, verb in agent:PotentialVerbs() do
-		if verb.obj == obj or (obj == nil and is_instance( verb, Verb.LeaveLocation)) then
-			local ok, details = verb:CanDo( agent )
-			local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
+	for i, verb in agent:PotentialVerbs( id, ... ) do
+		local ok, details = verb:CanDo( agent, ... )
+		local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 
-			if agent:IsBusy() then
-				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-				details = "You are already busy."
+		if agent:IsBusy() then
+			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+			details = "You are already busy."
 
-			elseif not ok then
-				ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-				details = details or "Can't do."
+		elseif not ok then
+			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+			details = details or "Can't do."
 
+		else
+			if verb.COLOUR then
+				ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
 			else
-				if verb.COLOUR then
-					ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
-				else
-					ui.PushStyleColor( "Text", 1, 1, 0, 1 )
-				end
-
-				if ui.Selectable( txt ) then
-					agent:DoVerbAsync( verb )
-				end
-
-				ui.PopStyleColor()
+				ui.PushStyleColor( "Text", 1, 1, 0, 1 )
 			end
 
-			if ui.IsItemHovered() and (details or verb.RenderTooltip) then
-				ui.BeginTooltip()
-				if verb.RenderTooltip then
-					verb:RenderTooltip( ui, agent )
-				end
-				if details then
-					ui.TextColored( 1, 1, 0.5, 1, details )
-				end
-				ui.EndTooltip()
+			if ui.Selectable( txt ) then
+				agent:DoVerbAsync( verb, ... )
 			end
+
+			ui.PopStyleColor()
+		end
+
+		if ui.IsItemHovered() and (details or verb.RenderTooltip) then
+			ui.BeginTooltip()
+			if verb.RenderTooltip then
+				verb:RenderTooltip( ui, agent )
+			end
+			if details then
+				ui.TextColored( 1, 1, 0.5, 1, details )
+			end
+			ui.EndTooltip()
 		end
 	end
 
@@ -368,11 +366,14 @@ function GameScreen:KeyPressed( key )
 		self.world:GetPuppet():SetFocus()
 		return true
 	elseif tonumber(key) then
-		local verb = self.world:GetPuppet():GetPotentialVerbs():VerbAt( tonumber(key) )
-		if verb then
-			local ok, details = verb:CanDo( self.world:GetPuppet() )
-			if ok then
-				self.world:GetPuppet():DoVerbAsync( verb )
+		local puppet = self.world:GetPuppet()
+		if puppet and puppet:GetFocus() == nil then
+			local verb = puppet:GetPotentialVerbs( "room" ):VerbAt( tonumber(key) )
+			if verb then
+				local ok, details = verb:CanDo( self.world:GetPuppet() )
+				if ok then
+					self.world:GetPuppet():DoVerbAsync( verb )
+				end
 			end
 		end
 		return true

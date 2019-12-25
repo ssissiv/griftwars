@@ -135,7 +135,6 @@ function Acquaint:Interact( actor )
 	-- We know the actor.
 	if actor:Acquaint( self.owner ) then
 		Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
-		actor:CollectPotentialVerbs( true )
 	end
 end
 

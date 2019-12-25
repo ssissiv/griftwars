@@ -21,6 +21,18 @@ function Object:Clone()
 	return clone
 end
 
+function Object:Equip()
+	self.equipped = true
+end
+
+function Object:Unequip()
+	self.equipped = false
+end
+
+function Object:IsEquipped()
+	return self.equipped
+end
+
 function Object:GetValue()
 	return self.value
 end

@@ -35,9 +35,9 @@ function Scrounge:init()
 	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.POWER, 1 ))
 end
 
-function Scrounge:OnCollectVerbs( event_name, agent, actions )
+function Scrounge:OnCollectVerbs( event_name, actor, verbs )
 	-- if working...
-	actions:AddVerb( Verb.Scrounge( agent ) )
+	verbs:AddVerb( Verb.Scrounge( actor ) )
 end
 
 

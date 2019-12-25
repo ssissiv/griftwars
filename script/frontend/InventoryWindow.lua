@@ -25,7 +25,20 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
 	end
 
 	for i, obj in self.agent:GetInventory():Items() do 
-		ui.Selectable( tostring(obj) )
+        local txt
+        if obj:IsEquipped() then
+            txt = loc.format( "[E] {1}", obj:GetName() )
+        else
+            txt = obj:GetName()
+        end
+
+		if ui.Selectable( txt, self.selected_obj == obj ) then
+            self.selected_obj = obj
+            self.viewer:RegenVerbs( "object" )
+        end
+        if self.selected_obj == obj then
+            screen:RenderPotentialVerbs( ui, self.viewer, "object", obj )
+        end
 	end
 
     ui.End()

@@ -23,10 +23,12 @@ function Sleep:GetDetailsDesc( viewer )
 end
 
 
-function Sleep.CollectInteractions( agent, verbs )
-	local home = agent:GetLocation():GetAspect( Feature.Home )
-	if home and home:GetHomeOwner() == agent then
-		verbs:AddVerb( Verb.Sleep( agent ))
+function Sleep.CollectVerbs( verbs, agent, obj )
+	if obj == nil then
+		local home = agent:GetLocation():GetAspect( Feature.Home )
+		if home and home:GetHomeOwner() == agent then
+			verbs:AddVerb( Verb.Sleep( agent ))
+		end
 	end
 end
 

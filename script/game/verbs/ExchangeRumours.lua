@@ -20,11 +20,11 @@ ExchangeRumours.NONE_MSG =
 	"{1.Id} is here chatting up {2.id}.",
 }
 
-function ExchangeRumours.CollectInteractions( actor, verbs )
+function ExchangeRumours.CollectVerbs( verbs, actor )
 	if actor.location and actor:HasAspect( Skill.RumourMonger ) then
 		local obj = actor:GetFocus()
 		if obj and obj:GetFocus() == actor and obj:HasAspect( Skill.RumourMonger ) then
-			table.insert( verbs, Verb.ExchangeRumours( actor, obj ))
+			verbs:AddVerb( Verb.ExchangeRumours( actor, obj ))
 		end
 	end
 end

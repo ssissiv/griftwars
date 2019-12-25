@@ -11,8 +11,6 @@ function Location:OnSpawn( world )
 	if self.contents then
 		for i, v in ipairs( self.contents ) do
 			world:SpawnAgent( v )
-			assert( v.name )
-			print( v, self )
 		end
 	end
 end
@@ -74,9 +72,11 @@ function Location:RemoveAgent( agent )
 	self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, agent )
 end
 
-function Location:OnCollectVerbs( event_name, agent, verbs )
-	for i, exit in ipairs( self.exits ) do
-		verbs:AddVerb( Verb.LeaveLocation( agent, exit:GetDest( self )))
+function Location:OnCollectVerbs( event_name, actor, verbs, ... )
+	if select( "#", ... ) == 0 then
+		for i, exit in ipairs( self.exits ) do
+			verbs:AddVerb( Verb.LeaveLocation( actor, exit:GetDest( self )))
+		end
 	end
 end
 

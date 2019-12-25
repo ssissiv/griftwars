@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"agent = t",
-			"print(t:CanInteract(agent))",
 			"print(tostr(world.pause))",
 			"print(puppet)",
 			"print(player)",
@@ -33,7 +31,9 @@ return {
 			"print(player:GetAspect( t ))",
 			"print(player:GetAspect( \"foo\" ))",
 			"print(player:GetAspect( t ))",
-			"print(player:GetAspect( t ), t)"
+			"print(player:GetAspect( t ), t)",
+			"DBG(CLASSES)",
+			"puppet:GetInventory():AddItem( Weapon.Dirk() )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

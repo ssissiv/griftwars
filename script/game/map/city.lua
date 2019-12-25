@@ -85,29 +85,35 @@ function City:ConnectShops()
 		if room:HasAspect( Feature.Home ) then
 			--
 		else
-			local shop = Location()
-			shop:SetImage( assets.LOCATION_BGS.SHOP )
-			shop:Connect( room )
+			local shop_room = Location()
+			shop_room:SetImage( assets.LOCATION_BGS.SHOP )
+			shop_room:Connect( room )
 			local adj = self.adjectives:PickName()
 			local noun = self.nouns:PickName()
+			local stock = {}
 
 			local shop_type = table.pick( SHOP_TYPE )
 			if shop_type == SHOP_TYPE.GENERAL then
 				local name = loc.format( "The {1} {2} General Store", adj, noun )
-				shop:SetDetails( name, "A general store." )
+				shop_room:SetDetails( name, "A general store." )
 
 			elseif shop_type == SHOP_TYPE.FOOD then
 				local name = loc.format( "The {1} {2} Restaurant", adj, noun )
-				shop:SetDetails( name, "A restaurant." )
+				shop_room:SetDetails( name, "A restaurant." )
 
 			elseif shop_type == SHOP_TYPE.EQUIPMENT then
 				local name = loc.format( "The {1} {2} Weapons n Arms", adj, noun )
-				shop:SetDetails( name, "An equipment store." )
+				shop_room:SetDetails( name, "An equipment store." )
+				table.insert( stock, Weapon.Dirk() )
 			end
 
 			local shopkeep = Agent.Shopkeeper()
-			shopkeep:GetAspect( Aspect.Shopkeep ):AssignShop( shop )
-			shopkeep:WarpToLocation( shop )
+			shopkeep:WarpToLocation( shop_room )
+			local shop = shopkeep:GetAspect( Aspect.Shopkeep )
+			shop:AssignShop( shop_room )
+			for i, obj in ipairs( stock ) do
+				shop:AddShopItem( obj )
+			end
 		end
 	end
 end

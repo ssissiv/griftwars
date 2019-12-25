@@ -39,6 +39,6 @@ function Job:GetName()
 	return self.name or self._classname
 end
 
-function Job:OnCollectVerbs( event_name, agent, actions )
-	actions:AddVerb( Verb.WorkJob( agent, self ))
+function Job:OnCollectVerbs( event_name, actor, verbs )
+	verbs:AddVerb( Verb.WorkJob( actor, self ))
 end

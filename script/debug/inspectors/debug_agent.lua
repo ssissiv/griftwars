@@ -32,15 +32,20 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		puppet:Acquaint( self.agent )
 	end
 
-	if ui.CollapsingHeader( "Potential Verbs" ) then
-		for i, verb in self.agent:PotentialVerbs() do
-			panel:AppendTable( ui, verb )
-		end
-	end
-
 	if ui.CollapsingHeader( "Verbs" ) then
 		for i, verb in self.agent:Verbs() do
 			verb:RenderDebugPanel( ui, panel, dbg )
+		end
+	end
+
+	if ui.CollapsingHeader( "Potential Verbs" ) then
+		for id, verbs in pairs( self.agent.potential_verbs ) do
+			ui.Bullet( id )
+			ui.Text( id )
+			
+			for j, verb in verbs:Verbs() do
+				verb:RenderDebugPanel( ui, panel, dbg )
+			end
 		end
 	end
 

@@ -86,12 +86,12 @@ require "game/aspects/Home"
 
 require "game/objects/Jerky"
 require "game/objects/Creds"
+require "game/objects/Dirk"
 
 --------------------------------------------------------------------
 -- Verbs
 
 require "game/verbs/Idle"
-require "game/verbs/Hail"
 require "game/verbs/Inspect"
 require "game/verbs/scrounge"
 require "game/verbs/LeaveLocation"
@@ -104,6 +104,8 @@ require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
 require "game/verbs/Strategize"
 require "game/verbs/WorkJob"
+
+require "game/verbs/EquipObject"
 
 require "game/characters/Scavenger"
 require "game/characters/Collector"

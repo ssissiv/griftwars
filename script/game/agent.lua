@@ -11,7 +11,7 @@ function Agent:init()
 	self.flags = {}
 	self.stats = {}
 	self.sense_log = {} -- array of strings
-	self.potential_verbs = VerbContainer()
+	self.potential_verbs = {}
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
 	self.viz = AgentViz()
@@ -118,44 +118,37 @@ function Agent:SetLeader( leader )
 	self.leader = leader
 end
 
-function Agent:CollectPotentialVerbs( force )
-	local now = self.world:GetDateTime()
-	if not force then
-		if now <= (self.verb_time or 0) then
-			return
+function Agent:RegenVerbs( id )
+	if id then
+		if self.potential_verbs[ id ] then
+			self.potential_verbs[ id ]:SetDirty()
+		end
+	else
+		for id, verbs in pairs( self.potential_verbs ) do
+			verbs:SetDirty()
 		end
 	end
-
-	-- FIXME: figure out a way to avoid churning this search.
-	self.verb_time = now + 1
-
-	-- if actor == nil or actor == self then
-	-- 	verbs = self.potential_verbs
-	-- 	table.clear( verbs )
-	-- else
-	-- 	assert( verbs )
-	-- end
-
-	self.potential_verbs:ClearVerbs()
-	self:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self.potential_verbs )
-
-	Verb.RecurseSubclasses( nil, function( class )
-		if class.CollectInteractions then
-			class.CollectInteractions( self, self.potential_verbs )
-		end
-	end )
-
-	return self.potential_verbs
 end
 
-function Agent:GetPotentialVerbs()
-	self:CollectPotentialVerbs()
-	return self.potential_verbs
+function Agent:CollectPotentialVerbs( id, ... )
+	local verbs = self.potential_verbs[ id ]
+	if verbs == nil then
+		verbs = VerbContainer( id )
+		self.potential_verbs[ id ] = verbs
+	end
+
+	verbs:CollectVerbs( self, ... )
+
+	return verbs
 end
 
-function Agent:PotentialVerbs()
-	self:CollectPotentialVerbs()
-	return self.potential_verbs:Verbs()
+function Agent:GetPotentialVerbs( id, ... )
+	return self:CollectPotentialVerbs( id, ... )
+end
+
+function Agent:PotentialVerbs( id, ... )
+	local verbs = self:CollectPotentialVerbs( id, ... )
+	return verbs:Verbs()
 end
 
 function Agent:SetDetails( name, desc, gender )
@@ -249,6 +242,7 @@ function Agent:Acquaint( agent )
 	if self.memory and not self:IsAcquainted( agent ) then
 		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
 		agent:RegenerateLocTable( self )
+		self:RegenVerbs()
 
 		if self:IsPuppet() then
 			self.world.nexus:ShowAgentDetails( self, agent )
@@ -311,7 +305,7 @@ function Agent:WarpToLocation( location )
 		self.location = nil
 	end
 
-	self.verb_time = nil
+	self:RegenVerbs()
 
 	if location then
 		self.location = location
@@ -517,7 +511,7 @@ function Agent:SetFocus( focus )
 
 	-- Focus probably changes verb eligibility.
 	self:CancelInvalidVerbs()
-	self.verb_time = nil
+	self:RegenVerbs()
 
 	-- print( "CHANGE FOCUS", self, self.focus )
 	self:BroadcastEvent( AGENT_EVENT.FOCUS_CHANGED, prev_focus, self.focus )
@@ -548,7 +542,7 @@ function Agent:OnReceivedFocus( other )
 			self:SetFocus( other )
 		end
 	end
-	self.verb_time = nil
+	self:RegenVerbs()
 end
 
 function Agent:GetSocialNode()
