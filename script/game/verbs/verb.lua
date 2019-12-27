@@ -6,6 +6,10 @@ function Verb:init( actor, obj )
 	self.obj = obj
 end
 
+function Verb:EqualVerb( verb )
+	return self.actor == verb.actor and self.obj == verb.obj
+end
+
 function Verb:GetWorld()
 	return self.actor.world
 end
@@ -70,6 +74,12 @@ end
 function Verb:CanDo( ... )
 	if self.coro then
 		return false, "Already executing"
+	end
+
+	for i, verb in self.actor:Verbs() do
+		if verb:EqualVerb( self ) then
+			return false, "Already executing copy"
+		end
 	end
 
 	local ok, reason = self:CanInteract( ... )
@@ -211,7 +221,7 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 			self:Cancel()
 		end
 	else
-		local ok, reason = self:CanInteract( self.actor )
+		local ok, reason = self:CanDo( self.actor )
 		if ok then
 			ui.TextColored( 0, 1, 0, 1, reason or "OK" )
 		else

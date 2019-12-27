@@ -1,5 +1,7 @@
 local Assistant = class( "Job.Assistant", Job )
 
+Assistant.salary = 5
+
 function Assistant:OnInit()
 	self:SetShiftHours( 8, 16 )
 end

@@ -204,7 +204,7 @@ function OfferJob:CanInteract( actor )
 	for i, req in self.job:TrainingReqs() do
 		local ok, reason = req:IsSatisfied( actor )
 		if not ok then
-			return false, reason
+			return false, reason or "Training requirements"
 		end
 	end
 

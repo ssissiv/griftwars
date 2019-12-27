@@ -9,6 +9,10 @@ function Interact:init( actor, aspect )
 	self.interaction = aspect
 end
 
+function Interact:EqualVerb( verb )
+	return self.actor == verb.actor and self.interaction == verb.interaction
+end
+
 function Interact:GetDesc()
 	return tostring(self.interaction)
 end
@@ -49,5 +53,5 @@ function Interact:Interact( actor )
 end
 
 function Interact:__tostring()
-	return string.format( "Interact: %s", tostring(self.interaction))
+	return string.format( "[Interact: %s]", tostring(self.interaction))
 end

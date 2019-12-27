@@ -4,7 +4,6 @@ TODO
 * JOBS.
 	- leaving
 	- getting fired
-	- NPC hires
 	- salary, job verbs, ...
 
 * Show time in current vocation/avocation.
@@ -50,6 +49,8 @@ LOCALES:
 
 BEHAVIOUR:
 	* Should generating Behaviours use POtentialVerb set?  THere is some redundancy when specifying potential verbs via COllectVerbs, and having to manually add a Behaviour verb in the character def.  Having two requirements makes potential verbs inflexible.
+	* Does the normal Behaviour AI run for the player, and the player simply *selects* what should be done?
+	
 	
 	figure out how behaviours run in parallel without stepping on eachothers toes.
 	* Think of behaviour as a 'fourier analysis'. Start with the basic 'spine' of

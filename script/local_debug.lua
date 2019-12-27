@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(a:CheckPrivacy( t, PRIVACY.ID ))",
-			"print( now )",
-			"print(t:CanAct())",
-			"print(t:CanInteract( t.actor ))",
-			"puppet:GainAspect( Skill.Scrounge() )",
 			"player:GainAspect( Skill.Scrounge() )",
 			"puppet:GainAspect( Skill.Scrounge() )",
 			"print( table.unpack( { 1, nil, 3 } ))",
@@ -33,7 +28,12 @@ return {
 			"print( #world.agents)",
 			"print(t:GetLocation())",
 			"print(world.adjectives:PickName())",
-			"DBG(world.adjectives)"
+			"DBG(world.adjectives)",
+			"world:SetPuppet( player )",
+			"print(t._class)",
+			"print(t._classname)",
+			"print(t:CanDo(t.actor))",
+			"print(t.actor)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

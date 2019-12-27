@@ -246,11 +246,11 @@ function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )
 		local ok, details = verb:CanDo( agent, ... )
 		local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
 
-		if agent:IsBusy() then
-			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-			details = "You are already busy."
+		-- if agent:IsBusy() then
+		-- 	ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+		-- 	details = "You are already busy."
 
-		elseif not ok then
+		if not ok then
 			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
 			details = details or "Can't do."
 
