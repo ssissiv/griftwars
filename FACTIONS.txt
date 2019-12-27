@@ -1,0 +1,26 @@
+FACTIONS
+
+Cerberus
+- Security corp for hire
+- Cerberus Black: cyber sec division
+- Have: intel ,money, hi tech gadgetry, trained fighters
+
+Venture Corp
+- bank like entity gives large loans to other factions
+
+Lumin Corp
+-	provides power to city
+-	has lumin power plant, but it's ancient and always needs new material
+-	Lumin Corp R&D divions responsible for converting raw liquid lumin to globars
+
+Drillers
+-	Set up at meteoritze sites to drlil for lumin
+-	sell to the highest bidder
+-	defend their sites fiercely
+
+Hunters
+-	a decentralized clan-like org of independent hunters who track and slay sludgemen
+
+Unity
+-	Citizen union fighting for citizen rights and quality of life
+-	Vizor: strong arm shadow faction of Unity, deployd when diplomacy fails.

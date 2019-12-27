@@ -21,12 +21,18 @@ function Shopkeeper:init()
 	local shop = self:GainAspect( Aspect.Shopkeep() )
 	shop:AddShopItem( Object.Jerky() )
 
-	local job = Job.Assistant( self )
-	self:GainAspect( Interaction.OfferJob( job ))
+	self.job = Job.Assistant( self )
+	self:GainAspect( Interaction.OfferJob( self.job ))
 end
 
 function Shopkeeper:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	local name = world:GetAspect( Aspect.NamePool ):PickName()
 	self:SetDetails( name, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
+
+	if math.random() < 0.5 then
+		local assistant = Agent.Citizen()
+		world:SpawnAgent( assistant )
+		assistant:GainAspect( self.job )
+	end
 end

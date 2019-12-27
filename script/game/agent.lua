@@ -37,7 +37,6 @@ function Agent:OnSpawn( world )
 	end
 
 	world:Log( "Spawned: {1}", self )
-	print( self.name )
 end
 
 function Agent:SetFlags( ... )

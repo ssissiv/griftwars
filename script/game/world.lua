@@ -9,8 +9,14 @@ function World:init()
 	self.stats = {}
 	self.relationships = {}
 
+	self.limbo = Location()
+	self.limbo:SetDetails( "Limbo", "Implementation room." )
+	self:SpawnLocation( self.limbo )
+
 	self.history = self:GainAspect( Aspect.History() )
-	self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
+	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
+	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )
+	self.nouns = Aspect.NamePool( "data/nouns.txt" )
 end
 
 function World:Log( fmt, ... )
@@ -23,7 +29,7 @@ function World:Start()
 end
 
 function World:SpawnLocation( location )
-	location:OnSpawn( self )
+	self:SpawnEntity( location )
 	table.insert( self.locations, location )
 end
 
@@ -39,12 +45,17 @@ function World:UnregisterStatValue( stat )
 	table.arrayremove( self.stats, stat )
 end
 
+function World:GetLimbo()
+	return self.limbo
+end
+
 function World:SpawnAgent( agent, location )
-	agent:OnSpawn( self )
+	self:SpawnEntity( agent )
+
 	if location then
 		agent:WarpToLocation( location )
-	else
-		assert( agent.location )
+	elseif not agent.location then
+		agent:WarpToLocation( agent:GetHome() or self.limbo )
 	end
 
 	table.insert( self.agents, agent )
@@ -64,7 +75,7 @@ end
 
 function World:SpawnRelationship( rel )
 	assert( is_instance( rel, Relationship ))
-	rel:OnSpawn( self )
+	self:SpawnEntity( rel )
 
 	table.insert( self.relationships, rel )
 end

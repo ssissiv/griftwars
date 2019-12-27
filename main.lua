@@ -51,6 +51,7 @@ require "game/VerbContainer"
 
 require "game/map/Line"
 require "game/map/City"
+require "game/map/CorpHQ"
 
 require "game/relationships/Relationship"
 require "game/relationships/ArmitageGerin"
@@ -80,6 +81,7 @@ require "game/aspects/behaviour"
 
 require "game/aspects/features"
 require "game/aspects/Home"
+require "game/aspects/Shop"
 
 --------------------------------------------------------------------
 -- Objects
@@ -107,6 +109,7 @@ require "game/verbs/WorkJob"
 
 require "game/verbs/EquipObject"
 
+require "game/characters/Citizen"
 require "game/characters/Scavenger"
 require "game/characters/Collector"
 require "game/characters/MilitiaCaptain"

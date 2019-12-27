@@ -274,13 +274,14 @@ local _ENUM_META =
 }
 
 function MakeEnum(args)
-    local enum = {}
+    local enum, array = {}, {}
     for k,v in ipairs(args) do
         assert(type(v) == "string", "Enums come from strings")
         enum[v] = v
+        array[v] = k
     end
     setmetatable( enum, _ENUM_META )
-    return enum
+    return enum, array
 end
 
 function AppendEnum(enum, args)

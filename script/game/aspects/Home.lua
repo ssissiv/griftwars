@@ -26,7 +26,9 @@ local Home = class( "Feature.Home", Feature )
 
 function Home:init( home_owner )
 	Feature.init( self )
-	self.home_owner = home_owner
+	if home_owner then
+		self:SetHomeOwner( home_owner )
+	end
 end
 
 function Home:OnSpawn( world )

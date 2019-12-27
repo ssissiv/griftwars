@@ -17,6 +17,7 @@ local assets =
 		INSIDE = "inside.png",
 		SHOP = "shop.png",
 		JUNKYARD_STRIP = "junkyard_strip.png",
+		HALLWAY = "inside.png",
 	},
 
 	LoadAll = function( self )

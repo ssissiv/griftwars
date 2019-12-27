@@ -40,6 +40,10 @@ function Line:RoomCount()
 	return #self.rooms
 end
 
+function Line:RandomRoom()
+	return table.arraypick( self.rooms )
+end
+
 function Line:RoomAt( i )
 	return self.rooms[ i ]
 end

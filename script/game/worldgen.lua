@@ -19,6 +19,7 @@ function WorldGen:GenerateWorld()
 	
 	local shop = Location()
 	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
+	shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
 	shop:Connect( city:RandomRoom() )
 	
 	local dens = Location()
@@ -45,9 +46,25 @@ function WorldGen:GenerateWorld()
 
 	self:GenerateMilitary( world )
 
+	--------------------------------------------------------------------------------------
+	-- Shops!
+
+	world:CreateBucketByAspect( Feature.Shop )
+	local bucket = world:GetBucket( Feature.Shop )
+	for i, ent in ipairs( bucket ) do
+		assert( ent:IsSpawned())
+		ent:GetAspect( Feature.Shop ):SpawnShopOwner()
+	end
+	world:RemoveBucket( Feature.Shop )
+	
+
+	--------------------------------------------------------------------------------------
+
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, start )
 	start:GainAspect( Feature.Home( player ) )
+
+	--------------------------------------------------------------------------------------
 
 	return self.world
 end

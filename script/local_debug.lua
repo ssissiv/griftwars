@@ -2,17 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(tostr(world.pause))",
-			"print(puppet)",
-			"print(player)",
-			"print(world:GetPuppet())",
-			"print(world:GetPuppet():IsBusy( VERB_FLAGS.MOVEMENT ))",
-			"print(t)",
-			"kevin = t",
-			"print(kevin:IsAcquainted(t))",
-			"kevin:Acquaint( t )",
-			"print(kevin:IsAcquainted(t))",
-			"print(kevin.memory)",
 			"a = t",
 			"print(a:CheckPrivacy( PRIVACY.ID, t ))",
 			"print(a,t)",
@@ -33,7 +22,18 @@ return {
 			"print(player:GetAspect( t ))",
 			"print(player:GetAspect( t ), t)",
 			"DBG(CLASSES)",
-			"puppet:GetInventory():AddItem( Weapon.Dirk() )"
+			"puppet:GetInventory():AddItem( Weapon.Dirk() )",
+			"print( is_class( t ))",
+			"print( t._class )",
+			"print( Feature.Home )",
+			"print( Feature.Home._class )",
+			"print( t._class )",
+			"print( t._class._class )",
+			"print( Feature.Home )",
+			"print(tostr(Feature.Home))",
+			"print( tostr(t._class))",
+			"print(t._class, Feature.Home)",
+			"print( #world.agents)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

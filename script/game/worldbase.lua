@@ -8,6 +8,7 @@ function WorldBase:init()
 	self.scheduled_events = {}
 
 	self.buckets = {}
+	self.entities = {}
 	self.pause = {}
 end
 
@@ -137,13 +138,36 @@ function WorldBase:AdvanceTime( dt )
 	self:CheckScheduledEvents()
 end
 
+function WorldBase:SpawnEntity( ent )
+	ent:OnSpawn( self )
+	assert( not table.contains( self.entities, ent ))
+	table.insert( self.entities, ent )
+end
+
+function WorldBase:DespawnEntity( ent )
+	ent:OnDespawn( self )
+	table.arrayremove( self.entities, ent )
+end
+
+function WorldBase:CreateBucketByAspect( aspect )
+	assert( is_class( aspect, Aspect ))
+	for i, ent in ipairs( self.entities ) do
+		if ent:HasAspect( aspect ) then
+			self:RegisterToBucket( aspect, ent )
+		end
+	end
+
+	return self.buckets[ aspect ]
+end
+
 function WorldBase:RegisterToBucket( key, obj )
+	assert( is_class( key ))
 	local bucket = self.buckets[ key ]
 	if bucket == nil then
 		bucket = {}
 		self.buckets[ key ] = bucket
 	end
-	table.insert( bucket, obj )
+	table.insert_unique( bucket, obj )
 end
 
 function WorldBase:UnregisterFromBucket( key, obj )
@@ -151,8 +175,16 @@ function WorldBase:UnregisterFromBucket( key, obj )
 	table.arrayremove( bucket, obj )
 end
 
+function WorldBase:RemoveBucket( key )
+	self.buckets[ key ] = nil
+end
+
 function WorldBase:Bucket( key )
 	return pairs( self.buckets[ key ] or table.empty )
+end
+
+function WorldBase:GetBucket( key )
+	return self.buckets[ key ]
 end
 
 function WorldBase:UpdateWorld( dt )

@@ -2,11 +2,9 @@ local City = class( "WorldGen.City" )
 
 function City:init()
 	self.rooms = {}
-	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )
-	self.nouns = Aspect.NamePool( "data/nouns.txt" )
 	self.home_count = 0
 
-	local left = WorldGen.Line( math.random( 8, 12 ), 0, 1 )
+	local left = WorldGen.Line( math.random( 10, 16 ), 0, 1 )
 	left:SetDetails( "The Junkyard West", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	left:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 	for i, room in left:Rooms() do
@@ -22,7 +20,7 @@ function City:init()
 	end
 	table.arrayadd( self.rooms, top.rooms )
 	
-	local right = WorldGen.Line( math.random( 8, 12 ), 0, 1 )
+	local right = WorldGen.Line( math.random( 10, 16 ), 0, 1 )
 	right:SetDetails( "The Junkyard East", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	right:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 	for i, room in right:Rooms() do
@@ -63,12 +61,13 @@ function City:init()
 	self:ConnectHomes( top, 2 )
 	self:ConnectHomes( right, 3 )
 	self:ConnectHomes( bottom, 4 )
+	self:ConnectCorps()
 	self:ConnectShops()
 end
 
 function City:ConnectHomes( line, block )
 	for i, room in line:Rooms() do
-		if math.random() < 0.3 then
+		if math.random() < 0.4 then
 			local home = Location()
 			home:SetDetails( loc.format( "Residence #{1}{2}", block, i ), "This is somebody's residence." )
 			home:SetImage( assets.LOCATION_BGS.INSIDE )
@@ -78,6 +77,13 @@ function City:ConnectHomes( line, block )
 	end
 end
 
+function City:ConnectCorps()
+	for i = 1, 2 do
+		local corp = WorldGen.CorpHQ()
+		corp:GetEntrance():Connect( self:RandomRoom() )
+		corp:SetCorpName( "Venture Corp" )
+	end
+end
 
 function City:ConnectShops()
 	for i = 1, 10 do
@@ -87,33 +93,8 @@ function City:ConnectShops()
 		else
 			local shop_room = Location()
 			shop_room:SetImage( assets.LOCATION_BGS.SHOP )
+			shop_room:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
 			shop_room:Connect( room )
-			local adj = self.adjectives:PickName()
-			local noun = self.nouns:PickName()
-			local stock = {}
-
-			local shop_type = table.pick( SHOP_TYPE )
-			if shop_type == SHOP_TYPE.GENERAL then
-				local name = loc.format( "The {1} {2} General Store", adj, noun )
-				shop_room:SetDetails( name, "A general store." )
-
-			elseif shop_type == SHOP_TYPE.FOOD then
-				local name = loc.format( "The {1} {2} Restaurant", adj, noun )
-				shop_room:SetDetails( name, "A restaurant." )
-
-			elseif shop_type == SHOP_TYPE.EQUIPMENT then
-				local name = loc.format( "The {1} {2} Weapons n Arms", adj, noun )
-				shop_room:SetDetails( name, "An equipment store." )
-				table.insert( stock, Weapon.Dirk() )
-			end
-
-			local shopkeep = Agent.Shopkeeper()
-			shopkeep:WarpToLocation( shop_room )
-			local shop = shopkeep:GetAspect( Aspect.Shopkeep )
-			shop:AssignShop( shop_room )
-			for i, obj in ipairs( stock ) do
-				shop:AddShopItem( obj )
-			end
 		end
 	end
 end
