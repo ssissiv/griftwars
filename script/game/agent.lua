@@ -14,6 +14,8 @@ function Agent:init()
 	self.potential_verbs = {}
 	self.inventory = Inventory( self )
 	self.social_node = SocialNode( self )
+	self:GainAspect( Trait.Memory() )
+
 	self.viz = AgentViz()
 	self.mental_state = MSTATE.ALERT
 

@@ -11,7 +11,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 	
 	if not self.agent:IsPuppet() then
 		if self.agent:GetLocation() then
-			if ui.Button( "Warp To" ) then
+			if ui.Button( loc.format( "Warp To {1}", self.agent:GetLocation()) ) then
 				self.agent.world:GetPuppet():MoveToAgent( self.agent )
 			end
 		end
@@ -19,6 +19,10 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		ui.SameLine( 0, 10 )
 		if ui.Button( "Switch To" ) then
 			self.agent.world:SetPuppet( self.agent )
+		end
+	else
+		if self.agent:GetLocation() then
+			panel:AppendTable( ui, self.agent:GetLocation() )
 		end
 	end
 

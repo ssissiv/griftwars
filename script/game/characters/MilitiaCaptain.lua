@@ -24,7 +24,6 @@ end
 
 function MilitiaCaptain:OnSpawn( world )
 	Agent.OnSpawn( self, world )
-	local name = world:GetAspect( Aspect.NamePool ):PickName()
-	self:SetDetails( name, "Commander of the militia.", GENDER.MALE )
+	self:SetDetails( nil, "Commander of the militia.", GENDER.MALE )
 end
 

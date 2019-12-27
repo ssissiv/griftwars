@@ -43,8 +43,7 @@ end
 
 function Collector:OnSpawn( world )
 	Agent.OnSpawn( self, world )
-	local name = world:GetAspect( Aspect.NamePool ):PickName()
-	self:SetDetails( name, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
+	self:SetDetails( nil, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
 end
 
 

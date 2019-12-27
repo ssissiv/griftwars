@@ -9,7 +9,10 @@ end
 
 function Shopkeep:AssignShop( shop )
 	assert( shop == nil or is_instance( shop, Location ))
-	self.shop = shop
+	if shop ~= self.shop then
+		self.shop = shop
+		shop:GetAspect( Feature.Shop ):AssignShopOwner( self.owner )
+	end
 end
 
 function Shopkeep:OnGainAspect( owner )

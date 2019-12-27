@@ -1,7 +1,7 @@
 local Creds = class( "Object.Creds", Object )
 
 function Creds:GetName()
-	return "Credits"
+	return loc.format( "{1} {1:Credit|Credits}", self.value )
 end
 
 function Creds:__tostring()

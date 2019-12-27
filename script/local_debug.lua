@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"a = t",
-			"print(a:CheckPrivacy( PRIVACY.ID, t ))",
-			"print(a,t)",
 			"print(a:CheckPrivacy( t, PRIVACY.ID ))",
 			"print( now )",
 			"print(t:CanAct())",
@@ -33,7 +30,10 @@ return {
 			"print(tostr(Feature.Home))",
 			"print( tostr(t._class))",
 			"print(t._class, Feature.Home)",
-			"print( #world.agents)"
+			"print( #world.agents)",
+			"print(t:GetLocation())",
+			"print(world.adjectives:PickName())",
+			"DBG(world.adjectives)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

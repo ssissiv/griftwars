@@ -27,12 +27,12 @@ end
 
 function Shopkeeper:OnSpawn( world )
 	Agent.OnSpawn( self, world )
-	local name = world:GetAspect( Aspect.NamePool ):PickName()
-	self:SetDetails( name, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
+	self:SetDetails( nil, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )
 
 	if math.random() < 0.5 then
 		local assistant = Agent.Citizen()
 		world:SpawnAgent( assistant )
 		assistant:GainAspect( self.job )
+		DBG(assistant)
 	end
 end

@@ -76,7 +76,6 @@ end
 
 function Scavenger:OnSpawn( world )
 	Agent.OnSpawn( self, world )
-	local name = world:GetAspect( Aspect.NamePool ):PickName()
-	self:SetDetails( name, "Here's a guy.", GENDER.MALE )
+	self:SetDetails( nil, "Here's a guy.", GENDER.MALE )
 end
 

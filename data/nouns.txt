@@ -8,3 +8,11 @@ Shield
 Visor
 Bone
 Skull
+Flagon
+Helmet
+Slab
+Tail
+Haunch
+Eye
+Fjord
+Glass

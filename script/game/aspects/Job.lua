@@ -6,8 +6,21 @@ function Job:init( employer )
 	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectVerbs )
 end
 
+function Job:GetLocation()
+	error( tostring(self) ) -- Define location for job.
+end
+
 function Job:OnGainAspect( owner )
 	Aspect.OnGainAspect( self, owner )
+
+	owner:Acquaint( self.employer )
+	self.employer:Acquaint( owner )
+
+	local behaviour = owner:GetAspect( Aspect.Behaviour )
+	if behaviour then
+		behaviour:RegisterVerb( Verb.WorkJob( owner, self ))
+	end
+
 	self:GetWorld():SchedulePeriodicFunction( ONE_HOUR, self.PaySalary, self )
 end
 

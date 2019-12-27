@@ -330,6 +330,9 @@ function GameScreen:RenderSenses( ui, agent )
 				r, g, b = 1, 1, 0.4
 			end
 
+			-- Keep things around along multiplier
+			duration = duration * 5
+
 			if duration then
 				a = 1.0 - clamp( elapsed / duration, 0, 1.0 )
 			else

@@ -42,6 +42,15 @@ MSTATE = MakeEnum
 	"DEAD",
 }
 
+GENERATION, GENERATION_ARRAY = MakeEnum
+{
+	"BABY",
+	"CHILD",
+	"YOUTH",
+	"ADULT",
+	"ELDER",
+}
+
 OPINION_STRINGS =
 {
 	[ OPINION.FEAR ] =
