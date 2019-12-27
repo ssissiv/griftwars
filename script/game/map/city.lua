@@ -4,7 +4,7 @@ function City:init()
 	self.rooms = {}
 	self.home_count = 0
 
-	local left = WorldGen.Line( math.random( 10, 16 ), 0, 1 )
+	local left = WorldGen.Line( math.random( 12, 16 ), 0, 1 )
 	left:SetDetails( "The Junkyard West", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	left:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 	for i, room in left:Rooms() do
@@ -20,7 +20,7 @@ function City:init()
 	end
 	table.arrayadd( self.rooms, top.rooms )
 	
-	local right = WorldGen.Line( math.random( 10, 16 ), 0, 1 )
+	local right = WorldGen.Line( math.random( 12, 16 ), 0, 1 )
 	right:SetDetails( "The Junkyard East", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	right:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 	for i, room in right:Rooms() do

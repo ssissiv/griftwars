@@ -1,6 +1,8 @@
-
 --------------------------------------------------------------
-
+-- Agent-side model of the Shopkeeper job.
+-- Links to: Feature.Shop (Location-side model of this job)
+-- Owner gains: Interaction.BuyFromShop (so that agents can interact with this shopkeeper)
+-- 
 local Shopkeep = class( "Aspect.Shopkeep", Aspect )
 
 function Shopkeep:init()

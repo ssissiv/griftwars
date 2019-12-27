@@ -70,7 +70,9 @@ end
 
 function Interaction:SatisfyReqs( actor )
 	local tokens = actor:GetAspect( Aspect.TokenHolder )
-	tokens:CommitReqTokens( self )
+	if tokens then
+		tokens:CommitReqTokens( self )
+	end
 
 	if not self.can_repeat then
 		if self.satisfied_by == nil then
