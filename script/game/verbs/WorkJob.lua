@@ -12,7 +12,12 @@ function WorkJob:GetDesc()
 end
 
 function WorkJob:UpdatePriority( actor, priority )
-	return PRIORITY.OBLIGATION
+	local world = actor.world
+	if self.job:IsTimeForShift( world:GetDateTime() ) then
+		return PRIORITY.OBLIGATION
+	else
+		return 0
+	end
 end
 
 function WorkJob:Interact( actor )
@@ -22,7 +27,7 @@ function WorkJob:Interact( actor )
 		Msg:Speak( actor, "Here for work." )
 	end
 
-	self:YieldForTime( ONE_HOUR )
+	self:YieldForTime( self.job:GetShiftDuration() )
 
 	Msg:Speak( actor, "Clocking out." )
 end

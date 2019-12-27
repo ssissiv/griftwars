@@ -4,6 +4,9 @@ function Job:init( employer )
 	assert( is_instance( employer, Agent ))
 	self.employer = employer
 	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectVerbs )
+	if self.OnInit then
+		self:OnInit()
+	end
 end
 
 function Job:GetLocation()
@@ -22,6 +25,28 @@ function Job:OnGainAspect( owner )
 	end
 
 	self:GetWorld():SchedulePeriodicFunction( ONE_HOUR, self.PaySalary, self )
+end
+
+function Job:SetShiftHours( start_time, end_time )
+	self.start_time = start_time
+	self.end_time = end_time
+end
+
+function Job:IsTimeForShift( datetime )
+	if self.start_time and self.end_time then
+		local tod = Calendar.GetTimeOfDay( datetime )
+		return tod >= self.start_time and tod < self.end_time
+	else
+		return true
+	end
+end
+
+function Job:GetShiftDuration()
+	if self.start_time and self.end_time then
+		return self.end_time - self.start_time
+	else
+		return ONE_DAY
+	end
 end
 
 function Job:PaySalary()

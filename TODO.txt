@@ -49,6 +49,8 @@ LOCALES:
 	Flesh Road - for all that stuff.
 
 BEHAVIOUR:
+	* Should generating Behaviours use POtentialVerb set?  THere is some redundancy when specifying potential verbs via COllectVerbs, and having to manually add a Behaviour verb in the character def.  Having two requirements makes potential verbs inflexible.
+	
 	figure out how behaviours run in parallel without stepping on eachothers toes.
 	* Think of behaviour as a 'fourier analysis'. Start with the basic 'spine' of
 	the behaviour, the basest default, eg. "Diurnal".

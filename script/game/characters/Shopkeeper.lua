@@ -1,5 +1,9 @@
 local Assistant = class( "Job.Assistant", Job )
 
+function Assistant:OnInit()
+	self:SetShiftHours( 8, 16 )
+end
+
 function Assistant:GetLocation()
 	return self.employer:GetLocation()
 end
