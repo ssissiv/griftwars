@@ -2,9 +2,10 @@ TODO
 ====
 
 * JOBS.
+	- how to assure the player works the jobs they're hired for?
 	- leaving
 	- getting fired
-	- salary, job verbs, ...
+	- salary, job verbs, (side effects)
 
 * Show time in current vocation/avocation.
 

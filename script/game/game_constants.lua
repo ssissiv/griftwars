@@ -115,11 +115,16 @@ SHOP_TYPE = MakeEnum{
 	"EQUIPMENT",
 }
 
+-- Verb priorities, which determine behaviour.
 PRIORITY =
 {
+	-- Life & death situation, or something the Agent would prioritize over life & death.
 	EMERGENCY = 100,
+	-- Something an Agent really should be doing, like a job.
 	OBLIGATION = 50,
+	-- A habit that takes place when any Obligations are satisfied.
 	HABIT = 30,
+	-- Low priority verbs, only if nothing else is going on.
 	FUN = 25,
 }
 

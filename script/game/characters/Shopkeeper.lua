@@ -25,7 +25,6 @@ local Shopkeeper = class( "Agent.Shopkeeper", Agent )
 function Shopkeeper:init()
 	Agent.init( self )
 	local shop = self:GainAspect( Aspect.Shopkeep() )
-	shop:AddShopItem( Object.Jerky() )
 
 	self.job = Job.Assistant( self )
 	self:GainAspect( Interaction.OfferJob( self.job ))
@@ -39,6 +38,5 @@ function Shopkeeper:OnSpawn( world )
 		local assistant = Agent.Citizen()
 		world:SpawnAgent( assistant )
 		assistant:GainAspect( self.job )
-		DBG(assistant)
 	end
 end

@@ -19,14 +19,25 @@ function Job:OnGainAspect( owner )
 	owner:Acquaint( self.employer )
 	self.employer:Acquaint( owner )
 
+	self.hire_time = self:GetWorld():GetDateTime()
+
 	local behaviour = owner:GetAspect( Aspect.Behaviour )
 	if behaviour then
 		behaviour:RegisterVerb( Verb.WorkJob( owner, self ))
 	end
 
-	if self.salary then
-		self:GetWorld():SchedulePeriodicFunction( ONE_DAY, self.PaySalary, self, self.salary )
+	local salary = self:GetSalary()
+	if salary then
+		self:GetWorld():SchedulePeriodicFunction( ONE_DAY, self.PaySalary, self, salary )
 	end
+end
+
+function Job:GetHireTime()
+	return self.hire_time
+end
+
+function Job:GetSalary()
+	return self.salary
 end
 
 function Job:SetShiftHours( start_time, end_time )

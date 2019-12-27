@@ -33,6 +33,10 @@ function Agent:OnSpawn( world )
 		self.name = world:GetAspect( Aspect.NamePool ):PickName()
 	end
 	
+	if self.gender == nil then
+		self.gender = math.random() < 0.5 and GENDER.MALE or GENDER.FEMALE
+	end
+	
 	local home = world:FindVacantHome()
 	if home then
 		home:SetHomeOwner( self )

@@ -13,7 +13,7 @@ end
 
 function WorkJob:UpdatePriority( actor, priority )
 	local world = actor.world
-	if self.job:IsTimeForShift( world:GetDateTime() ) then
+	if self.job:IsTimeForShift( world:GetDateTime() ) or self:IsDoing() then
 		return PRIORITY.OBLIGATION
 	else
 		return 0
@@ -21,13 +21,23 @@ function WorkJob:UpdatePriority( actor, priority )
 end
 
 function WorkJob:Interact( actor )
-	self.travel:DoVerb( actor, self.job:GetLocation() )
+	-- Track job location and stay around there.
+	while self.job:IsTimeForShift( self:GetWorld():GetDateTime() ) do
+		self.travel:DoVerb( actor, self.job:GetLocation() )
 
-	if actor:GetLocation() == self.job:GetLocation() then
-		Msg:Speak( actor, "Here for work." )
+		if actor:GetLocation() == self.job:GetLocation() then
+			Msg:Speak( actor, "Here for work." )
+
+			self:YieldForTime( self.job:GetShiftDuration() )
+
+			if not self:IsCancelled() then
+				actor:GainXP( 5 )
+			end
+
+		else
+			self:YieldForTime( HALF_HOUR )			
+		end
 	end
-
-	self:YieldForTime( self.job:GetShiftDuration() )
 
 	Msg:Speak( actor, "Clocking out." )
 end
