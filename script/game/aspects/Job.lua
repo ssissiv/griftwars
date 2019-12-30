@@ -25,11 +25,6 @@ function Job:OnGainAspect( owner )
 	if behaviour then
 		behaviour:RegisterVerb( Verb.WorkJob( owner, self ))
 	end
-
-	local salary = self:GetSalary()
-	if salary then
-		self:GetWorld():SchedulePeriodicFunction( ONE_DAY, self.PaySalary, self, salary )
-	end
 end
 
 function Job:GetHireTime()
@@ -63,6 +58,9 @@ function Job:GetShiftDuration()
 end
 
 function Job:PaySalary( salary )
+	if salary == nil then
+		salary = self:GetSalary()
+	end
 	self.owner:GetInventory():DeltaMoney( salary )
 	Msg:Echo( self.owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
 		self.employer:LocTable( self.owner ), self:GetName(), salary )

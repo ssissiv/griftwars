@@ -32,6 +32,7 @@ function WorkJob:Interact( actor )
 
 			if not self:IsCancelled() then
 				actor:GainXP( 5 )
+				self.job:PaySalary()
 			end
 
 		else
