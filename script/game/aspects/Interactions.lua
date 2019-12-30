@@ -5,6 +5,10 @@ function Interaction:init()
 	self.reqs = {}
 end
 
+function Interaction:GetDesc()
+	return tostring(self)
+end
+
 function Interaction:GetToolTip()
 	local tt = {}
 	for i, req in ipairs( self.reqs ) do
@@ -283,5 +287,32 @@ function LearnRelationship:Interact( actor, dice )
 	self.owner:AddKnownBy( actor )
 end
 
+-------------------------------------------------------------------------
 
+local WantMoney = class( "Interaction.WantMoney", Interaction )
+
+function WantMoney:GetDesc()
+	return loc.format( "Give {1.Id} money", self.owner:LocTable() )
+end
+
+function WantMoney:CanInteract( actor )
+	if actor:GetInventory():GetMoney() < 5 then
+		return false, "Not enough credits"
+	end
+
+	return WantMoney._base.CanInteract( self, actor )
+end
+
+function WantMoney:Interact( actor )
+	-- Give money.
+	Verb.GiveMoney.Interact( nil, actor, self.owner, 5 )
+
+	-- You've earned Trust!
+	local tokens = actor:GetAspect( Aspect.TokenHolder )
+	if tokens then
+		
+	end
+
+	self:StartCooldown( 3 * ONE_HOUR )
+end
 

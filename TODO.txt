@@ -1,6 +1,16 @@
 TODO
 ====
 
+Generic "Helping" verb that lets you mine opinion for time.  THe NPC loot box spits out stuff, but its diminishing returns.
+
+
+* Venture Corp
+	- give CEO salary
+	- generate hierarchy
+
+* Quests: to gain Trust.
+	- Tokens for specific people?	
+
 * JOBS.
 	- how to assure the player works the jobs they're hired for?
 	- leaving
@@ -16,8 +26,12 @@ ECON-CENTRIC AGENTS:
 	Some must satisfy their entire requirement at once, while others can be served out piecemeal.
 	
 INTEL:
-	* How much to bribe this person? Who you can bribe?
+	* Revealed by "Rumors".
+	  * How much to bribe this person? Who you can bribe?
 	* Wanna make someone disappear? Need permission. (all deaths within a region...)
+
+	* Knowledge about Agents (PRIVACY flags) decay except for the 3 you are allowed to mark as "Important"
+	* Friends are automatically "Important" 
 
 
 NEW AGENTS:

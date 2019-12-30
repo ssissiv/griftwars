@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"player:GainAspect( Skill.Scrounge() )",
 			"puppet:GainAspect( Skill.Scrounge() )",
 			"print( table.unpack( { 1, nil, 3 } ))",
 			"print( table.maxn( { 1, nil, 3 } ))",
@@ -33,7 +32,8 @@ return {
 			"print(t._class)",
 			"print(t._classname)",
 			"print(t:CanDo(t.actor))",
-			"print(t.actor)"
+			"print(t.actor)",
+			"player:GetInventory():DeltaMoney(5)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

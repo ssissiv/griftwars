@@ -14,7 +14,7 @@ function Interact:EqualVerb( verb )
 end
 
 function Interact:GetDesc()
-	return tostring(self.interaction)
+	return self.interaction:GetDesc()
 end
 
 function Interact:RenderTooltip( ui, viewer )

@@ -72,6 +72,7 @@ function Scavenger:init()
 	self:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	self:GainAspect( Interaction.Acquaint( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
+	self:GainAspect( Interaction.WantMoney() )
 end
 
 function Scavenger:OnSpawn( world )

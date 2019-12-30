@@ -24,6 +24,11 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		if self.agent:GetLocation() then
 			panel:AppendTable( ui, self.agent:GetLocation() )
 		end
+
+		ui.SameLine( 0, 10 )
+		if ui.Button( "Switch To Player" ) then
+			self.agent.world:SetPuppet( self.agent.world:GetPlayer() )
+		end
 	end
 
 	local home = self.agent:GetHome()

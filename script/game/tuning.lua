@@ -7,3 +7,7 @@ WEALTH =
 	HIGH = 10000,
 	RICH = 100000,
 }
+
+
+SLEEP_SPEED_RATE = 64.0
+
