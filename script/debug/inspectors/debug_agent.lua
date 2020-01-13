@@ -49,11 +49,13 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	if ui.CollapsingHeader( "Potential Verbs" ) then
 		for id, verbs in pairs( self.agent.potential_verbs ) do
-			ui.Bullet( id )
-			ui.Text( id )
-			
-			for j, verb in verbs:Verbs() do
-				verb:RenderDebugPanel( ui, panel, dbg )
+			if ui.TreeNode( id ) then
+				ui.Text( id )
+				
+				for j, verb in verbs:Verbs() do
+					verb:RenderDebugPanel( ui, panel, dbg )
+				end
+				ui.TreePop()
 			end
 		end
 	end

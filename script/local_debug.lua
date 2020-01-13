@@ -2,18 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"puppet:GainAspect( Skill.Scrounge() )",
-			"print( table.unpack( { 1, nil, 3 } ))",
-			"print( table.maxn( { 1, nil, 3 } ))",
-			"print( table.unpack( { 1, nil, 3 }, 3 ))",
-			"print(t)",
-			"print(t:GetLocation(), t:GetHome())",
-			"print(player:GetAspect( t ))",
-			"print(player:GetAspect( \"foo\" ))",
-			"print(player:GetAspect( t ))",
-			"print(player:GetAspect( t ), t)",
-			"DBG(CLASSES)",
-			"puppet:GetInventory():AddItem( Weapon.Dirk() )",
 			"print( is_class( t ))",
 			"print( t._class )",
 			"print( Feature.Home )",
@@ -33,7 +21,19 @@ return {
 			"print(t._classname)",
 			"print(t:CanDo(t.actor))",
 			"print(t.actor)",
-			"player:GetInventory():DeltaMoney(5)"
+			"player:GetInventory():DeltaMoney(5)",
+			"print( t )",
+			"print( t:IsFriend( puppet ))",
+			"print( t:IsFriends( puppet ))",
+			"print( t:IsAquainted( puppet ))",
+			"print( t:IsAcquainted( puppet ))",
+			"print( t:IsFriend( puppet ))",
+			"print( t:IsFriensd( puppet ))",
+			"print( t:IsFriends( puppet ))",
+			"print( t:IsAcquainted( puppet ))",
+			"t:RegenVerbs()",
+			"print(t:IsFriends(puppet))",
+			"t:RegenVerbs()"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

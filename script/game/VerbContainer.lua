@@ -17,8 +17,10 @@ function VerbContainer:CollectVerbs( actor, ... )
 
 	self.dirty = false
 
+	-- Event registrants...
 	actor:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self, ... )
 
+	-- Static VerbClasses...
 	if VERB_CLASSES == nil then
 		VERB_CLASSES = {}
 		for id, class in pairs( CLASSES ) do
@@ -29,7 +31,25 @@ function VerbContainer:CollectVerbs( actor, ... )
 	end
 
 	for i, class in ipairs( VERB_CLASSES ) do
-		class.CollectVerbs( self, actor, ... )
+		class.CollectVerbs( nil, self, actor, ... )
+	end
+
+	local location = actor:GetLocation()
+	if location then
+		for i, obj in location:Contents() do
+			if is_instance( obj, Agent ) then
+				self:CollectVerbsFromAgent( obj, actor, ... )
+			end 
+		end
+	end
+end
+
+function VerbContainer:CollectVerbsFromAgent( agent, actor, ... )
+	-- Verbs get a say.
+	for i, verb in agent:Verbs() do
+		if verb.CollectVerbs then
+			verb:CollectVerbs( self, actor, ... )
+		end
 	end
 end
 

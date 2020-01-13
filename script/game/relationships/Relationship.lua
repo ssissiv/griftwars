@@ -3,8 +3,6 @@ local Relationship = class( "Relationship", Entity )
 function Relationship:init()
 	Entity.init( self )
 
-	self:GainAspect( Interaction.LearnRelationship() )
-
 	self.agents = {}
 end
 

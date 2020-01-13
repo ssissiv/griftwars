@@ -24,6 +24,14 @@ function Memory:Engrams()
 	return pairs( self.engrams )
 end
 
+function Memory:HasEngram( pred )
+	for i, engram in ipairs( self.engrams ) do
+		if pred( engram ) then
+			return true
+		end
+	end
+end
+
 function Memory:CheckPrivacy( target, flag )
 	local pr_flags = 0
 	for i, engram in ipairs( self.engrams ) do

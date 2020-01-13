@@ -1,8 +1,10 @@
 TODO
 ====
 
-Generic "Helping" verb that lets you mine opinion for time.  THe NPC loot box spits out stuff, but its diminishing returns.
+Acquaint: Is BEFRIENDED.
+Network screen, where you can UNFRIEND.  See limited slot FRIENDS.
 
+Support Helping Scavenger.
 
 * Venture Corp
 	- give CEO salary
@@ -31,10 +33,50 @@ INTEL:
 	* Wanna make someone disappear? Need permission. (all deaths within a region...)
 
 	* Knowledge about Agents (PRIVACY flags) decay except for the 3 you are allowed to mark as "Important"
-	* Friends are automatically "Important" 
+	* Friends are automatically "Important"
+	* You can only mark so many things as "Important", and the rest will decay.
 
-
+MINIGAME:
+	Operation Overkill II press-key-timing for verbs.
+	NEEDED?!
+	
 NEW AGENTS:
+
+	T1:
+	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
+		Gain Trust as you Scavenge with them. (+trust, +coins / minor items)
+		Trust Level 1: DIPLOMACY
+		Trust Level 2: Introduction to T1 SHOPKEEP (-2 DIPLO REQ w/ Shopkeep)
+
+	SNOOP: Reveal PRIVACY flags about local T1s, famous ppl.
+		Gain Trust when you pay them. (+trust, -coins)
+	RANGERS: follow, fight.
+		Gain Trust for each shared kill. (+trust, -health)
+		Gain Intel about other RANGERS.
+		Gain: Combat skill.
+	WORKER: gets you a job.
+		Gain trust and wages. +trust, +money, +trust w/ T2 boss, +trust w/ other employees.
+
+	T2:
+		SHOPKEEP:
+			Gain Trust as you trade with them.
+			Trust Level 1: Bonus to trade.
+			Trust Level 2: 
+
+		WORKER BOSS.
+
+		HEAD RANGERS (T2 Rangers):
+			Fight to T2 Enemies. (+trust per kill)
+			Trust lvls: T2 Combat skills, (T2 GEAR as monster loot), Become HEAD RANGER.
+			Can: Learn all RANGER identities, Recruit RANGERS.
+			Relations: P
+
+		HUBS (T2 SNOOP): Has underling SNOOPs.
+			Trust when info is brought.
+			Gain: Hacking skill.
+
+
+
 	Controllers:
 		* Regional warlords.
 		* "Mayors" of specific areas -- have all the top connections.

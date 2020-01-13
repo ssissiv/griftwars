@@ -21,7 +21,7 @@ function Interact:RenderTooltip( ui, viewer )
 	self.interaction:RenderTooltip( ui, viewer )
 end
 
-function Interact.CollectVerbs( verbs, actor, obj )
+function Interact:CollectVerbs( verbs, actor, obj )
 	local focus = actor:GetFocus()
 	if focus and focus == obj then
 		for i, aspect in focus:Aspects() do

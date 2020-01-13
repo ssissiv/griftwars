@@ -30,7 +30,7 @@ function Scavenge:init( actor )
 end
 
 function Scavenge:GetDetailsDesc( viewer )
-	if viewer:CheckPrivacy( self.owner, PRIVACY.INTENT ) then
+	if viewer:CheckPrivacy( self.actor, PRIVACY.INTENT ) then
 		return "Scavenging for valuables"
 	else
 		return "???"
@@ -47,13 +47,22 @@ function Scavenge:UpdatePriority( actor, priority )
 	end
 end
 
+function Scavenge:CollectVerbs( verbs, actor )
+	if self and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
+		assert( is_instance( actor, Agent ), tostring(actor) )
+		verbs:AddVerb( Verb.Help( actor, self ))
+	end
+end
+
 function Scavenge:Interact( actor )
-	if math.random() < 0.4 then
-		self.scrounge:DoVerb( actor )
-	elseif math.random() < 0.5 then
-		self.idle:DoVerb( actor )
-	else
-		self.leave:DoVerb( actor )
+	while not self.cancelled do
+		if math.random() < 0.4 then
+			self.scrounge:DoVerb( actor )
+		elseif math.random() < 0.5 then
+			self.idle:DoVerb( actor )
+		else
+			self.leave:DoVerb( actor )
+		end
 	end
 end
 
@@ -69,10 +78,9 @@ function Scavenger:init()
 		Verb.Scavenge( self )
 	}
 	self:GainAspect( Skill.Scrounge() )
-	self:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
+	-- self:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	self:GainAspect( Interaction.Acquaint( CR1 ) )
-	self:GainAspect( Interaction.Chat() )
-	self:GainAspect( Interaction.WantMoney() )
+	-- self:GainAspect( Interaction.Chat() )
 end
 
 function Scavenger:OnSpawn( world )

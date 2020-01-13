@@ -4,7 +4,10 @@ function EquipObject:GetDesc()
 	return "Un/Equip Object"
 end
 
-function EquipObject.CollectVerbs( verbs, actor, obj )
+function EquipObject:CollectVerbs( verbs, actor, obj )
+	if not self then
+		return false
+	end
 	if not is_instance( obj, Object ) then
 		return false
 	end

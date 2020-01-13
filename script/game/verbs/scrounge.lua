@@ -38,7 +38,6 @@ function Scrounge:GetShortDesc( viewer )
 	end
 end
 
-
 function Scrounge:CanInteract( actor )
 	if not self:IsDoing() then
 		if actor:IsBusy( self.FLAGS ) then
@@ -77,6 +76,10 @@ function Scrounge:Interact( actor )
 		actor:GainXP( 1 )
 		
 		if math.random() < 0.5 then
+			break
+		end
+		if self.owner and self.owner.actor:GetLocation() ~= actor:GetLocation() then
+			print( "Owner", self.owner.actor, " not with us!" ,actor )
 			break
 		end
 	end

@@ -1,6 +1,6 @@
 local Inspect = class( "Verb.Inspect", Verb )
 
-function Inspect.CollectVerbs( verbs, actor, obj )
+function Inspect:CollectVerbs( verbs, actor, obj )
 	if obj and actor:GetFocus() == obj then
 		verbs:AddVerb( Verb.Inspect( actor, obj ))
 	end

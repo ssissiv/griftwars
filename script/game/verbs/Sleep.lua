@@ -23,7 +23,7 @@ function Sleep:GetDetailsDesc( viewer )
 end
 
 
-function Sleep.CollectVerbs( verbs, agent, obj )
+function Sleep:CollectVerbs( verbs, agent, obj )
 	if obj == nil then
 		local home = agent:GetLocation():GetAspect( Feature.Home )
 		if home and home:GetHomeOwner() == agent then

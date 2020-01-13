@@ -269,10 +269,19 @@ function Agent:CanSee( obj )
 	return false
 end
 
+function Agent:HasEngram( pred )
+	if self.memory then
+		return self.memory:HasEngram( pred )
+	end
+
+	return false
+end
 
 function Agent:CheckPrivacy( obj, pr_flags )
 	if self.memory then
-		return self.memory:CheckPrivacy( obj, pr_flags )
+		if self.memory:CheckPrivacy( obj, pr_flags ) then
+			return true
+		end
 	end
 	if self.relationships then
 		for i, r in ipairs( self.relationships ) do
@@ -290,6 +299,11 @@ function Agent:_AddRelationship( r )
 		self.relationships = {}
 	end
 	table.insert( self.relationships, r )
+	
+	for i, agent in r:Agents() do
+		agent:RegenerateLocTable( self )
+	end
+	self:RegenVerbs()
 end
 
 function Agent:CountRelationships()
@@ -298,6 +312,26 @@ end
 
 function Agent:Relationships()
 	return ipairs( self.relationships or table.empty )
+end
+
+function Agent:IsFriends( other )
+	if self.relationships then
+		for i, r in ipairs( self.relationships ) do
+			if r:HasAgent( other ) and is_instance( r, Relationship.Friend ) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+function Agent:Befriend( other )
+	self.world:SpawnRelationship( Relationship.Friend( self, other ))
+end
+
+function Agent:Unfriend( friend )
+	self.memory:AddEngram( Engram.Unfriended( agent ))
 end
 
 function Agent:WarpToLocation( location )

@@ -137,9 +137,16 @@ function Acquaint:init( cr )
 	self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
 end
 
+function Acquaint:CanInteract( actor )
+	if self.owner:HasEngram( Engram.IsUnfriended ) then
+		return false, "Unfriended"
+	end
+	return Interaction.CanInteract( self, actor )
+end
+
 function Acquaint:Interact( actor )
 	-- We know the actor.
-	if actor:Acquaint( self.owner ) then
+	if actor:Befriend( self.owner ) then
 		Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
 	end
 end
@@ -268,23 +275,6 @@ function BuyFromShop:Interact( actor )
 	if item then
 		self.owner:GetAspect( Aspect.Shopkeep ):SellToBuyer( item, actor )
 	end
-end
-
------------------------------------------------------------------------------------
--- Learn about Relationship
-
-local LearnRelationship = class( "Interaction.LearnRelationship", Interaction )
-
-function LearnRelationship:CanInteract( actor )
-	if self.owner:HasAgent( actor ) or self.owner:IsKnownBy( actor ) then
-		return false, "Relationship already known"
-	end
-
-	return LearnRelationship._base.CanInteract( self, actor )
-end
-
-function LearnRelationship:Interact( actor, dice )
-	self.owner:AddKnownBy( actor )
 end
 
 -------------------------------------------------------------------------

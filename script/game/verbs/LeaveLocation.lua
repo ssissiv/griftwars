@@ -73,10 +73,22 @@ function LeaveLocation:Interact( actor )
 
 	self:YieldForTime( ONE_MINUTE )
 
+	local prev_location = actor:GetLocation()
+
 	actor:DeltaStat( STAT.FATIGUE, 5 )
 	actor:WarpToLocation( dest )
 
 	Msg:Action( self.ENTER_STRINGS, actor, dest )
+
+	-- TODO: Followers don't lose fatigue, or take time to leave.
+	local leader = actor:GetAspect( Trait.Leader )
+	if leader then
+		for i, follower in leader:Followers() do
+			if follower:GetLocation() == prev_location then
+				follower:WarpToLocation( dest )
+			end
+		end
+	end
 end
 
 ---------------------------------------------------------------

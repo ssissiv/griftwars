@@ -54,6 +54,7 @@ require "game/map/City"
 require "game/map/CorpHQ"
 
 require "game/relationships/Relationship"
+require "game/relationships/Friend"
 require "game/relationships/ArmitageGerin"
 require "game/relationships/Subordinate"
 
@@ -93,12 +94,13 @@ require "game/objects/Dirk"
 --------------------------------------------------------------------
 -- Verbs
 
+require "game/verbs/Give"
+
 require "game/verbs/Idle"
 require "game/verbs/Inspect"
 require "game/verbs/scrounge"
 require "game/verbs/LeaveLocation"
 require "game/verbs/Travel"
-require "game/verbs/ExchangeRumours"
 require "game/verbs/Deliver"
 require "game/verbs/Sleep"
 require "game/verbs/Interact"
@@ -106,6 +108,7 @@ require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
 require "game/verbs/Strategize"
 require "game/verbs/WorkJob"
+require "game/verbs/Help"
 
 require "game/verbs/EquipObject"
 
