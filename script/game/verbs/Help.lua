@@ -47,11 +47,16 @@ function Help:Interact( actor )
 	Msg:Echo( actor, "You begin to help {1.Id} out.", self.obj.actor:LocTable( actor ) )
 
 	self.obj:AddChildVerb( self )
-	
+
 	while true do
 		self.travel:DoVerb( actor )
 
 		self:YieldForTime( 1 * ONE_MINUTE )
+
+		if actor:IsPuppet() then
+			self.ACT_RATE = self.obj.actor:CalculateTimeSpeed()
+			self:GetWorld():RefreshTimeSpeed()
+		end
 
 		if self:IsCancelled() then
 			Msg:Echo( actor, "You stop helping." )

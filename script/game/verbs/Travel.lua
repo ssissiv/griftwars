@@ -52,7 +52,7 @@ function Travel:Interact( actor, dest )
 
 		local path = pather:CalculatePath()
 		if path and not actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
-			Msg:Action( self.EXIT_STRINGS, actor, path[2] )
+			Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 			actor:WarpToLocation( path[2] )
 			Msg:Action( self.ENTER_STRINGS, actor, path[2] )
 		end

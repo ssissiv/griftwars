@@ -33,12 +33,16 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	local home = self.agent:GetHome()
 	if home then
+		ui.Text( "Home:" )
+		ui.SameLine( 0, 10 )
 		panel:AppendTable( ui, home )
 	end
 	
 	local puppet = self.agent.world:GetPuppet()
-	if not puppet:IsAcquainted( self.agent ) and ui.Button( "Acquaint" ) then
-		puppet:Acquaint( self.agent )
+	if puppet ~= self.agent then
+		if not puppet:IsAcquainted( self.agent ) and ui.Button( "Acquaint" ) then
+			puppet:Acquaint( self.agent )
+		end
 	end
 
 	if ui.CollapsingHeader( "Verbs" ) then
@@ -47,7 +51,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
-	if ui.CollapsingHeader( "Potential Verbs" ) then
+	if puppet == self.agent and ui.CollapsingHeader( "Potential Verbs" ) then
 		for id, verbs in pairs( self.agent.potential_verbs ) do
 			if ui.TreeNode( id ) then
 				ui.Text( id )

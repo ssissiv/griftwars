@@ -21,6 +21,8 @@
 
 local Scavenge = class( "Verb.Scavenge", Verb )
 
+Scavenge.ACT_RATE = 8.0
+
 function Scavenge:init( actor )
 	Scavenge._base.init( self, actor )
 
@@ -47,8 +49,8 @@ function Scavenge:UpdatePriority( actor, priority )
 	end
 end
 
-function Scavenge:CollectVerbs( verbs, actor )
-	if self and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
+function Scavenge:CollectVerbs( verbs, actor, obj )
+	if self and obj == self.actor and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
 		assert( is_instance( actor, Agent ), tostring(actor) )
 		verbs:AddVerb( Verb.Help( actor, self ))
 	end

@@ -222,9 +222,7 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 		end
 	else
 		local ok, reason = self:CanDo( self.actor )
-		if ok then
-			ui.TextColored( 0, 1, 0, 1, reason or "OK" )
-		else
+		if not ok then
 			ui.TextColored( 1, 0, 0, 1, reason or "Invalid" )
 		end
 	end

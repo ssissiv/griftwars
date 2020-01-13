@@ -44,6 +44,12 @@ function Scrounge:CanInteract( actor )
 			return false, "Busy"
 		end
 	end
+
+	local obj = actor:GetLocation():GetAspect( Aspect.ScroungeTarget )
+	if not obj then
+		return false, "No scrounging here"
+	end
+
 	return self._base.CanInteract( self, actor )
 end
 
@@ -60,14 +66,9 @@ function Scrounge:Interact( actor )
 		end
 		
 		if self:CheckDC() then
-			local obj = actor:GetLocation():GetAspect( Aspect.ScroungeTarget )
-			if obj then
-				local coins = math.random( 1, 3 )
-				Msg:Echo( actor, "You find {1#money}!", coins )
-				actor:GetInventory():DeltaMoney( coins )
-			else
-				Msg:Echo( actor, "You think you see a coin, but it turns out to be chewing gum." )
-			end
+			local coins = math.random( 1, 3 )
+			Msg:Echo( actor, "You find {1#money}!", coins )
+			actor:GetInventory():DeltaMoney( coins )
 		else
 			Msg:Echo( actor, "You don't find anything useful." )
 			Msg:ActToRoom( "{1.Id} mutters something unhappily.", actor )

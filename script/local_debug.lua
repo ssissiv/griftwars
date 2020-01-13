@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( is_class( t ))",
-			"print( t._class )",
 			"print( Feature.Home )",
 			"print( Feature.Home._class )",
 			"print( t._class )",
@@ -33,7 +31,9 @@ return {
 			"print( t:IsAcquainted( puppet ))",
 			"t:RegenVerbs()",
 			"print(t:IsFriends(puppet))",
-			"t:RegenVerbs()"
+			"t:RegenVerbs()",
+			"print(t:IsFriends(puppet))",
+			"print(t:CalculateTimeSpeed())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
