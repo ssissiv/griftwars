@@ -118,7 +118,7 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetName() )
     ui.SameLine( 0, 5 )
     if ui.SmallButton( "?" ) then
-		self.world.nexus:ShowAgentDetails( puppet, puppet )
+		self.nexus:ShowAgentDetails( puppet, puppet )
 	end
     ui.SameLine( 0, 20 )
     ui.Text( "HP: 3/3" )
@@ -365,6 +365,11 @@ function GameScreen:KeyPressed( key )
 			self:AddWindow( self.inventory_window )
 		end
 		return true
+
+	elseif key == "c" then
+		local puppet = self.world:GetPuppet()
+		self.nexus:ShowAgentDetails( puppet, puppet )
+
 	elseif key == "f" then
 		self.world:GetPuppet():SetFocus()
 		return true

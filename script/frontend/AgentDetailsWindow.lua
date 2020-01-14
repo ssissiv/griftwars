@@ -49,6 +49,16 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
 		ui:NewLine()
 
+		if self.agent == self.viewer and self.agent:GetMemory() then
+			if ui.TreeNode( "Engrams" ) then
+				for i, engram in self.agent:GetMemory():Engrams() do
+					ui.Bullet()
+					ui.Text( tostr(engram) )
+				end
+				ui.TreePop()
+			end
+		end
+
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
 		end

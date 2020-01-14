@@ -3,10 +3,6 @@ return {
 		docked = true,
 		history = {
 			"print( Feature.Home )",
-			"print( Feature.Home._class )",
-			"print( t._class )",
-			"print( t._class._class )",
-			"print( Feature.Home )",
 			"print(tostr(Feature.Home))",
 			"print( tostr(t._class))",
 			"print(t._class, Feature.Home)",
@@ -33,7 +29,11 @@ return {
 			"print(t:IsFriends(puppet))",
 			"t:RegenVerbs()",
 			"print(t:IsFriends(puppet))",
-			"print(t:CalculateTimeSpeed())"
+			"print(t:CalculateTimeSpeed())",
+			"print(t:GetWorld())",
+			"print(t.owner)",
+			"print(Trait)",
+			"print(Trait.OnSpawn, Aspect.OnSpawn)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
