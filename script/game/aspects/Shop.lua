@@ -2,7 +2,7 @@
 -- Marks a location used as a Shop front.
 --
 -- Locations have: Feature.Shop (shop_owner: Agent)
--- Agents have: Aspect.Shopkeep (shop: Location)
+-- Agents have: Job.Shopkeep (shop: Location)
 
 local Shop = class( "Feature.Shop", Feature )
 
@@ -15,7 +15,7 @@ function Shop:AssignShopOwner( agent )
 	assert( is_instance( agent, Agent ))
 	if agent ~= self.shop_owner then
 		self.shop_owner = agent
-		local shopkeep = agent:GetAspect( Aspect.Shopkeep )
+		local shopkeep = agent:GetAspect( Job.Shopkeep )
 		shopkeep:AssignShop( self.location )
 	end
 end
@@ -47,7 +47,7 @@ function Shop:SpawnShopOwner()
 	local shopkeep = Agent.Shopkeeper()
 	world:SpawnAgent( shopkeep, self.location )
 	
-	local shop = shopkeep:GetAspect( Aspect.Shopkeep )
+	local shop = shopkeep:GetAspect( Job.Shopkeep )
 	for i, obj in ipairs( stock ) do
 		shop:AddShopItem( obj )
 	end

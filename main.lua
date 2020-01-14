@@ -78,6 +78,7 @@ require "game/aspects/skills"
 require "game/aspects/Interactions"
 require "game/aspects/Leader"
 require "game/aspects/Shopkeep"
+require "game/aspects/Assistant"
 
 require "game/aspects/behaviour"
 

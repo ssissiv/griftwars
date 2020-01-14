@@ -237,7 +237,7 @@ function Agent:GetMemory()
 end
 
 function Agent:IsAcquainted( agent )
-	if not self:CheckPrivacy( agent, PRIVACY.ID ) then
+	if agent ~= self and not self:CheckPrivacy( agent, PRIVACY.ID ) then
 		return false
 	end
 	return true

@@ -3,10 +3,14 @@
 -- Links to: Feature.Shop (Location-side model of this job)
 -- Owner gains: Interaction.BuyFromShop (so that agents can interact with this shopkeeper)
 -- 
-local Shopkeep = class( "Aspect.Shopkeep", Aspect )
+local Shopkeep = class( "Job.Shopkeep", Job )
 
-function Shopkeep:init()
+function Shopkeep:OnInit()
 	self:RegisterHandler( AGENT_EVENT.LOCATION_CHANGED, self.OnLocationChanged )
+end
+
+function Shopkeep:GetName()
+	return loc.format( "Shopkeeper at the {1}", self.shop:GetTitle() )
 end
 
 function Shopkeep:AssignShop( shop )

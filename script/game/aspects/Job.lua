@@ -9,6 +9,10 @@ function Job:init( employer )
 	end
 end
 
+function Job:GetName()
+	return self.name or self._classname
+end
+
 function Job:GetLocation()
 	error( tostring(self) ) -- Define location for job.
 end
@@ -62,8 +66,13 @@ function Job:PaySalary( salary )
 		salary = self:GetSalary()
 	end
 	self.owner:GetInventory():DeltaMoney( salary )
-	Msg:Echo( self.owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
-		self.employer:LocTable( self.owner ), self:GetName(), salary )
+
+	if self.owner == self.employer then
+		Msg:Echo( self.owner, "You generated {3#money} as profit!", salary )
+	else
+		Msg:Echo( self.owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
+			self.employer:LocTable( self.owner ), self:GetName(), salary )
+	end
 end
 
 function Job:TrainingReqs()
@@ -81,10 +90,6 @@ function Job:Clone()
 	local clone = setmetatable( table.shallowcopy( self ), self._class )
 	clone.owner = nil -- Not transferrable.
 	return clone
-end
-
-function Job:GetName()
-	return self.name or self._classname
 end
 
 function Job:OnCollectVerbs( event_name, actor, verbs )

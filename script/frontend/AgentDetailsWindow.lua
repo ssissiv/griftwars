@@ -26,7 +26,8 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		if job then
 			ui.Text( "Job:" )
 			ui.SameLine( 0, 5 )
-			ui.Text( loc.format( "{1} for {2.Id}", job:GetName(), job.employer:LocTable( self.viewer )))
+			ui.Text( job:GetName() )
+
 			local salary = job:GetSalary()
 			if salary then
 				ui.Text( "  Salary:" )

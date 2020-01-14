@@ -273,7 +273,7 @@ function BuyFromShop:Interact( actor )
 	assert( actor )
 	local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )
 	if item then
-		self.owner:GetAspect( Aspect.Shopkeep ):SellToBuyer( item, actor )
+		self.owner:GetAspect( Job.Shopkeep ):SellToBuyer( item, actor )
 	end
 end
 

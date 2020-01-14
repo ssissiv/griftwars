@@ -13,7 +13,7 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 	local txt = loc.format( "{1.Id}'s Shop", self.owner:LocTable())
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
-    	local shopkeep = self.owner:GetAspect( Aspect.Shopkeep )
+    	local shopkeep = self.owner:GetAspect( Job.Shopkeep )
     	local money = self.buyer:GetInventory():GetMoney()
 
 		ui.Columns( 2 )

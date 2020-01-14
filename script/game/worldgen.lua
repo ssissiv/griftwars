@@ -28,7 +28,7 @@ function WorldGen:GenerateWorld()
 
 	local shopkeep = Agent.Shopkeeper()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
-	shopkeep:GetAspect( Aspect.Shopkeep ):AssignShop( shop )
+	shopkeep:GetAspect( Job.Shopkeep ):AssignShop( shop )
 	world:SpawnAgent( shopkeep, shop )
 
 	local collector = Agent.Collector()
