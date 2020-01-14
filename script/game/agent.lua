@@ -190,14 +190,14 @@ function Agent:GenerateLocTable( viewer )
 	if self.gender == GENDER.MALE then
 		t.gender = "male"
 		t.himher = "him"
-		t.hishers = "his"
+		t.hisher = "his"
 		t.heshe = "he"
 		t.HeShe = "He"
 
 	elseif self.gender == GENDER.FEMALE then
 		t.gender = "female"
 		t.himher = "her"
-		t.hishers = "hers"
+		t.hisher = "her"
 		t.heshe = "she"
 		t.HeShe = "She"
 

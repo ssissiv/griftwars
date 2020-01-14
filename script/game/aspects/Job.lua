@@ -39,16 +39,14 @@ function Job:UpdatePriority( actor, priority )
 end
 
 function Job:CalculateTimeSpeed()
-	local duration = self.job:GetShiftDuration()
+	local duration = self:GetShiftDuration()
 	return 64 * (duration / ONE_DAY)
 end
 
-function Job:OnGainAspect( owner )
-	Verb.OnGainAspect( self, owner )
 
-	owner:Acquaint( self.employer )
-	self.employer:Acquaint( owner )
-
+function Job:OnSpawn( world )
+	self.owner:Acquaint( self.employer )
+	self.employer:Acquaint( self.owner )
 	self.hire_time = self:GetWorld():GetDateTime()
 end
 
@@ -110,6 +108,7 @@ function Job:PaySalary( salary )
 			Msg:Echo( owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
 				self.employer:LocTable( owner ), self:GetName(), salary )
 		end
+		Msg:ActToRoom( "{1.Id} counts {1.hisher} earnings for the day.", owner )
 	end
 end
 

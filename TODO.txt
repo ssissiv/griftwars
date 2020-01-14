@@ -1,6 +1,23 @@
 TODO
 ====
 
+Location
+* Shop
+	.shop_owner -> Shopkeeper
+* Job
+* Assistant
+
+Shopkeeper
+* Job
+	.shop -> Shop
+	assistant_job
+
+Assistant
+* Job
+	.shop -> Shop
+	.employer = Shopkeeper
+
+	
 FIX shopkeepers addressing Assistants as customers
 
 Acquaint: Is BEFRIENDED.

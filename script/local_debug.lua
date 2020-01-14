@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( #world.agents)",
 			"print(t:GetLocation())",
 			"print(world.adjectives:PickName())",
 			"DBG(world.adjectives)",
@@ -33,7 +32,8 @@ return {
 			"print(t:IsWorking())",
 			"print(t:IsTimeForShift())",
 			"print(t:IsDoing())",
-			"print(t:IsWorking())"
+			"print(t:IsWorking())",
+			"print(t:GetLocation())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

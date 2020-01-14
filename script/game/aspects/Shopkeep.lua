@@ -28,9 +28,22 @@ function Shopkeep:AssignShop( shop )
 	end
 end
 
-function Shopkeep:OnGainAspect( owner )
-	Aspect.OnGainAspect( self, owner )
-	owner:GainAspect( Interaction.BuyFromShop() )
+function Shopkeep:OnSpawn( world )
+	Job.OnSpawn( self, world )
+
+	-- People can buy from us.
+	self.owner:GainAspect( Interaction.BuyFromShop() )
+
+	-- Sometimes we have assistants.
+	if math.random() < 0.5 then
+		self.assistant_job = Job.Assistant( self.owner )
+		self.owner:GainAspect( Interaction.OfferJob( self.assistant_job ))
+
+		local assistant = Agent.Citizen()
+		world:SpawnAgent( assistant )
+		assistant:GainAspect( self.assistant_job )
+		DBG(self.owner)
+	end
 end
 
 function Shopkeep:OnLocationChanged( event_name, agent, prev_location, location )
@@ -42,13 +55,22 @@ function Shopkeep:OnLocationChanged( event_name, agent, prev_location, location 
 	end
 end
 
+function Shopkeep:IsAssistant( agent )
+	if self.assistant_job then
+		return self.assistant_job.owner == agent
+	end
+	return false
+end
+
 function Shopkeep:OnLocationEvent( event_name, location, ... )
 	if event_name == LOCATION_EVENT.AGENT_ADDED and location == self.owner:GetLocation() and location == self.shop then
 		local agent = ...
-		if agent:Acquaint( self.owner ) then
-			Msg:Speak( self.owner, "Welcome, welcome! I'm {1.Id}." )
-		else
-			Msg:Speak( self.owner, "Good deals today." )
+		if not self:IsAssistant( agent ) then
+			if agent:Acquaint( self.owner ) then
+				Msg:Speak( self.owner, "Welcome, welcome! I'm {1.Id}." )
+			else
+				Msg:Speak( self.owner, "Good deals today." )
+			end
 		end
 	end
 end
