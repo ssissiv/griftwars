@@ -7,10 +7,15 @@ local Shopkeep = class( "Job.Shopkeep", Job )
 
 function Shopkeep:OnInit()
 	self:RegisterHandler( AGENT_EVENT.LOCATION_CHANGED, self.OnLocationChanged )
+	self:SetShiftHours( 8, 18 )
 end
 
 function Shopkeep:GetName()
 	return loc.format( "Shopkeeper at the {1}", self.shop:GetTitle() )
+end
+
+function Shopkeep:GetLocation()
+	return self.shop
 end
 
 function Shopkeep:AssignShop( shop )

@@ -8,7 +8,7 @@ ShortRest.ACT_DESC =
 	"{1.Id} is here resting.",
 }
 
-ShortRest.FLAGS = bit32.bor( VERB_FLAGS.ATTENTION, VERB_FLAGS.MOVEMENT )
+ShortRest.FLAGS = bit32.bor( VERB_FLAGS.MOVEMENT )
 
 function ShortRest:GetDesc()
 	return "Short rest"

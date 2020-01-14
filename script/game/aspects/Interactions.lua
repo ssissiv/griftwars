@@ -269,6 +269,16 @@ local BuyFromShop = class( "Interaction.BuyFromShop", Interaction )
 
 BuyFromShop.can_repeat = true -- This interaction can take place multiple times.
 
+function BuyFromShop:CanInteract( actor )
+	local job = self.owner:GetAspect( Job.Shopkeep )
+	local ok, reason = job:IsWorking()
+	if not ok then
+		return false, reason
+	end
+
+	return Interaction.CanInteract( self, actor )
+end
+
 function BuyFromShop:Interact( actor )
 	assert( actor )
 	local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )

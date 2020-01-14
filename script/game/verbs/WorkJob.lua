@@ -11,6 +11,14 @@ function WorkJob:GetDesc()
 	return loc.format( "Work job as {1}", self.job:GetName() )
 end
 
+function WorkJob:GetShortDesc( viewer )
+	if viewer == self.giver then
+		return "You are working."
+	else
+		return loc.format( "{1.Id} is here working.", self.actor:LocTable( viewer ))
+	end
+end
+
 function WorkJob:UpdatePriority( actor, priority )
 	local world = actor.world
 	if self.job:IsTimeForShift( world:GetDateTime() ) or self:IsDoing() then

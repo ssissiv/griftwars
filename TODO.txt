@@ -1,6 +1,8 @@
 TODO
 ====
 
+FIX shopkeepers addressing Assistants as customers
+
 Acquaint: Is BEFRIENDED.
 Network screen, where you can UNFRIEND.  See limited slot FRIENDS.
 

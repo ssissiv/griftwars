@@ -53,6 +53,19 @@ function Job:IsTimeForShift( datetime )
 	end
 end
 
+function Job:IsWorking()
+	if self.owner == nil then
+		return false, "No worker"
+	end
+	if not self:IsTimeForShift( self:GetWorld():GetDateTime() ) then
+		return false, "Not time for shift"
+	end
+	if self.owner:GetLocation() ~= self:GetLocation() then
+		return false, "Not at job location"
+	end
+	return true
+end
+
 function Job:GetShiftDuration()
 	if self.start_time and self.end_time then
 		return self.end_time - self.start_time
