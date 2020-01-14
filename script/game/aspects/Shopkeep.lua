@@ -5,6 +5,8 @@
 -- 
 local Shopkeep = class( "Job.Shopkeep", Job )
 
+Shopkeep.salary = 30
+
 function Shopkeep:OnInit()
 	self:RegisterHandler( AGENT_EVENT.LOCATION_CHANGED, self.OnLocationChanged )
 	self:SetShiftHours( 8, 18 )

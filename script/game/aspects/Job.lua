@@ -100,15 +100,16 @@ function Job:PaySalary( salary )
 	if salary == nil then
 		salary = self:GetSalary()
 	end
+	if salary then
+		local owner = self:GetOwner()
+		owner:GetInventory():DeltaMoney( salary )
 
-	local owner = self:GetOwner()
-	owner:GetInventory():DeltaMoney( salary )
-
-	if owner == self.employer then
-		Msg:Echo( owner, "You generated {3#money} as profit!", salary )
-	else
-		Msg:Echo( owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
-			self.employer:LocTable( owner ), self:GetName(), salary )
+		if owner == self.employer then
+			Msg:Echo( owner, "You generated {3#money} as profit!", salary )
+		else
+			Msg:Echo( owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
+				self.employer:LocTable( owner ), self:GetName(), salary )
+		end
 	end
 end
 
