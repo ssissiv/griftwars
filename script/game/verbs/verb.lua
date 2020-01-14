@@ -6,6 +6,10 @@ function Verb:init( actor, obj )
 	self.obj = obj
 end
 
+function Verb:CalculateTimeSpeed()
+	return self.ACT_RATE
+end
+
 function Verb:AddHelperVerb( helper )
 	assert( helper._class == Verb.Help )
 

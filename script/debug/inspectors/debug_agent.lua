@@ -31,11 +31,13 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
+	ui.Text( "Home:" )
+	ui.SameLine( 0, 10 )
 	local home = self.agent:GetHome()
 	if home then
-		ui.Text( "Home:" )
-		ui.SameLine( 0, 10 )
 		panel:AppendTable( ui, home )
+	else
+		ui.TextColored( 1, 0, 0, 1, "Homeless!" )
 	end
 	
 	local puppet = self.agent.world:GetPuppet()

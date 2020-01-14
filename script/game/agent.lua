@@ -453,7 +453,7 @@ function Agent:CalculateTimeSpeed()
 	local rate = 1.0
 	if self.verbs then
 		for i, verb in ipairs( self.verbs ) do
-			rate = math.max( verb.ACT_RATE or rate, rate )
+			rate = math.max( verb:CalculateTimeSpeed() or rate, rate )
 		end
 	end
 	return rate

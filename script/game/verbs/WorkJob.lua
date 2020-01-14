@@ -28,6 +28,18 @@ function WorkJob:UpdatePriority( actor, priority )
 	end
 end
 
+function WorkJob:CalculateTimeSpeed()
+	local duration = self.job:GetShiftDuration()
+	return 64 * (duration / ONE_DAY)
+end
+
+function WorkJob:CanInteract( actor )
+	if not self.job:IsTimeForShift( self:GetWorld():GetDateTime() ) then
+		return false, "Not time for shift"
+	end
+	return true
+end
+
 function WorkJob:Interact( actor )
 	-- Track job location and stay around there.
 	while self.job:IsTimeForShift( self:GetWorld():GetDateTime() ) do
