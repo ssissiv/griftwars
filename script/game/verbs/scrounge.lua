@@ -65,11 +65,11 @@ function Scrounge:Interact( actor )
 			break
 		end
 
-		local finder = self:GetRandomActor()		
+		local finder = self:GetRandomActor()
 		if self:CheckDC() then
 			local coins = math.random( 1, 3 )
 			Msg:Echo( finder, "You find {1#money}!", coins )
-			finder:GetInventory():DeltaMoney( coins )
+			finder.world.nexus:LootMoney( finder, coins )
 		else
 			Msg:Echo( finder, "You don't find anything useful." )
 			Msg:ActToRoom( "{1.Id} mutters something unhappily.", finder )

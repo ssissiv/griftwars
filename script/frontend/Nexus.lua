@@ -20,7 +20,7 @@ function WorldNexus:ChooseBuyItem( owner, buyer )
 end
 
 function WorldNexus:Sleep( agent )
-	if agent ~= self.world:GetPuppet() then
+	if not agent:IsPuppet() then
 		return
 	end
 	
@@ -36,6 +36,22 @@ function WorldNexus:Sleep( agent )
 	self.world:TogglePause( PAUSE_TYPE.NEXUS )
 
 	return stat_xp
+end
+
+function WorldNexus:LootMoney( agent, money )
+	if not agent:IsPuppet() then
+		agent:GetInventory():DeltaMoney( money )
+	else
+		local window = LootWindow( agent )
+		window:AddMoney( money )
+		self.screen:AddWindow( window )
+
+		self.world:TogglePause( PAUSE_TYPE.NEXUS )
+
+		window:DoLoot()
+
+		self.world:TogglePause( PAUSE_TYPE.NEXUS )
+	end
 end
 
 function WorldNexus:ShowAgentDetails( viewer, agent )

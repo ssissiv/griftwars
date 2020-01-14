@@ -11,9 +11,13 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 	ui.SetNextWindowSize( 500,300 )
 
 	local txt = loc.format( "{1.Id}", self.agent:LocTable() )
+	if self.agent:IsPuppet() then
+		txt = txt .. " (YOU)"
+	end
+
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
-		ui.Text( self.agent:GetShortDesc( self.viewer ))
+		ui.Text( "Description: " .. self.agent:GetShortDesc( self.viewer ))
 		ui.Text( "Gender:" )
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 0, 1, 1, 1, tostring(self.agent.gender) )
@@ -53,7 +57,12 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 			if ui.TreeNode( "Engrams" ) then
 				for i, engram in self.agent:GetMemory():Engrams() do
 					ui.Bullet()
-					ui.Text( tostr(engram) )
+					engram:RenderImGuiWindow( ui, screen, self.agent )
+					ui.SameLine( 0, 10 )
+					if ui.SmallButton( "?" ) then
+						DBG( engram )
+					end
+					ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
 				end
 				ui.TreePop()
 			end

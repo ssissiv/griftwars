@@ -18,6 +18,7 @@ require "frontend/Nexus"
 require "frontend/ShopWindow"
 require "frontend/SleepWindow"
 require "frontend/InventoryWindow"
+require "frontend/LootWindow"
 require "frontend/AgentDetailsWindow"
 
 Camera = require "camera"

@@ -5,9 +5,15 @@ function PathFinder:init( source, target )
 	self.target = target
 end
 
+-- Generate a path from start_room -> end_room.
+-- returns nil if no path can be found (or end_room == start_room),
+-- or an array of rooms leading from [start_room, end_room], inclusive.
 function PathFinder:CalculatePath()
 	local start_room = self:GetStartRoom()
 	local end_room = self:GetEndRoom()
+	if start_room == end_room then
+		return
+	end
 	local queue = { start_room }
 	assert( start_room )
 	assert( end_room )
@@ -22,7 +28,7 @@ function PathFinder:CalculatePath()
 			-- Found it! Generate path by walking back to start.
 			path = {}
 			local i = 0
-			while room and i < 10 do
+			while room and i < 20 do
 				table.insert( path, room )
 				i = i + 1
 				room = from_to[ room ]
