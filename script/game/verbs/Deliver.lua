@@ -49,6 +49,5 @@ function Deliver:Interact( actor )
 
 	Verb.GiveAll.Interact( nil, actor, self.receiver )
 
-	actor:GetAspect( Aspect.Behaviour ):UnregisterVerb( self )
-	self.removed = true -- FIXME.
+	actor:LoseAspect( self )
 end

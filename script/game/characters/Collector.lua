@@ -9,7 +9,7 @@ function Collector:OnTickBehaviour()
 	Collector._base.OnTickBehaviour( self )
 	
 	if self.deliver then
-		if not self.deliver.removed then
+		if self.deliver:GetOwner() then
 			return -- Still delivering
 		end
 		self.deliver = nil
@@ -26,7 +26,7 @@ function Collector:OnTickBehaviour()
 	local subordinate = table.arraypick( subordinates )
 	if subordinate then
 		self.deliver = Verb.Deliver( subordinate, self.owner )
-		subordinate:GetAspect( Aspect.Behaviour ):RegisterVerb( self.deliver )
+		subordinate:GainAspect( self.deliver )
 	end
 
 	ReleaseWorkTable( subordinates )

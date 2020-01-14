@@ -15,9 +15,7 @@ local MilitiaCaptain = class( "Agent.MilitiaCaptain", Agent )
 function MilitiaCaptain:init()
 	Agent.init( self )
 	
-	self:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
-		Verb.Strategize( self )
-	}
+	self:GainAspect( Verb.Strategize( self ))
 	self:GainAspect( Interaction.Acquaint( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 end

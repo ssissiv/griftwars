@@ -75,10 +75,10 @@ local Scavenger = class( "Agent.Scavenger", Agent )
 function Scavenger:init()
 	Agent.init( self )
 
-	self:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
-		Verb.ManageFatigue( self ),
-		Verb.Scavenge( self )
-	}
+	self:GainAspect( Aspect.Behaviour() )
+	self:GainAspect( Verb.ManageFatigue( self ))
+	self:GainAspect( Verb.Scavenge( self ))
+
 	self:GainAspect( Skill.Scrounge() )
 	-- self:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	self:GainAspect( Interaction.Acquaint( CR1 ) )

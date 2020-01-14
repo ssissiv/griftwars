@@ -31,6 +31,8 @@ function Aspect:OnSpawn( world )
 		for event, fn in pairs( self.event_handlers ) do
 			if IsEnum( event, WORLD_EVENT ) then
 				self.owner.world:ListenForEvent( event, self, fn )
+			else
+				self.owner:ListenForEvent( event, self, fn )
 			end
 		end
 	end

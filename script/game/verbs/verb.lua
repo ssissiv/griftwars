@@ -4,6 +4,7 @@ function Verb:init( actor, obj )
 	assert( is_instance( actor, Agent ))
 	self.actor = actor
 	self.obj = obj
+	self.priority = 0
 end
 
 function Verb:CalculateTimeSpeed()

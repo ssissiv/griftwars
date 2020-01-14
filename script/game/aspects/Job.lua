@@ -50,11 +50,6 @@ function Job:OnGainAspect( owner )
 	self.employer:Acquaint( owner )
 
 	self.hire_time = self:GetWorld():GetDateTime()
-
-	local behaviour = owner:GetAspect( Aspect.Behaviour )
-	if behaviour then
-		behaviour:RegisterVerb( self )
-	end
 end
 
 function Job:GetHireTime()

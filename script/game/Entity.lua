@@ -16,11 +16,17 @@ function Entity:ListenForEvent( event, listener, fn, priority )
 end
 
 function Entity:RemoveListener( listener )
-	self:GetEvents():RemoveListener( listener )
+	local events = self:GetEvents()
+	events:RemoveListener( listener )
+	if not events:HasListeners() then
+		self.events = nil
+	end
 end
 
 function Entity:BroadcastEvent( event_name, ... )
-	self:GetEvents():BroadcastEvent( event_name, self, ... )
+	if self.events then
+		self:GetEvents():BroadcastEvent( event_name, self, ... )
+	end
 end
 
 function Entity:GetEvents()
@@ -80,6 +86,8 @@ function Entity:GainAspect( aspect )
 		aspect:OnSpawn( self.world )
 	end
 
+	self:BroadcastEvent( ENTITY_EVENT.ASPECT_GAINED, aspect )
+
 	return aspect
 end
 
@@ -98,6 +106,8 @@ function Entity:LoseAspect( aspect )
 		self.aspects = nil
 		self.aspects_by_id = nil
 	end
+
+	self:BroadcastEvent( ENTITY_EVENT.ASPECT_LOST, aspect )
 end
 
 function Entity:GetAspect( arg )

@@ -13,10 +13,8 @@ function Shopkeeper:init()
 	self.assistant_job = Job.Assistant( self )
 	self:GainAspect( Interaction.OfferJob( self.assistant_job ))
 
-	self:GainAspect( Aspect.Behaviour() ):RegisterVerbs{
-		Verb.ManageFatigue( self ),
-		self.job
-	}
+	self:GainAspect( Aspect.Behaviour() )
+	self:GainAspect( Verb.ManageFatigue( self ))
 end
 
 function Shopkeeper:OnSpawn( world )
@@ -27,6 +25,5 @@ function Shopkeeper:OnSpawn( world )
 		local assistant = Agent.Citizen()
 		world:SpawnAgent( assistant )
 		assistant:GainAspect( self.assistant_job )
-		assistant:GetAspect( Aspect.Behaviour ):RegisterVerb( self.assistant_job )
 	end
 end
