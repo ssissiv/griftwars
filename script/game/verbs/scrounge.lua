@@ -64,23 +64,20 @@ function Scrounge:Interact( actor )
 		if self:IsCancelled() then
 			break
 		end
-		
+
+		local finder = self:GetRandomActor()		
 		if self:CheckDC() then
 			local coins = math.random( 1, 3 )
-			Msg:Echo( actor, "You find {1#money}!", coins )
-			actor:GetInventory():DeltaMoney( coins )
+			Msg:Echo( finder, "You find {1#money}!", coins )
+			finder:GetInventory():DeltaMoney( coins )
 		else
-			Msg:Echo( actor, "You don't find anything useful." )
-			Msg:ActToRoom( "{1.Id} mutters something unhappily.", actor )
+			Msg:Echo( finder, "You don't find anything useful." )
+			Msg:ActToRoom( "{1.Id} mutters something unhappily.", finder )
 		end
 
 		actor:GainXP( 1 )
 		
 		if math.random() < 0.5 then
-			break
-		end
-		if self.owner and self.owner.actor:GetLocation() ~= actor:GetLocation() then
-			print( "Owner", self.owner.actor, " not with us!" ,actor )
 			break
 		end
 	end

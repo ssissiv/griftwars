@@ -6,6 +6,54 @@ function Verb:init( actor, obj )
 	self.obj = obj
 end
 
+function Verb:AddHelperVerb( helper )
+	assert( helper._class == Verb.Help )
+
+	if self.helpers == nil then
+		self.helpers = {}
+	end
+	table.insert( self.helpers, helper )
+
+	-- So that cancels will cascade to the helper verb.
+	self:AddChildVerb( helper )
+end
+
+function Verb:RemoveHelperVerb( helper )
+	table.arrayremove( self.helpers, helper )
+	self:RemoveChildVerb( helper )
+end
+
+
+function Verb:GetHelpers( helpers )
+	if self.helpers then
+		if helpers == nil then
+			helpers = {}
+		end
+		for i, helper in ipairs( self.helpers ) do
+			table.insert_unique( helpers, helper )
+		end
+	end
+	if self.owner then
+		helpers = self.owner:GetHelpers( helpers )
+	end
+
+	return helpers
+end
+
+function Verb:Helpers()
+	return ipairs( self:GetHelpers() or table.empty )
+end
+
+function Verb:GetRandomActor()
+	local helpers = self:GetHelpers()
+	local i = math.random( (helpers and #helpers or 0) + 1 )
+	if i == 1 then
+		return self.actor
+	else
+		return helpers[i - 1].actor
+	end
+end
+
 function Verb:EqualVerb( verb )
 	return self.actor == verb.actor and self.obj == verb.obj
 end
@@ -22,6 +70,12 @@ function Verb:AddChildVerb( verb )
 
 	verb.owner = self
 	return verb
+end
+
+function Verb:RemoveChildVerb( verb )
+	assert( verb.owner == self )
+	table.arrayremove( self.children, verb )
+	verb.owner = nil
 end
 
 function Verb:GetFlags()
@@ -204,6 +258,16 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 		ui.Text( "Started:" )
 		ui.SameLine( 0, 10 )
 		Calendar.RenderDatetime( ui, self.time_started, self:GetWorld() )
+	end
+
+	local helpers = self:GetHelpers()
+	if helpers and #helpers > 0 then
+		ui.Text( "Helpers" )
+		ui.Indent( 20 )
+		for i, helper in ipairs( helpers ) do
+			panel:AppendTable( ui, helper, tostring(helper.actor))
+		end
+		ui.Unindent( 20 )
 	end
 
 	if self.coro then

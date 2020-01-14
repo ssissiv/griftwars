@@ -46,7 +46,7 @@ end
 function Help:Interact( actor )
 	Msg:Echo( actor, "You begin to help {1.Id} out.", self.obj.actor:LocTable( actor ) )
 
-	self.obj:AddChildVerb( self )
+	self.obj:AddHelperVerb( self )
 
 	while true do
 		self.travel:DoVerb( actor )
@@ -63,5 +63,7 @@ function Help:Interact( actor )
 			break
 		end
 	end
+
+	self.obj:RemoveHelperVerb( self )
 end
 

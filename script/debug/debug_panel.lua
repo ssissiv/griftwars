@@ -59,7 +59,7 @@ function DebugPanel:RenderPanel( dbg )
     end
 
     local title = string.format( "%s (%d/%d)###%d", node:GetName(), self.idx, #self.nodes, self.uid )
-    ui.SetNextWindowSize( node.PANEL_WIDTH or DEFAULT_WIDTH, node.PANEL_HEIGHT or DEFAULT_HEIGHT, ui.ImGuiSetCond_Once )
+    ui.SetNextWindowSize( node.PANEL_WIDTH or DEFAULT_WIDTH, node.PANEL_HEIGHT or DEFAULT_HEIGHT, "Once" )
     local show = ui.Begin( title, true, PANEL_FLAGS )
     if show then
         if ui.BeginMenuBar() then
