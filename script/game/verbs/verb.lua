@@ -1,4 +1,4 @@
-local Verb = class( "Verb" )
+local Verb = class( "Verb", Aspect )
 
 function Verb:init( actor, obj )
 	assert( is_instance( actor, Agent ))
@@ -37,8 +37,8 @@ function Verb:GetHelpers( helpers )
 			table.insert_unique( helpers, helper )
 		end
 	end
-	if self.owner then
-		helpers = self.owner:GetHelpers( helpers )
+	if self.parent then
+		helpers = self.parent:GetHelpers( helpers )
 	end
 
 	return helpers
@@ -62,8 +62,16 @@ function Verb:EqualVerb( verb )
 	return self.actor == verb.actor and self.obj == verb.obj
 end
 
+function Verb:GetOwner()
+	local parent = self.parent
+	while self.owner == nil and parent do
+		parent = parent.parent
+	end
+	return self.owner
+end
+
 function Verb:GetWorld()
-	return self.actor.world
+	return self:GetOwner().world
 end
 
 function Verb:AddChildVerb( verb )
@@ -72,14 +80,16 @@ function Verb:AddChildVerb( verb )
 	end
 	table.insert( self.children, verb )
 
-	verb.owner = self
+	assert( verb.parent == nil )
+	verb.parent = self
+
 	return verb
 end
 
 function Verb:RemoveChildVerb( verb )
-	assert( verb.owner == self )
+	assert( verb.parent == self )
 	table.arrayremove( self.children, verb )
-	verb.owner = nil
+	verb.parent = nil
 end
 
 function Verb:GetFlags()
@@ -173,7 +183,13 @@ function Verb:DoVerb( actor, ... )
 		print( "CANT DO", actor, self, reason )
 		return false
 	end
-	
+
+	if not actor:HasAspect( self ) then
+		self.transient = true
+		actor:GainAspect( self )
+	end
+
+	assert( self:GetOwner() == actor and actor )
 	actor:_AddVerb( self )
 
 	self.cancelled = nil
@@ -194,6 +210,11 @@ function Verb:DoVerb( actor, ... )
 	self.time_finished = actor.world:GetDateTime()
 
 	actor:_RemoveVerb( self )
+
+	if self.transient then
+		self.transient = nil
+		actor:LoseAspect( self )
+	end
 end
 
 function Verb:IsDoing()

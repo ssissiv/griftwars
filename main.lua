@@ -109,7 +109,6 @@ require "game/verbs/Interact"
 require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
 require "game/verbs/Strategize"
-require "game/verbs/WorkJob"
 require "game/verbs/Help"
 
 require "game/verbs/EquipObject"

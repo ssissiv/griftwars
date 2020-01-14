@@ -397,12 +397,13 @@ function Agent:DoVerbAsync( verb, ... )
 	end
 end
 
-function Agent:_AddVerb( verb, ... )
+function Agent:_AddVerb( verb )
 	if self.verbs == nil then
 		self.verbs = {}
 	end
 
 	assert( not self:IsDoing( verb ))
+
 	table.insert( self.verbs, verb )
 	assert( #self.verbs < 10, "Too many verbs: " ..tostring(self) )
 
@@ -420,6 +421,7 @@ function Agent:_RemoveVerb( verb )
 			if #self.verbs == 0 then
 				self.verbs = nil
 			end
+
 			self:BroadcastEvent( AGENT_EVENT.VERB_UNASSIGNED, verb )
 
 			if self:IsPuppet() then

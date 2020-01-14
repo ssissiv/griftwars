@@ -27,9 +27,13 @@ function LootWindow:RenderImGuiWindow( ui, screen )
     		end
     	end
 
-    	-- TODO: items
+    	for i, item in ipairs( self.loot ) do
+			-- TODO: item looting
+    	end
 
-		if ui.Button( "Close" ) then
+    	local done = self.money == 0 and #self.loot == 0
+
+		if done or ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
 			coroutine.resume( self.coro )
 		end

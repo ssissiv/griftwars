@@ -271,9 +271,13 @@ BuyFromShop.can_repeat = true -- This interaction can take place multiple times.
 
 function BuyFromShop:CanInteract( actor )
 	local job = self.owner:GetAspect( Job.Shopkeep )
-	local ok, reason = job:IsWorking()
-	if not ok then
-		return false, reason
+	if not job:IsDoing() then
+		local ok, reason = job:ShouldDo()
+		if not ok then
+			return false, reason
+		else
+			return false, "Not on the job"
+		end
 	end
 
 	return Interaction.CanInteract( self, actor )

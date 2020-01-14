@@ -1,4 +1,4 @@
-local Job = class( "Job", Aspect )
+local Job = class( "Job", Verb )
 
 function Job:init( employer )
 	assert( is_instance( employer, Agent ))
@@ -13,12 +13,38 @@ function Job:GetName()
 	return self.name or self._classname
 end
 
+function Job:GetDesc()
+	return loc.format( "Work job as {1}", self:GetName() )
+end
+
+function Job:GetShortDesc( viewer )
+	if viewer == self:GetOwner() then
+		return "You are working."
+	else
+		return loc.format( "{1.Id} is here working.", self:GetOwner():LocTable( viewer ))
+	end
+end
+
 function Job:GetLocation()
 	error( tostring(self) ) -- Define location for job.
 end
 
+function Job:UpdatePriority( actor, priority )
+	local world = actor.world
+	if self:IsTimeForShift( world:GetDateTime() ) or self:IsDoing() then
+		return PRIORITY.OBLIGATION
+	else
+		return 0
+	end
+end
+
+function Job:CalculateTimeSpeed()
+	local duration = self.job:GetShiftDuration()
+	return 64 * (duration / ONE_DAY)
+end
+
 function Job:OnGainAspect( owner )
-	Aspect.OnGainAspect( self, owner )
+	Verb.OnGainAspect( self, owner )
 
 	owner:Acquaint( self.employer )
 	self.employer:Acquaint( owner )
@@ -27,7 +53,7 @@ function Job:OnGainAspect( owner )
 
 	local behaviour = owner:GetAspect( Aspect.Behaviour )
 	if behaviour then
-		behaviour:RegisterVerb( Verb.WorkJob( owner, self ))
+		behaviour:RegisterVerb( self )
 	end
 end
 
@@ -53,14 +79,15 @@ function Job:IsTimeForShift( datetime )
 	end
 end
 
-function Job:IsWorking()
-	if self.owner == nil then
+function Job:ShouldDo()
+	local owner = self:GetOwner()
+	if owner == nil then
 		return false, "No worker"
 	end
 	if not self:IsTimeForShift( self:GetWorld():GetDateTime() ) then
 		return false, "Not time for shift"
 	end
-	if self.owner:GetLocation() ~= self:GetLocation() then
+	if owner:GetLocation() ~= self:GetLocation() then
 		return false, "Not at job location"
 	end
 	return true
@@ -78,13 +105,15 @@ function Job:PaySalary( salary )
 	if salary == nil then
 		salary = self:GetSalary()
 	end
-	self.owner:GetInventory():DeltaMoney( salary )
 
-	if self.owner == self.employer then
-		Msg:Echo( self.owner, "You generated {3#money} as profit!", salary )
+	local owner = self:GetOwner()
+	owner:GetInventory():DeltaMoney( salary )
+
+	if owner == self.employer then
+		Msg:Echo( owner, "You generated {3#money} as profit!", salary )
 	else
-		Msg:Echo( self.owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
-			self.employer:LocTable( self.owner ), self:GetName(), salary )
+		Msg:Echo( owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
+			self.employer:LocTable( owner ), self:GetName(), salary )
 	end
 end
 
@@ -99,12 +128,41 @@ function Job:AddTrainingReq( req )
 	table.insert( self.training_reqs, req )
 end
 
-function Job:Clone()
-	local clone = setmetatable( table.shallowcopy( self ), self._class )
-	clone.owner = nil -- Not transferrable.
-	return clone
+function Job:OnCollectVerbs( event_name, actor, verbs )
+	verbs:AddVerb( self )
 end
 
-function Job:OnCollectVerbs( event_name, actor, verbs )
-	verbs:AddVerb( Verb.WorkJob( actor, self ))
+function Job:CanInteract( actor )
+	if not self:IsTimeForShift( self:GetWorld():GetDateTime() ) then
+		return false, "Not time for shift"
+	end
+	return true
+end
+
+
+function Job:Interact()
+	local actor = self:GetOwner()
+	-- Track job location and stay around there.
+	while self:IsTimeForShift( self:GetWorld():GetDateTime() ) do
+		if self.travel == nil then
+			self.travel = Verb.Travel( actor )
+		end
+		self.travel:DoVerb( actor, self:GetLocation() )
+
+		if actor:GetLocation() == self:GetLocation() then
+			Msg:Speak( actor, "Time for work!" )
+
+			self:YieldForTime( self:GetShiftDuration() )
+
+			if not self:IsCancelled() then
+				actor:GainXP( 5 )
+				self:PaySalary()
+			end
+
+		else
+			self:YieldForTime( HALF_HOUR )			
+		end
+	end
+
+	Msg:Speak( actor, "Clocking out." )
 end

@@ -67,10 +67,13 @@ function Entity:GainAspect( aspect )
 		self.aspects_by_id = {}
 	end
 
-	local id = aspect:GetID()
+	assert( not table.contains( self.aspects, aspect ))
 	table.insert( self.aspects, aspect )
-	assert( self.aspects_by_id[ id ] == nil )
+
+	local id = aspect:GetID()
+	assert( self.aspects_by_id[ id ] == nil, tostring(id) )
 	self.aspects_by_id[ id ] = aspect
+
 	aspect:OnGainAspect( self )
 
 	if self.world and aspect.OnSpawn then
@@ -111,6 +114,9 @@ function Entity:GetAspect( arg )
 				return aspect
 			end
 		end
+
+	elseif self.aspects and table.contains( self.aspects, arg ) then
+		return arg
 
 	elseif self.aspects_by_id then
 		return self.aspects_by_id[ id ]

@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( tostr(t._class))",
-			"print(t._class, Feature.Home)",
 			"print( #world.agents)",
 			"print(t:GetLocation())",
 			"print(world.adjectives:PickName())",
@@ -33,7 +31,9 @@ return {
 			"print(Trait)",
 			"print(Trait.OnSpawn, Aspect.OnSpawn)",
 			"print(t:IsWorking())",
-			"print(t:IsTimeForShift())"
+			"print(t:IsTimeForShift())",
+			"print(t:IsDoing())",
+			"print(t:IsWorking())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
