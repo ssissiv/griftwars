@@ -265,9 +265,9 @@ function Agent:CanSee( obj )
 	return false
 end
 
-function Agent:HasEngram( pred )
+function Agent:HasEngram( pred, ... )
 	if self.memory then
-		return self.memory:HasEngram( pred )
+		return self.memory:HasEngram( pred, ... )
 	end
 
 	return false

@@ -101,7 +101,9 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
 		self:RenderRelationships( ui, screen )
 
-		-- self:RenderEngrams( ui, screen )
+		if self.agent:IsPuppet() then
+			self:RenderEngrams( ui, screen )
+		end
 
 		ui.Separator()
 

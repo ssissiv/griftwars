@@ -1,8 +1,13 @@
 TODO
 ====
 
-Network screen, where you can UNFRIEND.  See limited slot FRIENDS.
+LearnLocation : TravelTo place.
 
+SCAVENGER:
+	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
+		Gain Trust as you Scavenge with them. (+trust, +coins / minor items)
+		Trust Level 1: DIPLOMACY
+		Trust Level 2: Introduction to T1 SHOPKEEP (-2 DIPLO REQ w/ Shopkeep)
 
 * Venture Corp
 	- give CEO salary
@@ -37,12 +42,6 @@ MINIGAME:
 	NEEDED?!
 	
 NEW AGENTS:
-
-	T1:
-	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
-		Gain Trust as you Scavenge with them. (+trust, +coins / minor items)
-		Trust Level 1: DIPLOMACY
-		Trust Level 2: Introduction to T1 SHOPKEEP (-2 DIPLO REQ w/ Shopkeep)
 
 	SNOOP: Reveal PRIVACY flags about local T1s, famous ppl.
 		Gain Trust when you pay them. (+trust, -coins)

@@ -35,9 +35,9 @@ function Memory:Engrams()
 	return pairs( self.engrams )
 end
 
-function Memory:HasEngram( pred )
+function Memory:HasEngram( pred, ... )
 	for i, engram in ipairs( self.engrams ) do
-		if pred( engram ) then
+		if pred( engram, ... ) then
 			return true
 		end
 	end

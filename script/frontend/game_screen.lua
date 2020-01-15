@@ -117,6 +117,20 @@ function GameScreen:RemoveWindow( window )
 	table.arrayremove( self.windows, window )
 end
 
+function GameScreen:FindWindow( window )
+	if table.contains( self.windows, window ) then
+		return window
+	end
+
+	if is_class( window ) then
+		for i, w in ipairs( self.windows ) do
+			if w._class == window then
+				return w
+			end
+		end
+	end
+end
+
 function GameScreen:RenderAgentDetails( ui, puppet )
     ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetName() )
     ui.SameLine( 0, 5 )
@@ -184,6 +198,12 @@ end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
 	ui.Text( location:GetTitle() )
+	if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
+		ui.SameLine( 0, 10 )
+		if ui.SmallButton( "!") then
+			puppet:GetMemory():AddEngram( Engram.LearnLocation( location ))
+		end
+	end
 	ui.TextColored( 0.8, 0.8, 0.8, 1.0, location:GetDesc() )
 	ui.Spacing()
 
@@ -371,12 +391,26 @@ function GameScreen:KeyPressed( key )
 		return true
 
 	elseif key == "c" then
-		local puppet = self.world:GetPuppet()
-		self.nexus:ShowAgentDetails( puppet, puppet )
+		local window = self:FindWindow( AgentDetailsWindow )
+		if window then
+			self:RemoveWindow( window )
+		else
+			local puppet = self.world:GetPuppet()
+			self:AddWindow( AgentDetailsWindow( puppet, puppet ))
+		end
+
+	elseif key == "m" then
+		local window = self:FindWindow( MemoryWindow )
+		if window then
+			self:RemoveWindow( window )
+		else
+			self:AddWindow( MemoryWindow( self.world:GetPuppet() ))
+		end
 
 	elseif key == "f" then
 		self.world:GetPuppet():SetFocus()
 		return true
+
 	elseif tonumber(key) then
 		local puppet = self.world:GetPuppet()
 		if puppet and puppet:GetFocus() == nil then

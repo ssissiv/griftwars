@@ -35,3 +35,23 @@ function MakeKnown:RenderImGuiWindow( ui, screen, owner )
 		ui.Text( loc.format( "You learned {1.Id}'s plans and intents.", self.obj:LocTable( owner )))
 	end
 end
+
+
+-----------------------------------------------------------------------------
+-- You know certain details about an Agent
+
+local LearnLocation = class( "Engram.LearnLocation", Engram )
+
+function LearnLocation:init( location )
+	assert( is_instance( location, Location ))
+	self.location = location
+end
+
+function LearnLocation:RenderImGuiWindow( ui, screen, owner )
+	ui.Text( loc.format( "You know how to get to {1}.", self.location:GetTitle() ))
+end
+
+function Engram.HasLearnedLocation( engram, location )
+	return engram._class == LearnLocation and engram.location == location
+end
+

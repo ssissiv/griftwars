@@ -21,6 +21,7 @@ require "frontend/InventoryWindow"
 require "frontend/LootWindow"
 require "frontend/AgentDetailsWindow"
 require "frontend/AffinityChangedWindow"
+require "frontend/MemoryWindow"
 
 Camera = require "camera"
 bit32 = require "bit"
