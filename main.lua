@@ -20,6 +20,7 @@ require "frontend/SleepWindow"
 require "frontend/InventoryWindow"
 require "frontend/LootWindow"
 require "frontend/AgentDetailsWindow"
+require "frontend/AffinityChangedWindow"
 
 Camera = require "camera"
 bit32 = require "bit"

@@ -236,21 +236,18 @@ function Agent:GetMemory()
 end
 
 function Agent:IsAcquainted( agent )
-	if agent ~= self and not self:CheckPrivacy( agent, PRIVACY.ID ) then
-		return false
-	end
-	return true
+	return self:GetAffinity( agent ) ~= AFFINITY.STRANGER
 end
 
 function Agent:Acquaint( agent )
-	if self.memory and not self:IsAcquainted( agent ) then
-		self.memory:AddEngram( Engram.MakeKnown( agent, PRIVACY.ID ))
-		agent:RegenerateLocTable( self )
-		self:RegenVerbs()
+	local affinity = self.affinities and self.affinities[ agent ]
+	if affinity == nil then
+		affinity = Relationship.Affinity( self, agent )
+		self.world:SpawnRelationship( affinity )
+	end
 
-		if self:IsPuppet() then
-			self.world.nexus:ShowAgentDetails( self, agent )
-		end
+	if affinity:GetAffinity() == AFFINITY.STRANGER then
+		affinity:SetAffinity( AFFINITY.KNOWN )
 
 		self:GainXP( 10 )
 

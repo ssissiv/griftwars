@@ -20,9 +20,18 @@ function Affinity:GetAffinity()
 	return self.affinity
 end
 
+function Affinity:OnSpawn( world )
+	Relationship.OnSpawn( self, world )
+	self:SetAffinity( self.affinity )
+end
+
 function Affinity:SetAffinity( affinity )
 	assert( IsEnum( affinity, AFFINITY ))
 	self.affinity = affinity
+
+	if self.first:IsPuppet() or self.second:IsPuppet() then
+		self.world.nexus:ShowAffinityChanged( self )
+	end
 end
 
 function Affinity:CheckPrivacy( owner, target, flag )

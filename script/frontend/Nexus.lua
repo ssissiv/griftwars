@@ -63,4 +63,12 @@ function WorldNexus:ShowAgentDetails( viewer, agent )
 	self.screen:AddWindow( window )
 end
 
+function WorldNexus:ShowAffinityChanged( affinity )
+	local window = AffinityChangedWindow( affinity )
+	self.screen:AddWindow( window )
+
+	window:Show()
+end
+
+
 
