@@ -104,7 +104,7 @@ function World:RefreshTimeSpeed()
 end
 
 function World:CalculateTimeElapsed( dt )
-	return dt * (self.puppet_time_speed or 1.0)
+	return (self.puppet_time_speed or 1.0) * WorldBase.CalculateTimeElapsed( self, dt )
 end
 
 function World:OnUpdateWorld( dt, world_dt )

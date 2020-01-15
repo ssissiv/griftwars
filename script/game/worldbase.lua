@@ -187,9 +187,13 @@ function WorldBase:GetBucket( key )
 	return self.buckets[ key ]
 end
 
+function WorldBase:CalculateTimeElapsed( dt )
+	return dt * WALL_TO_GAME_TIME * self.debug_world_speed
+end
+
 function WorldBase:UpdateWorld( dt )
 	if not self:IsPaused() then
-		local world_dt = self:CalculateTimeElapsed( dt * WALL_TO_GAME_TIME * self.debug_world_speed )
+		local world_dt = self:CalculateTimeElapsed( dt )
 		self:AdvanceTime( world_dt )
 
 		if self.OnUpdateWorld then

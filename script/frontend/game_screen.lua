@@ -45,7 +45,9 @@ function GameScreen:RenderScreen( gui )
     local puppet = self.world:GetPuppet()
 
     -- Render details about the player.
-    ui.Text( Calendar.FormatTime( self.world:GetDateTime() ))
+    local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
+    local timestr = Calendar.FormatTime( self.world:GetDateTime(), use_seconds )
+    ui.Text( timestr )
     if self.world:IsPaused() then
     	ui.SameLine( 0, 10 )
     	ui.Text( "(PAUSED)" )

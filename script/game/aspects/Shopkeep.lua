@@ -42,7 +42,6 @@ function Shopkeep:OnSpawn( world )
 		local assistant = Agent.Citizen()
 		world:SpawnAgent( assistant )
 		assistant:GainAspect( self.assistant_job )
-		DBG(self.owner)
 	end
 end
 

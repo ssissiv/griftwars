@@ -10,4 +10,3 @@ WEALTH =
 
 
 SLEEP_SPEED_RATE = 64.0
-

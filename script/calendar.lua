@@ -1,19 +1,26 @@
 local Calendar = class( "Calendar" )
 
-function Calendar.FormatTime( datetime )
+function Calendar.FormatTime( datetime, show_seconds )
 	if datetime == nil then
 		return "nil"
 	end
 	
 	local days =  math.floor( datetime / 24 )
 	local hours = math.floor( datetime % 24 )
-	local minutes = math.floor( (datetime - math.floor( datetime )) * 60 )
+	local fminutes = (datetime - math.floor( datetime )) * 60
+	local minutes = math.floor( fminutes )
 	local hour = hours % 12
 	if hour == 0 then
 		hour = 12
 	end
 	local am_pm = hours < 12 and "am" or "pm"
-	return loc.format( "Day: {1} ({2}:{3%02d} {4})", days, hour, minutes, am_pm )
+	if show_seconds then
+		local minutes, seconds = math.modf( fminutes )
+		seconds = math.floor( seconds * 60 )
+		return loc.format( "Day: {1} ({2}:{3%02d} {4}, {5} seconds)", days, hour, minutes, am_pm, seconds )
+	else
+		return loc.format( "Day: {1} ({2}:{3%02d} {4})", days, hour, minutes, am_pm )
+	end
 end
 
 function Calendar.FormatWallTime( datetime )
@@ -61,7 +68,7 @@ end
 -- Returns 1.0 if datetime represents a time of day identical to target_time, and 0 if it represents
 -- the farther away it can be (12 hours difference).
 function Calendar.GetNormalizedTimeOfDay( datetime, target_time )
-	local n, modulus = math.modf(math.abs(Calendar.GetTimeOfDay( datetime ) - target_time) / HALF_DAY + 1.0, 1.0 )
+	local n, modulus = math.modf(math.abs(Calendar.GetTimeOfDay( datetime ) - target_time) / HALF_DAY + 1.0 )
 	return modulus
 end
 

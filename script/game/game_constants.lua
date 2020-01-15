@@ -1,7 +1,6 @@
--- 1 second == 1 game minute.
-WALL_TO_GAME_TIME = 1/60.0
-
-PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS" }
+-- 1.0 unit of datetime is meant to represent 1 hour,
+-- so a WALL_TO_GAME_TIME of 1.0 means every real world second is equivalent to 1 game hour.
+WALL_TO_GAME_TIME = 1/60.0 -- eg. 1 wall second == 1 game minute.
 
 -- Note: 'datetime' is a floating point measure of game hours passed.
 ONE_MINUTE = 1/60
@@ -15,6 +14,22 @@ ONE_WEEK = ONE_DAY * 7
 
 -- 6 am.
 DATETIME_START = 7
+
+-- World speed multipliers.
+DEBUG_WORLD_SPEEDS =
+{
+	1/60, -- eg. 1 wall second == 1 game second
+	0.5, -- eg. 1 wall second == half a game minute
+	1.0,
+	5.0, -- eg. 1 wall second == 5 game minutes
+	60.0, -- eg. 1 wall second == 1 game hour
+	360.0, -- eg. 1 wall second == 6 game hours
+}
+
+DEFAULT_DEBUG_SPEED = table.find( DEBUG_WORLD_SPEEDS, 1.0 )
+assert( DEFAULT_DEBUG_SPEED )
+
+PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS" }
 
 OPINION = MakeEnum
 {

@@ -2,18 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:GetLocation())",
-			"print(world.adjectives:PickName())",
-			"DBG(world.adjectives)",
-			"world:SetPuppet( player )",
-			"print(t._class)",
-			"print(t._classname)",
-			"print(t:CanDo(t.actor))",
-			"print(t.actor)",
-			"player:GetInventory():DeltaMoney(5)",
-			"print( t )",
-			"print( t:IsFriend( puppet ))",
-			"print( t:IsFriends( puppet ))",
 			"print( t:IsAquainted( puppet ))",
 			"print( t:IsAcquainted( puppet ))",
 			"print( t:IsFriend( puppet ))",
@@ -33,7 +21,19 @@ return {
 			"print(t:IsTimeForShift())",
 			"print(t:IsDoing())",
 			"print(t:IsWorking())",
-			"print(t:GetLocation())"
+			"print(t:GetLocation())",
+			"print(debug_world_speed)",
+			"print( DEFAULT_DEBUG_SPEED )",
+			"print(debug_world_speed)",
+			"print(DEBUG_WORLD_SPEEDS[ debug_world_speed ] )",
+			"print( math.modf(2.3))",
+			"print( math.modf(2.3, 1.0))",
+			"print( math.modf(2.3, 551.0))",
+			"print(world:CalculateTimeElapsed(1.0))",
+			"print( math.modf(2.3, 551.0))",
+			"print(world:CalculateTimeElapsed(1.0))",
+			"print(world.debug_world_speed)",
+			"print(world:CalculateTimeElapsed(1.0))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
