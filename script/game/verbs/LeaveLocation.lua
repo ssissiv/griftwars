@@ -73,6 +73,10 @@ function LeaveLocation:Interact( actor )
 
 	self:YieldForTime( ONE_MINUTE )
 
+	if self:IsCancelled() then
+		return
+	end
+	
 	local prev_location = actor:GetLocation()
 
 	actor:DeltaStat( STAT.FATIGUE, 5 )

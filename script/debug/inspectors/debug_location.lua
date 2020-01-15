@@ -8,7 +8,7 @@ end
 
 function DebugLocation:RenderPanel( ui, panel, dbg )
 	if ui.Button( "Warp To" ) then
-		self.location.world:GetPuppet():WarpToLocation( self.location )
+		self.location.world:DoAsync( function( world ) world:GetPuppet():WarpToLocation( self.location ) end )
 	end
     
     ui.Separator()

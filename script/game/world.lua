@@ -49,6 +49,16 @@ function World:GetLimbo()
 	return self.limbo
 end
 
+function World:DoAsync( fn,... )
+	local coro = coroutine.create( fn )
+
+	local ok, result = coroutine.resume( coro, self, ... )
+	if not ok then
+		error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
+	end
+end
+
+
 function World:SpawnAgent( agent, location )
 	self:SpawnEntity( agent )
 

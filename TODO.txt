@@ -1,8 +1,6 @@
 TODO
 ====
 
-LearnLocation : TravelTo place.
-
 SCAVENGER:
 	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
 		Gain Trust as you Scavenge with them. (+trust, +coins / minor items)

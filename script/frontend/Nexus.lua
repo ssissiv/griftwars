@@ -67,7 +67,11 @@ function WorldNexus:ShowAffinityChanged( affinity )
 	local window = AffinityChangedWindow( affinity )
 	self.screen:AddWindow( window )
 
+	self.world:TogglePause( PAUSE_TYPE.NEXUS )
+
 	window:Show()
+
+	self.world:TogglePause( PAUSE_TYPE.NEXUS )
 end
 
 

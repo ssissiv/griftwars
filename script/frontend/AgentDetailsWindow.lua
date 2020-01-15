@@ -38,23 +38,6 @@ function AgentDetailsWindow:RenderRelationships( ui, screen )
 	end
 end
 
-function AgentDetailsWindow:RenderEngrams( ui, screen )
-	if self.agent == self.viewer and self.agent:GetMemory() then
-		if ui.TreeNode( "Engrams" ) then
-			for i, engram in self.agent:GetMemory():Engrams() do
-				ui.Bullet()
-				engram:RenderImGuiWindow( ui, screen, self.agent )
-				ui.SameLine( 0, 10 )
-				if ui.SmallButton( "?" ) then
-					DBG( engram )
-				end
-				ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
-			end
-			ui.TreePop()
-		end
-	end
-end
-
 function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 
@@ -100,10 +83,6 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		ui.NewLine()
 
 		self:RenderRelationships( ui, screen )
-
-		if self.agent:IsPuppet() then
-			self:RenderEngrams( ui, screen )
-		end
 
 		ui.Separator()
 

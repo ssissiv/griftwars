@@ -66,6 +66,7 @@ function Scavenge:Interact( actor )
 			self.leave:DoVerb( actor )
 		end
 	end
+	Msg:Speak( actor, "Well, that's enough scavenging for now." )
 end
 
 ---------------------------------------------------------------------
