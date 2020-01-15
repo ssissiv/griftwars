@@ -89,6 +89,16 @@ PRIVACY = MakeBitField
 }
 PRIVACY_ALL = 0xFFFFFFFF
 
+RELATION = MakeEnum
+{
+	"STRANGER", -- Stranger, identiy not known.
+	"KNOWN", -- Neutral relationship, but identity known.
+	"FRIEND", -- Friend.
+	"UNFRIEND", -- Former friend.
+	"ENEMY", -- Enemy!
+}
+
+
 EQ_SLOT = MakeEnum
 {
 	"HAND",

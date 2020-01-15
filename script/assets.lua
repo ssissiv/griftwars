@@ -4,11 +4,12 @@ local assets =
 	{
 	},
 
-	OPINION_IMG =
+	AFFINITY_IMG =
 	{
-		FEAR = "fear.png",
-		LIKE = "liked.png",
-		DISLIKE = "unliked.png",
+		--FEAR = "fear.png",
+		FRIEND = "liked.png",
+		UNFRIEND = "unliked.png",
+		ENEMY = "unliked.png",
 	},
 
 	LOCATION_BGS =
@@ -21,8 +22,8 @@ local assets =
 	},
 
 	LoadAll = function( self )
-		for k, filename in pairs( self.OPINION_IMG ) do
-			self.OPINION_IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		for k, filename in pairs( self.AFFINITY_IMG ) do
+			self.AFFINITY_IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
 		end
 
 		for k, filename in pairs( self.LOCATION_BGS ) do

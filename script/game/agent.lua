@@ -13,7 +13,7 @@ function Agent:init()
 	self.sense_log = {} -- array of strings
 	self.potential_verbs = {}
 	self.inventory = Inventory( self )
-	self.social_node = SocialNode( self )
+	self:GainAspect( Aspect.SocialNet() )
 	self:GainAspect( Trait.Memory() )
 
 	self.viz = AgentViz()
@@ -586,12 +586,8 @@ function Agent:OnReceivedFocus( other )
 	self:RegenVerbs()
 end
 
-function Agent:GetSocialNode()
-	return self.social_node
-end
-
 function Agent:GetOpinion( other )
-	return self.social_node:GetOpinion( other )
+	return self.social and self.social:GetOpinion( other )
 end
 
 function Agent:GainXP( xp )
@@ -610,7 +606,7 @@ function Agent:AssignXP( xp, stat )
 end
 
 function Agent:DeltaOpinion( other, op, delta )
-	self.social_node:DeltaOpinion( other, op, delta )
+	self.social:DeltaOpinion( other, op, delta )
 end
 
 function Agent.GetAgentOwner( obj )

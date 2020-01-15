@@ -181,7 +181,7 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 	end
 end
 
-function GameScreen:RenderLocationDetails( ui, location, agent )
+function GameScreen:RenderLocationDetails( ui, location, puppet )
 	ui.Text( location:GetTitle() )
 	ui.TextColored( 0.8, 0.8, 0.8, 1.0, location:GetDesc() )
 	ui.Spacing()
@@ -194,24 +194,17 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 	local count = 0
 	for i, obj in location:Contents() do
 		ui.PushID(i)
-		if agent ~= obj then
+		if puppet ~= obj then
 			count = count + 1
 			self.objects[ count ] = obj
 
 			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
-			if is_instance( obj, Agent ) then
-				local op = obj:GetOpinion( agent )
-				if assets.OPINION_IMG[ op ] then
-					ui.Image( assets.OPINION_IMG[ op ], 16, 16 )
-					ui.SameLine( 0, 10 )
-				end
-			end
 
-			local desc = loc.format( "{1}) {2}", string.char( count + 96 ), obj:GetShortDesc( agent ) )
-			if agent:IsBusy() then
+			local desc = loc.format( "{1}) {2}", string.char( count + 96 ), obj:GetShortDesc( puppet ) )
+			if puppet:IsBusy() then
 				ui.Text( desc )
-			elseif ui.Selectable( desc, agent:GetFocus() == obj ) then
-				agent:SetFocus( obj )
+			elseif ui.Selectable( desc, puppet:GetFocus() == obj ) then
+				puppet:SetFocus( obj )
 			end
 			ui.PopStyleColor()
 	
@@ -220,16 +213,24 @@ function GameScreen:RenderLocationDetails( ui, location, agent )
 				break
 			end
 
-			if agent:GetFocus() == obj then
+			if is_instance( obj, Agent ) then
+				local affinity = obj:GetAffinity( puppet )
+				if assets.AFFINITY_IMG[ affinity ] then
+					ui.SameLine( 0, 10 )
+					ui.Image( assets.AFFINITY_IMG[ affinity ], 16, 16 )
+				end
+			end
+
+			if puppet:GetFocus() == obj then
 				ui.SameLine( 0, 10 )
 				if ui.Text( "(Focus)" ) then
-					agent:SetFocus( nil )
+					puppet:SetFocus( nil )
 				end
 
-				if agent:IsPuppet() then
+				if puppet:IsPuppet() then
 					ui.Indent( 20 )
 					-- Make a verb.
-					self:RenderPotentialVerbs( ui, agent, "focus", obj )
+					self:RenderPotentialVerbs( ui, puppet, "focus", obj )
 					ui.Unindent( 20 )
 				end
 			end

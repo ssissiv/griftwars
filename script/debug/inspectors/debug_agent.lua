@@ -81,6 +81,10 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 					ui.TextColored( 0.2, 1, 1, 1, tostring(k) )
 					ui.SameLine( 0, 5 )
 					panel:AppendTable( ui, v )
+				else
+					ui.Text( tostring(k) )
+					ui.SameLine( 0, 5 )
+					
 				end
 			end
 			ui.NextColumn()

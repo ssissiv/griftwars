@@ -1,29 +1,18 @@
 TODO
 ====
 
-Location
-* Shop
-	.shop_owner -> Shopkeeper
-* Job
-* Assistant
+Agent
+	* network
+		X -> friend, 30 trust.
+		Y -> unfriend, 40 trust.
+		
+	* relationship w/ X
+	* relationship w/ X, Y, Z
 
-Shopkeeper
-* Job
-	.shop -> Shop
-	assistant_job
-
-Assistant
-* Job
-	.shop -> Shop
-	.employer = Shopkeeper
-
-	
-FIX shopkeepers addressing Assistants as customers
 
 Acquaint: Is BEFRIENDED.
 Network screen, where you can UNFRIEND.  See limited slot FRIENDS.
 
-Support Helping Scavenger.
 
 * Venture Corp
 	- give CEO salary
@@ -36,9 +25,7 @@ Support Helping Scavenger.
 	- how to assure the player works the jobs they're hired for?
 	- leaving
 	- getting fired
-	- salary, job verbs, (side effects)
-
-* Show time in current vocation/avocation.
+	- salary, job child-verbs, (side effects)
 
 ECON-CENTRIC AGENTS:
 	Agents Import and Export resources.
