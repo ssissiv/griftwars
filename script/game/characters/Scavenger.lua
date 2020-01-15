@@ -39,11 +39,11 @@ function Scavenge:GetDetailsDesc( viewer )
 	end
 end
 
-function Scavenge:UpdatePriority( actor, priority )
+function Scavenge:CalculateUtility( actor )
 	-- How broke am I?
 	local value = actor:GetInventory():CalculateValue()
 	if value <= WEALTH.DESTITUTE then
-		return PRIORITY.OBLIGATION
+		return UTILITY.OBLIGATION
 	else
 		return 1
 	end

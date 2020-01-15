@@ -29,10 +29,10 @@ function Job:GetLocation()
 	error( tostring(self) ) -- Define location for job.
 end
 
-function Job:UpdatePriority( actor, priority )
-	local world = actor.world
+function Job:CalculateUtility()
+	local world = self:GetWorld()
 	if self:IsTimeForShift( world:GetDateTime() ) or self:IsDoing() then
-		return PRIORITY.OBLIGATION
+		return UTILITY.OBLIGATION
 	else
 		return 0
 	end

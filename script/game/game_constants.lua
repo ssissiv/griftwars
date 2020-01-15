@@ -134,8 +134,9 @@ SHOP_TYPE = MakeEnum{
 }
 
 -- Verb priorities, which determine behaviour.
-PRIORITY =
+UTILITY =
 {
+	MAX = 100,
 	-- Life & death situation, or something the Agent would prioritize over life & death.
 	EMERGENCY = 100,
 	-- Something an Agent really should be doing, like a job.

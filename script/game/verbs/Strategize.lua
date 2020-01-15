@@ -13,8 +13,8 @@ function Strategize:GetDetailsDesc( viewer )
 	end
 end
 
-function Strategize:UpdatePriority( actor, priority )
-	return PRIORITY.OBLIGATION
+function Strategize:CalculateUtility( actor )
+	return UTILITY.OBLIGATION
 end
 
 function Strategize:Interact( actor )

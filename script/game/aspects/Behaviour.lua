@@ -25,7 +25,7 @@ function Behaviour:RegenerateVerbs()
 	table.clear( self.verbs )
 
 	for i, aspect in self.owner:Aspects() do
-		if is_instance( aspect, Verb ) and aspect.UpdatePriority then
+		if is_instance( aspect, Verb ) and aspect.CalculateUtility then
 			table.insert( self.verbs, aspect )
 		end
 	end
@@ -33,7 +33,7 @@ end
 
 function Behaviour:OnAspectsChanged( event_name, owner, aspect )
 
-	if is_instance( aspect, Verb ) and aspect.UpdatePriority then
+	if is_instance( aspect, Verb ) and aspect.CalculateUtility then
 		if event_name == ENTITY_EVENT.ASPECT_LOST then
 			table.arrayremove( self.verbs, aspect )
 		elseif event_name == ENTITY_EVENT.ASPECT_GAINED then
@@ -59,7 +59,7 @@ function Behaviour:ScheduleNextTick( delta )
 end
 
 function Behaviour.SortVerbs( a, b )
-	return a.priority > b.priority
+	return a.utility > b.utility
 end
 
 function Behaviour:OnTickBehaviour()
@@ -94,8 +94,8 @@ function Behaviour:UpdatePriorities()
 	local world = self:GetWorld()
 
 	for i, verb in ipairs( self.verbs ) do
-		if verb.UpdatePriority then
-			verb.priority = verb:UpdatePriority( self.owner, verb.priority ) or -1
+		if verb.CalculateUtility then
+			verb:SetUtility( verb:CalculateUtility( verb:GetOwner() ))
 		end
 	end
 
@@ -123,7 +123,7 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 		panel:AppendTable( ui, verb )
 		ui.NextColumn()
 
-		ui.Text( tostring(verb.priority) )
+		ui.Text( tostring(verb.utility) )
 		ui.NextColumn()
 
 		if self.owner:IsDoing( verb ) then

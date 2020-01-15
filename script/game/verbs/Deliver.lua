@@ -29,12 +29,12 @@ function Deliver:GetShortDesc( viewer )
 end
 
 
-function Deliver:UpdatePriority( actor, priority )
+function Deliver:CalculateUtility( actor )
 	if self:DidWithinTime( actor, ONE_DAY ) then
 		return -1
 	end
 
-	return priority + 1
+	return self.utility + 1
 end
 
 function Deliver:CanInteract( actor )

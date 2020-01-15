@@ -7,22 +7,23 @@ function ManageFatigue:init( actor )
 	self.travel = self:AddChildVerb( Verb.Travel( actor ))
 end
 
-function ManageFatigue:UpdatePriority( actor, priority )
+function ManageFatigue:CalculateUtility( actor )
+	local utility
 	if self.sleep:IsDoing() or self.rest:IsDoing() then
-		priority = PRIORITY.EMERGENCY - 10
+		utility = UTILITY.EMERGENCY - 10
 	else
 		local night_t = Calendar.GetNormalizedTimeOfDay( actor.world:GetDateTime(), 20 * ONE_HOUR )
 		if night_t > 0.8 then
-			priority = PRIORITY.HABIT
+			utility = UTILITY.HABIT
 		else
-			priority = PRIORITY.FUN
+			utility = UTILITY.FUN
 		end
 
 		local t = actor:GetStat( STAT.FATIGUE ):GetPercent()
-		priority = priority + Easing.inQuad( t, 0, PRIORITY.EMERGENCY - priority, 1.0 )
+		utility = utility + Easing.inQuad( t, 0, UTILITY.EMERGENCY - utility, 1.0 )
 	end
 
-	return priority
+	return utility
 end
 
 function ManageFatigue:Interact( actor )
