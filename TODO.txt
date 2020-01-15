@@ -1,16 +1,6 @@
 TODO
 ====
 
-Agent
-	* network
-		X -> friend, 30 trust.
-		Y -> unfriend, 40 trust.
-		
-	* relationship w/ X
-	* relationship w/ X, Y, Z
-
-
-Acquaint: Is BEFRIENDED.
 Network screen, where you can UNFRIEND.  See limited slot FRIENDS.
 
 

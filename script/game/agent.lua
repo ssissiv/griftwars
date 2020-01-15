@@ -13,7 +13,6 @@ function Agent:init()
 	self.sense_log = {} -- array of strings
 	self.potential_verbs = {}
 	self.inventory = Inventory( self )
-	self:GainAspect( Aspect.SocialNet() )
 	self:GainAspect( Trait.Memory() )
 
 	self.viz = AgentViz()
@@ -300,6 +299,13 @@ function Agent:_AddRelationship( r )
 	end
 	table.insert( self.relationships, r )
 	
+	if is_instance( r, Relationship.Affinity ) then
+		if self.affinities == nil then
+			self.affinities = {}
+		end
+		self.affinities[ r:GetOther( self ) ] = r
+	end
+
 	for i, agent in r:Agents() do
 		agent:RegenerateLocTable( self )
 	end
@@ -315,23 +321,45 @@ function Agent:Relationships()
 end
 
 function Agent:IsFriends( other )
-	if self.relationships then
-		for i, r in ipairs( self.relationships ) do
-			if r:HasAgent( other ) and is_instance( r, Relationship.Friend ) then
-				return true
-			end
-		end
+	if self.affinities and self.affinities[ other ] then
+		return self.affinities[ other ]:GetAffinity() == AFFINITY.FRIEND
 	end
 
 	return false
 end
 
-function Agent:Befriend( other )
-	self.world:SpawnRelationship( Relationship.Friend( self, other ))
+function Agent:GetMaxFriends()
+	return self:GetStatValue( STAT.CHARISMA ) or 0
 end
 
-function Agent:Unfriend( friend )
-	self.memory:AddEngram( Engram.Unfriended( agent ))
+function Agent:CountAffinities( affinity )
+	local count = 0
+	if self.affinities then
+		for agent, rel in pairs( self.affinities ) do
+			if rel:GetAffinity() == affinity then
+				count = count + 1
+			end
+		end
+	end
+	return count
+end
+
+function Agent:Befriend( other )
+	local affinity = self.affinities and self.affinities[ other ]
+	if affinity == nil then
+		self.world:SpawnRelationship( Relationship.Affinity( self, other, AFFINITY.FRIEND ))
+	else
+		affinity:SetAffinity( AFFINITY.FRIEND )
+	end
+end
+
+function Agent:Unfriend( other )
+	local affinity = self.affinities[ other ]
+	if affinity == nil then
+		self.world:SpawnRelationship( Relationship.Affinity( self, other, AFFINITY.UNFRIEND ))
+	else
+		affinity:SetAffinity( AFFINITY.UNFRIEND )
+	end
 end
 
 function Agent:WarpToLocation( location )
@@ -586,8 +614,11 @@ function Agent:OnReceivedFocus( other )
 	self:RegenVerbs()
 end
 
-function Agent:GetOpinion( other )
-	return self.social and self.social:GetOpinion( other )
+function Agent:GetAffinity( other )
+	local affinity = self.affinities and self.affinities[ other ]
+	if affinity then
+		return affinity:GetAffinity()
+	end
 end
 
 function Agent:GainXP( xp )
@@ -603,10 +634,6 @@ function Agent:AssignXP( xp, stat )
 	if self.stats[ stat ] then
 		self.stats[ stat ]:GainXP( xp )
 	end
-end
-
-function Agent:DeltaOpinion( other, op, delta )
-	self.social:DeltaOpinion( other, op, delta )
 end
 
 function Agent.GetAgentOwner( obj )

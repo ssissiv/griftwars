@@ -6,9 +6,57 @@ function AgentDetailsWindow:init( viewer, agent )
 	self.agent = agent
 end
 
+function AgentDetailsWindow:RenderRelationships( ui, screen )
+	ui.Text( "Relationships:" )
+	ui.Bullet()
+	ui.Text( loc.format( "Friends: {1}/{2}", self.agent:CountAffinities( AFFINITY.FRIEND ), self.agent:GetMaxFriends() ))
+
+	local affinity_count = self.agent.affinities and table.count( self.agent.affinities ) or 0
+	if affinity_count > 0 then
+		ui.Columns( affinity_count )
+		for i, rel in self.agent:Relationships() do
+			if is_instance( rel, Relationship.Affinity ) then
+				local affinity = rel:GetAffinity()
+				if assets.AFFINITY_IMG[ affinity ] then
+					local other = rel:GetOther( self.agent )
+					ui.Image( assets.AFFINITY_IMG[ affinity ], 48, 48 )
+					ui.TextColored( 0, 1, 1, 1, loc.format( "{1} - {2}", other:GetName(), affinity ))
+					ui.Text( Calendar.FormatDuration( rel:GetAge() ))
+					ui.SameLine( 0, 5 )
+					if affinity == AFFINITY.FRIEND then
+						ui.PushStyleColor( ui.Style_Button, 1, 0, 0, 1 )
+						if ui.SmallButton( "X" ) then
+							self.agent:Unfriend( other )
+						end
+						ui.PopStyleColor()
+					end
+					ui.NextColumn()
+				end
+			end
+		end
+		ui.Columns( 1 )
+	end
+end
+
+function AgentDetailsWindow:RenderEngrams( ui, screen )
+	if self.agent == self.viewer and self.agent:GetMemory() then
+		if ui.TreeNode( "Engrams" ) then
+			for i, engram in self.agent:GetMemory():Engrams() do
+				ui.Bullet()
+				engram:RenderImGuiWindow( ui, screen, self.agent )
+				ui.SameLine( 0, 10 )
+				if ui.SmallButton( "?" ) then
+					DBG( engram )
+				end
+				ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
+			end
+			ui.TreePop()
+		end
+	end
+end
+
 function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
-	ui.SetNextWindowSize( 500,300 )
 
 	local txt = loc.format( "{1.Id}", self.agent:LocTable() )
 	if self.agent:IsPuppet() then
@@ -41,8 +89,6 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 			end
 		end
 
-		ui.Text( "Doing:" )
-		ui.Indent( 20 )
 		for i, verb in self.agent:Verbs() do
 			local desc = verb:GetDetailsDesc( self.viewer )
 			if desc then
@@ -50,24 +96,14 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 				ui.Text( tostring(desc) )
 			end
 		end
-		ui.Unindent( 20 )
 
-		ui:NewLine()
+		ui.NewLine()
 
-		if self.agent == self.viewer and self.agent:GetMemory() then
-			if ui.TreeNode( "Engrams" ) then
-				for i, engram in self.agent:GetMemory():Engrams() do
-					ui.Bullet()
-					engram:RenderImGuiWindow( ui, screen, self.agent )
-					ui.SameLine( 0, 10 )
-					if ui.SmallButton( "?" ) then
-						DBG( engram )
-					end
-					ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
-				end
-				ui.TreePop()
-			end
-		end
+		self:RenderRelationships( ui, screen )
+
+		-- self:RenderEngrams( ui, screen )
+
+		ui.Separator()
 
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )

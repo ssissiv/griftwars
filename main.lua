@@ -54,7 +54,7 @@ require "game/map/City"
 require "game/map/CorpHQ"
 
 require "game/relationships/Relationship"
-require "game/relationships/Friend"
+require "game/relationships/Affinity"
 require "game/relationships/ArmitageGerin"
 require "game/relationships/Subordinate"
 
@@ -66,7 +66,6 @@ require "game/verbs/verb"
 
 require "game/aspects/job"
 
-require "game/aspects/SocialNet"
 require "game/aspects/History"
 require "game/aspects/NamePool"
 require "game/aspects/statvalue"

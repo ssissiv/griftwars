@@ -134,13 +134,21 @@ local Acquaint = class( "Interaction.Acquaint", Interaction )
 
 function Acquaint:init( cr )
 	Acquaint._base.init( self )
-	self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
+	-- self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
 end
 
 function Acquaint:CanInteract( actor )
-	if self.owner:HasEngram( Engram.IsUnfriended ) then
-		return false, "Unfriended"
+	local affinity = self.owner:GetAffinity( actor )
+	if affinity == AFFINITY.FRIEND then
+		return false
 	end
+	if affinity == AFFINITY.UNFRIEND or affinity == AFFINITY.ENEMY then
+		return false, "Doesn't like you"
+	end
+	if actor:GetMaxFriends() <= actor:CountAffinities( AFFINITY.FRIEND ) then
+		return false, "Max friends reached"
+	end
+
 	return Interaction.CanInteract( self, actor )
 end
 

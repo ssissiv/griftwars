@@ -35,19 +35,3 @@ function MakeKnown:RenderImGuiWindow( ui, screen, owner )
 		ui.Text( loc.format( "You learned {1.Id}'s plans and intents.", self.obj:LocTable( owner )))
 	end
 end
-
------------------------------------------------------------------------------
--- You've "unfriended" them, preventing further associations.
-
-function Engram.Unfriend( agent )
-	assert( is_instance( agent, Agent ))
-	local engram = Engram()
-	engram.obj = agent
-	engram.unfriend = true
-	return engram
-end
-
-function Engram.IsUnfriended( engram )
-	return engram.unfriend == true
-end
-

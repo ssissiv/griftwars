@@ -31,14 +31,6 @@ assert( DEFAULT_DEBUG_SPEED )
 
 PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS" }
 
-OPINION = MakeEnum
-{
-	"NEUTRAL",
-	"FEAR",
-	"LIKE",
-	"DISLIKE",
-}
-
 GENDER = MakeEnum
 {
 	"MALE",
@@ -64,21 +56,6 @@ GENERATION, GENERATION_ARRAY = MakeEnum
 	"ELDER",
 }
 
-OPINION_STRINGS =
-{
-	[ OPINION.FEAR ] =
-	{
-		"{1.Id} fears you!",
-		"You fear {1.id}!",
-	},
-
-	[ OPINION.LIKE ] =
-	{
-		"{1.Id} likes you a little more!",
-		"You like {1.id} a little more!",
-	}
-}
-
 PRIVACY = MakeBitField
 {
 	"ID", -- Name, status, basic stats.
@@ -89,7 +66,7 @@ PRIVACY = MakeBitField
 }
 PRIVACY_ALL = 0xFFFFFFFF
 
-RELATION = MakeEnum
+AFFINITY = MakeEnum
 {
 	"STRANGER", -- Stranger, identiy not known.
 	"KNOWN", -- Neutral relationship, but identity known.

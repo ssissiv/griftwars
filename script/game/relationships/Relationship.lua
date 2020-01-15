@@ -6,11 +6,16 @@ function Relationship:init()
 	self.agents = {}
 end
 
+function Relationship:GetAge()
+	return self.world:GetDateTime() - self.when
+end
+
 function Relationship:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 	for i, agent in ipairs( self.agents ) do
 		agent:_AddRelationship( self )
 	end
+	self.when = world:GetDateTime()
 end
 
 function Relationship:HasAgent( agent )
