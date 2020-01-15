@@ -51,6 +51,11 @@ function LearnLocation:RenderImGuiWindow( ui, screen, owner )
 	ui.Text( loc.format( "You know how to get to {1}.", self.location:GetTitle() ))
 end
 
+LearnLocation.ACTIONS =
+{
+	{ name = "Travel", verb = function( self, owner ) return owner:DoVerbAsync( Verb.Travel( owner, self.location )) end }
+}
+
 function Engram.HasLearnedLocation( engram, location )
 	return engram._class == LearnLocation and engram.location == location
 end

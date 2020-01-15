@@ -25,6 +25,14 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 			end
 			ui.Indent( 20 )
 			ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
+			for i, action in ipairs( engram.ACTIONS or table.empty ) do
+				if i > 1 then
+					ui.SameLine( 0, 10 )
+				end
+				if ui.Button( action.name ) then
+					action.verb( engram, self.agent )
+				end
+			end
 			ui.Unindent( 20 )
 			count = count + 1
 		end
