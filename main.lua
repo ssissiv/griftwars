@@ -53,6 +53,7 @@ require "game/VerbContainer"
 
 require "game/map/Line"
 require "game/map/City"
+require "game/map/Forest"
 require "game/map/CorpHQ"
 
 require "game/relationships/Relationship"

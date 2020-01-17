@@ -57,6 +57,14 @@ function WorldGen:GenerateWorld()
 	end
 	world:RemoveBucket( Feature.Shop )
 	
+	--------------------------------------------------------------------------------------
+	-- Forest!
+
+	for i = 1, 3 do
+		local forest = WorldGen.Forest()
+		world:SpawnEntity( forest )
+		forest:RandomRoom():Connect( city:RandomRoom() )
+	end
 
 	--------------------------------------------------------------------------------------
 

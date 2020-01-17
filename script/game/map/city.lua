@@ -1,4 +1,4 @@
-local City = class( "WorldGen.City" )
+local City = class( "WorldGen.City", Entity )
 
 function City:init()
 	self.rooms = {}

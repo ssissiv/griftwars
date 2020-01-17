@@ -1,6 +1,31 @@
 TODO
 ====
 
+STARDEW:
+	* Start with Parsnip Seeds.
+	* Quest: Harvest Parsnips, Talk to 28 people.
+
+	About ~40 seconds an hour (so about 40*20 = 13 minutes max per day)
+	Actions cost Energy. YOu can quickly deplete your energy by 9 am on the first day if you chop furiously.
+
+	Day 2: Note from Willy: Meet at Beach.  Get a fishing rod, can fish.
+		You can loot, plant, buy, explore, talk, find quests, dig, fish, clear/chop, harvest,...
+	Day 3: Ad for a 24-slot backpack
+		Night: Level Up Fishing!
+	Day 4: Quests.
+	Day 6-10?: Community Centre
+
+	It is satisfing to plant, water, watch grow.  VERY satisfying to sow.
+	Getting things always feels great.
+
+	End-of-day level ups. You don't see XP.
+
+
+GRIFTWARS:
+	SCAV start: acquainted with a dude.  Start with 3 coins.
+	You can scavenge junk piles, kill things, loot eggs/plants on the outskirts, eavesdrop conversations,
+	j
+
 SCAVENGER:
 	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
 		Gain Trust as you Scavenge with them. (+trust, +coins / minor items)
