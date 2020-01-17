@@ -53,9 +53,11 @@ function Combat:EvaluateTarget( target )
 	if target:GetLocation() ~= self.owner:GetLocation() then
 		return false
 	end
-	-- TEMP. orcs attacksssss
-	if self.owner.species ~= SPECIES.ORC or target.species == SPECIES.ORC then
-		return false
+	if not target:GetAspect( Aspect.Combat ):IsTarget( self.owner ) then
+		-- TEMP. orcs attacksssss
+		if self.owner.species ~= SPECIES.ORC or target.species == SPECIES.ORC then
+			return false
+		end
 	end
 	return true
 end
@@ -88,6 +90,11 @@ function Combat:AddTarget( target )
 		assert( not self.owner:HasAspect( Verb.Attack ))
 		self.attack = self.owner:GainAspect( Verb.Attack( self.owner ))
 	end
+
+	local combat = target:GetAspect( Aspect.Combat )
+	if not combat:IsTarget( self.owner ) then
+		combat:AddTarget( self.owner )
+	end
 end
 
 function Combat:RemoveTarget( target, idx )
@@ -109,4 +116,7 @@ function Combat:PickTarget()
 	return table.arraypick( self.targets )
 end
 
+function Combat:Targets()
+	return ipairs( self.targets )
+end
 

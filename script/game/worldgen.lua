@@ -94,6 +94,8 @@ function WorldGen:GeneratePlayer( world )
 	-- player:GainAspect( Skill.Socialize() )
 	-- player:GainAspect( Skill.RumourMonger() )
 	player:GainAspect( Trait.Player() )
+	player:GainAspect( Aspect.Combat() )
+	
 	local tokens = player:GainAspect( Aspect.TokenHolder() )
 	tokens:AddToken( Token( DIE_FACE.DIPLOMACY, 1 ) )
 	tokens:AddToken( Token( DIE_FACE.STEALTH, 1 ) )

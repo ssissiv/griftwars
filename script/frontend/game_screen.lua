@@ -219,11 +219,22 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 			count = count + 1
 			self.objects[ count ] = obj
 
-			ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
-
-			local desc = loc.format( "{1}) {2}", string.char( count + 96 ), obj:GetShortDesc( puppet ) )
+			local hotkey = string.char( count + 96 )
+			local desc = loc.format( "{1}) {2}", hotkey, obj:GetShortDesc( puppet ) )
+			local combat = puppet:GetAspect( Aspect.Combat )
+			if combat and combat:IsTarget( obj ) then
+				ui.PushStyleColor( ui.Style_Text, 1, 0, 0, 1 )
+			else
+				ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
+			end
+	
 			if puppet:IsBusy() then
-				ui.Text( desc )
+				if combat and combat:IsTarget( puppet ) then
+					ui.Text( desc )
+				else
+					ui.Text( desc )
+--					ui.TextColored( 1, 0, 0, 1, desc )
+				end
 			elseif ui.Selectable( desc, puppet:GetFocus() == obj ) then
 				puppet:SetFocus( obj )
 			end

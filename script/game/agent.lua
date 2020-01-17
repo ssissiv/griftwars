@@ -21,9 +21,7 @@ function Agent:init()
 
 	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
 
-	self:CreateStat( STAT.STATURE, 1, 1 ):SetGrowthRate( 0.1 )
-	self:CreateStat( STAT.MIND, 1, 1 ):SetGrowthRate( 0.1 )
-	self:CreateStat( STAT.CHARISMA, 1, 1 ):SetGrowthRate( 0.1 )
+	self:CreateStat( STAT.HEALTH, 6, 6 )
 end
 
 function Agent:OnSpawn( world )
@@ -502,8 +500,16 @@ function Agent:DeltaStat( stat, delta )
 	local aspect = self.stats[ stat ]
 	if aspect then
 		aspect:DeltaValue( delta )
-		Msg:Echo( self, "You gain {1} {2}!", delta, stat )
+		-- Msg:Echo( self, "You gain {1} {2}!", delta, stat )
 	end
+end
+
+function Agent:DeltaHealth( delta )
+	self:DeltaStat( STAT.HEALTH, delta )
+end
+
+function Agent:GetHealth()
+	return self:GetStatValue( STAT.HEALTH )
 end
 
 function Agent:GetStatValue( stat )

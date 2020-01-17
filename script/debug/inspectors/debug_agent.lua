@@ -68,6 +68,18 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
+	local combat = self.agent:GetAspect( Aspect.Combat )
+	if combat and ui.CollapsingHeader( "Combat" ) then
+		ui.Text( "Targets:" )
+		for i, target in combat:Targets() do
+			ui.SameLine( 0, 10 )
+			panel:AppendTable( ui, target )
+		end
+		if combat.attack then
+			panel:AppendTable( ui, combat.attack )
+		end
+	end
+
 	if ui.CollapsingHeader( "Inventory" ) then
 		self.agent:GetInventory():RenderDebugPanel( ui, panel, dbg )
 	end

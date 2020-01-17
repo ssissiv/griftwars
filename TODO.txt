@@ -8,6 +8,7 @@ STARDEW:
 	About ~40 seconds an hour (so about 40*20 = 13 minutes max per day)
 	Actions cost Energy. YOu can quickly deplete your energy by 9 am on the first day if you chop furiously.
 
+	Day 1: Plant parsnips.  Water them.  Talk to people.  Explore.  See Calendar, loot items...
 	Day 2: Note from Willy: Meet at Beach.  Get a fishing rod, can fish.
 		You can loot, plant, buy, explore, talk, find quests, dig, fish, clear/chop, harvest,...
 	Day 3: Ad for a 24-slot backpack

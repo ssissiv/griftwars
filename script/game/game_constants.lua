@@ -157,7 +157,8 @@ STAT = MakeEnum
 {	
 	-- Core stats
 	"FATIGUE",
-
+	"HEALTH",
+	
 	-- Trainable stats.
 	"STATURE",
 	"MIND",
