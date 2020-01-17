@@ -266,6 +266,11 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 					ui.Unindent( 20 )
 				end
 			end
+
+			if combat and combat:IsTarget( obj ) then
+				ui.SameLine( 0, 10 )
+				ui.TextColored( 1, 0, 0, 1, loc.format( "{1}/{2}", obj:GetHealth() ))
+			end
 		end
 
 		ui.PopID()

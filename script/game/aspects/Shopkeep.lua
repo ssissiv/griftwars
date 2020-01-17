@@ -39,9 +39,11 @@ function Shopkeep:OnSpawn( world )
 		self.assistant_job = Job.Assistant( self.owner )
 		self.owner:GainAspect( Interaction.OfferJob( self.assistant_job ))
 
-		local assistant = Agent.Citizen()
-		world:SpawnAgent( assistant )
-		assistant:GainAspect( self.assistant_job )
+		if math.random() < 0.5 then
+			local assistant = Agent.Citizen()
+			world:SpawnAgent( assistant )
+			assistant:GainAspect( self.assistant_job )
+		end
 	end
 end
 

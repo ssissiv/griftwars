@@ -2,15 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( t:IsFriensd( puppet ))",
-			"print( t:IsFriends( puppet ))",
-			"print( t:IsAcquainted( puppet ))",
-			"t:RegenVerbs()",
-			"print(t:IsFriends(puppet))",
-			"t:RegenVerbs()",
-			"print(t:IsFriends(puppet))",
-			"print(t:CalculateTimeSpeed())",
-			"print(t:GetWorld())",
 			"print(t.owner)",
 			"print(Trait)",
 			"print(Trait.OnSpawn, Aspect.OnSpawn)",
@@ -33,7 +24,16 @@ return {
 			"print(world:CalculateTimeElapsed(1.0))",
 			"print( Verb.Attack )",
 			"t:EvaluateTargets()",
-			"sdf"
+			"sdf",
+			"print(t:IsDoing())",
+			"print( t )",
+			"print( t:CanDo( puppet ))",
+			"print(t:CollectVerbs( nil, puppet, nil )",
+			")",
+			"print(t:CollectVerbs( nil, puppet, nil ))",
+			"puppet:RegenVerbs()",
+			"puppet:GainAspect( Skill.Scrounge() )",
+			"print(t:GetLocation())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

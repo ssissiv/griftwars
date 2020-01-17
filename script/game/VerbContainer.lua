@@ -46,9 +46,9 @@ end
 
 function VerbContainer:CollectVerbsFromAgent( agent, actor, ... )
 	-- Verbs get a say.
-	for i, verb in agent:Verbs() do
-		if verb.CollectVerbs then
-			verb:CollectVerbs( self, actor, ... )
+	for i, aspect in agent:Aspects() do
+		if aspect.CollectVerbs then
+			aspect:CollectVerbs( self, actor, ... )
 		end
 	end
 end

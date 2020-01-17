@@ -21,7 +21,6 @@ end
 
 
 function Combat:OnLocationEvent( event_name, location, ... )
-	assert( location == self.owner:GetLocation() )
 	if event_name == LOCATION_EVENT.AGENT_ADDED then
 		local agent = ...
 		if not self:IsTarget( agent ) and self:EvaluateTarget( agent ) then
@@ -53,7 +52,11 @@ function Combat:EvaluateTarget( target )
 	if target:GetLocation() ~= self.owner:GetLocation() then
 		return false
 	end
-	if not target:GetAspect( Aspect.Combat ):IsTarget( self.owner ) then
+	local combat = target:GetAspect( Aspect.Combat )
+	if not combat then
+		return false
+	end
+	if not combat:IsTarget( self.owner ) then
 		-- TEMP. orcs attacksssss
 		if self.owner.species ~= SPECIES.ORC or target.species == SPECIES.ORC then
 			return false

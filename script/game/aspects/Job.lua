@@ -3,7 +3,7 @@ local Job = class( "Job", Verb )
 function Job:init( employer )
 	assert( is_instance( employer, Agent ))
 	self.employer = employer
-	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectVerbs )
+
 	if self.OnInit then
 		self:OnInit()
 	end
@@ -45,6 +45,7 @@ end
 
 
 function Job:OnSpawn( world )
+	self.actor = self.owner
 	self.owner:Acquaint( self.employer )
 	self.employer:Acquaint( self.owner )
 	self.hire_time = self:GetWorld():GetDateTime()
@@ -123,8 +124,10 @@ function Job:AddTrainingReq( req )
 	table.insert( self.training_reqs, req )
 end
 
-function Job:OnCollectVerbs( event_name, actor, verbs )
-	verbs:AddVerb( self )
+function Job:CollectVerbs( verbs, actor )
+	if self and actor == self.owner then
+		verbs:AddVerb( self )
+	end
 end
 
 function Job:CanInteract( actor )

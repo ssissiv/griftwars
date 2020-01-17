@@ -50,7 +50,7 @@ function Scavenge:CalculateUtility( actor )
 end
 
 function Scavenge:CollectVerbs( verbs, actor, obj )
-	if self and obj == self.actor and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
+	if self and self:IsDoing() and obj == self.actor and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
 		assert( is_instance( actor, Agent ), tostring(actor) )
 		verbs:AddVerb( Verb.Help( actor, self ))
 	end
