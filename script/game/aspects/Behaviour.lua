@@ -16,6 +16,8 @@ function Behaviour:GetName()
 end
 
 function Behaviour:OnSpawn( world )
+	Aspect.OnSpawn( self, world )
+
 	self:ScheduleNextTick( 0 )
 
 	self:RegenerateVerbs()
@@ -32,12 +34,19 @@ function Behaviour:RegenerateVerbs()
 end
 
 function Behaviour:OnAspectsChanged( event_name, owner, aspect )
-
 	if is_instance( aspect, Verb ) and aspect.CalculateUtility then
 		if event_name == ENTITY_EVENT.ASPECT_LOST then
 			table.arrayremove( self.verbs, aspect )
+			if self:GetWorld() then
+				self:ScheduleNextTick( 0 )
+				self.scheduled_reason = aspect
+			end
 		elseif event_name == ENTITY_EVENT.ASPECT_GAINED then
 			table.insert( self.verbs, aspect )
+			if self:GetWorld() then
+				self:ScheduleNextTick( 0 )
+				self.scheduled_reason = aspect
+			end
 		end
 	end
 end

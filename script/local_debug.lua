@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( t:IsAquainted( puppet ))",
-			"print( t:IsAcquainted( puppet ))",
-			"print( t:IsFriend( puppet ))",
 			"print( t:IsFriensd( puppet ))",
 			"print( t:IsFriends( puppet ))",
 			"print( t:IsAcquainted( puppet ))",
@@ -33,7 +30,10 @@ return {
 			"print( math.modf(2.3, 551.0))",
 			"print(world:CalculateTimeElapsed(1.0))",
 			"print(world.debug_world_speed)",
-			"print(world:CalculateTimeElapsed(1.0))"
+			"print(world:CalculateTimeElapsed(1.0))",
+			"print( Verb.Attack )",
+			"t:EvaluateTargets()",
+			"sdf"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

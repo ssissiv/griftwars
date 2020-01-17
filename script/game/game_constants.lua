@@ -3,6 +3,7 @@
 WALL_TO_GAME_TIME = 1/60.0 -- eg. 1 wall second == 1 game minute.
 
 -- Note: 'datetime' is a floating point measure of game hours passed.
+ONE_SECOND = 1/360
 ONE_MINUTE = 1/60
 HALF_HOUR = 30/60
 ONE_HOUR = 1
@@ -142,6 +143,8 @@ UTILITY =
 	MAX = 100,
 	-- Life & death situation, or something the Agent would prioritize over life & death.
 	EMERGENCY = 100,
+	-- Comat priorites basically trump everything except EMERGENCY.
+	COMBAT = 80,
 	-- Something an Agent really should be doing, like a job.
 	OBLIGATION = 50,
 	-- A habit that takes place when any Obligations are satisfied.

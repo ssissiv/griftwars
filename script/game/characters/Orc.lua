@@ -9,6 +9,7 @@ function Orc:init()
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))
+	self:GainAspect( Aspect.Combat() )
 end
 
 function Orc:OnSpawn( world )

@@ -75,6 +75,11 @@ function Verb:GetOwner()
 	return self.owner
 end
 
+function Verb:OnLoseAspect( owner )
+	Aspect.OnLoseAspect( self, owner )
+	self:Cancel()
+end
+
 function Verb:GetWorld()
 	return self:GetOwner().world
 end
@@ -231,6 +236,10 @@ function Verb:IsCancelled()
 end
 
 function Verb:Cancel()
+	if not self:IsDoing() then
+		return
+	end
+
 	self.cancelled = true
 
 	-- print ( "CANCEL", self, self.actor, debug.traceback())

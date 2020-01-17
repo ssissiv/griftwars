@@ -81,6 +81,7 @@ require "game/aspects/Interactions"
 require "game/aspects/Leader"
 require "game/aspects/Shopkeep"
 require "game/aspects/Assistant"
+require "game/aspects/Combat"
 
 require "game/aspects/behaviour"
 
@@ -112,6 +113,7 @@ require "game/verbs/ShortRest"
 require "game/verbs/ManageFatigue"
 require "game/verbs/Strategize"
 require "game/verbs/Help"
+require "game/verbs/Attack"
 
 require "game/verbs/EquipObject"
 

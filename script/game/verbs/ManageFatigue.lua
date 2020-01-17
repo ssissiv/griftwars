@@ -9,8 +9,10 @@ end
 
 function ManageFatigue:CalculateUtility( actor )
 	local utility
-	if self.sleep:IsDoing() or self.rest:IsDoing() then
+	if self.sleep:IsDoing() then
 		utility = UTILITY.EMERGENCY - 10
+	elseif self.rest:IsDoing() then
+		utility = UTILITY.FUN
 	else
 		local night_t = Calendar.GetNormalizedTimeOfDay( actor.world:GetDateTime(), 20 * ONE_HOUR )
 		if night_t > 0.8 then
