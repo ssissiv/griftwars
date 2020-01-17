@@ -8,6 +8,7 @@ Agent.FLAGS = FLAGS
 function Agent:init()
 	Entity.init( self )
 	self.prestige = 1
+	self.species = SPECIES.NONE
 	self.flags = {}
 	self.stats = {}
 	self.sense_log = {} -- array of strings
@@ -28,7 +29,7 @@ end
 function Agent:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
-	if self.name == nil then
+	if self.name == nil and SPECIES_PROPS[ self.species ].name_pool then
 		self.name = world:GetAspect( Aspect.NamePool ):PickName()
 	end
 	
@@ -67,7 +68,7 @@ function Agent:HasFlag( flag )
 end
 
 function Agent:GetName()
-	return self.name or "No Name"
+	return self.name or self.species or "No Name"
 end
 
 function Agent:GetDesc()
@@ -207,16 +208,18 @@ function Agent:GenerateLocTable( viewer )
 		t.HeShe = "It"
 	end
 
-	if viewer == nil then
-		t.id = loc.format( "[[{1}]]", self.name )
-		t.Id = t.id
-	elseif viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
-		t.id = loc.format( "[{1}]", self.name )
-		t.Id = t.id
+	if self.name then
+		if viewer == nil then
+			t.id = loc.format( "[[{1}]]", self.name )
+		elseif viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
+			t.id = loc.format( "[{1}]", self.name )
+		else
+			t.id = "[Unknown]"
+		end
 	else
-		t.id = "[Unknown]"
-		t.Id = t.id
+		t.id = loc.format( "[{1}]", self.species )
 	end
+	t.Id = t.id
 
 	t.name = self:GetName()
 

@@ -28,10 +28,34 @@ function Forest:init()
 end
 
 function Forest:OnSpawn( world )
+	Forest._base.OnSpawn( self, world )
+
+	for i, room in ipairs( self.rooms ) do
+		world:SpawnLocation( room )
+	end
 	print( "FOREST", #self.rooms )
 	-- for i, room in ipairs( self.rooms ) do
 	-- 	room:SetDetails( loc.format( "Thee Forest [{1}]", i ))
 	-- end
+	self:PopulateOrcs()
+end
+
+function Forest:PopulateOrcs()
+	local n = math.random( 3 )
+	if n == 1 then
+		-- Some Orcs
+		n = math.ceil( #self.rooms / 5 )
+	elseif n == 2 then
+		-- LOTS of Orcs!
+		n = math.ceil( #self.rooms / 3 )
+	else
+		-- No orcs!
+		n = 0
+	end
+	for i = 1, n do
+		local orc = Agent.Orc()
+		self.world:SpawnAgent( orc, self:RandomRoom() )
+	end
 end
 
 function Forest:CreateRoom()

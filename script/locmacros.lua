@@ -24,6 +24,15 @@ return
 		return concat
 	end,
 
+	a_an = function( s )
+		local c = s:sub( 1, 1 ):upper()
+		if c == "a" or c == "e" or c == "i" or c == "o" or c == "u" then
+			return string.format( "an %s", s )
+		else
+			return string.format( "a %s", s )
+		end
+	end,
+
 	-- Percentage, 0 places of precision.
 	percent = function( num )
 		local percent = num * 100

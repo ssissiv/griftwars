@@ -75,6 +75,22 @@ AFFINITY = MakeEnum
 	"ENEMY", -- Enemy!
 }
 
+SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC" }
+
+SPECIES_PROPS =
+{
+	NONE =
+	{
+	},
+	HUMAN = 
+	{
+		sentient = true,
+		name_pool = true,
+	},
+	ORC =
+	{
+	},
+}
 
 EQ_SLOT = MakeEnum
 {

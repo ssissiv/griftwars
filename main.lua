@@ -121,6 +121,8 @@ require "game/characters/Collector"
 require "game/characters/MilitiaCaptain"
 require "game/characters/Shopkeeper"
 
+require "game/characters/Orc"
+
 -----------------------------------------------------------
 
 require "imgui"

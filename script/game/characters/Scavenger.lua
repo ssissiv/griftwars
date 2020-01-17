@@ -76,6 +76,8 @@ local Scavenger = class( "Agent.Scavenger", Agent )
 function Scavenger:init()
 	Agent.init( self )
 
+	self.species = SPECIES.HUMAN
+
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))
 	self:GainAspect( Verb.Scavenge( self ))

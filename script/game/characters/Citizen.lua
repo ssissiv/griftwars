@@ -6,6 +6,8 @@ local Citizen = class( "Agent.Citizen", Agent )
 function Citizen:init()
 	Agent.init( self )
 
+	self.species = SPECIES.HUMAN
+
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))
 

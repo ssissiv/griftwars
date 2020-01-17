@@ -15,6 +15,8 @@ local MilitiaCaptain = class( "Agent.MilitiaCaptain", Agent )
 function MilitiaCaptain:init()
 	Agent.init( self )
 	
+	self.species = SPECIES.HUMAN
+	
 	self:GainAspect( Verb.Strategize( self ))
 	self:GainAspect( Interaction.Acquaint( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
