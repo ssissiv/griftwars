@@ -197,6 +197,11 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
+	if location == nil then
+		ui.Text( "Afterlife!" )
+		return
+	end
+
 	ui.Text( location:GetTitle() )
 	if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
 		ui.SameLine( 0, 10 )
@@ -329,7 +334,7 @@ function GameScreen:RenderBackground( ui, agent )
     love.graphics.setColor( 255, 255, 255 )
 
 	-- Render the background image
-    if agent:GetLocation():GetImage() then
+    if agent:GetLocation() and agent:GetLocation():GetImage() then
 	    -- love.graphics.rectangle( "fill", 0, h, W, H * 0.75 - h )
 	    love.graphics.draw( agent:GetLocation():GetImage(), 0, h )
 	end

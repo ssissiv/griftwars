@@ -21,7 +21,7 @@ function Agent:init()
 
 	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
 
-	self:CreateStat( STAT.HEALTH, 6, 6 )
+	self:GainAspect( Aspect.HealthValue( 1, 6 ))
 	self:CreateStat( STAT.CHARISMA, 1, 1 )
 end
 
@@ -43,6 +43,13 @@ function Agent:OnSpawn( world )
 
 	world:Log( "Spawned: {1}", self )
 end
+
+function Agent:OnDespawn()
+	self:WarpToNowhere()
+
+	Entity.OnDespawn( self )
+end
+
 
 function Agent:SetFlags( ... )
 	for i, flag in ipairs({...}) do
@@ -361,9 +368,7 @@ function Agent:Unfriend( other )
 	end
 end
 
-function Agent:WarpToLocation( location )
-	assert( is_instance( location, Location ))
-
+local function WarpToLocation( self, location )
 	local prev_location = self.location
 	if self.location then
 		self:SetFocus( nil )
@@ -379,6 +384,15 @@ function Agent:WarpToLocation( location )
 	end
 
 	self:BroadcastEvent( AGENT_EVENT.LOCATION_CHANGED, prev_location, self.location )
+end
+
+function Agent:WarpToNowhere()
+	WarpToLocation( self )
+end
+
+function Agent:WarpToLocation( location )
+	assert( is_instance( location, Location ))
+	WarpToLocation( self, location )
 end
 
 function Agent:MoveToAgent( agent )
@@ -511,6 +525,16 @@ end
 
 function Agent:GetHealth()
 	return self:GetStatValue( STAT.HEALTH )
+end
+
+function Agent:Kill()
+	if self:IsPuppet() then
+		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
+	end
+	
+	Msg:ActToRoom( "{1.Id} dies!", self )
+	Msg:Echo( self, "You die!" )
+	self.world:DespawnEntity( self )
 end
 
 function Agent:GetStatValue( stat )

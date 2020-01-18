@@ -94,6 +94,8 @@ function Combat:AddTarget( target )
 		self.attack = self.owner:GainAspect( Verb.Attack( self.owner ))
 	end
 
+	self.owner:RegenVerbs()
+
 	local combat = target:GetAspect( Aspect.Combat )
 	if not combat:IsTarget( self.owner ) then
 		combat:AddTarget( self.owner )
@@ -113,6 +115,8 @@ function Combat:RemoveTarget( target, idx )
 		self.owner:LoseAspect( self.attack )
 		self.attack = nil
 	end
+
+	self.owner:RegenVerbs()
 end
 
 function Combat:PickTarget()

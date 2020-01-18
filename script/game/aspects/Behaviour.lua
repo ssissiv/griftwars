@@ -23,6 +23,15 @@ function Behaviour:OnSpawn( world )
 	self:RegenerateVerbs()
 end
 
+function Behaviour:OnDespawn()
+	if self.tick_ev then
+		self:GetWorld():UnscheduleEvent( self.tick_ev )
+		self.tick_ev = nil
+	end
+	Aspect.OnDespawn( self )
+end
+
+
 function Behaviour:RegenerateVerbs()
 	table.clear( self.verbs )
 

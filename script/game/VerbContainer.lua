@@ -17,6 +17,10 @@ function VerbContainer:CollectVerbs( actor, ... )
 
 	self.dirty = false
 
+	if not actor:IsSpawned() then
+		return
+	end
+
 	-- Event registrants...
 	actor:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self, ... )
 

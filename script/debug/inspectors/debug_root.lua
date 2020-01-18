@@ -32,19 +32,28 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
             panel:AppendTable( ui, self.game.world:GetPuppet() )
         end
 
+        local changed, filter_str = ui.InputText( "Filter", self.filter_str or "", 128 )
+        if changed then
+            self.filter_str = filter_str
+        end
+
         if ui.TreeNodeEx( "Locations", "DefaultOpen" ) then
             if puppet and puppet:GetLocation() then
                 panel:AppendTable( ui, puppet:GetLocation(), string.format( "**%s", tostring(puppet:GetLocation())) )
             end
             for i, location in self.game.world:AllLocations() do
-                panel:AppendTable( ui, location )
+                if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
+                    panel:AppendTable( ui, location )
+                end
             end
             ui.TreePop()
         end
 
         if ui.TreeNodeEx( "Agents", "DefaultOpen" ) then
             for i, agent in self.game.world:AllAgents() do
-                panel:AppendTable( ui, agent )
+                if self.filter_str == nil or string.find( tostring(agent), self.filter_str ) then
+                    panel:AppendTable( ui, agent )
+                end
             end
             ui.TreePop()
         end

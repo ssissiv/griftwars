@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t.owner)",
-			"print(Trait)",
 			"print(Trait.OnSpawn, Aspect.OnSpawn)",
 			"print(t:IsWorking())",
 			"print(t:IsTimeForShift())",
@@ -33,7 +31,9 @@ return {
 			"print(t:CollectVerbs( nil, puppet, nil ))",
 			"puppet:RegenVerbs()",
 			"puppet:GainAspect( Skill.Scrounge() )",
-			"print(t:GetLocation())"
+			"print(t:GetLocation())",
+			"puppet:RegenVerbs()",
+			"world:SetPuppet( nil )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

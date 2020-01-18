@@ -99,7 +99,7 @@ function World:GetPuppet()
 end
 
 function World:SetPuppet( agent )
-	assert( is_instance( agent, Agent ))
+	assert( agent == nil or is_instance( agent, Agent ))
 
 	self.puppet = agent
 	self:RefreshTimeSpeed()
