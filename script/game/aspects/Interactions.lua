@@ -134,7 +134,7 @@ local Befriend = class( "Interaction.Befriend", Interaction )
 
 Befriend.can_repeat = true -- This interaction can take place multiple times.
 
-function Befriend:init( cr )
+function Befriend:init()
 	Befriend._base.init( self )
 	-- self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
 end
@@ -160,8 +160,8 @@ function Befriend:Interact( actor )
 	if challenge == nil then
 		challenge = Verb.Challenge( actor ):SetDuration( 1.0 ):SetAttempts( 3 )
 		local t1, t2 = math.random(), math.random()
-		:AddResult( t1, t1 + 0.1 * math.random( 1, 3 ), "success" )
-		:AddResult( t2, t2 + 0.1 * math.random( 1, 3 ), "success" )
+		challenge:AddResult( t1, t1 + 0.1 * math.random( 1, 3 ), "success" )
+		challenge:AddResult( t2, t2 + 0.1 * math.random( 1, 3 ), "success" )
 		self.challenge = challenge
 	end
 
@@ -171,7 +171,7 @@ function Befriend:Interact( actor )
 			Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
 		end
 		if self.OnSuccess then
-			self:OnSuccess( challenge )
+			self:OnSuccess( actor, challenge )
 		end
 
 	else
@@ -184,12 +184,14 @@ end
 local IntroduceAgent = class( "Interaction.IntroduceAgent", Befriend )
 
 function IntroduceAgent:init( friend )
+	Befriend.init( self )
 	assert( is_instance( friend, Agent ))
 	self.friend = friend
 end
 
-function IntroduceAgent:OnSuccess()
-	Msg:Speak( self.owner, "Listen, {1.Id} is a friend of mine. {1.HeShe} can help you out.", self.friend )
+function IntroduceAgent:OnSuccess( actor )
+	actor:Acquaint( self.friend )
+	Msg:Speak( self.owner, "Listen, {2.Id} is a friend of mine. {2.HeShe} can help you out.", self.friend )
 end
 
 -----------------------------------------------------------------------------------

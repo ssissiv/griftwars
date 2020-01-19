@@ -160,6 +160,17 @@ function WorldBase:CreateBucketByAspect( aspect )
 	return self.buckets[ aspect ]
 end
 
+function WorldBase:CreateBucketByClass( class )
+	assert( is_class( class ))
+	for i, ent in ipairs( self.entities ) do
+		if is_instance( ent, class ) then
+			self:RegisterToBucket( class, ent )
+		end
+	end
+
+	return self.buckets[ class ]
+end
+
 function WorldBase:RegisterToBucket( key, obj )
 	assert( is_class( key ))
 	local bucket = self.buckets[ key ]

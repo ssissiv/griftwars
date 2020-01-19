@@ -58,7 +58,6 @@ function World:DoAsync( fn,... )
 	end
 end
 
-
 function World:SpawnAgent( agent, location )
 	self:SpawnEntity( agent )
 
