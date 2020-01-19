@@ -172,6 +172,8 @@ function love.load(arg)
 
     debug_mgr.game = game
     debug_mgr:ExecuteDebugFile( "script/debug/consolecommands.lua" )
+
+    debug_mgr:TryExecuteDebugFile( "script/startup.lua" )
 end
  
 function love.update(dt)

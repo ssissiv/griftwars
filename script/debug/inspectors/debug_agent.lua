@@ -13,7 +13,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		if self.agent:GetLocation() then
 			if ui.Button( loc.format( "Warp To {1}", self.agent:GetLocation()) ) then
 				self.agent.world:DoAsync( function( world )
-					world:GetPuppet():MoveToAgent( self.agent )
+					world:GetPuppet():WarpToAgent( self.agent )
 				end )
 			end
 		end

@@ -390,7 +390,7 @@ function Agent:WarpToLocation( location )
 	WarpToLocation( self, location )
 end
 
-function Agent:MoveToAgent( agent )
+function Agent:WarpToAgent( agent )
 	self:WarpToLocation( agent:GetLocation() )
 end
 

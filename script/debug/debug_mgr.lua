@@ -100,6 +100,18 @@ function DebugManager:ExecuteDebugFile( filename )
 	end
 end
 
+function DebugManager:TryExecuteDebugFile( filename )
+	print( "Executing: ", filename )
+	if filename then
+		local f,e = loadfile( filename, nil, self:GetDebugEnv() )
+		if not f then
+			print( "Failed: " .. tostring(e))
+		else
+			return f()
+		end
+	end
+end
+
 function DebugManager:DoRender()
 	if self.console_open then
 		self:RenderDebugConsole()
