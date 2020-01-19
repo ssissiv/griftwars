@@ -1,19 +1,3 @@
--- Find a home with no home owner assigned
-function World:FindVacantHome()
-	local homes = ObtainWorkTable()
-	for i, home in self:Bucket( Feature.Home ) do
-		if home:GetHomeOwner() == nil then
-			table.insert( homes, home )
-		end
-	end
-
-	local home = table.arraypick( homes )
-	ReleaseWorkTable( homes )
-	return home
-end
-
---------------------------------------------------------------
---
 
 function Agent:GetHome()
 	return self.home and self.home:GetLocation()
@@ -26,9 +10,8 @@ local Home = class( "Feature.Home", Feature )
 
 function Home:init( home_owner )
 	Feature.init( self )
-	if home_owner then
-		self:SetHomeOwner( home_owner )
-	end
+	assert( home_owner == nil )
+	self.residents = {}
 end
 
 function Home:OnSpawn( world )
@@ -40,15 +23,20 @@ function Home:OnDespawn()
 	self:GetWorld():UnregisterFromBucket( self._class, self )
 end
 
-function Home:SetHomeOwner( agent )
-	assert( self.home_owner == nil )
+function Home:AddResident( agent )
 	assert( is_instance( agent, Agent ))
-	self.home_owner = agent
 	agent.home = self
+
+	table.insert( self.residents, agent )
+	return self
 end
 
-function Home:GetHomeOwner()
-	return self.home_owner
+function Home:IsResident( agent )
+	return table.contains( self.residents, agent )
+end
+
+function Home:CountResidents()
+	return #self.residents
 end
 
 function Home:__tostring()

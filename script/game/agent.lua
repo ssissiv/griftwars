@@ -36,11 +36,6 @@ function Agent:OnSpawn( world )
 		self.gender = math.random() < 0.5 and GENDER.MALE or GENDER.FEMALE
 	end
 	
-	local home = world:FindVacantHome()
-	if home then
-		home:SetHomeOwner( self )
-	end
-
 	world:Log( "Spawned: {1}", self )
 end
 
@@ -531,7 +526,7 @@ function Agent:Kill()
 	if self:IsPuppet() then
 		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
 	end
-	
+
 	Msg:ActToRoom( "{1.Id} dies!", self )
 	Msg:Echo( self, "You die!" )
 	self.world:DespawnEntity( self )

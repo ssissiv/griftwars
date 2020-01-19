@@ -11,6 +11,6 @@ function Citizen:init()
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))
 
-	self:GainAspect( Interaction.Acquaint( CR1 ) )
+	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 end

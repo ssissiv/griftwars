@@ -74,5 +74,10 @@ function WorldNexus:ShowAffinityChanged( affinity )
 	self.world:TogglePause( PAUSE_TYPE.NEXUS )
 end
 
+function WorldNexus:DoChallenge( challenge )
+	local window = ChallengeWindow( challenge )
+	self.screen:AddWindow( window )
 
+	return window:Show()
+end
 

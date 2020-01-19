@@ -396,10 +396,21 @@ function GameScreen:MouseMoved( mx, my )
 end
 
 function GameScreen:MousePressed( mx, my, btn )
+	for i, window in ipairs( self.windows ) do
+		if window.MousePressed and window:MousePressed( mx, my, btn ) then
+			return true
+		end
+	end
 	return false
 end
 
 function GameScreen:KeyPressed( key )
+	for i, window in ipairs( self.windows ) do
+		if window.KeyPressed and window:KeyPressed( key ) then
+			return true
+		end
+	end
+
 	if key == "i" then
 		if self.inventory_window then
 			self:RemoveWindow( self.inventory_window )

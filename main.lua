@@ -22,6 +22,7 @@ require "frontend/LootWindow"
 require "frontend/AgentDetailsWindow"
 require "frontend/AffinityChangedWindow"
 require "frontend/MemoryWindow"
+require "frontend/ChallengeWindow"
 
 Camera = require "camera"
 bit32 = require "bit"
@@ -115,6 +116,7 @@ require "game/verbs/ManageFatigue"
 require "game/verbs/Strategize"
 require "game/verbs/Help"
 require "game/verbs/Attack"
+require "game/verbs/Challenge"
 
 require "game/verbs/EquipObject"
 

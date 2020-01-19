@@ -130,14 +130,16 @@ end
 
 -----------------------------------------------------------------------------------
 
-local Acquaint = class( "Interaction.Acquaint", Interaction )
+local Befriend = class( "Interaction.Befriend", Interaction )
 
-function Acquaint:init( cr )
-	Acquaint._base.init( self )
+Befriend.can_repeat = true -- This interaction can take place multiple times.
+
+function Befriend:init( cr )
+	Befriend._base.init( self )
 	-- self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
 end
 
-function Acquaint:CanInteract( actor )
+function Befriend:CanInteract( actor )
 	local affinity = self.owner:GetAffinity( actor )
 	if affinity == AFFINITY.FRIEND then
 		return false
@@ -152,11 +154,42 @@ function Acquaint:CanInteract( actor )
 	return Interaction.CanInteract( self, actor )
 end
 
-function Acquaint:Interact( actor )
-	-- We know the actor.
-	if actor:Befriend( self.owner ) then
-		Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
+function Befriend:Interact( actor )
+
+	local challenge = self.challenge
+	if challenge == nil then
+		challenge = Verb.Challenge( actor ):SetDuration( 1.0 ):SetAttempts( 3 )
+		local t1, t2 = math.random(), math.random()
+		:AddResult( t1, t1 + 0.1 * math.random( 1, 3 ), "success" )
+		:AddResult( t2, t2 + 0.1 * math.random( 1, 3 ), "success" )
+		self.challenge = challenge
 	end
+
+	local result = actor.world.nexus:DoChallenge( challenge )
+	if result == "success" then
+		if actor:Befriend( self.owner ) then
+			Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
+		end
+		if self.OnSuccess then
+			self:OnSuccess( challenge )
+		end
+
+	else
+		Msg:Echo( actor, "{1.Id} seems indifferent.", self.owner:LocTable( actor ))
+	end
+end
+
+-----------------------------------------------------------------------------------
+
+local IntroduceAgent = class( "Interaction.IntroduceAgent", Befriend )
+
+function IntroduceAgent:init( friend )
+	assert( is_instance( friend, Agent ))
+	self.friend = friend
+end
+
+function IntroduceAgent:OnSuccess()
+	Msg:Speak( self.owner, "Listen, {1.Id} is a friend of mine. {1.HeShe} can help you out.", self.friend )
 end
 
 -----------------------------------------------------------------------------------

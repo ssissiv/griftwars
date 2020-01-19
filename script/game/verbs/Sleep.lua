@@ -26,7 +26,7 @@ end
 function Sleep:CollectVerbs( verbs, agent, obj )
 	if obj == nil then
 		local home = agent:GetLocation():GetAspect( Feature.Home )
-		if home and home:GetHomeOwner() == agent then
+		if home and home:IsResident( agent ) then
 			verbs:AddVerb( Verb.Sleep( agent ))
 		end
 	end
@@ -50,11 +50,14 @@ function Sleep:Interact( actor )
 	
 	actor:SetMentalState( MSTATE.SLEEPING )
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -10 )
+	actor:GetStat( STAT.HEALTH ):DeltaRegen( 0.5 )
 
    	-- self:YieldForTime( 1 )
    	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 10 )
+	actor:GetStat( STAT.HEALTH ):DeltaRegen( -0.5 )
+
 	actor:SetMentalState( MSTATE.ALERT )
 
 	if not self:IsCancelled() then

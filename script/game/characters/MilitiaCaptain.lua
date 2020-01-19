@@ -18,7 +18,7 @@ function MilitiaCaptain:init()
 	self.species = SPECIES.HUMAN
 	
 	self:GainAspect( Verb.Strategize( self ))
-	self:GainAspect( Interaction.Acquaint( CR1 ) )
+	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 end
 

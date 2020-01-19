@@ -25,13 +25,24 @@ STARDEW:
 GRIFTWARS:
 	SCAV start: acquainted with a dude.  Start with 3 coins.
 	You can scavenge junk piles, kill things, loot eggs/plants on the outskirts, eavesdrop conversations,
-	j
+	Scav:
 
 SCAVENGER:
 	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
-		Gain Trust as you Scavenge with them. (+trust, +coins / minor items)
-		Trust Level 1: DIPLOMACY
-		Trust Level 2: Introduction to T1 SHOPKEEP (-2 DIPLO REQ w/ Shopkeep)
+		* GAIN CONTACT: Shopkeeper.  Buys your junk.
+			"I know a guy. Buys scrap."
+		* Shares Food once a day.
+			"You come to me if you need food. We gotsta stick together."
+		* Tells you a high-valued Junk Pile once a day.
+			"Heard some Hisec dropped a carbalytic booster."
+		* Teach thing about scavenge.
+			"I been doing this a long time, this is how you do it..."
+		* Provides you a home.
+			"Come where I stay. It ain't much but it's a bed."
+		* Introduces to another local T1.
+			"My buddy is X around here, he's a good guy."
+
+
 
 * Venture Corp
 	- give CEO salary

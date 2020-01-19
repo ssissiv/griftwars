@@ -33,7 +33,7 @@ function Forest:OnSpawn( world )
 	for i, room in ipairs( self.rooms ) do
 		world:SpawnLocation( room )
 	end
-	print( "FOREST", #self.rooms )
+
 	-- for i, room in ipairs( self.rooms ) do
 	-- 	room:SetDetails( loc.format( "Thee Forest [{1}]", i ))
 	-- end

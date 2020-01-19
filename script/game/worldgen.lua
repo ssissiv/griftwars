@@ -15,62 +15,48 @@ function WorldGen:GenerateWorld()
 	world:SpawnLocation( start )
 
 	local city = WorldGen.City()
+	world:SpawnEntity( city )
 	city:RoomAt( 1 ):Connect( start )
 	
 	local shop = Location()
 	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
 	shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
-	shop:Connect( city:RandomRoom() )
+	shop:Connect( city:RandomRoad() )
 	
 	local dens = Location()
 	dens:SetDetails( "The Dens", "Nobody visits these ruins, for they are overrun with feral vrocs." )
-	dens:Connect( city:RandomRoom() )
+	dens:Connect( city:RandomRoad() )
 
 	local shopkeep = Agent.Shopkeeper()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	shopkeep:GetAspect( Job.Shopkeep ):AssignShop( shop )
 	world:SpawnAgent( shopkeep, shop )
 
-	local collector = Agent.Collector()
-	shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
-	world:SpawnAgent( collector, shop )
+	-- local collector = Agent.Collector()
+	-- shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
+	-- world:SpawnAgent( collector, shop )
 
 	-- Gerin meets Armitage to identify any unknown items he's scavenged.
 	-- Armitage gets free Scrap.
-	world:SpawnRelationship( Relationship.ArmitageGerin( shopkeep, collector ) )
+	-- world:SpawnRelationship( Relationship.ArmitageGerin( shopkeep, collector ) )
 
-	for i = 1, 3 do
-		local scavenger = world:SpawnAgent( Agent.Scavenger(), start )
-		world:SpawnRelationship( Relationship.Subordinate( collector, scavenger ))
-	end
 
 	self:GenerateMilitary( world )
 
-	--------------------------------------------------------------------------------------
-	-- Shops!
-
-	world:CreateBucketByAspect( Feature.Shop )
-	local bucket = world:GetBucket( Feature.Shop )
-	for i, ent in ipairs( bucket ) do
-		assert( ent:IsSpawned())
-		ent:GetAspect( Feature.Shop ):SpawnShopOwner()
-	end
-	world:RemoveBucket( Feature.Shop )
-	
 	--------------------------------------------------------------------------------------
 	-- Forest!
 
 	for i = 1, 3 do
 		local forest = WorldGen.Forest()
 		world:SpawnEntity( forest )
-		forest:RandomRoom():Connect( city:RandomRoom() )
+		forest:RandomRoom():Connect( city:RandomRoad() )
 	end
 
 	--------------------------------------------------------------------------------------
 
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, start )
-	start:GainAspect( Feature.Home( player ) )
+	start:GainAspect( Feature.Home():AddResident( player ) )
 
 	--------------------------------------------------------------------------------------
 

@@ -51,7 +51,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
 
         if ui.TreeNodeEx( "Agents", "DefaultOpen" ) then
             for i, agent in self.game.world:AllAgents() do
-                if self.filter_str == nil or string.find( tostring(agent), self.filter_str ) then
+                if self.filter_str == nil or string.find( tostring(agent), self.filter_str ) or string.find( agent._classname, self.filter_str ) then
                     panel:AppendTable( ui, agent )
                 end
             end

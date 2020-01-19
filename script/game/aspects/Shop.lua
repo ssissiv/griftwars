@@ -53,6 +53,7 @@ function Shop:SpawnShopOwner()
 	end
 
 	self:AssignShopOwner( shopkeep )
+	return shopkeep
 end
 
 

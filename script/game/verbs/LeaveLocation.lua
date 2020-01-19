@@ -28,7 +28,7 @@ LeaveLocation.ENTER_STRINGS =
 function LeaveLocation:GetShortDesc( viewer )
 	if self.obj then
 		if self.actor:IsPuppet() then
-			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), elf.obj:LocTable( viewer ))
+			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), self.obj:LocTable( viewer ))
 		else
 			return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.obj:LocTable( viewer ))
 		end
