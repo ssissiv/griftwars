@@ -163,10 +163,14 @@ function Befriend:Interact( actor )
 		challenge:AddResult( t1, t1 + 0.1 * math.random( 1, 3 ), "success" )
 		challenge:AddResult( t2, t2 + 0.1 * math.random( 1, 3 ), "success" )
 		self.challenge = challenge
+	else
+		challenge:Reset()
 	end
 
 	local result = actor.world.nexus:DoChallenge( challenge )
-	if result == "success" then
+	if result == "cancel" then
+
+	elseif result == "success" then
 		if actor:Befriend( self.owner ) then
 			Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
 		end

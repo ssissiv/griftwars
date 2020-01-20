@@ -2,10 +2,17 @@ local Challenge = class( "Verb.Challenge", Verb )
 
 function Challenge:init( actor )
 	Verb.init( self, actor )
-	self.duration = 1.0
 	self.fns = {}
+	self.duration = 1.0
 	self.results = {}
-	self.attempts = 1
+	self.max_attempts = 1
+
+	self:Reset()
+end
+
+function Challenge:Reset()
+	self.attempts = 0
+	self.result = nil
 end
 
 function Challenge:GetResult()
@@ -22,8 +29,8 @@ function Challenge:SetDuration( duration )
 	return self
 end
 
-function Challenge:SetAttempts( attempts )
-	self.attempts = attempts
+function Challenge:SetAttempts( max_attempts )
+	self.max_attempts = max_attempts
 	return self
 end
 
@@ -60,10 +67,23 @@ function Challenge:GetT()
 	end
 
 	local now = love.timer.getTime()
-	if self.start_time == nil then
-		self.start_time = now
+	if not self.start_time then
+		return 0
+	else
+		return clamp( (now - self.start_time) / self.duration, 0, 1.0 )
 	end
-	return clamp( (now - self.start_time) / self.duration, 0, 1.0 )
+end
+
+function Challenge:Start()
+	self.start_time = love.timer.getTime()
+end
+
+function Challenge:IsStarted()
+	return self.start_time ~= nil
+end
+
+function Challenge:Cancel()
+	self.result = "cancel"
 end
 
 function Challenge:Stop()
@@ -79,6 +99,8 @@ function Challenge:RenderImGuiWindow( ui, screen )
 	local cx, cy = screenw/2, screenh*0.5
 	local w, h = screenw*0.7, screenh/4
 
+	love.graphics.setColor( 0, 0, 0 )
+	love.graphics.rectangle( "fill", cx - w/2 - 8, cy - h/2 - 8, w + 18, h + 18 )
 	love.graphics.setColor( 0, 5, 50 )
 	love.graphics.rectangle( "fill", cx - w/2, cy - h/2, w, h )
 
@@ -86,60 +108,95 @@ function Challenge:RenderImGuiWindow( ui, screen )
 	local t = self:GetT()
 
 	local barw, barh = w - 30, 30
+	local bar_hoffset = 50
 	local x1, x2 = cx - barw/2, cx + barw/2
 	local idx = 1
+	local xcell
 	local x = x1
 	while x < x2 do
 		local t1, t2 = (x - x1) / (x2 - x1), (x + 10 - x1) / (x2 - x1)
 		if t >= t1 and t <= t2 then
 			if self.stop_time then
-				local c = clamp( (now - self.stop_time) / 0.25, 0, 1 )
-				love.graphics.setColor( Lerp( 0, 255, c ), 255, 255 )
+				local result = self:FindResult( self.stop_t ) or "done"
+				local tc = clamp( (now - self.stop_time) / 1.0, 0, 1 )
+				local c = Easing.outQuad( tc, 0, 255, 1.0 )
+				if result == "done" then
+					love.graphics.setColor( 255 - c, 0, 0 )
+				else
+					love.graphics.setColor( c, 255, c )
+				end
 			else
 				love.graphics.setColor( 0, 255, 255 )
 			end
 
 		elseif self:FindResult( t1 ) or self:FindResult( t2 ) then
 			if idx % 2 == 1 then
-				love.graphics.setColor( 128, 128, 10 )
+				love.graphics.setColor( 0, 128, 10 )
 			else
-				love.graphics.setColor( 156, 156, 10 )
+				love.graphics.setColor( 0, 156, 10 )
 			end
 		else
 			if idx % 2 == 1 then
-				love.graphics.setColor( 128, 10, 10 )
+				love.graphics.setColor( 96, 10, 10 )
 			else
-				love.graphics.setColor( 156, 10, 10 )
+				love.graphics.setColor( 64, 10, 10 )
 			end
 		end
-		love.graphics.rectangle( "fill", x, cy + barh/2, 10, barh )
+		local dh = 1.0
+		for i, fn in ipairs( self.fns ) do
+			dh = dh * fn( (t1 + t2) / 2 )
+		end
+		dh = dh * barh
+		love.graphics.rectangle( "fill", x, cy + bar_hoffset - barh/2 - dh, 9, barh + dh )
+
 		if t >= t1 and t <= t2 then
-			if self.stop_time then
-				local c = clamp( (now - self.stop_time) / 0.25, 0, 1 )
-				love.graphics.setColor( Lerp( 0, 255, c ), 255, 255, 100 )
-			else
-				love.graphics.setColor( 0, 250, 250, 100 )
-			end
-			love.graphics.rectangle( "fill", x - 2, cy + barh/2 - 2, 14, barh + 4 )
+			xcell = x
 		end
 
 		idx = idx + 1
 		x = x + 10
 	end
 
-	if t >= 1.0 then
-		self.start_time = now
-		self.attempts = self.attempts - 1
-		if self.attempts <= 0 then
-			self.result = "fail"
+	if xcell then
+		if self.stop_time then
+			local result = self:FindResult( self.stop_t ) or "done"
+			local tc = clamp( (now - self.stop_time) / 1.0, 0, 1 )
+			local c = Easing.outQuad( tc, 0, 255, 1.0 )
+			local a = Easing.linear( tc, 100, -100, 1.0 )
+			local sz = Easing.outCubic( tc, 0, 20, 1.0 )
+			if result == "done" then
+				love.graphics.setColor( 255 - c, 0, 0, math.floor(a) )
+			else
+				love.graphics.setColor( c, 255, c, math.floor(a) )
+			end
+			love.graphics.rectangle( "fill", xcell - 2 - sz/2, cy + bar_hoffset - barh/2 - 2 - sz/2, 14 + sz, barh + 4 + sz )
+		else
+			love.graphics.setColor( 0, 250, 250, 100 )
+			love.graphics.rectangle( "fill", xcell - 2, cy + bar_hoffset - barh/2 - 2, 14, barh + 4 )
 		end
 	end
-	local x = cx - barw/2 + t * barw
-	love.graphics.setColor( 255, 0, 0 )
-	love.graphics.line( x, cy + barh/2 + 10, x, cy - barh/2 - 10 )
 
-	if self.stop_time and now - self.stop_time > 0.35 then
-		self.result = self:FindResult( self.stop_t ) or "done"
+	-- Attempts Remaining
+	love.graphics.setColor( 255, 255, 255, 255 )
+    love.graphics.setFont( assets.FONTS.TITLE )
+    if self.start_time == nil then
+		love.graphics.print( "Press ENTER to go, or any other key to cancel", cx - w/2 + 10, cy - h/2 )
+	else
+		love.graphics.print( loc.format( "Attempts left: {1}", self.attempts ), cx - w/2 + 10, cy - h/2 )
+
+		-- Check loop.
+		if t >= 1.0 then
+			self.start_time = now
+			self.attempts = self.attempts - 1
+			if self.max_attempts <= self.attempts then
+				self.result = "fail"
+			end
+		end
+
+		-- Post-delay.
+		if self.stop_time and now - self.stop_time > 1 and self.result == nil then
+			self.result = self:FindResult( self.stop_t ) or "done"
+		end
 	end
 end
 

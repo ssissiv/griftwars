@@ -2,6 +2,7 @@ local assets =
 {
 	FONTS =
 	{
+		TITLE = "Ayuthaya.ttf",
 	},
 
 	AFFINITY_IMG =
@@ -23,6 +24,10 @@ local assets =
 	},
 
 	LoadAll = function( self )
+		for k, filename in pairs( self.FONTS ) do
+			self.FONTS[ k ] = love.graphics.newFont( string.format( "data/%s", filename ), 16 )
+		end
+		 
 		for k, filename in pairs( self.AFFINITY_IMG ) do
 			self.AFFINITY_IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
 		end

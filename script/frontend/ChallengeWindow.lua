@@ -5,14 +5,25 @@ function ChallengeWindow:init( challenge )
 end
 
 function ChallengeWindow:KeyPressed( key )
-	self.challenge:Stop()
+	if self.challenge:IsStarted() then
+		self.challenge:Stop()
+	else
+		if key == "return" then
+			self.challenge:Start()
+		else
+			self.challenge:Cancel()
+		end
+	end
 	return true
 end
 
 function ChallengeWindow:MousePressed( mx, my, btn )
-	self.challenge:Stop()
+	if self.challenge:IsStarted() then
+		self.challenge:Stop()
+	end
 	return true
 end
+
 function ChallengeWindow:RenderImGuiWindow( ui, screen )
 
 	local ok, result = pcall( self.challenge.RenderImGuiWindow, self.challenge, ui, screen )
