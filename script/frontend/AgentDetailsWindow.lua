@@ -6,24 +6,35 @@ function AgentDetailsWindow:init( viewer, agent )
 	self.agent = agent
 end
 
-function AgentDetailsWindow:RenderRelationships( ui, screen )
-	ui.Text( "Relationships:" )
+function AgentDetailsWindow:RenderAllRelationships( ui, screen )
 	ui.Bullet()
-	ui.Text( loc.format( "Friends: {1}/{2}", self.agent:CountAffinities( AFFINITY.FRIEND ), self.agent:GetMaxFriends() ))
+	local count = self.agent:CountAffinities( AFFINITY.FRIEND )
+	ui.Text( loc.format( "Friends: {1}/{2}", count, self.agent:GetMaxFriends() ))	
+	self:RenderRelationships( ui, screen, AFFINITY.FRIEND )
 
-	local affinity_count = self.agent.affinities and table.count( self.agent.affinities ) or 0
+	ui.Spacing()
+	ui.Bullet()
+	ui.Text( "Known" )
+	self:RenderRelationships( ui, screen, AFFINITY.KNOWN )
+end
+
+function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
+
+	local affinity_count = self.agent:CountAffinities( affinity )
 	if affinity_count > 0 then
 		ui.Columns( affinity_count )
 		for i, rel in self.agent:Relationships() do
-			if is_instance( rel, Relationship.Affinity ) then
-				local affinity = rel:GetAffinity()
+			if is_instance( rel, Relationship.Affinity ) and rel:GetAffinity() == affinity then
 				if assets.AFFINITY_IMG[ affinity ] then
 					local other = rel:GetOther( self.agent )
 					ui.Image( assets.AFFINITY_IMG[ affinity ], 48, 48 )
 					ui.TextColored( 0, 1, 1, 1, loc.format( "{1} - {2}", other:GetName(), affinity ))
-					ui.Text( Calendar.FormatDuration( rel:GetAge() ))
-					ui.SameLine( 0, 5 )
+					if ui.IsItemHovered() then
+						ui.SetTooltip( Calendar.FormatDuration( rel:GetAge() ))
+					end
+
 					if affinity == AFFINITY.FRIEND then
+						ui.SameLine( 0, 5 )
 						ui.PushStyleColor( ui.Style_Button, 1, 0, 0, 1 )
 						if ui.SmallButton( "X" ) then
 							self.agent:Unfriend( other )
@@ -82,7 +93,7 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
 		ui.NewLine()
 
-		self:RenderRelationships( ui, screen )
+		self:RenderAllRelationships( ui, screen )
 
 		ui.Separator()
 

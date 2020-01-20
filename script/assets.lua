@@ -8,6 +8,7 @@ local assets =
 	AFFINITY_IMG =
 	{
 		--FEAR = "fear.png",
+		KNOWN = "known.png",
 		FRIEND = "liked.png",
 		UNFRIEND = "unliked.png",
 		ENEMY = "unliked.png",
