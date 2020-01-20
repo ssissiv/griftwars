@@ -1,4 +1,4 @@
-local LootWindow = class( "LootWindow" )
+local LootWindow = class( "LootWindow", NexusWindow )
 
 function LootWindow:init( agent )
 	assert( agent )
@@ -35,7 +35,7 @@ function LootWindow:RenderImGuiWindow( ui, screen )
 
 		if done or ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
-			coroutine.resume( self.coro )
+			self:Resume()
 		end
 	end
 

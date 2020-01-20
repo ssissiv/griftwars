@@ -177,7 +177,6 @@ function Befriend:Interact( actor )
 		if self.OnSuccess then
 			self:OnSuccess( actor, challenge )
 		end
-
 	else
 		Msg:Echo( actor, "{1.Id} seems indifferent.", self.owner:LocTable( actor ))
 	end
@@ -196,6 +195,17 @@ end
 function IntroduceAgent:OnSuccess( actor )
 	actor:Acquaint( self.friend )
 	Msg:Speak( self.owner, "Listen, {2.Id} is a friend of mine. {2.HeShe} can help you out.", self.friend )
+
+	local work = self.friend:GetAspect( Job )
+	if work and work:GetLocation() then
+		Msg:Speak( self.owner, loc.format( "Works over at the {1}.", work:GetLocation():GetTitle() ))
+	else
+		if self.friend:GetHome() then
+			Msg:Speak( self.owner, loc.format( "Lives over at {1}.", self.friend:GetHome():GetLocation():GetTitle() ))
+		end
+	end
+
+
 end
 
 -----------------------------------------------------------------------------------

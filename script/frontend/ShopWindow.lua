@@ -1,4 +1,4 @@
-local ShopWindow = class( "ShopWindow" )
+local ShopWindow = class( "ShopWindow", NexusWindow )
 
 function ShopWindow:init( owner, buyer )
 	assert( owner and buyer )
@@ -39,7 +39,7 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
-			coroutine.resume( self.coro, nil )
+			self:Resume()
 		end
 	end
 

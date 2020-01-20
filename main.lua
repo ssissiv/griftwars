@@ -15,6 +15,7 @@ Shaders = require "render/shader_defs"
 
 GameScreen = require "frontend/game_screen"
 require "frontend/Nexus"
+require "frontend/NexusWindow"
 require "frontend/ShopWindow"
 require "frontend/SleepWindow"
 require "frontend/InventoryWindow"

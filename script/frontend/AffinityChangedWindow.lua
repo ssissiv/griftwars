@@ -1,4 +1,4 @@
-local AffinityChangedWindow = class( "AffinityChangedWindow" )
+local AffinityChangedWindow = class( "AffinityChangedWindow", NexusWindow )
 
 function AffinityChangedWindow:init( affinity )
 	assert( is_instance( affinity, Relationship.Affinity ))
@@ -23,7 +23,7 @@ function AffinityChangedWindow:RenderImGuiWindow( ui, screen )
 
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
-			coroutine.resume( self.coro )
+			self:Resume()
 		end
 	end
 

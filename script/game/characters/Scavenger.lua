@@ -93,7 +93,6 @@ function Scavenger:OnSpawn( world )
 	self:SetDetails( nil, "Here's a guy.", GENDER.MALE )
 
 	local friend = table.arraypick( world:CreateBucketByClass( Agent.Shopkeeper ) )
-	print( friend )
 	if friend then
 		self:GainAspect( Interaction.IntroduceAgent( friend ))
 	end

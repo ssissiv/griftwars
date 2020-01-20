@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:IsDoing())",
-			"print(t:IsWorking())",
-			"print(t:GetLocation())",
-			"print(debug_world_speed)",
 			"print( DEFAULT_DEBUG_SPEED )",
 			"print(debug_world_speed)",
 			"print(DEBUG_WORLD_SPEEDS[ debug_world_speed ] )",
@@ -33,7 +29,11 @@ return {
 			"world:SetPuppet( nil )",
 			"print(os.clock())",
 			"print(os.time())",
-			"print( love.timer.getTime())"
+			"print( love.timer.getTime())",
+			"print(t:GetAspect( Job ))",
+			"print(tostr(COROS))",
+			"print(tostr(COROS[1]))",
+			"print( coroutine.status(COROS[1]))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

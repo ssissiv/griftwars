@@ -1,4 +1,4 @@
-local ChallengeWindow = class( "ChallengeWindow" )
+local ChallengeWindow = class( "ChallengeWindow", NexusWindow )
 
 function ChallengeWindow:init( challenge )
 	self.challenge = challenge
@@ -33,7 +33,7 @@ function ChallengeWindow:RenderImGuiWindow( ui, screen )
 
 	if self.challenge:GetResult() then
 		screen:RemoveWindow( self )
-		coroutine.resume( self.coro, self.challenge:GetResult() )
+		self:Resume( self.challenge:GetResult() )
 	end
 end
 

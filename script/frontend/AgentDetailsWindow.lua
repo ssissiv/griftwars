@@ -27,6 +27,7 @@ function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
 			if is_instance( rel, Relationship.Affinity ) and rel:GetAffinity() == affinity then
 				if assets.AFFINITY_IMG[ affinity ] then
 					local other = rel:GetOther( self.agent )
+					ui.PushID( rawstring(other) )
 					ui.Image( assets.AFFINITY_IMG[ affinity ], 48, 48 )
 					ui.TextColored( 0, 1, 1, 1, loc.format( "{1} - {2}", other:GetName(), affinity ))
 					if ui.IsItemHovered() then
@@ -41,7 +42,14 @@ function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
 						end
 						ui.PopStyleColor()
 					end
+
+					ui.SameLine( 0, 5 )
+					if ui.SmallButton( "?" ) then
+						DBG( other )
+					end
+
 					ui.NextColumn()
+					ui.PopID()
 				end
 			end
 		end
