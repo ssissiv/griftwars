@@ -15,6 +15,11 @@ function Shopkeeper:init()
 	self:GainAspect( Verb.ManageFatigue( self ))
 end
 
+function Shopkeeper:GetTitle()
+	return "Shopkeeper"
+end
+
+
 function Shopkeeper:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	self:SetDetails( nil, "Rough looking fellow in a coat of multiple pockets.", GENDER.MALE )

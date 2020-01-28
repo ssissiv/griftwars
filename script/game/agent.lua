@@ -72,6 +72,9 @@ function Agent:GetName()
 	return self.name or self.species or "No Name"
 end
 
+function Agent:GetTitle()
+end
+
 function Agent:GetDesc()
 	return self.desc or "No Desc"
 end
@@ -109,6 +112,11 @@ function Agent:GetShortDesc( viewer )
 
 	if self.focus == self.world:GetPuppet() then
 		desc = desc .. loc.format( " {1.HeShe} is looking at you.", self:LocTable( viewer ) )
+	end
+
+	local title = self:GetTitle()
+	if title then
+		desc = desc .. loc.format( "({1})", title )
 	end
 
 	return desc

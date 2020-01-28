@@ -11,8 +11,11 @@ function Challenge:init( actor )
 end
 
 function Challenge:Reset()
-	self.attempts = 0
+	self.attempts = nil
 	self.result = nil
+	self.stop_time = nil
+	self.stop_t = nil
+	self.start_time = nil
 end
 
 function Challenge:GetResult()

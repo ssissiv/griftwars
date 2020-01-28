@@ -168,6 +168,7 @@ function Befriend:Interact( actor )
 	end
 
 	local result = actor.world.nexus:DoChallenge( challenge )
+	print( result )
 	if result == "cancel" then
 
 	elseif result == "success" then
