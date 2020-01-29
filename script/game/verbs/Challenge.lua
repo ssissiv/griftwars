@@ -5,13 +5,14 @@ function Challenge:init( actor )
 	self.fns = {}
 	self.duration = 1.0
 	self.results = {}
+	self.attempts = 0
 	self.max_attempts = 1
 
 	self:Reset()
 end
 
 function Challenge:Reset()
-	self.attempts = nil
+	self.attempts = 0
 	self.result = nil
 	self.stop_time = nil
 	self.stop_t = nil
@@ -199,7 +200,7 @@ function Challenge:RenderImGuiWindow( ui, screen )
 		-- Check loop.
 		if t >= 1.0 then
 			self.start_time = now
-			self.attempts = self.attempts - 1
+			self.attempts = self.attempts + 1
 			if self.max_attempts <= self.attempts then
 				self.result = "fail"
 			end
