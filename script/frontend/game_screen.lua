@@ -1,6 +1,8 @@
-local GameScreen = class( "GameScreen" )
+local GameScreen = class( "GameScreen", RenderScreen )
 
 function GameScreen:init()
+	RenderScreen.init( self )
+	
 	local gen = WorldGen()
 	self.world = gen:GenerateWorld()
 	self.nexus = WorldNexus( self.world, self )
@@ -97,6 +99,8 @@ function GameScreen:RenderScreen( gui )
 	for i, window in ipairs( self.windows ) do
 		window:RenderImGuiWindow( ui, self )
 	end
+
+	self:RenderTooltip( ui )
 end
 
 function GameScreen:AddWindow( window )

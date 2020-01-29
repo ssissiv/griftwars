@@ -30,8 +30,8 @@ end
 local Scrounge = class( "Skill.Scrounge", Skill )
 
 function Scrounge:init()
-	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.STEALTH, 1 ))
-	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.POWER, 1 ))
+	self:AddTrainingReq( Req.Face( DIE_FACE.STEALTH, 1 ))
+	self:AddTrainingReq( Req.Face( DIE_FACE.POWER, 1 ))
 end
 
 function Scrounge:CollectVerbs( verbs, actor, obj )
@@ -48,7 +48,7 @@ local RumourMonger = class( "Skill.RumourMonger", Skill )
 
 function RumourMonger:init()
 	self.info = {}
-	self:AddTrainingReq( Req.MakeFaceReq( DIE_FACE.STEALTH, 2 ))
+	self:AddTrainingReq( Req.Face( DIE_FACE.STEALTH, 2 ))
 end
 
 function RumourMonger:GainInfo( e_info, delta )

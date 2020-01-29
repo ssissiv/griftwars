@@ -41,7 +41,12 @@ end
 -- face: DIE_FACE
 -- max_count: integer (number of faces required to satisfy req)
 function Interaction:ReqFace( face, max_count )
-	table.insert( self.reqs, Req.MakeFaceReq( face, max_count ))
+	table.insert( self.reqs, Req.Face( face, max_count ))
+	return self
+end
+
+function Interaction:ReqTrust( trust )
+	table.insert( self.reqs, Req.Trust( trust ))
 	return self
 end
 
@@ -60,16 +65,6 @@ function Interaction:GetFaceCount( face, viewer )
 		count = count + tokens:GetFaceCount( face )
 	end
 	return count
-end
-
-function Interaction:IsSatisfied( viewer )
-	for i, req in ipairs( self.reqs ) do
-		if not req:IsSatisfied( viewer ) then
-			return false
-		end
-	end
-	
-	return true
 end
 
 function Interaction:SatisfyReqs( actor )
@@ -101,11 +96,12 @@ function Interaction:CanInteract( actor )
 
 	local reasons
 	for i, req in ipairs( self.reqs ) do
-		if not req:IsSatisfied( actor ) then
+		local ok, reason = req:IsSatisfied( actor )
+		if not ok then
 			if reasons == nil then
 				reasons = {}
 			end
-			table.insert( reasons, tostring(req) )
+			table.insert( reasons, reason or tostring(req) )
 		end
 	end
 	if reasons then
@@ -168,7 +164,6 @@ function Befriend:Interact( actor )
 	end
 
 	local result = actor.world.nexus:DoChallenge( challenge )
-	print( result )
 	if result == "cancel" then
 
 	elseif result == "success" then

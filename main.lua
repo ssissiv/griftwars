@@ -13,6 +13,7 @@ debug_menus = require "debug/debug_menus"
 loc = require "locstring"
 Shaders = require "render/shader_defs"
 
+require "frontend/RenderScreen"
 GameScreen = require "frontend/game_screen"
 require "frontend/Nexus"
 require "frontend/NexusWindow"

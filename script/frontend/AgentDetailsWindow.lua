@@ -48,6 +48,11 @@ function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
 						DBG( other )
 					end
 
+					if affinity == AFFINITY.FRIEND then
+						local trust = rel:GetTrust()
+						ui.TextColored( 0, 1, 1, 1, loc.format( "{1}/{2} Trust", trust, 100 ))
+					end
+
 					ui.NextColumn()
 					ui.PopID()
 				end

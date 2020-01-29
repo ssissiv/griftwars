@@ -6,6 +6,7 @@ function Affinity:init( first, second, affinity )
 	self.first = self:AddAgent( first )
 	self.second = self:AddAgent( second )
 	self.affinity = affinity or AFFINITY.STRANGER
+	self.trust = 0
 end
 
 function Affinity:GetOther( agent )
@@ -14,6 +15,10 @@ function Affinity:GetOther( agent )
 	elseif agent == self.second then
 		return self.first
 	end
+end
+
+function Affinity:GetTrust()
+	return self.trust
 end
 
 function Affinity:GetAffinity()
@@ -25,9 +30,17 @@ function Affinity:OnSpawn( world )
 	self:SetAffinity( self.affinity )
 end
 
+function Affinity:DeltaTrust( trust )
+	self.trust = self.trust + trust
+end
+
 function Affinity:SetAffinity( affinity )
 	assert( IsEnum( affinity, AFFINITY ))
 	self.affinity = affinity
+
+	if affinity ~= AFFINITY.FRIEND then
+		self.trust = 0
+	end
 
 	if (self.first:IsPuppet() or self.second:IsPuppet()) and affinity ~= AFFINITY.STRANGER then
 		self.world.nexus:ShowAffinityChanged( self )

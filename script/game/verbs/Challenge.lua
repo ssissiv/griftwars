@@ -150,7 +150,16 @@ function Challenge:RenderImGuiWindow( ui, screen )
 			dh = dh * fn( (t1 + t2) / 2 )
 		end
 		dh = dh * barh
-		love.graphics.rectangle( "fill", x, cy + bar_hoffset - barh/2 - dh, 9, barh + dh )
+
+		screen:Rectangle( "fill", x, cy + bar_hoffset - barh/2 - dh, 9, barh + dh )
+		if screen:IsHovered() then
+			local result = self:FindResult( t1 ) or self:FindResult( t2 ) 
+			if result then
+				screen:SetTooltip( tostr(result)) 
+			else
+				screen:SetTooltip( "FAIL" )
+			end
+		end
 
 		if t >= t1 and t <= t2 then
 			xcell = x
