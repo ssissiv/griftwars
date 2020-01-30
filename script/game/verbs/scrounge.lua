@@ -1,5 +1,12 @@
 local ScroungeTarget = class( "Aspect.ScroungeTarget", Aspect )
 
+function ScroungeTarget:CollectVerbs( verbs, actor, obj )
+	local scrounge = actor:GetAspect( Verb.Scrounge )
+	if scrounge and obj == self.owner then
+		verbs:AddVerb( scrounge )
+	end
+end
+
 -------------------------------------------------------------------------
 
 local Scrounge = class( "Verb.Scrounge", Verb )
@@ -38,18 +45,17 @@ function Scrounge:GetShortDesc( viewer )
 	end
 end
 
-function Scrounge:CanInteract( actor )
+function Scrounge:CanInteract( actor, target )
 	if not self:IsDoing() then
 		if actor:IsBusy( self.FLAGS ) then
 			return false, "Busy"
 		end
 	end
 
-	local obj = actor:GetLocation():GetAspect( Aspect.ScroungeTarget )
-	if not obj then
-		return false, "No scrounging here"
+	if not target or not target:GetAspect( Aspect.ScroungeTarget ) then
+		return false, "Can't scrounge"
 	end
-
+	
 	return self._base.CanInteract( self, actor )
 end
 

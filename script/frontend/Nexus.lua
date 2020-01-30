@@ -54,13 +54,18 @@ function WorldNexus:LootMoney( agent, money )
 	end
 end
 
-function WorldNexus:ShowAgentDetails( viewer, agent )
+function WorldNexus:Inspect( viewer, ent )
 	if viewer ~= self.world:GetPuppet() then
 		return
 	end
 
-	local window = AgentDetailsWindow( viewer, agent )
-	self.screen:AddWindow( window )
+	if is_instance( ent, Agent ) then
+		local window = AgentDetailsWindow( viewer, ent )
+		self.screen:AddWindow( window )
+	else
+		local window = ObjectDetailsWindow( viewer, ent )
+		self.screen:AddWindow( window )
+	end
 end
 
 function WorldNexus:ShowAffinityChanged( affinity )

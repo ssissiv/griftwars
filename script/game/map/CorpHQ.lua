@@ -12,6 +12,7 @@ function CorpHQ:init()
 	entrance:SetDetails( "Entrance Foyer", "A foyer to an office building.")
 	entrance:Connect( hall:RoomAt( 1 ))
 	self.entrance = entrance
+	table.insert( self.rooms, entrance )
 
 	local office = Location()
 	office:SetDetails( "Office", "An office where business happens.")

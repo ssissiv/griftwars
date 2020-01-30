@@ -12,6 +12,6 @@ end
 
 function Inspect:Interact( actor )
 	local obj = actor:GetFocus()
-	actor.world.nexus:ShowAgentDetails( actor, obj )
+	actor.world.nexus:Inspect( actor, obj )
 end
 

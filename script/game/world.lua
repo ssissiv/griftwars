@@ -58,24 +58,33 @@ function World:DoAsync( fn,... )
 	end
 end
 
-function World:SpawnAgent( agent, location )
-	self:SpawnEntity( agent )
+function World:SpawnEntity( ent, location )
+	WorldBase.SpawnEntity( self, ent )
 
 	if location then
-		agent:WarpToLocation( location )
-	elseif not agent.location then
-		agent:WarpToLocation( agent:GetHome() or self.limbo )
+		ent:WarpToLocation( location )
 	end
 
-	table.insert( self.agents, agent )
+	if is_instance( ent, Agent ) then
+		if not ent.location and not location then
+			ent:WarpToLocation( ent:GetHome() or self.limbo )
+		end
 
-	if agent:IsPlayer() then
-		assert( self.player == nil )
-		self.player = agent
-		self.puppet = agent
+		table.insert( self.agents, ent )
+
+		if ent:IsPlayer() then
+			assert( self.player == nil )
+			self.player = ent
+			self.puppet = ent
+		end
 	end
 
-	return agent
+	return ent
+end
+
+function World:SpawnAgent( agent, location )
+	assert( is_instance( agent, Agent ))
+	return self:SpawnEntity( agent, location )
 end
 
 function World:AllAgents()
@@ -103,7 +112,7 @@ function World:SetPuppet( agent )
 	self.puppet = agent
 	self:RefreshTimeSpeed()
 
-	if self:IsPaused( PAUSE_TYPE.FOCUS_MODE ) ~= (agent:GetFocus() ~= nil) then
+	if self:IsPaused( PAUSE_TYPE.FOCUS_MODE ) ~= is_instance( agent:GetFocus(), Agent ) then
 		self:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 	end
 end

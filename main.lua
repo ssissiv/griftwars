@@ -22,6 +22,7 @@ require "frontend/SleepWindow"
 require "frontend/InventoryWindow"
 require "frontend/LootWindow"
 require "frontend/AgentDetailsWindow"
+require "frontend/ObjectDetailsWindow"
 require "frontend/AffinityChangedWindow"
 require "frontend/MemoryWindow"
 require "frontend/ChallengeWindow"
@@ -99,6 +100,7 @@ require "game/aspects/Shop"
 require "game/objects/Jerky"
 require "game/objects/Creds"
 require "game/objects/Dirk"
+require "game/objects/JunkHeap"
 
 --------------------------------------------------------------------
 -- Verbs

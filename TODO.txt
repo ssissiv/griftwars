@@ -1,6 +1,11 @@
 TODO
 ====
 
+* Is being in a location an Aspect (share code betwen ENt/Object)
+* AI dealing with targets.  Gross that Behaviour uses aspect Verbs, but sub-verbs are explicitly specified. eg. bheaviours should not bestow capabilities on their agents
+* You should be able to add contents/exits and have them spawn automatically when their parent is spawned
+
+
 STARDEW:
 	* Start with Parsnip Seeds.
 	* Quest: Harvest Parsnips, Talk to 28 people.

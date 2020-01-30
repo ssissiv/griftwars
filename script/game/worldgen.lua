@@ -69,7 +69,7 @@ function WorldGen:GenerateMilitary( world )
 	world:SpawnLocation( room )
 
 	local commander = Agent.MilitiaCaptain()
-	room:SpawnAgent( commander )
+	room:SpawnEntity( commander )
 end
 
 function WorldGen:GeneratePlayer( world )
@@ -81,6 +81,7 @@ function WorldGen:GeneratePlayer( world )
 	-- player:GainAspect( Skill.RumourMonger() )
 	player:GainAspect( Trait.Player() )
 	player:GainAspect( Aspect.Combat() )
+	player:GainAspect( Verb.Scrounge( player ) )
 	
 	local tokens = player:GainAspect( Aspect.TokenHolder() )
 	tokens:AddToken( Token( DIE_FACE.DIPLOMACY, 1 ) )

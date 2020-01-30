@@ -49,7 +49,7 @@ function LeaveLocation:GetDesc()
 	end
 end
 
-function LeaveLocation:CanInteract( actor )
+function LeaveLocation:CanInteract( actor, obj )
 	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Moving"
 	end
@@ -60,6 +60,7 @@ function LeaveLocation:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
 	local dest = self.obj
+	assert( dest == nil or is_instance( dest, Location ))
 	if dest == nil then
 		local dests = {}
 		for i, exit in actor.location:Exits() do

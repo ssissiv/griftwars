@@ -2,12 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( DEFAULT_DEBUG_SPEED )",
-			"print(debug_world_speed)",
-			"print(DEBUG_WORLD_SPEEDS[ debug_world_speed ] )",
-			"print( math.modf(2.3))",
-			"print( math.modf(2.3, 1.0))",
-			"print( math.modf(2.3, 551.0))",
 			"print(world:CalculateTimeElapsed(1.0))",
 			"print( math.modf(2.3, 551.0))",
 			"print(world:CalculateTimeElapsed(1.0))",
@@ -33,7 +27,13 @@ return {
 			"print(t:GetAspect( Job ))",
 			"print(tostr(COROS))",
 			"print(tostr(COROS[1]))",
-			"print( coroutine.status(COROS[1]))"
+			"print( coroutine.status(COROS[1]))",
+			"print(player.focus)",
+			"for i, l in pairs( world.locations ) do print( l ) end",
+			"for i, l in pairs( world.locations ) assert( l.world ) end",
+			"for i, l in pairs( world.locations ) do assert( l.world ) end",
+			"print(t.world)",
+			"print(t:IsSpawned())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

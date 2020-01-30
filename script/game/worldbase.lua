@@ -142,6 +142,7 @@ function WorldBase:SpawnEntity( ent )
 	ent:OnSpawn( self )
 	assert( not table.contains( self.entities, ent ))
 	table.insert( self.entities, ent )
+	return ent
 end
 
 function WorldBase:DespawnEntity( ent )

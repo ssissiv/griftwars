@@ -42,42 +42,64 @@ function Location:SetDetails( title, desc )
 	self.desc = desc
 end
 
-function Location:SpawnAgent( agent )
-	self.world:SpawnAgent( agent, self )
+function Location:SpawnEntity( entity )
+	self.world:SpawnEntity( entity, self )
 end
 
-function Location:AddAgent( agent )
-	assert( is_instance( agent, Agent ))
-	assert( self.contents == nil or table.arrayfind( self.contents, agent ) == nil )
-	assert( agent.world == self.world, tostring(agent.world))
-	assert( agent.location == self )
+function Location:AddEntity( entity )
+	assert( is_instance( entity, Entity ))
+	assert( self.contents == nil or table.arrayfind( self.contents, entity ) == nil )
+	assert( entity.world == self.world, tostring(entity.world))
+	assert( entity.location == self )
 	
 	if self.contents == nil then
 		self.contents = {}
 	end
 
-	table.insert( self.contents, agent )
-	agent:ListenForEvent( AGENT_EVENT.COLLECT_VERBS, self, self.OnCollectVerbs )
+	table.insert( self.contents, entity )
 
-	self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, agent )
+	if is_instance( entity, Agent ) then
+		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
+	end
+end
+
+function Location:RemoveEntity( entity )
+	local idx = table.arrayfind( self.contents, entity )
+	table.remove( self.contents, idx )
+
+	if is_instance( entity, Agent ) then
+		self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, entity )
+	end
+end
+
+function Location:AddAgent( agent )
+	assert( is_instance( agent, Agent ))
+	self:AddEntity( agent )
 end
 
 function Location:RemoveAgent( agent )
 	assert( is_instance( agent, Agent ))
-
-	agent:RemoveListener( self )
-	local idx = table.arrayfind( self.contents, agent )
-	table.remove( self.contents, idx )
-
-	self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, agent )
+	self:RemoveEntity( agent )
 end
 
-function Location:OnCollectVerbs( event_name, actor, verbs, ... )
-	if select( "#", ... ) == 0 then
+function Location:CollectVerbs( verbs, actor, obj )
+	if verbs.id == "room" then
 		for i, exit in ipairs( self.exits ) do
 			verbs:AddVerb( Verb.LeaveLocation( actor, exit:GetDest( self )))
 		end
 	end
+end
+
+function Location:HasEntity( ent )
+	for i, obj in ipairs( self.contents ) do
+		if obj == ent then
+			return true
+		end
+		if is_class( ent ) and is_instance( obj, ent ) then
+			return true
+		end
+	end
+	return false
 end
 
 function Location:IsConnected( other )

@@ -40,17 +40,21 @@ function VerbContainer:CollectVerbs( actor, ... )
 
 	local location = actor:GetLocation()
 	if location then
+		self:CollectVerbsFromEntity( location, actor, ... )
+
 		for i, obj in location:Contents() do
-			if is_instance( obj, Agent ) then
-				self:CollectVerbsFromAgent( obj, actor, ... )
-			end 
+			self:CollectVerbsFromEntity( obj, actor, ... )
 		end
 	end
 end
 
-function VerbContainer:CollectVerbsFromAgent( agent, actor, ... )
+function VerbContainer:CollectVerbsFromEntity( entity, actor, ... )
+	if entity.CollectVerbs then
+		entity:CollectVerbs( self, actor, ... )
+	end
+
 	-- Verbs get a say.
-	for i, aspect in agent:Aspects() do
+	for i, aspect in entity:Aspects() do
 		if aspect.CollectVerbs then
 			aspect:CollectVerbs( self, actor, ... )
 		end

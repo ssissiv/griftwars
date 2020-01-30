@@ -82,7 +82,7 @@ function Scavenger:init()
 	self:GainAspect( Verb.ManageFatigue( self ))
 	self:GainAspect( Verb.Scavenge( self ))
 
-	self:GainAspect( Skill.Scrounge() )
+	-- self:GainAspect( Skill.Scrounge() )
 	-- self:GainAspect( Skill.RumourMonger() ):GainInfo( INFO.LOCAL_NEWS, 3 )
 	-- self:GainAspect( Interaction.Befriend( CR1 ) )
 	-- self:GainAspect( Interaction.Chat() )

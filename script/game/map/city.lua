@@ -8,36 +8,24 @@ function City:init()
 	local left = WorldGen.Line( math.random( 12, 16 ), 0, 1 )
 	left:SetDetails( "The Junkyard West", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	left:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	for i, room in left:Rooms() do
-		room:GainAspect( Aspect.ScroungeTarget() )
-	end
 	table.arrayadd( self.rooms, left.rooms )
 	table.arrayadd( self.roads, left.rooms )
 
 	local top = WorldGen.Line( math.random( 8, 12 ), 1, 0 )
 	top:SetDetails( "The Junkyard North", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	top:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	for i, room in top:Rooms() do
-		room:GainAspect( Aspect.ScroungeTarget() )
-	end
 	table.arrayadd( self.rooms, top.rooms )
 	table.arrayadd( self.roads, top.rooms )
 	
 	local right = WorldGen.Line( math.random( 12, 16 ), 0, 1 )
 	right:SetDetails( "The Junkyard East", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	right:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	for i, room in right:Rooms() do
-		room:GainAspect( Aspect.ScroungeTarget() )
-	end
 	table.arrayadd( self.rooms, right.rooms )
 	table.arrayadd( self.roads, right.rooms )
 
 	local bottom = WorldGen.Line( math.random( 8, 12 ), 1, 0 )
 	bottom:SetDetails( "The Junkyard South", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	bottom:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	for i, room in bottom:Rooms() do
-		room:GainAspect( Aspect.ScroungeTarget() )
-	end
 	table.arrayadd( self.rooms, bottom.rooms )
 	table.arrayadd( self.roads, bottom.rooms )
 	
@@ -71,6 +59,13 @@ function City:OnSpawn( world )
 
 	for i, room in ipairs( self.rooms ) do
 		world:SpawnLocation( room )
+	end
+
+	-- Junk heaps
+	for i, road in ipairs( self.roads ) do
+		if math.random() < 0.33 then
+			road:SpawnEntity( Object.JunkHeap() )
+		end
 	end
 
 	-- Shopkeepers

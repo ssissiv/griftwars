@@ -145,6 +145,7 @@ function Agent:RegenVerbs( id )
 end
 
 function Agent:CollectPotentialVerbs( id, ... )
+	assert( id )
 	local verbs = self.potential_verbs[ id ]
 	if verbs == nil then
 		verbs = VerbContainer( id )
@@ -394,7 +395,7 @@ function Agent:WarpToNowhere()
 end
 
 function Agent:WarpToLocation( location )
-	assert( is_instance( location, Location ))
+	assert( is_instance( location, Location ), tostring(location))
 	WarpToLocation( self, location )
 end
 
@@ -590,7 +591,7 @@ function Agent:SetFocus( focus )
 			prev_focus:OnLostFocus( self )
 		end
 
-		if self:IsPuppet() then
+		if self:IsPuppet() and is_instance( focus, Agent ) then
 			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 		end
 	end
@@ -607,7 +608,7 @@ function Agent:SetFocus( focus )
 			focus:OnReceivedFocus( self )
 		end
 
-		if self:IsPuppet() then
+		if self:IsPuppet() and is_instance( focus, Agent ) then
 			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 		end
 	end
