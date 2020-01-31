@@ -45,6 +45,16 @@ function Scrounge:GetShortDesc( viewer )
 	end
 end
 
+function Scrounge:FindTarget( actor )
+	local targets = {}
+	for i, obj in actor:GetLocation():Contents() do
+		if self:CanInteract( actor, obj ) then
+			table.insert( targets, obj )
+		end
+	end
+	return table.arraypick( targets )
+end
+
 function Scrounge:CanInteract( actor, target )
 	if not self:IsDoing() then
 		if actor:IsBusy( self.FLAGS ) then
@@ -52,18 +62,28 @@ function Scrounge:CanInteract( actor, target )
 		end
 	end
 
-	if not target or not target:GetAspect( Aspect.ScroungeTarget ) then
-		return false, "Can't scrounge"
+	if target == nil then
+		if not self:FindTarget( actor ) then
+			return false, "No targets"
+		end
+
+	elseif not target:GetAspect( Aspect.ScroungeTarget ) then
+		return false, "Can't scrounge " ..tostring(target)
 	end
 	
 	return self._base.CanInteract( self, actor )
 end
 
-function Scrounge:Interact( actor )
-	Msg:ActToRoom( "{1.Id} begins rummaging around.", actor )
-	Msg:Echo( actor, "You begin to rummage around." )
+function Scrounge:Interact( actor, target )
+	if target == nil then
+		target = self:FindTarget( actor )
+	end
+
+	Msg:ActToRoom( "{1.Id} begins rummaging around in {2.Id}.", actor, target )
+	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
 
 	while true do
+		DBG(self)
 		self:YieldForTime( 30 * ONE_MINUTE )
 		actor:DeltaStat( STAT.FATIGUE, 5 )
 
@@ -75,6 +95,7 @@ function Scrounge:Interact( actor )
 		if self:CheckDC() then
 			local coins = math.random( 1, 3 )
 			Msg:Echo( finder, "You find {1#money}!", coins )
+			Msg:ActToRoom( "{1.Id} finds {3#money}!", finder, nil, coins )
 			finder.world.nexus:LootMoney( finder, coins )
 		else
 			Msg:Echo( finder, "You don't find anything useful." )
