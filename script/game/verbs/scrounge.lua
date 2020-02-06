@@ -1,10 +1,19 @@
 local ScroungeTarget = class( "Aspect.ScroungeTarget", Aspect )
 
+function ScroungeTarget:init( quality )
+	assert( quality )
+	self.quality = quality
+end
+
 function ScroungeTarget:CollectVerbs( verbs, actor, obj )
 	local scrounge = actor:GetAspect( Verb.Scrounge )
 	if scrounge and obj == self.owner then
 		verbs:AddVerb( scrounge )
 	end
+end
+
+function ScroungeTarget:RenderDetailsUI( ui, screen )
+	ui.Text( loc.format( "Can scrounge: {1}", QUALITY_STRINGS[ self.quality ] ))
 end
 
 -------------------------------------------------------------------------

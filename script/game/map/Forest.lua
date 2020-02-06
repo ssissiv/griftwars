@@ -63,7 +63,7 @@ function Forest:CreateRoom()
 	room:SetDetails( loc.format( "The Forest [{1}]", self.count ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
 	room:SetImage( assets.LOCATION_BGS.FOREST )
 	if math.random() < 0.5 then
-		room:GainAspect( Aspect.ScroungeTarget() )
+		room:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ) )
 	end
 
 	return room

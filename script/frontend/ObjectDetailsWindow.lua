@@ -18,6 +18,12 @@ function ObjectDetailsWindow:RenderImGuiWindow( ui, screen )
     	ui.NewLine()
     	ui.Separator()
 
+        for i, aspect in self.obj:Aspects() do
+            if aspect.RenderDetailsUI then
+                aspect:RenderDetailsUI( ui, screen )
+            end
+        end
+
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
 		end

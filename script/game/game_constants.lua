@@ -103,6 +103,20 @@ EQ_SLOT = MakeEnum
 	"FEET",
 }
 
+QUALITY =
+{
+	JUNK = 0,
+	POOR = 1,
+	AVERAGE = 2,
+	GOOD = 3,
+}
+
+QUALITY_STRINGS = {}
+for k, v in pairs( QUALITY ) do
+	QUALITY_STRINGS[ v ] = tostring(k)
+end
+
+
 SENSOR = MakeEnum
 {
 	"ECHO", -- Meta sense. Game logging.
