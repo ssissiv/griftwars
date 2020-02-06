@@ -52,21 +52,32 @@ function City:init()
 	-- Connect homes
 	self:ConnectCorps()
 	self:ConnectShops()
+
+
+	-- Junk heaps
+	for i, road in ipairs( self.roads ) do
+		if math.random() < 0.33 then
+			Object.JunkHeap():WarpToLocation( road )
+		end
+	end
+
 end
 
 function City:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
-	for i, room in ipairs( self.rooms ) do
-		world:SpawnLocation( room )
-	end
+	assert( self.rooms[1] )
+	world:SpawnLocation( self.rooms[1] )
+	-- for i, room in ipairs( self.rooms ) do
+	-- 	world:SpawnLocation( room )
+	-- end
 
-	-- Junk heaps
-	for i, road in ipairs( self.roads ) do
-		if math.random() < 0.33 then
-			road:SpawnEntity( Object.JunkHeap() )
-		end
-	end
+	-- -- Junk heaps
+	-- for i, road in ipairs( self.roads ) do
+	-- 	if math.random() < 0.33 then
+	-- 		road:SpawnEntity( Object.JunkHeap() )
+	-- 	end
+	-- end
 
 	-- Shopkeepers
 	for i, room in ipairs( self.rooms ) do

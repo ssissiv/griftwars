@@ -25,19 +25,18 @@ function Forest:init()
 
 		table.insert( self.rooms, room )
 	end
+
+	self:PopulateOrcs()
 end
 
 function Forest:OnSpawn( world )
 	Forest._base.OnSpawn( self, world )
 
-	for i, room in ipairs( self.rooms ) do
-		world:SpawnLocation( room )
-	end
+	world:SpawnLocation( self.rooms[1] )
 
 	-- for i, room in ipairs( self.rooms ) do
 	-- 	room:SetDetails( loc.format( "Thee Forest [{1}]", i ))
 	-- end
-	self:PopulateOrcs()
 end
 
 function Forest:PopulateOrcs()
@@ -54,7 +53,7 @@ function Forest:PopulateOrcs()
 	end
 	for i = 1, n do
 		local orc = Agent.Orc()
-		self.world:SpawnAgent( orc, self:RandomRoom() )
+		orc:WarpToLocation( self:RandomRoom() )
 	end
 end
 

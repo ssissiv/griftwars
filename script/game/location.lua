@@ -1,3 +1,14 @@
+
+local function SpawnLocation( location, world )
+	if location:IsSpawned() then
+		return false
+	else
+		world:SpawnLocation( location )
+		return true
+	end
+end
+
+
 local Location = class( "Location", Entity )
 
 function Location:init()
@@ -10,7 +21,14 @@ function Location:OnSpawn( world )
 
 	if self.contents then
 		for i, v in ipairs( self.contents ) do
-			world:SpawnAgent( v )
+			world:SpawnEntity( v )
+		end
+	end
+
+	for i, exit in ipairs( self.exits ) do
+		local dest = exit:GetDest( self )
+		if dest and not dest:IsSpawned() then
+			world:SpawnLocation( dest )
 		end
 	end
 end
@@ -42,14 +60,10 @@ function Location:SetDetails( title, desc )
 	self.desc = desc
 end
 
-function Location:SpawnEntity( entity )
-	self.world:SpawnEntity( entity, self )
-end
 
 function Location:AddEntity( entity )
 	assert( is_instance( entity, Entity ))
 	assert( self.contents == nil or table.arrayfind( self.contents, entity ) == nil )
-	assert( entity.world == self.world, tostring(entity.world))
 	assert( entity.location == self )
 	
 	if self.contents == nil then
@@ -60,6 +74,13 @@ function Location:AddEntity( entity )
 
 	if is_instance( entity, Agent ) then
 		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
+	end
+
+	-- Spawn entity or self, if needed.
+	if entity.world == nil and self.world then
+		self.world:SpawnEntity( entity )		
+	elseif entity.world and self.world == nil then
+		SpawnLocation( self, entity.world )
 	end
 end
 
@@ -112,14 +133,6 @@ function Location:IsConnected( other )
 	return false
 end
 
-local function SpawnLocation( location, world )
-	if location:IsSpawned() then
-		return false
-	else
-		world:SpawnLocation( location )
-		return true
-	end
-end
 
 function Location:Connect( other )
 	assert( other ~= nil )
@@ -134,9 +147,9 @@ function Location:Connect( other )
 	table.insert( other.exits, exit )
 
 	if not self:IsSpawned() and other:IsSpawned() then
-		self:Visit( SpawnLocation, other.world )
+		self:Visit( SpawnLocation, other.world, self )
 	elseif self:IsSpawned() and not other:IsSpawned() then
-		other:Visit( SpawnLocation, self.world )
+		other:Visit( SpawnLocation, self.world, self )
 	end
 end
 

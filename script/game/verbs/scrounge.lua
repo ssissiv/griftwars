@@ -83,7 +83,6 @@ function Scrounge:Interact( actor, target )
 	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
 
 	while true do
-		DBG(self)
 		self:YieldForTime( 30 * ONE_MINUTE )
 		actor:DeltaStat( STAT.FATIGUE, 5 )
 

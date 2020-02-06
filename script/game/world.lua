@@ -30,7 +30,6 @@ end
 
 function World:SpawnLocation( location )
 	self:SpawnEntity( location )
-	table.insert( self.locations, location )
 end
 
 function World:AllLocations()
@@ -77,6 +76,9 @@ function World:SpawnEntity( ent, location )
 			self.player = ent
 			self.puppet = ent
 		end
+
+	elseif is_instance( ent, Location ) then
+		table.insert( self.locations, location )
 	end
 
 	return ent

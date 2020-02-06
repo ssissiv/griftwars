@@ -69,7 +69,7 @@ function WorldGen:GenerateMilitary( world )
 	world:SpawnLocation( room )
 
 	local commander = Agent.MilitiaCaptain()
-	room:SpawnEntity( commander )
+	commander:WarpToLocation( room )
 end
 
 function WorldGen:GeneratePlayer( world )
