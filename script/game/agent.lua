@@ -656,6 +656,22 @@ function Agent:GetAffinity( other )
 	end
 end
 
+function Agent:DeltaTrust( trust )
+	local other = self.world:GetPlayer()
+	local affinity = self.affinities and self.affinities[ other ]
+	if affinity == nil then
+		affinity = Relationship.Affinity( self, other )
+		self.world:SpawnRelationship( affinity )
+	end
+
+	if affinity then
+		affinity:DeltaTrust( trust )
+		Msg:Echo( other, "{1.Id}'s trust with you increases! ({2%+d})", self:LocTable( other ), trust )
+
+	end
+end
+
+
 function Agent:GainXP( xp )
 	if self.stats[ STAT.XP ] then
 		self:DeltaStat( STAT.XP, xp )

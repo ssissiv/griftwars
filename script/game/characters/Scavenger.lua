@@ -103,3 +103,11 @@ function Scavenger:OnSpawn( world )
 	end
 end
 
+function Scavenger:OnLocationEntityEvent( event_name, entity, ... )
+	if event_name == AGENT_EVENT.SCROUNGE then
+		if entity:IsPlayer() then
+			self:DeltaTrust( 5 )
+		end
+	end
+end
+

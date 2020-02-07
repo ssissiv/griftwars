@@ -18,6 +18,8 @@ end
 
 -------------------------------------------------------------------------
 
+AppendEnum( AGENT_EVENT, "SCROUNGE" )
+
 local Scrounge = class( "Verb.Scrounge", Verb )
 
 Scrounge.ACT_DESC =
@@ -111,6 +113,8 @@ function Scrounge:Interact( actor, target )
 		end
 
 		actor:GainXP( 1 )
+
+		finder:BroadcastEvent( AGENT_EVENT.SCROUNGE, actor )
 		
 		if math.random() < 0.5 then
 			break

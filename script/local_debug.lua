@@ -2,19 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(world:CalculateTimeElapsed(1.0))",
-			"print( math.modf(2.3, 551.0))",
-			"print(world:CalculateTimeElapsed(1.0))",
-			"print(world.debug_world_speed)",
-			"print(world:CalculateTimeElapsed(1.0))",
-			"print( Verb.Attack )",
-			"t:EvaluateTargets()",
-			"sdf",
-			"print(t:IsDoing())",
-			"print( t )",
-			"print( t:CanDo( puppet ))",
-			"print(t:CollectVerbs( nil, puppet, nil )",
-			")",
 			"print(t:CollectVerbs( nil, puppet, nil ))",
 			"puppet:RegenVerbs()",
 			"puppet:GainAspect( Skill.Scrounge() )",
@@ -33,7 +20,20 @@ return {
 			"for i, l in pairs( world.locations ) assert( l.world ) end",
 			"for i, l in pairs( world.locations ) do assert( l.world ) end",
 			"print(t.world)",
-			"print(t:IsSpawned())"
+			"print(t:IsSpawned())",
+			"print(location)",
+			"puppet.location:AddEntity( Object.JunkPile() )",
+			"puppet.location:AddEntity( Object.JunkHeap() )",
+			"Object.JunkHeap():WarpToLocation( puppet.location )",
+			"location:BroadcastEvent( LOCATION_EVENT.ENTITY_EVENT, \"what' )",
+			"location:BroadcastEvent( LOCATION_EVENT.ENTITY_EVENT, \"what\" )",
+			"puppet.location:BroadcastEvent( LOCATION_EVENT.ENTITY_EVENT, \"what\" )",
+			"puppet.location:BroadcastEvent( \"ENTITY_EVENT\", \"what\" )",
+			"location:BroadcastEvent( LOCATION_EVENT.ENTITY_EVENT, \"what\" )",
+			"puppet.location:BroadcastEvent( \"ENTITY_EVENT\", \"what\" )",
+			"Object.JunkHeap():WarpToLocation( puppet.location )",
+			"t:DeltaTrust(10)",
+			"Object.JunkHeap():WarpToLocation( puppet.location )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

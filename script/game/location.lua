@@ -82,12 +82,16 @@ function Location:AddEntity( entity )
 	elseif entity.world and self.world == nil then
 		SpawnLocation( self, entity.world )
 	end
+
+	entity:ListenForAny( self, self.OnEntityEvent )
 end
 
 function Location:RemoveEntity( entity )
 	local idx = table.arrayfind( self.contents, entity )
 	table.remove( self.contents, idx )
 
+	self:RemoveListener( entity )
+	
 	if is_instance( entity, Agent ) then
 		self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, entity )
 	end
@@ -122,6 +126,15 @@ function Location:HasEntity( ent )
 	end
 	return false
 end
+
+function Location:OnEntityEvent( event_name, entity, ... )
+	for i, obj in ipairs( self.contents ) do
+		if entity ~= obj and obj.OnLocationEntityEvent then
+			obj:OnLocationEntityEvent( event_name, entity, ... )
+		end
+	end
+end
+
 
 function Location:IsConnected( other )
 	for i, exit in ipairs( self.exits ) do
