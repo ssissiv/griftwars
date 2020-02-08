@@ -591,7 +591,7 @@ function Agent:SetFocus( focus )
 			prev_focus:OnLostFocus( self )
 		end
 
-		if self:IsPuppet() and is_instance( focus, Agent ) then
+		if self:IsPuppet() and is_instance( prev_focus, Agent ) then
 			self.world:TogglePause( PAUSE_TYPE.FOCUS_MODE) 
 		end
 	end
