@@ -48,7 +48,6 @@ function Interact:CanInteract( actor, ... )
 end
 
 function Interact:Interact( actor )
-	self.interaction:SatisfyReqs( actor )
 	self.interaction:Interact( actor )
 end
 

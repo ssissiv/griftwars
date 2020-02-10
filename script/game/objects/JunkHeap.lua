@@ -12,6 +12,17 @@ function JunkHeap:init()
 	end
 end
 
+function JunkHeap:OnSpawn( world )
+	JunkHeap._base.OnSpawn( self, world )
+	world:SchedulePeriodicFunction( ONE_HOUR, self.RefreshJunk, self )
+end
+
+function JunkHeap:RefreshJunk()
+	local quality = table.arraypick{ QUALITY.POOR, QUALITY.AVERAGE, QUALITY.GOOD }
+	self:GetAspect( Aspect.ScroungeTarget ):SetQuality( quality )
+end
+
+
 function JunkHeap:GetName()
 	return "Junk Heap"
 end

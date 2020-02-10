@@ -26,6 +26,7 @@ require "frontend/ObjectDetailsWindow"
 require "frontend/AffinityChangedWindow"
 require "frontend/MemoryWindow"
 require "frontend/ChallengeWindow"
+require "frontend/ChoiceWindow"
 
 Camera = require "camera"
 bit32 = require "bit"

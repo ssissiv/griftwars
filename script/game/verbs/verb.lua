@@ -190,7 +190,7 @@ end
 function Verb:DoVerb( actor, ... )
 	local ok, reason = self:CanInteract( actor, ... )
 	if not ok then
-		print( "CANT DO", actor, self, reason )
+		-- print( "CANT DO", actor, self, reason )
 		return false
 	end
 
@@ -207,6 +207,8 @@ function Verb:DoVerb( actor, ... )
 	self.coro = coroutine.running()
 	assert( self.coro )
 	self.time_started = actor.world:GetDateTime()
+
+	-- actor.world:Log( "{1} begins {2} at {3}", actor, self, actor.location )`
 
 	self:Interact( actor, ... )
 

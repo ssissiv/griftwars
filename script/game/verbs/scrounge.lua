@@ -5,6 +5,10 @@ function ScroungeTarget:init( quality )
 	self.quality = quality
 end
 
+function ScroungeTarget:SetQuality( quality )
+	self.quality = quality
+end
+
 function ScroungeTarget:CollectVerbs( verbs, actor, obj )
 	local scrounge = actor:GetAspect( Verb.Scrounge )
 	if scrounge and obj == self.owner then

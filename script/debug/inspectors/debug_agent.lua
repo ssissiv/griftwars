@@ -116,7 +116,24 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 	if behaviour and ui.CollapsingHeader( "Behaviour", "DefaultOpen" ) then
 		behaviour:RenderDebugPanel( ui, panel, dbg )
 	end
-	
+
+    if ui.CollapsingHeader( "History" ) then
+        local changed, filter = ui.InputText( "Filter", self.history_filter or "", 512 )
+        if filter and filter ~= self.history_filter then
+            self.history_filter = filter
+        end
+        ui.Indent( 10 )
+        for i, v in self.agent.world:GetAspect( Aspect.History ):Items() do
+            if table.contains( v, self.agent ) then
+                local txt = loc.format( table.unpack( v, 1, table.maxn( v ) ))
+                if (self.history_filter == nil or txt:find( self.history_filter )) and ui.Selectable( txt ) then
+                    DBG(v)
+                end
+            end
+        end
+        ui.Unindent( 10 )
+    end
+
 	DebugTable.RenderPanel( self, ui, panel, dbg )
 end
 

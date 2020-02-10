@@ -24,6 +24,18 @@ function Memory:OnSpawn( world )
 	for i, engram in ipairs( self.engrams ) do
 		engram:StampTime( self.owner )
 	end
+
+	self:SchedulePeriodicFunction( ONE_HOUR, self.RefreshEngrams )
+end
+
+function Memory:RefreshEngrams()
+	for i = #self.engrams, 1, -1 do
+		local engram = self.engrams[ i ]
+		local duration = engram:GetDuration()
+		if duration and duration < engram:GetAge( self.owner ) then
+			table.remove( self.engrams, i )
+		end
+	end
 end
 
 function Memory:AddEngram( engram )

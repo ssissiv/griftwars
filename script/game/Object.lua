@@ -93,7 +93,11 @@ function Object:DeltaValue( delta )
 end
 
 function Object:GetLocation()
-	return self.location
+	if self.location then
+		return self.location
+	elseif self.owner then
+		return self.owner:GetLocation()
+	end
 end
 
 function Object:__tostring()

@@ -45,6 +45,28 @@ end
 
 function Aspect:OnDespawn()
 	self.owner.world:RemoveListener( self )
+
+	if self.scheduled_evs then
+		for i, ev in ipairs( self.scheduled_evs ) do
+			self.owner.world:UnscheduleEvent( ev )
+		end
+	end
+end
+
+function Aspect:SchedulePeriodicFunction( delta, fn, ... )
+	local ev = self.owner.world:SchedulePeriodicFunction( delta, fn, self, ... )
+	if self.scheduled_evs == nil then
+		self.scheduled_evs = {}
+	end
+	table.insert( self.scheduled_evs, ev )
+end
+
+function Aspect:ScheduleFunction( delta, fn, ... )
+	local ev = self.world:ScheduleFunction( delta, fn, self, ... )
+	if self.scheduled_evs == nil then
+		self.scheduled_evs = {}
+	end
+	table.insert( self.scheduled_evs, ev )
 end
 
 function Aspect:RegisterHandler( event, fn )

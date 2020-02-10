@@ -33,6 +33,13 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 					action.verb( engram, self.agent )
 				end
 			end
+
+			local duration = engram:GetDuration()
+			if duration then
+				local time_left = duration - engram:GetAge( self.agent )
+				ui.Text( loc.format( "Expires in: {1}", Calendar.FormatDuration( time_left )))
+			end
+
 			ui.Unindent( 20 )
 			count = count + 1
 		end

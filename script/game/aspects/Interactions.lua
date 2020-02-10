@@ -164,7 +164,6 @@ function Befriend:Interact( actor )
 	end
 
 	local result = actor.world.nexus:DoChallenge( challenge )
-	print( result )
 	if result == "cancel" then
 
 	elseif result == "success" then
@@ -205,6 +204,30 @@ function IntroduceAgent:OnSuccess( actor )
 
 end
 
+
+-----------------------------------------------------------------------------------
+
+local RevealObject = class( "Interaction.RevealObject", Interaction )
+
+function RevealObject:init( class_name, range )
+	Interaction.init( self )
+	self.range = range
+	self.class_name = class_name
+end
+
+function RevealObject:Interact( actor )
+	local location = self.owner:GetHome() or actor:GetLocation()
+	local candidates = location:SearchObject( function( obj ) return is_instance( obj, self.class_name ) end, self.range )
+	local obj = table.arraypick( candidates )
+	if obj then
+		Msg:Echo( actor, "{1.Id} reveals the location of {2.Id}.", self.owner:LocTable( actor ), obj:LocTable( actor ) )
+		actor:GetMemory():AddEngram( Engram.LearnWhereabouts( obj ))
+	else
+		Msg:Echo( actor, "{1.Id} reveals nothing of interest.", self.owner:LocTable( actor ) )
+	end
+end
+
+
 -----------------------------------------------------------------------------------
 
 local TrainSkill = class( "Interaction.TrainSkill", Interaction )
@@ -234,6 +257,8 @@ function TrainSkill:CanInteract( actor )
 end
 
 function TrainSkill:Interact( actor )
+	self:SatisfyReqs( actor )
+
 	Msg:Echo( actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), self.skill:GetName() )
 	Msg:ActToRoom( "{I.Id{} learns the {2} skill!", actor )
 
@@ -277,10 +302,17 @@ function OfferJob:CanInteract( actor )
 end
 
 function OfferJob:Interact( actor )
-	Msg:Echo( actor, "{1.Id} gives you a new job: {2}", self.owner:LocTable( actor ), self.job:GetName() )
-	Msg:ActToRoom( "{I.Id} gives {2} a new job.", self.owner, actor )
+	local title = loc.format( "{1.Id}'s Job Offer", self.owner:LocTable( actor ) )
+	local body = loc.format( "Job: {1}\nDo you want to accept the job offer?", self.job:GetName() )
 
-	actor:GainAspect( self.job )
+	if self:GetWorld().nexus:ConfirmChoice( title, body ) then
+		self:SatisfyReqs( actor )
+	
+		Msg:Echo( actor, "{1.Id} gives you a new job: {2}", self.owner:LocTable( actor ), self.job:GetName() )
+		Msg:ActToRoom( "{I.Id} gives {2} a new job.", self.owner, actor )
+
+		actor:GainAspect( self.job )
+	end
 end
 
 -----------------------------------------------------------------------------------

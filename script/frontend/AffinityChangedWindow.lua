@@ -5,6 +5,16 @@ function AffinityChangedWindow:init( affinity )
 	self.affinity = affinity
 end
 
+
+function AffinityChangedWindow:KeyPressed( key, screen )
+	if key == "return" or key == "escape" then
+		self.result = true
+	end
+
+	return false
+end
+
+
 function AffinityChangedWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 	ui.SetNextWindowSize( 400, 150 )
@@ -22,12 +32,16 @@ function AffinityChangedWindow:RenderImGuiWindow( ui, screen )
 		end
 
 		if ui.Button( "Close" ) then
-			screen:RemoveWindow( self )
-			self:Resume()
+			self.result = true
 		end
 	end
 
     ui.End()
+
+    if self.result then
+		screen:RemoveWindow( self )
+		self:Resume()
+	end
 end
 
 function AffinityChangedWindow:Show()

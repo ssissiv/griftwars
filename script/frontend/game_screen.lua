@@ -210,7 +210,7 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 	if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
 		ui.SameLine( 0, 10 )
 		if ui.SmallButton( "!") then
-			puppet:GetMemory():AddEngram( Engram.LearnLocation( location ))
+			puppet:GetMemory():AddEngram( Engram.LearnWhereabouts( location ))
 		end
 	end
 	ui.TextColored( 0.8, 0.8, 0.8, 1.0, location:GetDesc() )
@@ -410,7 +410,7 @@ end
 
 function GameScreen:KeyPressed( key )
 	for i, window in ipairs( self.windows ) do
-		if window.KeyPressed and window:KeyPressed( key ) then
+		if window.KeyPressed and window:KeyPressed( key, self ) then
 			return true
 		end
 	end

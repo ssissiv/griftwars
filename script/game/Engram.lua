@@ -1,7 +1,13 @@
 local Engram = class( "Engram" )
 
+Engram.duration = ONE_DAY
+
 function Engram:GetAge( owner )
 	return owner.world:GetDateTime() - self.when
+end
+
+function Engram:GetDuration()
+	return self.duration
 end
 
 function Engram:StampTime( owner )
@@ -38,25 +44,28 @@ end
 
 
 -----------------------------------------------------------------------------
--- You know certain details about an Agent
+-- You know the location of something
 
-local LearnLocation = class( "Engram.LearnLocation", Engram )
+local LearnWhereabouts = class( "Engram.LearnWhereabouts", Engram )
 
-function LearnLocation:init( location )
-	assert( is_instance( location, Location ))
-	self.location = location
+function LearnWhereabouts:init( target )
+	self.target = target
 end
 
-function LearnLocation:RenderImGuiWindow( ui, screen, owner )
-	ui.Text( loc.format( "You know how to get to {1}.", self.location:GetTitle() ))
+function LearnWhereabouts:RenderImGuiWindow( ui, screen, owner )
+	if is_instance( self.target, Location ) then
+		ui.Text( loc.format( "You know how to get to {1}.", self.target:GetTitle() ))
+	else
+		ui.Text( loc.format( "You know how to get to {1}.", self.target ))
+	end
 end
 
-LearnLocation.ACTIONS =
+LearnWhereabouts.ACTIONS =
 {
-	{ name = "Travel", verb = function( self, owner ) return owner:DoVerbAsync( Verb.Travel( owner, self.location )) end }
+	{ name = "Travel", verb = function( self, owner ) return owner:DoVerbAsync( Verb.Travel( owner, self.target )) end }
 }
 
-function Engram.HasLearnedLocation( engram, location )
-	return engram._class == LearnLocation and engram.location == location
+function Engram.HasLearnedLocation( engram, target )
+	return engram._class == LearnWhereabouts and engram.target == target
 end
 

@@ -188,6 +188,42 @@ function Location:Visit( fn, ... )
 	VisitInternal( {}, self, fn, ... )
 end
 
+function Location:SearchObject( fn, max_depth )
+	local candidates = {}
+	local open, closed = { self }, { [self] = 0 }
+	local depth = 0
+
+	max_depth = max_depth or math.huge
+
+	while depth <= max_depth and #open > 0 do
+
+		local x = table.remove( open )
+		depth = closed[ x ]
+
+		-- search contents
+		if x.contents then
+			for i, obj in ipairs( x.contents ) do
+				if fn( obj ) then
+					table.insert( candidates, obj )
+				end
+			end
+		end
+
+		if depth < max_depth then
+			-- recurse
+			for i, exit in ipairs( x.exits ) do
+				local dest = exit:GetDest( x )
+				if not table.contains( open, dest ) and not closed[ dest ] then
+					table.insert( open, dest )
+					closed[ dest ] = depth + 1
+				end
+			end
+		end
+	end
+
+	return candidates
+end
+
 function Location:Contents()
 	return ipairs( self.contents or table.empty )
 end

@@ -101,6 +101,7 @@ function Scavenger:OnSpawn( world )
 	if friend then
 		self:GainAspect( Interaction.IntroduceAgent( friend ) )
 	end
+	self:GainAspect( Interaction.RevealObject( Object.JunkHeap, 3 ))
 end
 
 function Scavenger:OnLocationEntityEvent( event_name, entity, ... )

@@ -78,7 +78,7 @@ function World:SpawnEntity( ent, location )
 		end
 
 	elseif is_instance( ent, Location ) then
-		table.insert( self.locations, location )
+		table.insert( self.locations, ent )
 	end
 
 	return ent

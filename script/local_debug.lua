@@ -2,13 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:CollectVerbs( nil, puppet, nil ))",
-			"puppet:RegenVerbs()",
-			"puppet:GainAspect( Skill.Scrounge() )",
-			"print(t:GetLocation())",
-			"puppet:RegenVerbs()",
-			"world:SetPuppet( nil )",
-			"print(os.clock())",
 			"print(os.time())",
 			"print( love.timer.getTime())",
 			"print(t:GetAspect( Job ))",
@@ -33,7 +26,14 @@ return {
 			"puppet.location:BroadcastEvent( \"ENTITY_EVENT\", \"what\" )",
 			"Object.JunkHeap():WarpToLocation( puppet.location )",
 			"t:DeltaTrust(10)",
-			"Object.JunkHeap():WarpToLocation( puppet.location )"
+			"Object.JunkHeap():WarpToLocation( puppet.location )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 1 )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 2 )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 1 )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 2 )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 1 )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 2 )",
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 3 )"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

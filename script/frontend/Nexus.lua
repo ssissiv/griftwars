@@ -86,3 +86,11 @@ function WorldNexus:DoChallenge( challenge )
 	return window:Show()
 end
 
+function WorldNexus:ConfirmChoice( title, body )
+	local window = ChoiceWindow( title, body )
+	self.screen:AddWindow( window )
+
+	return window:Show()
+end
+
+
