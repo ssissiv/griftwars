@@ -96,6 +96,7 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 			end
 		end
 
+		ui.Text( "Actions:" )
 		for i, verb in self.agent:Verbs() do
 			local desc = verb:GetDetailsDesc( self.viewer )
 			if desc then
@@ -106,7 +107,9 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
 		ui.NewLine()
 
-		self:RenderAllRelationships( ui, screen )
+		if self.agent == self.viewer then
+			self:RenderAllRelationships( ui, screen )
+		end
 
 		ui.Separator()
 
