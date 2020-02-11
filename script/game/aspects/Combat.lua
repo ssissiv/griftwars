@@ -7,6 +7,7 @@ end
 function Combat:OnSpawn( world )
 	self:EvaluateTargets()
 	self.owner:ListenForEvent( AGENT_EVENT.LOCATION_CHANGED, self, self.OnLocationChanged )
+	self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
 end
 
 function Combat:OnLocationChanged( event_name, agent, prev_location, location )

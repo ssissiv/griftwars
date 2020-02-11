@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(os.time())",
-			"print( love.timer.getTime())",
-			"print(t:GetAspect( Job ))",
-			"print(tostr(COROS))",
-			"print(tostr(COROS[1]))",
 			"print( coroutine.status(COROS[1]))",
 			"print(player.focus)",
 			"for i, l in pairs( world.locations ) do print( l ) end",
@@ -33,7 +28,12 @@ return {
 			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 2 )",
 			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 1 )",
 			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 2 )",
-			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 3 )"
+			"puppet.location:SearchObject( function( obj ) print( obj, obj.location ) end, 3 )",
+			"print(t:GetAspect( Aspect.Combat ))",
+			"print(t:GetAspect( Aspect.Combat ):EvaluateTarget( player ))",
+			"print(t:GetAspect( Aspect.Combat ))",
+			"print(puppet.location:IsListener( t:GetAspect( Aspect.Combat )))",
+			"print(puppet.location.events:IsListener( t:GetAspect( Aspect.Combat )))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

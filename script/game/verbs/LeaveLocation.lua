@@ -13,7 +13,7 @@ LeaveLocation.ACT_DESC =
 
 LeaveLocation.EXIT_STRINGS =
 {
-	"You leave {2.title}.",
+	nil, --"You leave {2.title}.",
 	nil,
 	"{1.Id} leaves.",
 }

@@ -21,7 +21,7 @@ function Agent:init()
 
 	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
 
-	self:GainAspect( Aspect.HealthValue( 1, 6 ))
+	self:GainAspect( Aspect.HealthValue( 6, 6 ))
 	self:CreateStat( STAT.CHARISMA, 1, 1 )
 end
 

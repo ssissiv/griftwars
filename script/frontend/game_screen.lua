@@ -141,8 +141,6 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     if ui.SmallButton( "?" ) then
 		self.nexus:Inspect( puppet, puppet )
 	end
-    ui.SameLine( 0, 20 )
-    ui.Text( "HP: 3/3" )
 
     ui.SameLine( 0, 40 )
     ui.TextColored( 1, 1, 0, 1, loc.format( "{1#money}", puppet:GetInventory():GetMoney() ))

@@ -59,6 +59,17 @@ function EventSystem:HasListeners()
     return next(self.listeners) ~= nil
 end
 
+function EventSystem:IsListener( listener, event )
+    if event == nil then
+        return self.listeners[ listener ] ~= nil
+    elseif self.listeners_by_event and self.listeners_by_event[ event ] then
+        return table.contains( self.listeners_by_event[ event ], listener )
+    end
+
+    return false
+end
+
+
 function EventSystem:RemoveListenerFromList(listener, t)
     for i = 1, #t, 3 do
         if t[i] == listener then

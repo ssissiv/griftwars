@@ -1,6 +1,6 @@
 -- 1.0 unit of datetime is meant to represent 1 hour,
 -- so a WALL_TO_GAME_TIME of 1.0 means every real world second is equivalent to 1 game hour.
-WALL_TO_GAME_TIME = 1/60.0 -- eg. 1 wall second == 1 game minute.
+WALL_TO_GAME_TIME = 1/60.0 -- eg. 1 wall second == 1 game minute / 1 wall minute = 1 game hour
 
 -- Note: 'datetime' is a floating point measure of game hours passed.
 ONE_SECOND = 1/360

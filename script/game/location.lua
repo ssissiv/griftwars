@@ -90,8 +90,8 @@ function Location:RemoveEntity( entity )
 	local idx = table.arrayfind( self.contents, entity )
 	table.remove( self.contents, idx )
 
-	self:RemoveListener( entity )
-	
+	entity:RemoveListener( self )
+
 	if is_instance( entity, Agent ) then
 		self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, entity )
 	end
