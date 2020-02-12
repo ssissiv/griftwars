@@ -15,22 +15,19 @@ function WorldGen:GenerateWorld()
 	world:SpawnLocation( start )
 
 	local city = WorldGen.City()
-	world:SpawnEntity( city )
-	city:RoomAt( 1 ):Connect( start )
 	
 	local shop = Location()
 	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
 	shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
 	shop:Connect( city:RandomRoad() )
 	
-	local dens = Location()
-	dens:SetDetails( "The Dens", "Nobody visits these ruins, for they are overrun with feral vrocs." )
-	dens:Connect( city:RandomRoad() )
-
 	local shopkeep = Agent.Shopkeeper()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	shopkeep:GetAspect( Job.Shopkeep ):AssignShop( shop )
-	world:SpawnAgent( shopkeep, shop )
+	shopkeep:WarpToLocation( shop )
+	
+	world:SpawnEntity( city )
+	city:RoomAt( 1 ):Connect( start )
 
 	-- local collector = Agent.Collector()
 	-- shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
@@ -82,7 +79,8 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Trait.Player() )
 	player:GainAspect( Aspect.Combat() )
 	player:GainAspect( Verb.Scrounge( player ) )
-	
+	player:GainAspect( Verb.Chat( player ) )
+
 	local tokens = player:GainAspect( Aspect.TokenHolder() )
 	tokens:AddToken( Token( DIE_FACE.DIPLOMACY, 1 ) )
 	tokens:AddToken( Token( DIE_FACE.STEALTH, 1 ) )

@@ -41,7 +41,8 @@ function Entity:IsSpawned()
 end
 
 function Entity:OnSpawn( world )
-	assert( self.world == nil )
+	assert( self.world == nil or error( tostr(self) ))
+
 	self.world = world
 
 	if self.aspects then

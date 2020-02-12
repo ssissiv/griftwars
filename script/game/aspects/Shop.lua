@@ -22,25 +22,27 @@ end
 
 function Shop:SpawnShopOwner()
 	local world = self:GetWorld()
-	local adj = world.adjectives:PickName()
-	local noun = world.nouns:PickName()
 	local stock = {}
-	local name
-
-	local shop_type = table.pick( SHOP_TYPE )
-	if shop_type == SHOP_TYPE.GENERAL then
-		name = loc.format( "The {1} {2} General Store", adj, noun )
-
-	elseif shop_type == SHOP_TYPE.FOOD then
-		name = loc.format( "The {1} {2} Restaurant", adj, noun )
+	local shop_type = self.shop_type
+	if shop_type == SHOP_TYPE.FOOD then
 		table.insert( stock, Object.Jerky() )
 
 	elseif shop_type == SHOP_TYPE.EQUIPMENT then
-		name = loc.format( "{1} {2}'s' Equipment", adj, noun )
 		table.insert( stock, Weapon.Dirk() )
 	end
 
-	if self.name == nil and name then
+	if self.name == nil then
+		local adj = world.adjectives:PickName()
+		local noun = world.nouns:PickName()
+		local name
+		if shop_type == SHOP_TYPE.FOOD then
+			name = loc.format( "The {1} {2} Restaurant", adj, noun )
+		elseif shop_type == SHOP_TYPE.EQUIPMENT then
+			name = loc.format( "{1} {2}'s' Equipment", adj, noun )
+		else
+			name = loc.format( "The {1} {2} General Store", adj, noun )
+		end
+
 		self.location:SetDetails( name )
 	end
 

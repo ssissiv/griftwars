@@ -24,7 +24,9 @@ function Shopkeep:AssignShop( shop )
 	assert( shop == nil or is_instance( shop, Location ))
 	if shop ~= self.shop then
 		self.shop = shop
-		shop:GetAspect( Feature.Shop ):AssignShopOwner( self.owner )
+		if shop then
+			shop:GetAspect( Feature.Shop ):AssignShopOwner( self.owner )
+		end
 	end
 end
 

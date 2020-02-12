@@ -21,7 +21,9 @@ function Location:OnSpawn( world )
 
 	if self.contents then
 		for i, v in ipairs( self.contents ) do
-			world:SpawnEntity( v )
+			if not v:IsSpawned() then
+				world:SpawnEntity( v )
+			end
 		end
 	end
 

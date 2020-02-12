@@ -86,6 +86,7 @@ require "game/aspects/skills"
 require "game/aspects/Interactions"
 require "game/aspects/Leader"
 require "game/aspects/Shopkeep"
+require "game/aspects/Barkeep"
 require "game/aspects/Assistant"
 require "game/aspects/Combat"
 
@@ -94,6 +95,7 @@ require "game/aspects/behaviour"
 require "game/aspects/features"
 require "game/aspects/Home"
 require "game/aspects/Shop"
+require "game/aspects/Tavern"
 
 --------------------------------------------------------------------
 -- Objects
@@ -130,6 +132,7 @@ require "game/characters/Scavenger"
 require "game/characters/Collector"
 require "game/characters/MilitiaCaptain"
 require "game/characters/Shopkeeper"
+require "game/characters/Barkeep"
 
 require "game/characters/Orc"
 

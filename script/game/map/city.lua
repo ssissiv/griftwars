@@ -66,18 +66,7 @@ end
 function City:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
-	assert( self.rooms[1] )
 	world:SpawnLocation( self.rooms[1] )
-	-- for i, room in ipairs( self.rooms ) do
-	-- 	world:SpawnLocation( room )
-	-- end
-
-	-- -- Junk heaps
-	-- for i, road in ipairs( self.roads ) do
-	-- 	if math.random() < 0.33 then
-	-- 		road:SpawnEntity( Object.JunkHeap() )
-	-- 	end
-	-- end
 
 	-- Shopkeepers
 	for i, room in ipairs( self.rooms ) do
@@ -89,6 +78,7 @@ function City:OnSpawn( world )
 			end
 		end
 	end	
+
 
 	-- Scavengers
 	local poor_house = self:SpawnHome()
@@ -126,16 +116,20 @@ end
 function City:ConnectShops()
 	for i = 1, 10 do
 		local room = self:RandomRoad()
-		if room:HasAspect( Feature.Home ) then
-			--
-			error()
-		else
-			local shop_room = Location()
-			shop_room:SetImage( assets.LOCATION_BGS.SHOP )
-			shop_room:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
-			shop_room:Connect( room )
-			table.insert( self.rooms, shop_room )
-		end
+		local shop_room = Location()
+		shop_room:SetImage( assets.LOCATION_BGS.SHOP )
+		shop_room:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
+		shop_room:Connect( room )
+		table.insert( self.rooms, shop_room )
+	end
+
+	for i = 1, 3 do
+		local road = self:RandomRoad()
+		local tavern = Location()
+		tavern:SetImage( assets.LOCATION_BGS.SHOP )
+		tavern:GainAspect( Feature.Tavern())
+		tavern:Connect( road )
+		table.insert( self.rooms, tavern )
 	end
 end
 
