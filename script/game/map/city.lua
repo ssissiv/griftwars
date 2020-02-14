@@ -87,6 +87,12 @@ function City:OnSpawn( world )
 		local scavenger = world:SpawnAgent( Agent.Scavenger(), self:RandomRoad() )
 		poor_house:GetAspect( Feature.Home ):AddResident( scavenger )
 	end
+
+	-- Snoops
+	for i = 1, 2 do
+		local snoop = world:SpawnAgent( Agent.Snoop(), poor_house )
+		poor_house:GetAspect( Feature.Home ):AddResident( snoop )
+	end
 end
 
 function City:SpawnHome( resident )

@@ -186,8 +186,39 @@ local function VisitInternal( visited, location, fn, ... )
 	end
 end
 
+-- Depth-first traversal applying fn().
 function Location:Visit( fn, ... )
 	VisitInternal( {}, self, fn, ... )
+end
+
+-- Breadth-first traversal applying fn().
+function Location:Flood( fn, ... )
+	local open, closed = { self, 0 }, {}
+
+	while #open > 0 do
+		local x = table.remove( open, 1 )
+		local depth = table.remove( open, 1 )
+
+		table.insert( closed, open )
+		if #closed > 999 then
+			break
+		end
+
+		local continue, stop = fn( x, depth, ... )
+		if stop then
+			break
+		elseif continue then
+			for i, exit in ipairs( x.exits ) do
+				local dest = exit:GetDest( x )
+				if not table.contains( open, dest ) and not table.contains( closed, dest ) then
+					table.insert( open, dest )
+					table.insert( open, depth + 1 )
+				end
+			end
+		end
+	end
+
+	assert_warning( #closed <= 99, "Floodings lots of rooms!", #closed )
 end
 
 function Location:SearchObject( fn, max_depth )

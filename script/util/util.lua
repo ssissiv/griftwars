@@ -14,6 +14,15 @@ function generic_error( err )
     return debug.traceback( err, 2 )
 end
 
+function assert_warning( cond, fmt, ... )
+    if not cond then
+        if fmt then
+           print( fmt, ... )
+       end
+       print( debug.traceback())
+   end
+end
+
 function true_function()
     return true
 end
