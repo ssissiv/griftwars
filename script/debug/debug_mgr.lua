@@ -107,7 +107,12 @@ function DebugManager:TryExecuteDebugFile( filename )
 		if not f then
 			print( "Failed: " .. tostring(e))
 		else
-			return f()
+			local results = { xpcall( f, generic_error ) }
+			if not results[1] then
+				print( results[2] )
+			else
+				return select( 2, results )
+			end
 		end
 	end
 end
