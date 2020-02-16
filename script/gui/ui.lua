@@ -24,8 +24,10 @@ end
 function ui:RenderUI()
 	love.graphics.setColor( 255, 255, 255 )
 
-	for i, screen in ipairs( self.screens ) do
+	for i = #self.screens, 1, -1 do
+		local screen = self.screens[i]
 		screen:RenderScreen( self )
+		break
 	end
 	table.clear( self.input.keys_pressed )
 end
@@ -40,6 +42,10 @@ end
 
 function ui:WasPressed( key )
 	return self.input.keys_pressed[ key ] ~= nil
+end
+
+function ui:GetSize()
+	return love.graphics.getWidth(), love.graphics.getHeight()
 end
 
 ---------------------------------------------

@@ -4,8 +4,16 @@ function RenderScreen:init()
 	self.render_bounds = {}
 end
 
-function RenderScreen:Rectangle( fill, x, y, w, h )
-	love.graphics.rectangle( fill, x, y, w, h )
+function RenderScreen:Rectangle( x, y, w, h )
+	love.graphics.rectangle( "fill", x, y, w, h )
+	self.render_bounds[1] = x
+	self.render_bounds[2] = y
+	self.render_bounds[3] = w
+	self.render_bounds[4] = h
+end
+
+function RenderScreen:Box( x, y, w, h )
+	love.graphics.rectangle( "line", x, y, w, h )
 	self.render_bounds[1] = x
 	self.render_bounds[2] = y
 	self.render_bounds[3] = w

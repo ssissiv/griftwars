@@ -1,15 +1,11 @@
-local Camera =
-{
-	x = 0,
-	y = 0,
-	targetx = 0,
-	targety = 0,
-	zoom = 1.0
-}
+local Camera = class( "Camera" )
 
-function Camera.New()
-	local self = table.shallowcopy( Camera )
-	return self
+function Camera:init()
+	self.x = 0
+	self.y = 0
+	self.targetx = 0
+	self.targety = 0
+	self.zoom = 1.0
 end
 
 function Camera:GetPosition()
@@ -84,6 +80,3 @@ end
 function Camera:RenderDebug()
 	imgui.Text( string.format( "Camera: %.2f, %.2f; Zoom: %.2f", self.x, self.y, self.zoom ))
 end
-
-
-return Camera

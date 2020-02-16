@@ -14,9 +14,12 @@ function World:init()
 	self:SpawnLocation( self.limbo )
 
 	self.history = self:GainAspect( Aspect.History() )
+	self.map = self:GainAspect( Aspect.WorldMap() )
+
 	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
 	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )
 	self.nouns = Aspect.NamePool( "data/nouns.txt" )
+
 end
 
 function World:Log( fmt, ... )
@@ -30,6 +33,10 @@ end
 
 function World:SpawnLocation( location )
 	self:SpawnEntity( location )
+end
+
+function World:GetLocationAt( x, y )
+	return self.map:LookupGrid( x, y )
 end
 
 function World:AllLocations()

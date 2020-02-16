@@ -16,6 +16,11 @@ ONE_WEEK = ONE_DAY * 7
 -- 6 am.
 DATETIME_START = 7
 
+TILE_SIZE = 64
+
+-- Default camera zoom
+DEFAULT_ZOOM = 1 / TILE_SIZE
+
 -- World speed multipliers.
 DEBUG_WORLD_SPEEDS =
 {
@@ -145,6 +150,16 @@ LOCATION_EVENT = MakeEnum{
 	"AGENT_REMOVED",
 	"ENTITY_EVENT",
 }
+
+EXIT = MakeEnum{ "NORTH", "EAST", "WEST", "SOUTH" }
+REXIT = {
+	NORTH = EXIT.SOUTH,
+	SOUTH = EXIT.NORTH,
+	WEST = EXIT.EAST,
+	EAST = EXIT.WEST,
+}
+
+EXIT_ARRAY = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
 
 SHOP_TYPE = MakeEnum{
 	"GENERAL",

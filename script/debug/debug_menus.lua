@@ -77,6 +77,9 @@ local SHARED_BINDINGS =
     {
         Binding = {key="space"},
         Text = "Toggle Pause",
+        Enabled = function()
+            return is_instance( GetGUI():GetTopScreen(), GameScreen )
+        end,
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
             dbg_env.game.world:TogglePause( PAUSE_TYPE.DEBUG )

@@ -375,6 +375,19 @@ function ClearBits( bits, flags )
     return bit32.bor( bits, bit32.bnot( flags ) )
 end
 
+function OffsetExit( x, y, exit )
+    assert( IsEnum( exit, EXIT ))
+    if exit == EXIT.NORTH then
+        return x, y + 1
+    elseif exit == EXIT.EAST then
+        return x + 1, y
+    elseif exit == EXIT.SOUTH then
+        return x, y - 1
+    elseif exit == EXIT.WEST then
+        return x - 1, y
+    end
+end
+
 function LoadLinesFromFile( filename )
     local t = {}
     for line in io.lines( filename ) do

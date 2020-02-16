@@ -5,63 +5,65 @@ function City:init()
 	self.roads = {}
 	self.home_count = 0
 
-	local left = WorldGen.Line( math.random( 12, 16 ), 0, 1 )
-	left:SetDetails( "The Junkyard West", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	left:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	table.arrayadd( self.rooms, left.rooms )
-	table.arrayadd( self.roads, left.rooms )
+	-- local left = WorldGen.Line( math.random( 12, 16 ), EXIT.NORTH )
+	-- left:SetDetails( "The Junkyard West", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	-- left:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	-- table.arrayadd( self.rooms, left.rooms )
+	-- table.arrayadd( self.roads, left.rooms )
 
-	local top = WorldGen.Line( math.random( 8, 12 ), 1, 0 )
-	top:SetDetails( "The Junkyard North", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	top:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	table.arrayadd( self.rooms, top.rooms )
-	table.arrayadd( self.roads, top.rooms )
+	-- local top = WorldGen.Line( math.random( 8, 12 ), EXIT.EAST )
+	-- top:SetDetails( "The Junkyard North", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	-- top:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	-- table.arrayadd( self.rooms, top.rooms )
+	-- table.arrayadd( self.roads, top.rooms )
+	-- print(tostr(top:RoomAt(1).exits))
 	
-	local right = WorldGen.Line( math.random( 12, 16 ), 0, 1 )
-	right:SetDetails( "The Junkyard East", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	right:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	table.arrayadd( self.rooms, right.rooms )
-	table.arrayadd( self.roads, right.rooms )
+	-- local right = WorldGen.Line( math.random( 12, 16 ), EXIT.SOUTH )
+	-- right:SetDetails( "The Junkyard East", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	-- right:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	-- table.arrayadd( self.rooms, right.rooms )
+	-- table.arrayadd( self.roads, right.rooms )
 
-	local bottom = WorldGen.Line( math.random( 8, 12 ), 1, 0 )
-	bottom:SetDetails( "The Junkyard South", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	bottom:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
-	table.arrayadd( self.rooms, bottom.rooms )
-	table.arrayadd( self.roads, bottom.rooms )
+	-- local bottom = WorldGen.Line( math.random( 8, 12 ), EXIT.WEST )
+	-- bottom:SetDetails( "The Junkyard South", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	-- bottom:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	-- table.arrayadd( self.rooms, bottom.rooms )
+	-- table.arrayadd( self.roads, bottom.rooms )
 	
-	-- Connect left and top
-	local left_top = left:RoomAt( math.random( 1, 3 ) )
-	local top_left = top:RoomAt( math.random( 1, 3 ) )
-	left_top:Connect( top_left )
+	-- -- Connect left and top
+	-- local left_top = left:RoomAt( math.random( 1, 3 ) )
+	-- local top_left = top:RoomAt( 1 )
+	-- left_top:Connect( top_left, EXIT.EAST )
 
-	-- Connect right and top
-	local right_top = right:RoomAt( math.random( 1, 3 ))
-	local top_right = top:RoomAt( top:RoomCount() - math.random( 1, 3 ))
-	right_top:Connect( top_right )
+	-- -- Connect right and top
+	-- local right_top = right:RoomAt( math.random( 1, 3 ) )
+	-- local top_right = top:RoomAt( top:RoomCount() )
+	-- right_top:Connect( top_right, EXIT.WEST )
 
-	-- Connect right and bottom
-	local right_bottom = right:RoomAt( right:RoomCount() - math.random( 1, 3 ))
-	local bottom_right = bottom:RoomAt( bottom:RoomCount() - math.random( 1, 3 ))
-	right_bottom:Connect( bottom_right )
+	-- -- Connect right and bottom
+	-- local right_bottom = right:RoomAt( right:RoomCount() - math.random( 1, 3 ))
+	-- local bottom_right = bottom:RoomAt( 1 )
+	-- right_bottom:Connect( bottom_right, EXIT.WEST )
 
-	-- Connect bottom and left
-	local left_bottom = left:RoomAt( left:RoomCount() - math.random( 1, 3 ))
-	local bottom_left = bottom:RoomAt( math.random( 1, 3 ))
-	left_bottom:Connect( bottom_left )
+	-- -- Connect bottom and left
+	-- local left_bottom = left:RoomAt( left:RoomCount() )
+	-- local bottom_left = bottom:RoomAt( left:RoomCount() - math.random( 1, 3 ))
+	-- left_bottom:Connect( bottom_left, EXIT.SOUTH )
 
-	-- Connect homes
-	self:ConnectCorps()
-	self:ConnectShops()
+	-- -- Connect homes
+	-- self:ConnectCorps()
+	-- self:ConnectShops()
 
 
-	-- Junk heaps
-	for i, road in ipairs( self.roads ) do
-		if math.random() < 0.33 then
-			Object.JunkHeap():WarpToLocation( road )
-		end
-	end
+	-- -- Junk heaps
+	-- for i, road in ipairs( self.roads ) do
+	-- 	if math.random() < 0.33 then
+	-- 		Object.JunkHeap():WarpToLocation( road )
+	-- 	end
+	-- end
 
 end
+
 
 function City:OnSpawn( world )
 	Entity.OnSpawn( self, world )
@@ -93,6 +95,50 @@ function City:OnSpawn( world )
 		local snoop = world:SpawnAgent( Agent.Snoop(), poor_house )
 		poor_house:GetAspect( Feature.Home ):AddResident( snoop )
 	end
+end
+
+function City:OnSpawn( world )
+	Entity.OnSpawn( self, world )
+
+	-- Origin.
+	local road = self:CreateRoad()
+	road:SetCoordinate( 0, 0 )
+	world:SpawnLocation( road )
+	table.insert( self.roads, road )
+
+	local x, y = 0, 0
+	local bumps = 0
+	while #self.roads < 8 or bumps > 4 do
+		local exit = table.arraypick( EXIT_ARRAY )
+		x, y = OffsetExit( x, y, exit )
+
+		local room = world:GetLocationAt( x, y )
+		if room == nil then
+			-- Extend road.
+			room = self:CreateRoad()
+			road:Connect( room, exit )
+			road = room
+			table.insert( self.roads, road )
+
+		elseif table.contains( self.roads, room ) then
+			if not road:IsConnected( room ) then
+				-- Connect back to road.
+				road:Connect( room, exit )
+			end
+			road = room
+
+		else
+			-- Ran into somethin else on the grid.
+			bumps = bumps + 1
+		end
+	end
+end
+
+function City:CreateRoad()
+	local road = Location()
+	road:SetDetails( "City Road", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	road:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+	return road
 end
 
 function City:SpawnHome( resident )
@@ -137,6 +183,17 @@ function City:ConnectShops()
 		tavern:Connect( road )
 		table.insert( self.rooms, tavern )
 	end
+end
+
+function City:RandomAvailableRoad()
+	local roads = {}
+	for i, road in ipairs( self.roads ) do
+		if road:CountAvailableExits() > 0 then
+			table.insert( roads, road )
+		end
+	end
+	assert( #roads > 0 )
+	return table.arraypick( roads )
 end
 
 function City:RandomRoad()

@@ -14,6 +14,8 @@ local Location = class( "Location", Entity )
 function Location:init()
 	Entity.init( self )
 	self.exits = {}
+	self.available_exits = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
+	self.map_colour = constants.colours.DEFAULT_TILE
 end
 
 function Location:OnSpawn( world )
@@ -27,22 +29,64 @@ function Location:OnSpawn( world )
 		end
 	end
 
-	for i, exit in ipairs( self.exits ) do
-		local dest = exit:GetDest( self )
-		if dest and not dest:IsSpawned() then
-			world:SpawnLocation( dest )
+	for exit, adj in pairs( self.exits ) do
+		if exit == EXIT.NORTH then
+			if self.y == nil then
+				self.x, self.y = adj.x, adj.y - 1
+			else
+				assert( self.x == adj.x and self.y == adj.y - 1 )
+			end
+		elseif exit == EXIT.EAST then
+			if self.x == nil then
+				self.x, self.y = adj.x - 1, adj.y
+			else
+				assert( self.x == adj.x - 1 and self.y == adj.y )
+			end
+		elseif exit == EXIT.SOUTH then
+			if self.y == nil then
+				self.x, self.y = adj.x, adj.y + 1
+			else
+				assert( self.x == adj.x and self.y == adj.y + 1 )
+			end
+		elseif exit == EXIT.WEST then
+			if self.x == nil then
+				self.x, self.y = adj.x + 1, adj.y
+			else
+				assert( self.x == adj.x + 1 and self.y == adj.y )
+			end
 		end
 	end
+
+	if self.x and self.y then
+		world:GetAspect( Aspect.WorldMap ):AssignToGrid( self )
+	end
 end
+
+function Location:OnDespawn()
+	Entity.OnDespawn( self )
+
+	if self.x and self.y then
+		self.world:GetAspect( Aspect.WorldMap ):UnassignFromGrid( self )
+	end
+end
+
 
 function Location:LocTable()
 	return self
 end
 
 function Location:SetCoordinate( x, y, z )
+	if self.x then
+		world:GetAspect( Aspect.WorldMap ):UnassignFromGrid( self )
+	end
+
 	self.x = x
 	self.y = y
 	self.z = z
+
+	if self.world and self.x and self.y then
+		world:GetAspect( Aspect.WorldMap ):AssignToGrid( self )
+	end		
 end
 
 function Location:GetCoordinate()
@@ -139,27 +183,36 @@ end
 
 
 function Location:IsConnected( other )
-	for i, exit in ipairs( self.exits ) do
-		if exit:GetDest( self ) == other then
-			return true, exit
-		end
-	end
-
-	return false
+	return table.find( self.exits, other ) ~= nil
 end
 
 
-function Location:Connect( other )
+function Location:Connect( other, exit )
 	assert( other ~= nil )
 	assert( is_instance( other, Location ))
-	assert( not self:IsConnected( other ))
-	assert( not other:IsConnected( self ))
 
-	local exit = Exit()
-	exit:Connect( self, other )
+	if exit == nil then
+		local choices = {}
+		for i, exit in ipairs( self.available_exits ) do
+			if table.contains( other.available_exits, REXIT[ exit ] ) then
+				table.insert( choices, exit )
+			end
+		end
+		exit = table.arraypick( choices )
+		assert( exit )
+	end
+	
+	assert( IsEnum( exit, EXIT ))
+	assert( self.exits[ exit ] == nil or error(exit))
 
-	table.insert( self.exits, exit )
-	table.insert( other.exits, exit )
+	local rexit = REXIT[ exit ]
+	assert( other.exits[ rexit ] == nil, tostr(other.exits) )
+
+	self.exits[ exit ] = other
+	table.arrayremove( self.available_exits, exit )
+
+	other.exits[ rexit ] = self
+	table.arrayremove( other.available_exits, rexit )
 
 	if not self:IsSpawned() and other:IsSpawned() then
 		self:Visit( SpawnLocation, other.world, self )
@@ -168,8 +221,12 @@ function Location:Connect( other )
 	end
 end
 
+function Location:CountAvailableExits()
+	return #self.available_exits
+end
+
 function Location:Exits()
-	return ipairs( self.exits )
+	return pairs( self.exits )
 end
 
 local function VisitInternal( visited, location, fn, ... )
@@ -267,6 +324,11 @@ end
 
 function Location:GetDesc()
 	return self.desc or "No Desc"
+end
+
+function Location:RenderMapTile( screen, x1, y1, x2, y2 )
+	love.graphics.setColor( table.unpack( self.map_colour ))
+	screen:Rectangle( x1 + 4, y1 + 4, x2 - x1 - 8, y2 - y1 - 8 )
 end
 
 function Location:__tostring()

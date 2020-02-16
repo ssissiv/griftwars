@@ -29,14 +29,10 @@ local colours =
 	BTN_CLICK_BG = { 255, 40, 40 },
 	BTN_LABEL = { 220, 200, 200 },
 
-	EMPTY_TILE = { 12, 24, 80 },
-	EMPTY_ORIGIN = { 20, 32, 88 },
+	--------------------------------
+	-- Map
 
-	----------------------------
-	-- map colours
-
-	FOOD = { 190, 50, 110 },
-	LEVEL_BG = { 80, 120, 0 },
+	DEFAULT_TILE = { 12, 36, 220 },
 }
 
 

@@ -9,26 +9,24 @@ function WorldGen:GenerateWorld()
 
 	Msg:SetWorld( world )
 
+	local city = WorldGen.City()
+	world:SpawnEntity( city )
+	
 	local start = Location()
 	start:SetDetails( "Your Home", "This is your home. It's pretty chill." )
 	start:SetImage( assets.LOCATION_BGS.HOME )
-	world:SpawnLocation( start )
+	start:Connect( city:RandomAvailableRoad() )
 
-	local city = WorldGen.City()
-	
 	local shop = Location()
 	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
 	shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
-	shop:Connect( city:RandomRoad() )
+	shop:Connect( city:RandomAvailableRoad() )
 	
 	local shopkeep = Agent.Shopkeeper()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	shopkeep:GetAspect( Job.Shopkeep ):AssignShop( shop )
 	shopkeep:WarpToLocation( shop )
 	
-	world:SpawnEntity( city )
-	city:RoomAt( 1 ):Connect( start )
-
 	-- local collector = Agent.Collector()
 	-- shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
 	-- world:SpawnAgent( collector, shop )
@@ -38,16 +36,16 @@ function WorldGen:GenerateWorld()
 	-- world:SpawnRelationship( Relationship.ArmitageGerin( shopkeep, collector ) )
 
 
-	self:GenerateMilitary( world )
+	-- self:GenerateMilitary( world )
 
 	--------------------------------------------------------------------------------------
 	-- Forest!
 
-	for i = 1, 3 do
-		local forest = WorldGen.Forest()
-		world:SpawnEntity( forest )
-		forest:RandomRoom():Connect( city:RandomRoad() )
-	end
+	-- for i = 1, 3 do
+	-- 	local forest = WorldGen.Forest()
+	-- 	world:SpawnEntity( forest )
+	-- 	forest:RandomRoom():Connect( city:RandomRoad() )
+	-- end
 
 	--------------------------------------------------------------------------------------
 
@@ -79,7 +77,6 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Trait.Player() )
 	player:GainAspect( Aspect.Combat() )
 	player:GainAspect( Verb.Scrounge( player ) )
-	player:GainAspect( Verb.Chat( player ) )
 
 	local tokens = player:GainAspect( Aspect.TokenHolder() )
 	tokens:AddToken( Token( DIE_FACE.DIPLOMACY, 1 ) )

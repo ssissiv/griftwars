@@ -1,0 +1,51 @@
+local WorldMap = class( "Aspect.WorldMap", Aspect )
+
+function WorldMap:init()
+	self.grid = {} -- array of arrays.
+end
+
+function WorldMap:AssignToGrid( location )
+	local x, y = location:GetCoordinate()
+
+	local row = self.grid[ y ]
+	if row == nil then
+		row = {}
+		self.grid[ y ] = row
+	end
+
+	if row[ x ] == nil then
+		row[ x ] = location
+	else
+		row[ x ] = { row[ x ], location }
+	end
+end
+
+function WorldMap:UnassignFromGrid( location )
+	local x, y = location:GetCoordinate()
+	local t = self.row[ y ][ x ]
+	if t == location then
+		self.row[ y ][ x ] = nil
+	elseif t then
+		table.arrayremove( t, location )
+		if #t == 1 then
+			self.row[ y ][ x ] = t[ 1 ]
+		elseif #t == 0 then
+			self.row[ y ][ x ] = nil
+		end
+	else
+		error( location )
+	end
+end
+
+function WorldMap:LookupGrid( x, y )
+	local row = self.grid[ y ]
+	if row then
+		local t = row [ x ]
+		if is_instance( t, Location ) then
+			return t
+		elseif t then
+			return t[1]
+		end
+	end
+end
+

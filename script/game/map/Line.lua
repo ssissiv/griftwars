@@ -1,26 +1,14 @@
 local Line = class( "WorldGen.Line" )
 
-function Line:init( len, dx, dy )
+function Line:init( len, exit )
 	self.rooms = {}
-
-	if dx == nil and dy == nil then
-		dx, dy = 1, 0
-	end
 
 	for i = 1, len do
 		local room = Location()
 		self.rooms[i] = room
-		room:SetCoordinate( dx * i, dy * i )
 		if i > 1 then
-			room:Connect( self.rooms[ i - 1 ] )
+			self.rooms[ i - 1 ]:Connect( room, exit )
 		end
-	end
-end
-
-function Line:Offset( dx, dy, dz )
-	for i, room in ipairs( self.rooms ) do
-		local x, y, z = room:GetCoordinate()
-		room:SetCoordinate( x + dx, y + dy, z + dz )
 	end
 end
 

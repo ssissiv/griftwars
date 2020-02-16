@@ -32,10 +32,6 @@ function GameScreen:UpdateScreen( dt )
 	self.world:UpdateWorld( dt )
 end
 
-function GameScreen:RenderDebug()
-	imgui.Text( string.format( "Debug" ))
-end
-
 function GameScreen:RenderScreen( gui )
 
 	local ui = imgui
@@ -433,13 +429,17 @@ function GameScreen:KeyPressed( key )
 			self:AddWindow( AgentDetailsWindow( puppet, puppet ))
 		end
 
-	elseif key == "m" then
+	elseif key == "k" then
 		local window = self:FindWindow( MemoryWindow )
 		if window then
 			self:RemoveWindow( window )
 		else
 			self:AddWindow( MemoryWindow( self.world:GetPuppet() ))
 		end
+
+	elseif key == "m" then
+		local screen = MapScreen( self.world )
+		GetGUI():AddScreen( screen )
 
 	elseif key == "f" then
 		self.world:GetPuppet():SetFocus()
@@ -474,5 +474,3 @@ end
 
 function GameScreen:KeyReleased( key )
 end
-
-return GameScreen

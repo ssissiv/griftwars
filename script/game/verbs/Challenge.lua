@@ -152,7 +152,7 @@ function Challenge:RenderImGuiWindow( ui, screen )
 		end
 		dh = dh * barh
 
-		screen:Rectangle( "fill", x, cy + bar_hoffset - barh/2 - dh, 9, barh + dh )
+		screen:Rectangle( x, cy + bar_hoffset - barh/2 - dh, 9, barh + dh )
 		if screen:IsHovered() then
 			local result = self:FindResult( t1 ) or self:FindResult( t2 ) 
 			if result then
