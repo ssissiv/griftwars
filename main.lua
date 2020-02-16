@@ -129,6 +129,7 @@ require "game/verbs/EquipObject"
 
 require "game/characters/Citizen"
 require "game/characters/Scavenger"
+require "game/characters/Snoop"
 require "game/characters/Collector"
 require "game/characters/MilitiaCaptain"
 require "game/characters/Shopkeeper"
