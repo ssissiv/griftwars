@@ -18,10 +18,10 @@ end
 function Tavern:OnSpawn( world )
 	Feature._base.OnSpawn( self, world )
 	if self.barkeep == nil then
-		DBG( self:SpawnBarkeep() )
+		self:SpawnBarkeep()
 	end
 end
-
+ 
 function Tavern:SpawnBarkeep()
 	local world = self:GetWorld()
 	

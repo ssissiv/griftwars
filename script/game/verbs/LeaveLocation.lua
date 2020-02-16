@@ -15,7 +15,7 @@ LeaveLocation.EXIT_STRINGS =
 {
 	nil, --"You leave {2.title}.",
 	nil,
-	"{1.Id} leaves.",
+	"{1.Id} leaves to {2.title}.",
 }
 
 LeaveLocation.ENTER_STRINGS =
