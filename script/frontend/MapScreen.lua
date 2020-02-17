@@ -27,6 +27,7 @@ function MapScreen:UpdateScreen( dt )
 end
 
 function MapScreen:RenderScreen( gui )
+
 	local W, H = gui:GetSize()
 	local wx0, wy0 = self.camera:ScreenToWorld( 0, 0 )
 	wx0, wy0 = math.floor( wx0 ), math.floor( wy0 )
@@ -37,6 +38,27 @@ function MapScreen:RenderScreen( gui )
 	local x1, y1 = self.camera:WorldToScreen( wx1, wy1 )
 
 	self:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
+
+	if self.hovered_tile then
+		self:RenderHoveredLocation( gui )
+	end
+end
+
+function MapScreen:RenderHoveredLocation( gui )
+	local ui = imgui
+    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoBringToFrontOnFocus" }
+    local mx, my = love.mouse.getPosition()
+	ui.SetNextWindowPos( mx + 20, my, 0 )
+
+    if ui.Begin( "LOCATION", true, flags ) then
+    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
+    	ui.Separator()
+    	for i, obj in self.hovered_tile:Contents() do
+    		ui.Text( tostring(obj) )
+    	end
+    end
+
+    ui.End()
 end
 
 function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
@@ -110,9 +132,12 @@ function MapScreen:MouseMoved( mx, my )
 end
 
 function MapScreen:MousePressed( mx, my, btn )
+	if self.hovered_tile then
+		DBG(self.hovered_tile)
+		return true
+	end
 	return false
 end
-
 
 function MapScreen:KeyPressed( key )
 

@@ -49,5 +49,6 @@ function RenderScreen:RenderTooltip( ui )
     ui.End()
 end
 
-
-
+function RenderScreen:__tostring()
+	return string.format( "[%s]", self._classname )
+end

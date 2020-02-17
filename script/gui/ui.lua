@@ -87,6 +87,15 @@ function ui:MouseReleased( x, y, btn )
 	end
 end
 
+function ui:MouseWheelMoved( x, y )
+	for i = #self.screens, 1, -1 do
+		local screen = self.screens[i]
+		if screen.MouseWheelMoved == nil or screen:MouseWheelMoved( x, y ) then
+			break
+		end
+	end
+end
+
 function ui:KeyPressed( key )
 	self.input.keys_pressed[ key ] = true
 
@@ -110,6 +119,10 @@ function ui:KeyReleased( key )
 end
 
 ----------------------------------------------
+
+function ui:Screens()
+	return ipairs( self.screens )
+end
 
 function ui:AddScreen( screen )
 	table.insert( self.screens, screen )

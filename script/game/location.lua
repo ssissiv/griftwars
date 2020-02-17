@@ -329,6 +329,29 @@ end
 function Location:RenderMapTile( screen, x1, y1, x2, y2 )
 	love.graphics.setColor( table.unpack( self.map_colour ))
 	screen:Rectangle( x1 + 4, y1 + 4, x2 - x1 - 8, y2 - y1 - 8 )
+
+	if self.contents then
+		local sz = math.floor( (x2 - x1) / 8 )
+		local margin = math.ceil( sz / 2 )
+		local x, y = x1 + 4 + margin , y1 + 4 + margin
+		for i, obj in ipairs( self.contents ) do
+			if is_instance( obj, Agent ) then
+				if obj:IsPlayer() then
+					love.graphics.setColor( 255, 0, 0 )
+				else
+					love.graphics.setColor( 255, 0, 255 )
+				end
+			else
+				love.graphics.setColor( 255, 255, 0 )
+			end
+
+			screen:Rectangle( x, y, sz, sz )
+			x = x + sz + margin
+			if x >= x2 - margin - 4 then
+				x, y = x1 + 4 + margin, y + sz + margin
+			end
+		end
+	end
 end
 
 function Location:__tostring()

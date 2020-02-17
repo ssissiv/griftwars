@@ -267,6 +267,6 @@ end
 function love.wheelmoved(x, y)
     imgui.WheelMoved(y)
     if not imgui.GetWantCaptureMouse() then
-        -- Pass event to the game
+        gui:MouseWheelMoved( x, y )
     end
 end

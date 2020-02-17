@@ -13,8 +13,8 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
     
     ui.Separator()
 
-    for i, exit in self.location:Exits() do
-    	panel:AppendTable( ui, exit:GetDest( self.location ))
+    for i, dest in self.location:Exits() do
+    	panel:AppendTable( ui, dest )
     end
 
     DebugTable.RenderPanel( self, ui, panel, dbg )

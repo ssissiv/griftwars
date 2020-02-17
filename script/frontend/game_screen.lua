@@ -339,7 +339,7 @@ function GameScreen:RenderBackground( ui, agent )
 
 	if is_instance( agent:GetFocus(), Agent ) then
 		-- head
-	    love.graphics.setColor( table.unpack( agent.viz.skin_colour ))
+	    love.graphics.setColor( table.unpack( agent:GetFocus().viz.skin_colour ))
 		love.graphics.circle( "fill", W/2, h + 150, 100 )
 
 		-- eyes
@@ -351,6 +351,16 @@ function GameScreen:RenderBackground( ui, agent )
 		love.graphics.setColor( 0, 60, 90 )
 		love.graphics.circle( "fill", W/2 - 30, h + 150 - 10, 10 )
 		love.graphics.circle( "fill", W/2 + 30, h + 150 - 10, 10 )
+
+		-- nose
+		love.graphics.setColor( 0, 0, 0 )
+		love.graphics.line( W/2 + 5, h + 175, W/2, h + 179 )
+
+		-- mouth
+		love.graphics.setColor( 0, 0, 0 )
+		love.graphics.line( W/2 - 40, h + 190, W/2 - 30, h + 200 )
+		love.graphics.line( W/2 - 30, h + 200, W/2 + 30, h + 200 )
+		love.graphics.line( W/2 + 30, h + 200, W/2 + 40, h + 190 )
 	end
 end
 

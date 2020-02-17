@@ -16,8 +16,15 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
     ui.Text( string.format( "%s\n\n", "BUILD_ID" ))
     ui.Separator()
 
-    if ui.Selectable( "UI" ) then
+    if ui.Button( "UI" ) then
         panel:PushDebugValue( DebugUI( GetGUI() ) )
+    end
+
+    for i, screen in GetGUI():Screens() do
+        ui.SameLine( 0, 10 )
+        if ui.Button( tostring(screen) ) then
+            DBG( screen )
+        end
     end
 
     if self.game then
