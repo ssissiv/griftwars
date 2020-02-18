@@ -1,7 +1,8 @@
 local Forest = class( "WorldGen.Forest", Entity )
 
-function Forest:init()
+function Forest:init( worldgen )
 	self.rooms = {}
+	self.worldgen = worldgen
 
 	-- local max_rooms = math.random( 10, 30 )
 	-- local open = { self:CreateRoom() }
@@ -31,12 +32,21 @@ end
 
 function Forest:OnSpawn( world )
 	Forest._base.OnSpawn( self, world )
+end
 
-	local room = self:CreateRoom()
-	
-	-- for i, room in ipairs( self.rooms ) do
-	-- 	room:SetDetails( loc.format( "Thee Forest [{1}]", i ))
-	-- end
+function Forest:Generate( location, count )
+	local function CreateRoom( room )
+		room:SetDetails( loc.format( "The Forest [{1}]", #self.rooms ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
+		room:SetImage( assets.LOCATION_BGS.FOREST )
+		if math.random() < 0.5 then
+			room:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ) )
+		end
+		room.map_colour = constants.colours.FOREST_TILE
+
+		table.insert( self.rooms, room )
+	end
+
+	self.worldgen:SproutLocations( location, count, CreateRoom )
 end
 
 function Forest:PopulateOrcs()
@@ -55,18 +65,6 @@ function Forest:PopulateOrcs()
 		local orc = Agent.Orc()
 		orc:WarpToLocation( self:RandomRoom() )
 	end
-end
-
-function Forest:CreateRoom()
-	self.count = (self.count or 0) + 1
-	local room = Location()
-	room:SetDetails( loc.format( "The Forest [{1}]", self.count ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
-	room:SetImage( assets.LOCATION_BGS.FOREST )
-	if math.random() < 0.5 then
-		room:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ) )
-	end
-
-	return room
 end
 
 function Forest:RandomRoom()

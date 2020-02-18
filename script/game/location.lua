@@ -191,16 +191,16 @@ function Location:Connect( other, exit )
 	assert( other ~= nil )
 	assert( is_instance( other, Location ))
 
-	if exit == nil then
-		local choices = {}
-		for i, exit in ipairs( self.available_exits ) do
-			if table.contains( other.available_exits, REXIT[ exit ] ) then
-				table.insert( choices, exit )
-			end
-		end
-		exit = table.arraypick( choices )
-		assert( exit )
-	end
+	-- if exit == nil then
+	-- 	local choices = {}
+	-- 	for i, exit in ipairs( self.available_exits ) do
+	-- 		if table.contains( other.available_exits, REXIT[ exit ] ) then
+	-- 			table.insert( choices, exit )
+	-- 		end
+	-- 	end
+	-- 	exit = table.arraypick( choices )
+	-- 	assert( exit )
+	-- end
 	
 	assert( IsEnum( exit, EXIT ))
 	assert( self.exits[ exit ] == nil or error(exit))
@@ -222,7 +222,18 @@ function Location:Connect( other, exit )
 end
 
 function Location:CountAvailableExits()
-	return #self.available_exits
+	if self.world then
+		local count = 0
+		for i, exit in ipairs( self.available_exits ) do
+			local x1, y1 = OffsetExit( self.x, self.y, exit )
+			if not self.world:GetLocationAt( x1, y1 ) then
+				count = count + 1
+			end
+		end
+		return count
+	else
+		return #self.available_exits
+	end
 end
 
 function Location:Exits()
@@ -327,11 +338,13 @@ function Location:GetDesc()
 end
 
 function Location:RenderMapTile( screen, x1, y1, x2, y2 )
+	local w, h = x2 - x1, y2 - y1
+
 	love.graphics.setColor( table.unpack( self.map_colour ))
-	screen:Rectangle( x1 + 4, y1 + 4, x2 - x1 - 8, y2 - y1 - 8 )
+	screen:Rectangle( x1 + 4, y1 + 4, w - 8, h - 8 )
 
 	if self.contents then
-		local sz = math.floor( (x2 - x1) / 8 )
+		local sz = math.floor( w / 8 )
 		local margin = math.ceil( sz / 2 )
 		local x, y = x1 + 4 + margin , y1 + 4 + margin
 		for i, obj in ipairs( self.contents ) do
@@ -350,6 +363,26 @@ function Location:RenderMapTile( screen, x1, y1, x2, y2 )
 			if x >= x2 - margin - 4 then
 				x, y = x1 + 4 + margin, y + sz + margin
 			end
+		end
+	end
+
+	love.graphics.setColor( table.unpack( self.map_colour ))
+
+	local exit_sz = math.floor( w / 6 ) -- width of exit
+	for exit, adj in pairs( self.exits ) do
+		local x, y = OffsetExit( self.x, self.y, exit )
+		if x == adj.x and y == adj.y then
+			if exit == EXIT.NORTH then
+				screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
+			elseif exit == EXIT.EAST then
+				screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
+			elseif exit == EXIT.WEST then
+				screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
+			elseif exit == EXIT.SOUTH then
+				screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
+			end
+		else
+
 		end
 	end
 end

@@ -3,33 +3,86 @@ local WorldGen = class( "WorldGen" )
 function WorldGen:init()
 end
 
+function WorldGen:Sprout( room, fn, ... )
+	local exits = table.shallowcopy( room.available_exits )
+	while #exits > 0 do
+		local exit = table.remove( exits, math.random( #exits ))
+		local x, y = room:GetCoordinate()
+		x, y = OffsetExit( x, y, exit )
+
+		local adj = self.world:GetLocationAt( x, y )
+		if adj == nil then
+			local new_room = Location()
+			fn( new_room, ... )
+			room:Connect( new_room, exit )
+			return new_room
+		end
+	end
+
+	print( "COULD NOT SPROUT FROM", room, tostr(room.available_exits), debug.traceback() )
+	DBG(room)
+end
+
+function WorldGen:SproutLocations( start, max_count, fn, ... )
+	assert( is_instance( start, Location ))
+	local locations = {}
+	local stack = { start }
+
+	while max_count > #locations and #stack > 0 do
+		local room = stack[ #stack ]
+		local new_room = self:Sprout( room, fn, ... )
+		if new_room then
+			--
+			table.insert( stack, new_room )
+			table.insert( locations, new_room )
+		else
+			-- Is there a connecting room?
+			-- local exits = table.shallowcopy( room.available_exits )
+			-- for i = #exits, 1, -1 do
+			-- 	if not table.contains( locations, exits[i] ) then
+			-- 		table.remove( exits, i )
+			-- 	end
+			-- end
+
+			-- local adj = table.arraypick( exits )
+			-- if adj then
+			-- 	room:Connect( adj, )
+
+			table.remove( stack )
+		end
+	end
+end
+
 function WorldGen:GenerateWorld()
 	local world = World()
 	self.world = world
 
 	Msg:SetWorld( world )
 
-	local city = WorldGen.City()
+
+	local city = WorldGen.City( self )
 	world:SpawnEntity( city )
 	
-	local start = Location()
-	start:SetDetails( "Your Home", "This is your home. It's pretty chill." )
-	start:SetImage( assets.LOCATION_BGS.HOME )
-	start:Connect( city:RandomAvailableRoad() )
+	local start = self:Sprout( city:RandomAvailableRoad(), function( location )
+		location:SetDetails( "Your Home", "This is your home. It's pretty chill." )
+		location:SetImage( assets.LOCATION_BGS.HOME )
+		location.map_colour = constants.colours.HOME_TILE
+	end )
 
-	local shop = Location()
-	shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
-	shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
-	shop:Connect( city:RandomAvailableRoad() )
+	local shop = self:Sprout( city:RandomAvailableRoad(), function( shop )
+		shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
+		shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
+		shop.map_colour = constants.colours.SHOP_TILE
+	end )
 	
 	local shopkeep = Agent.Shopkeeper()
 	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
 	shopkeep:GetAspect( Job.Shopkeep ):AssignShop( shop )
 	shopkeep:WarpToLocation( shop )
 	
-	-- local collector = Agent.Collector()
-	-- shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
-	-- world:SpawnAgent( collector, shop )
+	local collector = Agent.Collector()
+	shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
+	world:SpawnAgent( collector, shop )
 
 	-- Gerin meets Armitage to identify any unknown items he's scavenged.
 	-- Armitage gets free Scrap.
@@ -41,17 +94,20 @@ function WorldGen:GenerateWorld()
 	--------------------------------------------------------------------------------------
 	-- Forest!
 
-	-- for i = 1, 3 do
-	-- 	local forest = WorldGen.Forest()
-	-- 	world:SpawnEntity( forest )
-	-- 	forest:RandomRoom():Connect( city:RandomRoad() )
-	-- end
+	for i = 1, 2 do
+		local forest = WorldGen.Forest( self )
+		world:SpawnEntity( forest )
+		forest:Generate( city:RandomAvailableRoad(), 6 )
+		forest:PopulateOrcs()
+	end
 
 	--------------------------------------------------------------------------------------
 
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, start )
-	start:GainAspect( Feature.Home():AddResident( player ) )
+	if start then
+		start:GainAspect( Feature.Home():AddResident( player ) )
+	end
 
 	--------------------------------------------------------------------------------------
 

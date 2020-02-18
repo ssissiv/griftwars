@@ -80,8 +80,11 @@ function DebugManager:GetDebugEnv()
     dbg_env.gui = GetGUI()
 
 	local screen = dbg_env.gui:GetTopScreen()
-	if screen and screen.GetDebugEnv then
-		screen:GetDebugEnv( dbg_env )
+	if screen then
+		dbg_env.screen = screen
+		if screen.GetDebugEnv then
+			screen:GetDebugEnv( dbg_env )
+		end
 	end
 
     return dbg_env

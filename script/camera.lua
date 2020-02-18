@@ -77,6 +77,10 @@ function Camera:WorldToScreen( x, y )
 	return mx, my
 end
 
+function Camera:SetViewPort( w, h )
+	self.view_width, self.view_height = w, h
+end
+
 function Camera:RenderDebug()
 	imgui.Text( string.format( "Camera: %.2f, %.2f; Zoom: %.2f", self.x, self.y, self.zoom ))
 end

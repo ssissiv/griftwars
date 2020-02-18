@@ -1,6 +1,7 @@
 local City = class( "WorldGen.City", Entity )
 
-function City:init()
+function City:init( worldgen )
+	self.worldgen = worldgen
 	self.rooms = {}
 	self.roads = {}
 	self.home_count = 0
@@ -106,32 +107,13 @@ function City:OnSpawn( world )
 	world:SpawnLocation( road )
 	table.insert( self.roads, road )
 
-	local x, y = 0, 0
-	local bumps = 0
-	while #self.roads < 8 or bumps > 4 do
-		local exit = table.arraypick( EXIT_ARRAY )
-		x, y = OffsetExit( x, y, exit )
-
-		local room = world:GetLocationAt( x, y )
-		if room == nil then
-			-- Extend road.
-			room = self:CreateRoad()
-			road:Connect( room, exit )
-			road = room
-			table.insert( self.roads, road )
-
-		elseif table.contains( self.roads, room ) then
-			if not road:IsConnected( room ) then
-				-- Connect back to road.
-				road:Connect( room, exit )
-			end
-			road = room
-
-		else
-			-- Ran into somethin else on the grid.
-			bumps = bumps + 1
-		end
+	local function MakeCity( location )
+		location:SetDetails( "City Road", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+		location:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+		table.insert( self.roads, location )
 	end
+
+	self.worldgen:SproutLocations( road, 8, MakeCity )
 end
 
 function City:CreateRoad()
@@ -192,7 +174,6 @@ function City:RandomAvailableRoad()
 			table.insert( roads, road )
 		end
 	end
-	assert( #roads > 0 )
 	return table.arraypick( roads )
 end
 

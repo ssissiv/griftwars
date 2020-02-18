@@ -6,6 +6,7 @@ function MapScreen:init( world )
 
 	self.zoom_level = 0
 	self.camera = Camera()
+	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
 	self:MoveTo( 0, 0 )
 end
@@ -26,7 +27,44 @@ function MapScreen:UpdateScreen( dt )
 	end
 end
 
+function MapScreen:RenderHeader( gui )
+	local ui = imgui
+    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
+--	ui.SetNextWindowSize( love.graphics.getWidth(), 40 )
+	ui.SetNextWindowPos( 0, 0 )
+
+    ui.Begin( "ROOM", true, flags )
+    local puppet = self.world:GetPuppet()
+
+    -- Render details about the player.
+    local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
+    local timestr = Calendar.FormatTime( self.world:GetDateTime(), use_seconds )
+    ui.Text( timestr )
+    if self.world:IsPaused() then
+    	ui.SameLine( 0, 10 )
+    	ui.Text( "(PAUSED)" )
+    end
+    local dt = self.world:CalculateTimeElapsed( 1.0 )
+    if dt ~= WALL_TO_GAME_TIME then
+    	ui.SameLine( 0, 10 )
+    	ui.Text( string.format( "(x%.2f)", dt / WALL_TO_GAME_TIME))
+    end
+
+    ui.Separator()
+
+    local mx, my = love.mouse.getPosition()
+    ui.Text( loc.format( "{1}, {2}", self:ScreenToCell( mx, my ) ))
+
+    if self.hovered_tile then
+    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile))
+    end
+
+    ui.End()
+end
+
 function MapScreen:RenderScreen( gui )
+
+	self:RenderHeader( gui )
 
 	local W, H = gui:GetSize()
 	local wx0, wy0 = self.camera:ScreenToWorld( 0, 0 )
@@ -66,8 +104,6 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 	local ytiles = wy1 - wy0
 
 	-- Render all map tiles.
-	love.graphics.setShader( Shaders.maptile )
-
 	for dx = 1, xtiles do
 		for dy = ytiles, 1, -1 do
 			local tx, ty = wx0 + dx - 1, wy0 + dy - 1
@@ -79,7 +115,6 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 			end
 		end
 	end
-	love.graphics.setShader()
 
 	if self.hoverx and self.hovery then
 		local x1, y1 = self.camera:WorldToScreen( self.hoverx, self.hovery )

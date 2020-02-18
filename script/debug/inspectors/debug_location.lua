@@ -13,10 +13,20 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
     
     ui.Separator()
 
-    for i, dest in self.location:Exits() do
+    for exit, dest in self.location:Exits() do
+        ui.Text( tostring(exit) )
+        ui.SameLine( 100 )
     	panel:AppendTable( ui, dest )
     end
 
+    ui.Separator()
+
+    for i, obj in self.location:Contents() do
+        panel:AppendTable( ui, obj )
+    end
+
+    ui.NewLine()
+    
     DebugTable.RenderPanel( self, ui, panel, dbg )
 end
 
