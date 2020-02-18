@@ -56,39 +56,6 @@ function City:init( worldgen )
 	-- self:ConnectShops()
 end
 
-
-function City:OnSpawn( world )
-	Entity.OnSpawn( self, world )
-
-	world:SpawnLocation( self.rooms[1] )
-
-	-- Shopkeepers
-	for i, room in ipairs( self.rooms ) do
-		local shop = room:GetAspect( Feature.Shop )
-		if shop then
-			local shopkeep = shop:SpawnShopOwner()
-			if shopkeep then
-				local home = self:SpawnHome( shopkeep )
-			end
-		end
-	end	
-
-
-	-- Scavengers
-	local poor_house = self:SpawnHome()
-	poor_house:SetDetails( "Under a Bridge" )
-	for i = 1, 3 do
-		local scavenger = world:SpawnAgent( Agent.Scavenger(), self:RandomRoad() )
-		poor_house:GetAspect( Feature.Home ):AddResident( scavenger )
-	end
-
-	-- Snoops
-	for i = 1, 2 do
-		local snoop = world:SpawnAgent( Agent.Snoop(), poor_house )
-		poor_house:GetAspect( Feature.Home ):AddResident( snoop )
-	end
-end
-
 function City:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
@@ -106,20 +73,34 @@ function City:OnSpawn( world )
 		if math.random() < 0.33 then
 			Object.JunkHeap():WarpToLocation( location )
 		end
-
-		if math.random() < 0.5 then
-			local room = Location()
-			room:SetDetails( loc.format( "Residence #{1}", #self.rooms ), "This is somebody's residence." )
-			room:SetImage( assets.LOCATION_BGS.INSIDE )
-			local home = room:GainAspect( Feature.Home() )
-
-			local structure = Structure( room )
-			structure:WarpToLocation( location )
-			structure:Connect( room, location )
-		end
 	end
 
 	self.worldgen:SproutLocations( road, 8, MakeCity )
+
+	-- Shops
+	for i = 1, 3 do
+		self:SpawnShop()
+	end	
+
+	-- Scavengers
+	local poor_house = self.worldgen:Sprout( self:RandomAvailableRoad(), function( location )
+			location:GainAspect( Feature.Home() )
+			location:SetDetails( "Under a Bridge" )
+		end )
+	assert( poor_house )
+	assert( poor_house:GetAspect( Feature.Home ) ~= nil )
+
+
+	for i = 1, 3 do
+		local scavenger = world:SpawnAgent( Agent.Scavenger(), self:RandomRoad() )
+		poor_house:GetAspect( Feature.Home ):AddResident( scavenger )
+	end
+
+	-- Snoops
+	for i = 1, 2 do
+		local snoop = world:SpawnAgent( Agent.Snoop(), poor_house )
+		poor_house:GetAspect( Feature.Home ):AddResident( snoop )
+	end
 end
 
 function City:CreateRoad()
@@ -139,10 +120,43 @@ function City:SpawnHome( resident )
 	if resident then
 		home:AddResident( resident )
 	end
-	room:Connect( self:RandomRoad() )
+
+	local structure = Structure()
+	structure:WarpToLocation( self:RandomRoad() )
+	structure:Connect( room )
 
 	table.insert( self.rooms, room )
 	return room
+end
+
+function City:SpawnShop()
+	local shop_room = Location()
+	shop_room:SetImage( assets.LOCATION_BGS.SHOP )
+	local shop = shop_room:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
+
+	local structure = Structure()
+	structure:WarpToLocation( self:RandomRoad() )
+	structure:Connect( shop_room )
+
+	local shopkeep = shop:SpawnShopOwner()
+	local home = self:SpawnHome( shopkeep )
+
+	table.insert( self.rooms, shop_room )
+end
+
+function City:SpawnTavern()
+	local tavern = Location()
+	tavern:SetImage( assets.LOCATION_BGS.SHOP )
+	tavern:GainAspect( Feature.Tavern())
+
+	local structure = Structure()
+	structure:WarpToLocation( self:RandomRoad() )
+	structure:Connect( tavern )
+
+	local barkeep = tavern:SpawnBarkeep()
+	local home = self:SpawnHome( barkeep )
+
+	table.insert( self.rooms, tavern )
 end
 
 function City:ConnectCorps()
@@ -151,26 +165,6 @@ function City:ConnectCorps()
 		corp:GetEntrance():Connect( self:RandomRoad() )
 		corp:SetCorpName( "Venture Corp" )
 		table.arrayadd( self.rooms, corp.rooms )
-	end
-end
-
-function City:ConnectShops()
-	for i = 1, 10 do
-		local room = self:RandomRoad()
-		local shop_room = Location()
-		shop_room:SetImage( assets.LOCATION_BGS.SHOP )
-		shop_room:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
-		shop_room:Connect( room )
-		table.insert( self.rooms, shop_room )
-	end
-
-	for i = 1, 3 do
-		local road = self:RandomRoad()
-		local tavern = Location()
-		tavern:SetImage( assets.LOCATION_BGS.SHOP )
-		tavern:GainAspect( Feature.Tavern())
-		tavern:Connect( road )
-		table.insert( self.rooms, tavern )
 	end
 end
 

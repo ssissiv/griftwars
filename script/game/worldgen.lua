@@ -66,7 +66,7 @@ function WorldGen:GenerateWorld()
 	local start = self:Sprout( city:RandomAvailableRoad(), function( location )
 		location:SetDetails( "Your Home", "This is your home. It's pretty chill." )
 		location:SetImage( assets.LOCATION_BGS.HOME )
-		location.map_colour = constants.colours.HOME_TILE
+		location:GainAspect( Feature.Home() )
 	end )
 
 	local shop = self:Sprout( city:RandomAvailableRoad(), function( shop )
@@ -106,7 +106,7 @@ function WorldGen:GenerateWorld()
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, start )
 	if start then
-		start:GainAspect( Feature.Home():AddResident( player ) )
+		start:GetAspect( Feature.Home ):AddResident( player )
 	end
 
 	--------------------------------------------------------------------------------------
