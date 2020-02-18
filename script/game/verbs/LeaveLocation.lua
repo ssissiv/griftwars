@@ -63,7 +63,8 @@ function LeaveLocation:Interact( actor )
 	assert( dest == nil or is_instance( dest, Location ))
 	if dest == nil then
 		local dests = {}
-		for i, dest in actor.location:Exits() do
+		for i, exit in actor.location:Exits() do
+			local dest = exit:GetDest( actor.location )
 			assert( dest ~= actor.location )
 			table.insert( dests, dest )
 		end

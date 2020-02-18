@@ -54,15 +54,6 @@ function City:init( worldgen )
 	-- -- Connect homes
 	-- self:ConnectCorps()
 	-- self:ConnectShops()
-
-
-	-- -- Junk heaps
-	-- for i, road in ipairs( self.roads ) do
-	-- 	if math.random() < 0.33 then
-	-- 		Object.JunkHeap():WarpToLocation( road )
-	-- 	end
-	-- end
-
 end
 
 
@@ -111,6 +102,21 @@ function City:OnSpawn( world )
 		location:SetDetails( "City Road", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 		location:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 		table.insert( self.roads, location )
+
+		if math.random() < 0.33 then
+			Object.JunkHeap():WarpToLocation( location )
+		end
+
+		if math.random() < 0.5 then
+			local room = Location()
+			room:SetDetails( loc.format( "Residence #{1}", #self.rooms ), "This is somebody's residence." )
+			room:SetImage( assets.LOCATION_BGS.INSIDE )
+			local home = room:GainAspect( Feature.Home() )
+
+			local structure = Structure( room )
+			structure:WarpToLocation( location )
+			structure:Connect( room, location )
+		end
 	end
 
 	self.worldgen:SproutLocations( road, 8, MakeCity )
@@ -120,6 +126,7 @@ function City:CreateRoad()
 	local road = Location()
 	road:SetDetails( "City Road", "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	road:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
+
 	return road
 end
 

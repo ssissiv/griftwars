@@ -29,30 +29,14 @@ function Location:OnSpawn( world )
 		end
 	end
 
-	for exit, adj in pairs( self.exits ) do
-		if exit == EXIT.NORTH then
-			if self.y == nil then
-				self.x, self.y = adj.x, adj.y - 1
+	for i, exit in pairs( self.exits ) do
+		local dest, addr = exit:GetDest( self )
+		if IsEnum( addr, EXIT ) then
+			local x, y = OffsetExit( dest.x, dest.y, REXIT[ addr ] )
+			if self.x == nil or self.y == nil then
+				self.x, self.y = x, y
 			else
-				assert( self.x == adj.x and self.y == adj.y - 1 )
-			end
-		elseif exit == EXIT.EAST then
-			if self.x == nil then
-				self.x, self.y = adj.x - 1, adj.y
-			else
-				assert( self.x == adj.x - 1 and self.y == adj.y )
-			end
-		elseif exit == EXIT.SOUTH then
-			if self.y == nil then
-				self.x, self.y = adj.x, adj.y + 1
-			else
-				assert( self.x == adj.x and self.y == adj.y + 1 )
-			end
-		elseif exit == EXIT.WEST then
-			if self.x == nil then
-				self.x, self.y = adj.x + 1, adj.y
-			else
-				assert( self.x == adj.x + 1 and self.y == adj.y )
+				assert( self.x == x and self.y == y )
 			end
 		end
 	end
@@ -156,7 +140,8 @@ end
 function Location:CollectVerbs( verbs, actor, obj )
 	if verbs.id == "room" then
 		for i, exit in ipairs( self.exits ) do
-			verbs:AddVerb( Verb.LeaveLocation( actor, exit:GetDest( self )))
+			local dest, addr = exit:GetDest( self )
+			verbs:AddVerb( Verb.LeaveLocation( actor, dest ))
 		end
 	end
 end
@@ -187,37 +172,45 @@ function Location:IsConnected( other )
 end
 
 
-function Location:Connect( other, exit )
+function Location:Connect( other, addr )
 	assert( other ~= nil )
 	assert( is_instance( other, Location ))
+	assert( not self:FindExit( addr ))
 
-	-- if exit == nil then
-	-- 	local choices = {}
-	-- 	for i, exit in ipairs( self.available_exits ) do
-	-- 		if table.contains( other.available_exits, REXIT[ exit ] ) then
-	-- 			table.insert( choices, exit )
-	-- 		end
-	-- 	end
-	-- 	exit = table.arraypick( choices )
-	-- 	assert( exit )
-	-- end
+	local exit = Exit()
+
+	if IsEnum( addr, EXIT ) then
+		local raddr = REXIT[ addr ]
+		assert( not other:FindExit( raddr ))
+
+		table.arrayremove( self.available_exits, addr )
+		table.arrayremove( other.available_exits, raddr )
+
+		exit:Connect( self, addr, other, raddr )
 	
-	assert( IsEnum( exit, EXIT ))
-	assert( self.exits[ exit ] == nil or error(exit))
+	else
+		exit:Connect( self, addr, other, addr )
+	end
 
-	local rexit = REXIT[ exit ]
-	assert( other.exits[ rexit ] == nil, tostr(other.exits) )
 
-	self.exits[ exit ] = other
-	table.arrayremove( self.available_exits, exit )
-
-	other.exits[ rexit ] = self
-	table.arrayremove( other.available_exits, rexit )
+	table.insert( self.exits, exit )
+	table.insert( other.exits, exit )
 
 	if not self:IsSpawned() and other:IsSpawned() then
 		self:Visit( SpawnLocation, other.world, self )
 	elseif self:IsSpawned() and not other:IsSpawned() then
 		other:Visit( SpawnLocation, self.world, self )
+	end
+
+	return exit
+end
+
+function Location:FindExit( addr )
+	for i, exit in ipairs( self.exits ) do
+		local dest, dest_addr = exit:GetDest( self )
+		if dest_addr == addr then
+			return exit
+		end
 	end
 end
 
@@ -237,7 +230,7 @@ function Location:CountAvailableExits()
 end
 
 function Location:Exits()
-	return pairs( self.exits )
+	return ipairs( self.exits )
 end
 
 local function VisitInternal( visited, location, fn, ... )
@@ -248,6 +241,7 @@ local function VisitInternal( visited, location, fn, ... )
 
 	for i, exit in ipairs( location.exits ) do
 		local dest = exit:GetDest( location )
+		assert( dest )
 		if visited[ dest ] == nil then
 			VisitInternal( visited, dest, fn, ... )
 		end
@@ -369,20 +363,23 @@ function Location:RenderMapTile( screen, x1, y1, x2, y2 )
 	love.graphics.setColor( table.unpack( self.map_colour ))
 
 	local exit_sz = math.floor( w / 6 ) -- width of exit
-	for exit, adj in pairs( self.exits ) do
-		local x, y = OffsetExit( self.x, self.y, exit )
-		if x == adj.x and y == adj.y then
-			if exit == EXIT.NORTH then
-				screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
-			elseif exit == EXIT.EAST then
-				screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
-			elseif exit == EXIT.WEST then
-				screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
-			elseif exit == EXIT.SOUTH then
-				screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
-			end
-		else
+	for i, exit in pairs( self.exits ) do
+		local dest, addr = exit:GetDest( self )
+		if IsEnum( addr, EXIT ) then
+			local x, y = OffsetExit( self.x, self.y, addr )
+			if x == dest.x and y == dest.y then
+				if addr == EXIT.NORTH then
+					screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
+				elseif addr == EXIT.EAST then
+					screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
+				elseif addr == EXIT.WEST then
+					screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
+				elseif addr == EXIT.SOUTH then
+					screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
+				end
+			else
 
+			end
 		end
 	end
 end

@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(screen.world)",
 			"print(GetUI())",
 			"print(GetGUI())",
 			"print(GetGUI():GetTopScreen())",
@@ -33,7 +32,8 @@ return {
 			"print(t.available_exits[1])",
 			"print(OffsetExit( t.x, t.y, t.available_exits[1]))",
 			"print(OffsetExit( t.x, t.y, t.available_exits[2]))",
-			"print(tostring(world:GetLocationAt(-3,1)))"
+			"print(tostring(world:GetLocationAt(-3,1)))",
+			"print(t:CountAvailableExits())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

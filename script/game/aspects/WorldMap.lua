@@ -15,8 +15,10 @@ function WorldMap:AssignToGrid( location )
 
 	if row[ x ] == nil then
 		row[ x ] = location
-	else
+	elseif is_instance( row[ x ], Location ) then
 		row[ x ] = { row[ x ], location }
+	else
+		table.insert( row[ x ], location )
 	end
 end
 

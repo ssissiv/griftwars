@@ -106,6 +106,7 @@ require "game/objects/Jerky"
 require "game/objects/Creds"
 require "game/objects/Dirk"
 require "game/objects/JunkHeap"
+require "game/objects/Structure"
 
 --------------------------------------------------------------------
 -- Verbs

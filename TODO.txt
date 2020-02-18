@@ -2,8 +2,7 @@ TODO
 ====
 
 * Return to AI Schedules.  Need predictability.
-
-
+* move exits array into a .Nav aspect?
 
 STARDEW:
 	* Start with Parsnip Seeds.

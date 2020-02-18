@@ -37,7 +37,8 @@ function PathFinder:CalculatePath()
 			break
 		end
 
-		for i, dest in room:Exits() do
+		for i, exit in room:Exits() do
+			local dest = exit:GetDest( room )
 			if from_to[ dest ] == nil and dest ~= start_room then
 				assert( dest ~= start_room )
 				from_to[ dest ] = room
