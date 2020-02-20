@@ -38,7 +38,7 @@ function Forest:Generate( location, count )
 	local function CreateRoom( room )
 		room:SetDetails( loc.format( "The Forest [{1}]", #self.rooms ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
 		room:SetImage( assets.LOCATION_BGS.FOREST )
-		if math.random() < 0.5 then
+		if self.worldgen:Random() < 0.5 then
 			room:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ) )
 		end
 		room.map_colour = constants.colours.FOREST_TILE
@@ -50,7 +50,7 @@ function Forest:Generate( location, count )
 end
 
 function Forest:PopulateOrcs()
-	local n = math.random( 3 )
+	local n = self.worldgen:Random( 3 )
 	if n == 1 then
 		-- Some Orcs
 		n = math.ceil( #self.rooms / 5 )
@@ -68,7 +68,7 @@ function Forest:PopulateOrcs()
 end
 
 function Forest:RandomRoom()
-	return table.arraypick( self.rooms )
+	return self.worldgen:ArrayPick( self.rooms )
 end
 
 function Forest:GetRooms()

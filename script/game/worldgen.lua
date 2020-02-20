@@ -2,6 +2,23 @@ local WorldGen = class( "WorldGen" )
 
 function WorldGen:init( world )
 	self.world = world
+	local seed1, seed2 = 3418323524, 20529293
+	self.rng = love.math.newRandomGenerator( seed1, seed2 )
+	print( "WorldGen seeds:", self.rng:getSeed() )
+end
+
+function WorldGen:Random( a, b )
+	if a == nil and b == nil then
+		return self.rng:random()
+	elseif b == nil then
+		return self.rng:random( a )
+	else
+		return self.rng:random( a, b )
+	end
+end
+
+function WorldGen:ArrayPick( t )
+	return t[ self:Random( #t ) ]
 end
 
 function WorldGen:Sprout( room, fn, ... )
@@ -11,7 +28,7 @@ function WorldGen:Sprout( room, fn, ... )
 
 	local exits = table.shallowcopy( room.available_exits )
 	while #exits > 0 do
-		local exit = table.remove( exits, math.random( #exits ))
+		local exit = table.remove( exits, self:Random( #exits ))
 		local x, y = room:GetCoordinate()
 		x, y = OffsetExit( x, y, exit )
 
@@ -51,7 +68,7 @@ function WorldGen:SproutLocations( start, max_count, fn, ... )
 			local x1, y1 = OffsetExit( x, y, exit )
 			local adj = self.world:GetLocationAt( x1, y1 )
 			if adj and table.contains( locations, adj ) then
-				if math.random() < p then
+				if self:Random() < p then
 					room:Connect( adj, exit )
 				end
 			end
@@ -107,7 +124,7 @@ function WorldGen:RandomAvailableLocation( locations, spaces )
 			end
 		end
 	end
-	return table.arraypick( available )
+	return self:ArrayPick( available )
 end
 
 

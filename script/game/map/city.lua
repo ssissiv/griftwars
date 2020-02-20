@@ -53,12 +53,12 @@ function City:SpawnRoad( road )
 		self.world:SpawnLocation( road )
 	end
 
-	road:SetDetails( self.name, "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
+	road:SetDetails( loc.format( "City of {1}", self.name), "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 	road:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 
 	table.insert( self.roads, road )
 
-	if math.random() < 0.2 then
+	if self.worldgen:Random() < 0.2 then
 		Object.JunkHeap():WarpToLocation( road )
 	end
 
@@ -125,7 +125,7 @@ function City:GenerateMilitary( world )
 end
 
 function City:RandomRoad()
-	return table.arraypick( self.roads )
+	return self.worldgen:ArrayPick( self.roads )
 end
 
 function City:GetRoads()

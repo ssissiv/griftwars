@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(screen:ScreenToTile( 200, 0 ))",
-			"print(screen:ScreenToTile( 200, 200 ))",
-			"print(screen:ScreenToTile( 200, 0 ))",
 			"print(screen:ScreenToTile( 200, 200 ))",
 			"print(screen:ScreenToTile( 0, 0 ))",
 			"print(screen:ScreenToTile( 400, 0 ))",
@@ -33,7 +30,10 @@ return {
 			"wg = WorldGen(world); print(wg:CountSpace(1, 0, 99 ))",
 			"wg = WorldGen(world); print(wg:CountSpace(6, 0, 99 ))",
 			"wg = WorldGen(world); print(wg:CountSpace(5, -1, 99 ))",
-			"wg = WorldGen(world); print(wg:CountSpace(2, -1, 10  ))"
+			"wg = WorldGen(world); print(wg:CountSpace(2, -1, 10  ))",
+			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random( 10 ))",
+			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random( 10, 20 ))",
+			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
