@@ -1,3 +1,5 @@
+require "game/aspects/statvalue"
+
 local HealthValue = class( "Aspect.HealthValue", Aspect.StatValue )
 
 function HealthValue:init( value, max_value )

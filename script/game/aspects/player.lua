@@ -1,7 +1,7 @@
 ---------------------------------------------------------------
 -- Traits used only by the Player agent.
 
-local Player = class( "Trait.Player", Aspect )
+local Player = class( "Aspect.Player", Aspect )
 
 function Player:init()
 	-- self.dice = DiceContainer( self )

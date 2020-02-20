@@ -1,26 +1,25 @@
 
-
-local Memory = class( "Trait.Memory", Trait )
+local Memory = class( "Aspect.Memory", Aspect )
 
 function Memory:init()
 	self.engrams = {}
 end
 
 function Memory:OnGainAspect( owner )
-	Trait.OnGainAspect( self, owner )
+	Aspect.OnGainAspect( self, owner )
 	assert( owner.memory == nil )
 	owner.memory = self
 end
 
 function Memory:OnLoseAspect()
-	Trait.OnLoseAspect( self )
+	Aspect.OnLoseAspect( self )
 
 	assert( self.owner.memory == self )
 	self.owner.memory = nil
 end
 
 function Memory:OnSpawn( world )
-	Trait.OnSpawn( self, world )
+	Aspect.OnSpawn( self, world )
 	for i, engram in ipairs( self.engrams ) do
 		engram:StampTime( self.owner )
 	end

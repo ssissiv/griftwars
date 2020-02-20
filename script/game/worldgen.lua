@@ -200,7 +200,7 @@ function WorldGen:GeneratePlayer( world )
 	-- player:GainAspect( Skill.Scrounge() )
 	-- player:GainAspect( Skill.Socialize() )
 	-- player:GainAspect( Skill.RumourMonger() )
-	player:GainAspect( Trait.Player() )
+	player:GainAspect( Aspect.Player() )
 	player:GainAspect( Aspect.Combat() )
 	player:GainAspect( Verb.Scrounge( player ) )
 

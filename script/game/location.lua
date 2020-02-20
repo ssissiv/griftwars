@@ -239,6 +239,10 @@ function Location:Visit( fn, ... )
 end
 
 -- Breadth-first traversal applying fn().
+-- fn( location, depth ) returns two booleans:
+--		continue: if false, do not flood from this location
+--		stop: abort the Flood search entirely.
+
 function Location:Flood( fn, ... )
 	local open, closed = { self, 0 }, {}
 
@@ -246,7 +250,7 @@ function Location:Flood( fn, ... )
 		local x = table.remove( open, 1 )
 		local depth = table.remove( open, 1 )
 
-		table.insert( closed, open )
+		table.insert( closed, x )
 		if #closed > 999 then
 			break
 		end

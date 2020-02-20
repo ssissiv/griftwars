@@ -1,5 +1,6 @@
 print( "Startup!", world )
 
-local scav = table.arraypick( world:CreateBucketByClass( Agent.Scavenger ))
-puppet:WarpToAgent( scav )
+local agent = table.arraypick( world:CreateBucketByClass( Agent.Captain ))
+puppet:WarpToAgent( agent )
 
+DBG(agent:GetAspect( Verb.Strategize ))

@@ -1,3 +1,5 @@
+require "game/aspects/Job"
+
 local Assistant = class( "Job.Assistant", Job )
 
 Assistant.salary = 5

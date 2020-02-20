@@ -14,7 +14,7 @@ function Agent:init()
 	self.sense_log = {} -- array of strings
 	self.potential_verbs = {}
 	self.inventory = Inventory( self )
-	self:GainAspect( Trait.Memory() )
+	self:GainAspect( Aspect.Memory() )
 
 	self.viz = AgentViz()
 	self.mental_state = MSTATE.ALERT
@@ -80,11 +80,11 @@ function Agent:GetDesc()
 end
 
 function Agent:IsPlayer()
-	return self:HasAspect( Trait.Player )
+	return self:HasAspect( Aspect.Player )
 end
 
 function Agent:GetPlayer()
-	return self:GetAspect( Trait.Player )
+	return self:GetAspect( Aspect.Player )
 end
 
 function Agent:IsPuppet()
@@ -245,7 +245,7 @@ function Agent:GetInventory()
 end
 
 function Agent:GetMemory()
-	return self.memory -- Assigned by Trait.Memory when attained.
+	return self.memory -- Assigned by Aspect.Memory when attained.
 end
 
 function Agent:IsAcquainted( agent )

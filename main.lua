@@ -69,84 +69,15 @@ require "game/relationships/Subordinate"
 require "game/aspects/aspect"
 require "game/verbs/verb"
 
---------------------------------------------------------------------
--- Aspects
-
-require "game/aspects/job"
-
-require "game/aspects/WorldMap"
-require "game/aspects/History"
-require "game/aspects/NamePool"
-require "game/aspects/statvalue"
-require "game/aspects/HealthValue"
-require "game/aspects/traits"
-require "game/aspects/Memory"
-require "game/aspects/Player"
-require "game/aspects/Faction"
-require "game/aspects/TokenHolder"
-require "game/aspects/skills"
-require "game/aspects/Interactions"
-require "game/aspects/Leader"
-require "game/aspects/Shopkeep"
-require "game/aspects/Barkeep"
-require "game/aspects/Assistant"
-require "game/aspects/Combat"
-
-require "game/aspects/behaviour"
-
-require "game/aspects/features"
-require "game/aspects/Home"
-require "game/aspects/Shop"
-require "game/aspects/Tavern"
-
---------------------------------------------------------------------
--- Objects
-
-require "game/objects/Jerky"
-require "game/objects/Creds"
-require "game/objects/Dirk"
-require "game/objects/JunkHeap"
-require "game/objects/Structure"
-
---------------------------------------------------------------------
--- Verbs
-
-require "game/verbs/Give"
-
-require "game/verbs/Idle"
-require "game/verbs/Inspect"
-require "game/verbs/scrounge"
-require "game/verbs/LeaveLocation"
-require "game/verbs/Travel"
-require "game/verbs/Deliver"
-require "game/verbs/Sleep"
-require "game/verbs/Interact"
-require "game/verbs/ShortRest"
-require "game/verbs/ManageFatigue"
-require "game/verbs/Strategize"
-require "game/verbs/Help"
-require "game/verbs/Attack"
-require "game/verbs/Challenge"
-
-require "game/verbs/EquipObject"
-
-require "game/characters/Citizen"
-require "game/characters/Scavenger"
-require "game/characters/Snoop"
-require "game/characters/Collector"
-require "game/characters/Captain"
-require "game/characters/Shopkeeper"
-require "game/characters/Barkeep"
-
-require "game/characters/Orc"
-
 -----------------------------------------------------------
 
 require "imgui"
 
 local test_window = false
 local gui = nil
-local debug_mgr = nil
+local debug_mgr  = DebugManager()
+debug_mgr:AddBindingGroup( debug_menus.GAME_BINDINGS )
+
 local myShader
 local global_lcg = lcg()
 
@@ -169,13 +100,26 @@ end
 --
 -- LOVE callbacks
 --
+
+local function LoadAllScripts( dir )
+    local files = love.filesystem.getDirectoryItems( "script/"..dir )
+    for k, file in ipairs(files) do
+        local filename = file:match( "^(.+)[.]lua$" )
+        if filename then
+            require( dir .. "/" ..filename )
+        end
+    end
+end
+
 function love.load(arg)
     math.randomseed( os.time() )
 
-    assets:LoadAll()
+    LoadAllScripts( "game/aspects" )
+    LoadAllScripts( "game/verbs" )
+    LoadAllScripts( "game/characters" )
+    LoadAllScripts( "game/objects" )
 
-    debug_mgr = DebugManager()
-    debug_mgr:AddBindingGroup( debug_menus.GAME_BINDINGS )
+    assets:LoadAll()
 
     local game = GameScreen()
 

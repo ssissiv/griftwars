@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(screen:ScreenToTile( 200, 200 ))",
-			"print(screen:ScreenToTile( 0, 0 ))",
 			"print(screen:ScreenToTile( 400, 0 ))",
 			"print(screen:ScreenToTile( 400, 400 ))",
 			"print(GetGUI():GetSize())",
@@ -33,7 +31,9 @@ return {
 			"wg = WorldGen(world); print(wg:CountSpace(2, -1, 10  ))",
 			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random( 10 ))",
 			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random( 10, 20 ))",
-			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random())"
+			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random())",
+			"print(t:FindStrategicPoint())",
+			"print(t:FindStrategicPoint( t.owner ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -1,6 +1,5 @@
 --------------------------------------------------------------------
 -- Manages a prioritized list of Verbs
-
 local Behaviour = class( "Aspect.Behaviour", Aspect )
 
 function Behaviour:init()
