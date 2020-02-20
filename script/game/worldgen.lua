@@ -2,8 +2,8 @@ local WorldGen = class( "WorldGen" )
 
 function WorldGen:init( world )
 	self.world = world
-	local seed1, seed2 = 3418323524, 20529293
-	self.rng = love.math.newRandomGenerator( seed1, seed2 )
+	-- self.rng = love.math.newRandomGenerator( 3418323524, 20529293 )
+	self.rng = love.math.newRandomGenerator( 5235235, 120912 )
 	print( "WorldGen seeds:", self.rng:getSeed() )
 end
 
@@ -61,6 +61,12 @@ function WorldGen:SproutLocations( start, max_count, fn, ... )
 		end
 	end
 
+	if #locations < max_count then
+		print( string.format( "only spawned %d/%d locations", #locations, max_count ))
+		print( start, start:GetCoordinate() )
+		print( debug.traceback() )
+	end
+
 	local p = 0.5
 	for i, room in ipairs( locations ) do
 		local x, y = room:GetCoordinate()
@@ -114,12 +120,13 @@ function WorldGen:CountSpace( x, y, max_count )
 end
 
 function WorldGen:RandomAvailableLocation( locations, spaces )
+	spaces = spaces or 1
 	local available = {}
 	for i, room in ipairs( locations ) do
 		local x, y = room:GetCoordinate()
 		for i, exit in ipairs( room.available_exits ) do
 			local x1, y1 = OffsetExit( x, y, exit )
-			if self:CountSpace( x1, y1, spaces or 1 ) then
+			if self:CountSpace( x1, y1, spaces ) >= spaces then
 				table.insert( available, room )
 			end
 		end
