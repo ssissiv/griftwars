@@ -214,21 +214,6 @@ function Location:FindExit( addr )
 	end
 end
 
-function Location:CountAvailableExits()
-	if self.world then
-		local count = 0
-		for i, exit in ipairs( self.available_exits ) do
-			local x1, y1 = OffsetExit( self.x, self.y, exit )
-			if not self.world:GetLocationAt( x1, y1 ) then
-				count = count + 1
-			end
-		end
-		return count
-	else
-		return #self.available_exits
-	end
-end
-
 function Location:Exits()
 	return ipairs( self.exits )
 end
@@ -344,10 +329,12 @@ function Location:RenderMapTile( screen, x1, y1, x2, y2 )
 		for i, obj in ipairs( self.contents ) do
 			if is_instance( obj, Agent ) then
 				if obj:IsPlayer() then
-					love.graphics.setColor( 255, 0, 0 )
+					love.graphics.setColor( 255, 0, 255, 55 + 200 * (1.0 + math.sin( screen:ElapsedTime() * 10 )))
 				else
 					love.graphics.setColor( 255, 0, 255 )
 				end
+			elseif is_instance( obj, Structure ) then
+				love.graphics.setColor( 0, 0, 0 )
 			else
 				love.graphics.setColor( 255, 255, 0 )
 			end

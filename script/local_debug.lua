@@ -2,13 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(GetUI())",
-			"print(GetGUI())",
-			"print(GetGUI():GetTopScreen())",
-			"print(screen)",
-			"print(screen.camera)",
-			"print(screen.camera:ScreenToTile( 0, 0 ))",
-			"print(screen:ScreenToTile( 0, 0 ))",
 			"print(screen:ScreenToTile( 200, 0 ))",
 			"print(screen:ScreenToTile( 200, 200 ))",
 			"print(screen:ScreenToTile( 200, 0 ))",
@@ -33,7 +26,14 @@ return {
 			"print(OffsetExit( t.x, t.y, t.available_exits[1]))",
 			"print(OffsetExit( t.x, t.y, t.available_exits[2]))",
 			"print(tostring(world:GetLocationAt(-3,1)))",
-			"print(t:CountAvailableExits())"
+			"print(t:CountAvailableExits())",
+			"wg = WorldGen(world); print(wg:CountSpaces(0, 0, 99 ))",
+			"wg = WorldGen(world); print(wg:CountSpace(0, 0, 99 ))",
+			"wg = WorldGen(world); print(wg:CountSpace(-1,-1, 99 ))",
+			"wg = WorldGen(world); print(wg:CountSpace(1, 0, 99 ))",
+			"wg = WorldGen(world); print(wg:CountSpace(6, 0, 99 ))",
+			"wg = WorldGen(world); print(wg:CountSpace(5, -1, 99 ))",
+			"wg = WorldGen(world); print(wg:CountSpace(2, -1, 10  ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

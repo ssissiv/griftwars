@@ -13,5 +13,5 @@ end
 
 
 function Structure:GetName()
-	return loc.format( "Structure ({1})", self.exit:GetDest( self.location ))
+	return loc.format( "*{1}*", self.exit:GetDest( self.location ))
 end

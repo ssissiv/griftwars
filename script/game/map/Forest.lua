@@ -71,6 +71,10 @@ function Forest:RandomRoom()
 	return table.arraypick( self.rooms )
 end
 
+function Forest:GetRooms()
+	return self.rooms
+end
+
 function Forest:RoomAt( i )
 	return self.rooms[ i ]
 end

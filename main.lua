@@ -64,7 +64,6 @@ require "game/map/CorpHQ"
 
 require "game/relationships/Relationship"
 require "game/relationships/Affinity"
-require "game/relationships/ArmitageGerin"
 require "game/relationships/Subordinate"
 
 require "game/aspects/aspect"

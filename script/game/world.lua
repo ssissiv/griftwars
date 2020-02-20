@@ -19,7 +19,7 @@ function World:init()
 	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
 	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )
 	self.nouns = Aspect.NamePool( "data/nouns.txt" )
-
+	self.city_names = self:GainAspect( Aspect.CityNamePool( "data/cities.txt" ))
 end
 
 function World:Log( fmt, ... )

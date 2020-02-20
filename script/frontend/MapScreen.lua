@@ -4,15 +4,27 @@ function MapScreen:init( world )
 	RenderScreen.init( self )
 	self.world = world
 
+	self.elapsed_time = 0
+
 	self.zoom_level = 0
 	self.camera = Camera()
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
-	self:MoveTo( 0, 0 )
+
+	local player = world:GetPlayer()
+	if player and player:GetLocation() then
+		self:MoveTo( player:GetLocation():GetCoordinate() )
+	end
+end
+
+function MapScreen:ElapsedTime()
+	return self.elapsed_time
 end
 
 function MapScreen:UpdateScreen( dt )
 	self.camera:UpdateCamera( dt )
+
+	self.elapsed_time = self.elapsed_time + dt
 
 	if self.is_panning then
 		self.hovered_tile = nil

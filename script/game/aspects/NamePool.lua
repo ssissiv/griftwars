@@ -13,3 +13,7 @@ function NamePool:PickName()
 	return table.remove( self.names, math.random( #self.names ))
 end
 
+-----------------------------------------------
+--
+
+local CityNamePool = class( "Aspect.CityNamePool", NamePool )

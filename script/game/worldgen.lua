@@ -1,9 +1,14 @@
 local WorldGen = class( "WorldGen" )
 
-function WorldGen:init()
+function WorldGen:init( world )
+	self.world = world
 end
 
 function WorldGen:Sprout( room, fn, ... )
+	if room == nil then
+		return
+	end
+
 	local exits = table.shallowcopy( room.available_exits )
 	while #exits > 0 do
 		local exit = table.remove( exits, math.random( #exits ))
@@ -19,8 +24,7 @@ function WorldGen:Sprout( room, fn, ... )
 		end
 	end
 
-	print( "COULD NOT SPROUT FROM", room, tostr(room.available_exits), debug.traceback() )
-	DBG(room)
+	-- print( "COULD NOT SPROUT FROM", room, tostr(room.available_exits), debug.traceback() )
 end
 
 function WorldGen:SproutLocations( start, max_count, fn, ... )
@@ -36,24 +40,97 @@ function WorldGen:SproutLocations( start, max_count, fn, ... )
 			table.insert( stack, new_room )
 			table.insert( locations, new_room )
 		else
-			-- Is there a connecting room?
-			-- local exits = table.shallowcopy( room.available_exits )
-			-- for i = #exits, 1, -1 do
-			-- 	if not table.contains( locations, exits[i] ) then
-			-- 		table.remove( exits, i )
-			-- 	end
-			-- end
-
-			-- local adj = table.arraypick( exits )
-			-- if adj then
-			-- 	room:Connect( adj, )
-
 			table.remove( stack )
+		end
+	end
+
+	local p = 0.5
+	for i, room in ipairs( locations ) do
+		local x, y = room:GetCoordinate()
+		for i, exit in ipairs( room.available_exits ) do
+			local x1, y1 = OffsetExit( x, y, exit )
+			local adj = self.world:GetLocationAt( x1, y1 )
+			if adj and table.contains( locations, adj ) then
+				if math.random() < p then
+					room:Connect( adj, exit )
+				end
+			end
 		end
 	end
 end
 
+local function FindCoordinate( coords, x, y )
+	for i = 1, #coords, 2 do
+		if coords[i] == x and coords[i+1] == y then
+			return i
+		end
+	end
+end
+
+function WorldGen:CountSpace( x, y, max_count )
+	local open = { x, y }
+	local closed = {}
+	local count = 0
+
+	while #open > 0 and count < max_count do
+		local x = table.remove( open, 1 )
+		local y = table.remove( open, 1 )
+
+		table.insert( closed, x )
+		table.insert( closed, y )
+
+		local room = self.world:GetLocationAt( x, y )
+		if room == nil then
+			count = count + 1
+
+			for i, exit in ipairs( EXIT_ARRAY ) do
+				local x1, y1 = OffsetExit( x, y, exit )
+				if not FindCoordinate( open, x1, y1 ) and not FindCoordinate( closed, x1, y1 ) then
+					table.insert( open, x1 )
+					table.insert( open, y1 )
+				end
+			end
+		end
+	end
+
+	return count
+end
+
+function WorldGen:RandomAvailableLocation( locations, spaces )
+	local available = {}
+	for i, room in ipairs( locations ) do
+		local x, y = room:GetCoordinate()
+		for i, exit in ipairs( room.available_exits ) do
+			local x1, y1 = OffsetExit( x, y, exit )
+			if self:CountSpace( x1, y1, spaces or 1 ) then
+				table.insert( available, room )
+			end
+		end
+	end
+	return table.arraypick( available )
+end
+
+
+function WorldGen:GenerateTinyWorld()
+	local world = World()
+	self.world = world
+
+	Msg:SetWorld( world )
+
+	local origin = Location()
+	origin:SetDetails( "Tiny World", "Not much here." )
+	origin:SetCoordinate( 0, 0 )
+
+	local player = self:GeneratePlayer( self.world )
+	world:SpawnAgent( player, origin )
+
+	return world
+
+end
+
 function WorldGen:GenerateWorld()
+	assert( self.world == nil )
+
 	local world = World()
 	self.world = world
 
@@ -61,66 +138,35 @@ function WorldGen:GenerateWorld()
 
 
 	local city = WorldGen.City( self )
-	world:SpawnEntity( city )
+	city:GenerateCity( nil, 6 )
 	
-	local start = self:Sprout( city:RandomAvailableRoad(), function( location )
-		location:SetDetails( "Your Home", "This is your home. It's pretty chill." )
-		location:SetImage( assets.LOCATION_BGS.HOME )
-		location:GainAspect( Feature.Home() )
-	end )
-
-	local shop = self:Sprout( city:RandomAvailableRoad(), function( shop )
-		shop:SetDetails( "Shady Sundries", "Little more than ramshackle shed, this carved out nook in the debris is a popular shop.")
-		shop:GainAspect( Feature.Shop( SHOP_TYPE.GENERAL ) )
-		shop.map_colour = constants.colours.SHOP_TILE
-	end )
-	
-	local shopkeep = Agent.Shopkeeper()
-	shopkeep:SetDetails( "Armitage", "Dude with lazr-glass vizors, and a knife in every pocket.", GENDER.MALE )
-	shopkeep:GetAspect( Job.Shopkeep ):AssignShop( shop )
-	shopkeep:WarpToLocation( shop )
-	
-	local collector = Agent.Collector()
-	shopkeep:SetDetails( "Gerin", "Always searching. Is it something he seeks, or something he yearns to know?", GENDER.MALE )	
-	world:SpawnAgent( collector, shop )
-
-	-- Gerin meets Armitage to identify any unknown items he's scavenged.
-	-- Armitage gets free Scrap.
-	-- world:SpawnRelationship( Relationship.ArmitageGerin( shopkeep, collector ) )
-
-
-	-- self:GenerateMilitary( world )
-
 	--------------------------------------------------------------------------------------
 	-- Forest!
 
 	for i = 1, 2 do
-		local forest = WorldGen.Forest( self )
-		world:SpawnEntity( forest )
-		forest:Generate( city:RandomAvailableRoad(), 6 )
-		forest:PopulateOrcs()
+		local origin = self:RandomAvailableLocation( city:GetRoads(), 6 )
+		if origin then
+			local forest = WorldGen.Forest( self )
+			world:SpawnEntity( forest )
+			forest:Generate( origin, 6 )
+			forest:PopulateOrcs()
+
+			local city_origin = self:RandomAvailableLocation( forest:GetRooms(), 6 )
+			if city_origin then
+				local city = WorldGen.City( self )
+				city:GenerateCity( city_origin, 6 )
+			end
+		end
 	end
 
 	--------------------------------------------------------------------------------------
 
 	local player = self:GeneratePlayer( self.world )
-	world:SpawnAgent( player, start )
-	if start then
-		start:GetAspect( Feature.Home ):AddResident( player )
-	end
+	world:SpawnAgent( player, city:RandomRoad() )
 
 	--------------------------------------------------------------------------------------
 
 	return self.world
-end
-
-function WorldGen:GenerateMilitary( world )
-	local room = Location()
-	room:SetDetails( "Command Room", "An open room crammed with old tech and metal debris.")
-	world:SpawnLocation( room )
-
-	local commander = Agent.MilitiaCaptain()
-	commander:WarpToLocation( room )
 end
 
 function WorldGen:GeneratePlayer( world )
