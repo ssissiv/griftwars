@@ -14,6 +14,7 @@ end
 function Shop:AssignShopOwner( agent )
 	assert( is_instance( agent, Agent ))
 	if agent ~= self.shop_owner then
+		assert( agent == nil or self.shop_owner == nil )
 		self.shop_owner = agent
 		local shopkeep = agent:GetAspect( Job.Shopkeep )
 		shopkeep:AssignShop( self.location )

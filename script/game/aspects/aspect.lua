@@ -16,6 +16,7 @@ end
 
 function Aspect:OnGainAspect( owner )
 	assert( owner )
+	assert( self.owner == nil )
 	self.owner = owner
 	if self.event_handlers then
 		for event, fn in pairs( self.event_handlers ) do

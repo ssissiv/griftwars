@@ -3,6 +3,7 @@ local WorldBase = class( "WorldBase", Entity )
 function WorldBase:init()
 	self.datetime = 0
 	self.debug_world_speed = 1.0
+	self.next_id = 100
 
 	self:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
@@ -14,6 +15,11 @@ end
 
 function WorldBase:SetNexus( nexus )
 	self.nexus = nexus
+end
+
+function WorldBase:GenerateID()
+	self.next_id = self.next_id + 1
+	return self.next_id
 end
 
 function WorldBase:IsGameOver()

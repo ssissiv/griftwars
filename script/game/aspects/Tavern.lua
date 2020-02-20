@@ -9,16 +9,10 @@ local Tavern = class( "Feature.Tavern", Feature )
 function Tavern:AssignBarkeep( agent )
 	assert( is_instance( agent, Agent ))
 	if agent ~= self.barkeep then
+		assert( agent == nil or self.barkeep == nil )
 		self.barkeep = agent
 		local shopkeep = agent:GetAspect( Job.Barkeep )
 		shopkeep:AssignTavern( self.location )
-	end
-end
-
-function Tavern:OnSpawn( world )
-	Feature._base.OnSpawn( self, world )
-	if self.barkeep == nil then
-		self:SpawnBarkeep()
 	end
 end
  

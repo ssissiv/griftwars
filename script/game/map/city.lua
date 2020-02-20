@@ -12,6 +12,7 @@ function City:GenerateCity( origin, sz )
 	local world = self.world
 
 	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
+	self.faction = world:CreateFaction( self.name )
 
 	if origin == nil then
 		origin = self:SpawnRoad()
@@ -20,9 +21,12 @@ function City:GenerateCity( origin, sz )
 	self.worldgen:SproutLocations( origin, sz, function( location ) self:SpawnRoad( location ) end )
 
 	-- Shops
-	for i = 1, 3 do
+	for i = 1, 1 do
 		self:SpawnShop()
-	end	
+	end
+
+	self:SpawnTavern()
+	self:SpawnMilitary()
 
 	-- Scavengers
 	local poor_house = self.worldgen:Sprout( self.worldgen:RandomAvailableLocation( self.roads, 1 ), function( location )
@@ -100,28 +104,33 @@ function City:SpawnShop()
 end
 
 function City:SpawnTavern()
-	local tavern = Location()
-	tavern:SetImage( assets.LOCATION_BGS.SHOP )
-	tavern:GainAspect( Feature.Tavern())
+	local room = Location()
+	room:SetImage( assets.LOCATION_BGS.SHOP )
+	local tavern = room:GainAspect( Feature.Tavern())
 
 	local structure = Structure()
 	structure:WarpToLocation( self:RandomRoad() )
-	structure:Connect( tavern )
+	structure:Connect( room )
 
 	local barkeep = tavern:SpawnBarkeep()
 	local home = self:SpawnHome( barkeep )
 
-	table.insert( self.rooms, tavern )
+	table.insert( self.rooms, room )
 end
 
-
-function City:GenerateMilitary( world )
+function City:SpawnMilitary()
 	local room = Location()
-	room:SetDetails( "Command Room", "An open room crammed with old tech and metal debris.")
-	world:SpawnLocation( room )
+	room:SetDetails( "War Chambers", "An open room crammed with old tech and metal debris.")
 
-	local commander = Agent.MilitiaCaptain()
+	local structure = Structure()
+	structure:WarpToLocation( self:RandomRoad() )
+	structure:Connect( room )
+
+	local commander = Agent.Captain()
+	commander:GainAspect( Aspect.Faction( self.faction ))
 	commander:WarpToLocation( room )
+
+	table.insert( self.rooms, room )
 end
 
 function City:RandomRoad()

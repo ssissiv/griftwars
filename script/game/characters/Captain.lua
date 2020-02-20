@@ -10,20 +10,25 @@
 
 ---------------------------------------------------------------------
 
-local MilitiaCaptain = class( "Agent.MilitiaCaptain", Agent )
+local Captain = class( "Agent.Captain", Agent )
 
-function MilitiaCaptain:init()
+function Captain:init()
 	Agent.init( self )
 	
 	self.species = SPECIES.HUMAN
 	
+	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize( self ))
 	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 end
 
-function MilitiaCaptain:OnSpawn( world )
+function Captain:GetTitle()
+	return "Captain"
+end
+
+function Captain:OnSpawn( world )
 	Agent.OnSpawn( self, world )
-	self:SetDetails( nil, "Commander of the militia.", GENDER.MALE )
+	self:SetDetails( nil, "A captain of the militia.", GENDER.MALE )
 end
 

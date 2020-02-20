@@ -18,5 +18,8 @@ function Strategize:CalculateUtility( actor )
 end
 
 function Strategize:Interact( actor )
-	Msg:Speak( actor, "Hmm... where should this brigade go..." )
+	while true do
+		self:YieldForTime( ONE_HOUR )
+		Msg:Speak( actor, "Hmm... where should this brigade go..." )
+	end
 end

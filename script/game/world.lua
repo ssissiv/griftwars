@@ -8,6 +8,7 @@ function World:init()
 	self.agents = {}
 	self.stats = {}
 	self.relationships = {}
+	self.factions = {}
 
 	self.limbo = Location()
 	self.limbo:SetDetails( "Limbo", "Implementation room." )
@@ -29,6 +30,16 @@ end
 function World:Start()
 	self:Log( "World started!" )
 	self:BroadcastEvent( WORLD_EVENT.START, self )
+end
+
+function World:CreateFaction( name )
+	local faction = FactionData( name )
+	table.insert( self.factions, faction )
+	return faction
+end
+
+function World:Factions()
+	return ipairs( self.factions )
 end
 
 function World:SpawnLocation( location )
