@@ -70,7 +70,7 @@ function Shopkeep:OnLocationEvent( event_name, location, ... )
 		local agent = ...
 		if not self:IsAssistant( agent ) then
 			if agent:Acquaint( self.owner ) then
-				Msg:Speak( self.owner, "Welcome, welcome! I'm {1.Id}." )
+				Msg:Speak( self.owner, "Welcome, welcome! I'm {1.Id}.", self.owner:LocTable( agent ) )
 			else
 				Msg:Speak( self.owner, "Good deals today." )
 			end

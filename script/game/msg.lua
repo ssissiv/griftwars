@@ -44,7 +44,7 @@ function Msg:ActToRoom( msg, actor, target, ... )
 	end
 end
 
-function Msg:Speak( actor, msg, target, ... )
+function Msg:Speak( actor, msg, ... )
 	assert( is_instance( actor, Agent ))
 	local location = actor:GetLocation()
 	for i, obj in location:Contents() do
@@ -52,24 +52,40 @@ function Msg:Speak( actor, msg, target, ... )
 			if obj == actor then
 				-- This message goes to the actor 
 				local txt = loc.format( "You say, '{1}'", msg )
-				txt = loc.format( txt, self:LocTable( actor ), target and self:LocTable( target ), ... )
+				txt = loc.format( txt, self:LocTable( actor ), ... )
 				actor:Sense( txt )
 
-			elseif obj == target then
-				-- This message is directed to the target 
-				local txt = loc.format( "{1.Id} says to you, '{2}'", self:LocTable( actor ), msg )
-				txt = loc.format( txt, self:LocTable( actor ), target and self:LocTable( target ), ... )
-				target:Sense( txt )
-
 			else
+				msg = loc.format( msg, ... )
 				local txt = loc.format( "{1.Id} says, '{2}'", self:LocTable( actor ), msg )
-				txt = loc.format( txt, self:LocTable( actor ), target and self:LocTable( target ), ... )
 				obj:Sense( txt )
 			end
 		end
 	end
 end
 
+function Msg:SpeakTo( actor, target, msg, ... )
+	assert( is_instance( actor, Agent ))
+	assert( is_instance( target, Agent ))
+
+	local location = actor:GetLocation()
+	for i, obj in location:Contents() do
+		if obj.Sense then
+			if obj == actor then
+				-- This message goes to the actor 
+				local txt = loc.format( "You say, '{1}'", msg )
+				txt = loc.format( txt, self:LocTable( actor ), ... )
+				actor:Sense( txt )
+
+			elseif obj == target then
+				-- This message is directed to the target 
+				local txt = loc.format( "{1.Id} says to you, '{2}'", self:LocTable( actor ), msg )
+				txt = loc.format( txt, self:LocTable( actor ), ... )
+				target:Sense( txt )
+			end
+		end
+	end
+end
 function Msg:Echo( actor, format, ... )
 	if actor.Echo then
 		local txt = loc.format( format, ... )

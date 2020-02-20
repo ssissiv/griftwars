@@ -22,9 +22,10 @@ function ShortRest:GetShortDesc( viewer )
 	end
 end
 
-function ShortRest:GetDetailsDesc( viewer )
+function ShortRest:RenderAgentDetails( ui, screen, viewer )
 	if viewer:CanSee( self.owner ) then
-		return "Resting"
+		ui.Bullet()
+		ui.Text( "Resting" )
 	end
 end
 

@@ -21,13 +21,10 @@ function Travel:GetDesc()
 	return loc.format( "Travel to {1}", tostring(self.obj) )
 end
 
-function Travel:GetDetailsDesc( viewer )
+function Travel:RenderAgentDetails( ui, screen, viewer )
 	if viewer:CanSee( self.owner ) then
-		if viewer:CheckPrivacy( self.owner, PRIVACY.INTENT ) then
-			return loc.format( "Traveling to {1}", tostring(self.obj))
-		else
-			return "Traveling somewhere"
-		end
+		ui.Bullet()
+		ui.Text( loc.format( "Traveling to {1}", tostring(self.obj) ))
 	end
 end
 

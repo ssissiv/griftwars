@@ -31,12 +31,9 @@ function Scavenge:init( actor )
 	self.leave = self:AddChildVerb( Verb.LeaveLocation( actor ) )
 end
 
-function Scavenge:GetDetailsDesc( viewer )
-	if viewer:CheckPrivacy( self.actor, PRIVACY.INTENT ) then
-		return "Scavenging for valuables"
-	else
-		return "???"
-	end
+function Scavenge:RenderAgentDetails( ui, screen, viewer )
+	ui.Bullet()
+	ui.Text( "Scavenging for valuables" )
 end
 
 function Scavenge:CalculateUtility( actor )

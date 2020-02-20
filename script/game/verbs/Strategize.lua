@@ -5,11 +5,16 @@ function Strategize:init( actor )
 	Strategize._base.init( self, actor )
 end
 
-function Strategize:GetDetailsDesc( viewer )
-	if viewer:CheckPrivacy( self.owner, PRIVACY.INTENT ) then
-		return "Making military plans"
+function Strategize:RenderAgentDetails( ui, screen, viewer )
+	ui.Bullet()
+	if self.target then
+		ui.Text( loc.format( "Strategizing to capture {1}", self.target ))
+		ui.SameLine( 0, 5 )
+		if ui.SmallButton( "?" ) then
+			DBG(self.target)
+		end
 	else
-		return "???"
+		ui.Text( "Making military plans" )
 	end
 end
 
@@ -28,14 +33,20 @@ function Strategize:FindStrategicPoint( actor )
 
 	actor.location:Flood( IsStrategicPoint )
 
-	DBG(pts)
+	return table.arraypick( pts )
 end
 
 function Strategize:Interact( actor )
 	while true do
-		self:YieldForTime( ONE_HOUR )
+		self:YieldForTime( ONE_MINUTE )
+
 		Msg:Speak( actor, "Hmm... where should this brigade go..." )
 
 		self.target = self:FindStrategicPoint( actor )
+		if self.target then
+			Msg:Speak( actor, "We must target {1}!", self.target )
+		end
+
+		self:YieldForTime( ONE_HOUR )
 	end
 end

@@ -77,34 +77,12 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 0, 1, 1, 1, tostring(self.agent.gender) )
 
-		local job = self.agent:GetAspect( Job )
-		if job then
-			ui.Text( "Job:" )
-			ui.SameLine( 0, 5 )
-			ui.Text( job:GetName() )
-
-			local salary = job:GetSalary()
-			if salary then
-				ui.Text( "  Salary:" )
-				ui.SameLine( 0, 5 )
-				ui.TextColored( 0, 1, 0, 1, loc.format( "{1} credits/day", salary ))
-			end
-			local hire_time = job:GetHireTime()
-			if hire_time then
-				local now = self.agent.world:GetDateTime()
-				ui.Text( loc.format( "  Hired for: {1}", Calendar.FormatDuration( now - hire_time )))
+		for id, aspect in self.agent:Aspects() do
+			if aspect.RenderAgentDetails then
+				aspect:RenderAgentDetails( ui, screen, self.viewer )
 			end
 		end
-
-		ui.Text( "Actions:" )
-		for i, verb in self.agent:Verbs() do
-			local desc = verb:GetDetailsDesc( self.viewer )
-			if desc then
-				ui.Bullet()
-				ui.Text( tostring(desc) )
-			end
-		end
-
+		
 		ui.NewLine()
 
 		if self.agent == self.viewer then

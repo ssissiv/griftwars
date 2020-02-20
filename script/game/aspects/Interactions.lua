@@ -168,7 +168,7 @@ function Befriend:Interact( actor )
 
 	elseif result == "success" then
 		if actor:Befriend( self.owner ) then
-			Msg:Speak( self.owner, "Yo, I'm {1.name}", actor )
+			Msg:SpeakTo( self.owner, actor, "Yo, I'm {1.name}", self.owner:LocTable( actor ))
 		end
 		if self.OnSuccess then
 			self:OnSuccess( actor, challenge )
@@ -190,14 +190,14 @@ end
 
 function IntroduceAgent:OnSuccess( actor )
 	actor:Acquaint( self.friend )
-	Msg:Speak( self.owner, "Listen, {2.Id} is a friend of mine. {2.HeShe} can help you out.", self.friend )
+	Msg:Speak( self.owner, "Listen, {1.Id} is a friend of mine. {1.HeShe} can help you out.", self.friend:LocTable( actor ) )
 
 	local work = self.friend:GetAspect( Job )
 	if work and work:GetLocation() then
-		Msg:Speak( self.owner, loc.format( "Works over at the {1}.", work:GetLocation():GetTitle() ))
+		Msg:Speak( self.owner, "Works over at the {1}.", work:GetLocation():GetTitle() )
 	else
 		if self.friend:GetHome() then
-			Msg:Speak( self.owner, loc.format( "Lives over at {1}.", self.friend:GetHome():GetLocation():GetTitle() ))
+			Msg:Speak( self.owner, "Lives over at {1}.", self.friend:GetHome():GetLocation():GetTitle() )
 		end
 	end
 
@@ -337,13 +337,13 @@ function Chat:Interact( actor )
 
 	local skill = table.arraypick( t )
 	if skill then
-		Msg:Speak( self.owner, "There's lots of stuff to find if you know where to look.", actor )
+		Msg:SpeakTo( self.owner, actor, "There's lots of stuff to find if you know where to look." )
 
 		self.owner:GainAspect( TrainSkill( skill ))
 
 		self:StartCooldown( ONE_DAY )
 	else
-		Msg:Speak( self.owner, "Nothing to say, really.", actor )
+		Msg:SpeakTo( self.owner, actor, "Nothing to say, really." )
 	end
 end
 

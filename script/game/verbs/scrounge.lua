@@ -45,9 +45,10 @@ function Scrounge:GetDesc()
 	return "Scrounge"
 end
 
-function Scrounge:GetDetailsDesc( viewer )
+function Scrounge:RenderAgentDetails( ui, screen, viewer )
 	if viewer:CanSee( self.owner ) then
-		return "Busy scrounging"
+		ui.Bullet()
+		ui.Text( "Busy scrounging" )
 	end
 end
 

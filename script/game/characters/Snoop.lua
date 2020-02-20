@@ -6,12 +6,9 @@ function FindInformation:init( actor )
 	self.travel = Verb.Travel( actor )
 end
 
-function FindInformation:GetDetailsDesc( viewer )
-	if viewer:CheckPrivacy( self.actor, PRIVACY.INTENT ) then
-		return "Looking for information"
-	else
-		return "???"
-	end
+function FindInformation:RenderAgentDetails( ui, screen, viewer )
+	ui.Bullet()
+	ui.Text( "Looking for information" )
 end
 
 function FindInformation:CalculateUtility( actor )

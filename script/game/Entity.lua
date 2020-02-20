@@ -69,6 +69,8 @@ function Entity:OnDespawn()
 end
 
 function Entity:GainAspect( aspect )
+	assert( is_instance( aspect, Aspect ))
+	
 	if self.aspects == nil then
 		self.aspects = {}
 		self.aspects_by_id = {}

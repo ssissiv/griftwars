@@ -16,12 +16,12 @@ function Sleep:GetDesc()
 	return "Sleep"
 end
 
-function Sleep:GetDetailsDesc( viewer )
+function Sleep:RenderAgentDetails( ui, screen, viewer )
 	if viewer:CanSee( self.owner ) then
-		return "Sleeping"
+		ui.Bullet()
+		ui.Text( "Sleeping" )
 	end
 end
-
 
 function Sleep:CollectVerbs( verbs, agent, obj )
 	if obj == nil then

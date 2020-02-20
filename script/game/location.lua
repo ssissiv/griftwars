@@ -376,7 +376,7 @@ function Location:RenderMapTile( screen, x1, y1, x2, y2 )
 end
 
 function Location:__tostring()
-	return self:GetTitle()
+	return string.format( "[%s]", self:GetTitle())
 end
 
 

@@ -25,6 +25,27 @@ function Job:GetShortDesc( viewer )
 	end
 end
 
+function Job:RenderAgentDetails( ui, screen )
+	local job = self.agent:GetAspect( Job )
+	if job then
+		ui.Text( "Job:" )
+		ui.SameLine( 0, 5 )
+		ui.Text( job:GetName() )
+
+		local salary = job:GetSalary()
+		if salary then
+			ui.Text( "  Salary:" )
+			ui.SameLine( 0, 5 )
+			ui.TextColored( 0, 1, 0, 1, loc.format( "{1} credits/day", salary ))
+		end
+		local hire_time = job:GetHireTime()
+		if hire_time then
+			local now = self.agent.world:GetDateTime()
+			ui.Text( loc.format( "  Hired for: {1}", Calendar.FormatDuration( now - hire_time )))
+		end
+	end
+end
+
 function Job:GetLocation()
 	error( tostring(self) ) -- Define location for job.
 end

@@ -134,10 +134,6 @@ function Verb:GetRoomDesc()
 	end
 end
 
--- Shown when viewing this verb in the UI
-function Verb:GetDetailsDesc( viewer )
-end
-
 function Verb:GetDC()
 	if self.dc == nil and self.CalculateDC then
 		self.dc = self:CalculateDC( Modifiers() )
