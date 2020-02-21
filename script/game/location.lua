@@ -77,6 +77,20 @@ function Location:GetCoordinate()
 	return self.x, self.y, self.z
 end
 
+function Location:GetClosestCoordinate()
+	if self.x == nil then
+		local x, y, z
+		local function HasCoordinate( location, depth )
+			x, y, z = location.x, location.y, location.z
+			return depth < 3, x ~= nil
+		end
+		self:Flood( HasCoordinate )
+		return x, y, z
+	else
+		return self.x, self.y, self.z
+	end
+end
+
 function Location:SetImage( image )
 	self.image = image
 end

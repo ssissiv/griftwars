@@ -13,7 +13,7 @@ function MapScreen:init( world )
 
 	local player = world:GetPlayer()
 	if player and player:GetLocation() then
-		self:MoveTo( player:GetLocation():GetCoordinate() )
+		self:MoveTo( player:GetLocation():GetClosestCoordinate() )
 	end
 end
 
