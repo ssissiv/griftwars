@@ -1,6 +1,6 @@
 local Attack = class( "Verb.Attack", Verb )
 
-Attack.ACT_RATE = 1/60
+Attack.ACT_RATE = 3/60
 
 function Attack:init( actor )
 	Verb.init( self, actor )
@@ -35,7 +35,7 @@ function Attack:CalculateUtility( actor )
 end
 
 function Attack:CanInteract( actor )
-	return self.combat:HasTargets()
+	return actor:IsSpawned() and self.combat:HasTargets()
 end
 
 function Attack:Interact( actor )
@@ -45,6 +45,8 @@ function Attack:Interact( actor )
 		return
 	end
 
+	assert( actor:IsSpawned(), actor )
+	assert( actor.location, actor )
 	local target = self.combat:PickTarget()
 	Msg:ActToRoom( "{1.Id} attacks {2.Id}!", actor, target )
 	Msg:Echo( actor, loc.format( "You attack {1.Id}!", target:LocTable( self.owner ) ))

@@ -55,10 +55,13 @@ function Captain:Recruit( job )
 					self:GetAspect( Aspect.Faction ):AssignFaction( fighter )
 				end
 				return self.world:SpawnAgent( fighter, self.location )
-			end,
-			function( agent )
-				return not agent:IsEnemy( self ) and agent:CanLearnSkill( Skill.Fighter ) and not agent:IsEmployed()
 			end )
+			-- function( agent )
+			-- 	return not agent:IsPlayer() and
+			-- 			not agent:IsEnemy( self ) and
+			-- 			agent:CanLearnSkill( Skill.Fighter ) and
+			-- 			not agent:IsEmployed()
+			-- end )
 
 		recruit:GainAspect( job )
 	end
@@ -69,5 +72,4 @@ function Captain:RecruitAll()
 		self:Recruit( job )
 	end
 end
-
 

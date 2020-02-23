@@ -15,11 +15,16 @@ function Skill:AddTrainingReq( req )
 	table.insert( self.training_reqs, req )
 end
 
-function Skill:CanLearnSkill( actor )
-	for i, req in ipairs( self.training_reqs ) do
-		local ok, reason = req:IsSatisfied( actor )
-		if not ok then
-			return false, reason
+function Skill:CanLearn( actor )
+	if self == nil then
+		return true
+
+	else
+		for i, req in ipairs( self.training_reqs ) do
+			local ok, reason = req:IsSatisfied( actor )
+			if not ok then
+				return false, reason
+			end
 		end
 	end
 

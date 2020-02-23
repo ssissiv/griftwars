@@ -3,7 +3,7 @@ local FindInformation = class( "Verb.FindInformation", Verb )
 
 function FindInformation:init( actor )
 	FindInformation._base.init( self, actor )
-	self.travel = Verb.Travel( actor )
+	self.travel = self:AddChildVerb( Verb.Travel( actor ))
 end
 
 function FindInformation:RenderAgentDetails( ui, screen, viewer )

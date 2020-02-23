@@ -164,8 +164,8 @@ function Verb:CanDo( ... )
 	return true
 end
 
-function Verb:CanInteract( ... )
-	return true
+function Verb:CanInteract( actor, ... )
+	return actor:IsSpawned()
 end
 
 function Verb:GetDesc()

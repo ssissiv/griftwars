@@ -111,11 +111,8 @@ end
 
 function Entity:GetAspect( arg )
 	assert( arg ~= nil, "looking for nil Aspect" )
-	local id
 	if type(arg) == "string" then
-
-	elseif type(arg) == "string" then
-		id = arg
+		return self.aspects_by_id[ arg ]
 
 	elseif is_class( arg ) and self.aspects then
 		for id, aspect in ipairs( self.aspects ) do
@@ -126,9 +123,6 @@ function Entity:GetAspect( arg )
 
 	elseif self.aspects and table.contains( self.aspects, arg ) then
 		return arg
-
-	elseif self.aspects_by_id then
-		return self.aspects_by_id[ id ]
 	end
 end
 

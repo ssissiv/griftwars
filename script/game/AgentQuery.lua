@@ -14,9 +14,9 @@ function Agent:CanLearnSkill( skill )
 	assert( is_class( skill ))
 	local owned_skill = self:GetAspect( skill )
 	if owned_skill then
-		return owned_skill:CanLearn()
+		return owned_skill:CanLearn( self )
 	else
-		
+		return skill.CanLearn( nil, self )
 	end
 end
 

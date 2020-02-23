@@ -2,20 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(world:GetLocationAt(-2,0))",
-			"print(world:GetLocationAt(-4,0))",
-			"print(world:GetLocationAt(-3,0))",
-			"print(world:GetLocationAt(-3,-1))",
-			"print(world:GetLocationAt(-3,1))",
-			"print(tostring(world:GetLocationAt(-3,1)))",
-			"print(t)",
-			"print(t.available_exits[1])",
-			"print(OffsetExit( t.x, t.y, t.available_exits[1]))",
-			"print(OffsetExit( t.x, t.y, t.available_exits[2]))",
-			"print(tostring(world:GetLocationAt(-3,1)))",
-			"print(t:CountAvailableExits())",
-			"wg = WorldGen(world); print(wg:CountSpaces(0, 0, 99 ))",
-			"wg = WorldGen(world); print(wg:CountSpace(0, 0, 99 ))",
 			"wg = WorldGen(world); print(wg:CountSpace(-1,-1, 99 ))",
 			"wg = WorldGen(world); print(wg:CountSpace(1, 0, 99 ))",
 			"wg = WorldGen(world); print(wg:CountSpace(6, 0, 99 ))",
@@ -33,7 +19,21 @@ return {
 			"print(t:IsTimeForShift())",
 			"print(t:IsTimeForShift( world:GetDateTime() ))",
 			"DBG(t)",
-			"print(t:IsTimeForShift( world:GetDateTime() ))"
+			"print(t:IsTimeForShift( world:GetDateTime() ))",
+			"print( player:GetAspect( STAT.HEALTH ))",
+			"orc = t",
+			"world.history.file:close()",
+			"print( love.filesystem.getWorkingDirectory())",
+			"print( love.filesystem.read( \"TODO.txt\" ))",
+			"fl = love.fileesystem.newFile( \"foobar.txt\" )",
+			"fl = love.filesystem.newFile( \"foobar.txt\" )",
+			"print(fl)",
+			"fl:open( \"w\" )",
+			"fl:write(\"FOOBAR!\")",
+			"fl:close()",
+			"print(fl:getFilename())",
+			"print(fl:isOpen())",
+			"print(love.filesystem.getIdentity())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

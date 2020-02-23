@@ -90,7 +90,6 @@ function Behaviour:OnTickBehaviour()
 				active_verb = verb
 
 			elseif verb:CanInteract( self.owner ) then
-				self.owner:DoVerbAsync( verb )
 				active_verb = verb
 			end
 
@@ -101,6 +100,10 @@ function Behaviour:OnTickBehaviour()
 				verb:Cancel()
 			end
 		end
+	end
+
+	if active_verb and not self.owner:IsDoing( active_verb ) then
+		self.owner:DoVerbAsync( active_verb )
 	end
 
 	self:ScheduleNextTick()

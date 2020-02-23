@@ -48,7 +48,10 @@ function Agent:OnSpawn( world )
 end
 
 function Agent:OnDespawn()
+	self.world:Log( "Despawned: {1}", self )
+
 	self:WarpToNowhere()
+	assert( self.verbs == nil )
 
 	Entity.OnDespawn( self )
 end
@@ -388,6 +391,7 @@ local function WarpToLocation( self, location )
 		self.location = nil
 	end
 
+	self:CancelInvalidVerbs()
 	self:RegenVerbs()
 
 	if location then

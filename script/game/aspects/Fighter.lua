@@ -9,6 +9,8 @@ function Fighter:init()
 	self.species = SPECIES.HUMAN
 	
 	self:GainAspect( Aspect.Behaviour() )
+	self:GainAspect( Aspect.Combat() )
+	self:GainAspect( Skill.Fighter() )
 end
 
 function Fighter:GetTitle()
