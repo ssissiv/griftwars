@@ -122,6 +122,7 @@ function City:SpawnMilitary()
 	local room = Location()
 	room:SetDetails( "War Chambers", "An open room crammed with old tech and metal debris.")
 	room:GainAspect( Feature.StrategicPoint() )
+	room:GainAspect( Aspect.Faction( self.faction ))
 
 	local structure = Structure()
 	structure:WarpToLocation( self:RandomRoad() )

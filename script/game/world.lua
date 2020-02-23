@@ -10,6 +10,10 @@ function World:init()
 	self.relationships = {}
 	self.factions = {}
 
+	-- self.rng = love.math.newRandomGenerator( 3418323524, 20529293 )
+	self.rng = love.math.newRandomGenerator( 5235235, 120912 )
+	print( "WorldGen seeds:", self.rng:getSeed() )
+
 	self.limbo = Location()
 	self.limbo:SetDetails( "Limbo", "Implementation room." )
 	self:SpawnLocation( self.limbo )
@@ -105,6 +109,39 @@ end
 function World:SpawnAgent( agent, location )
 	assert( is_instance( agent, Agent ))
 	return self:SpawnEntity( agent, location )
+end
+
+function World:RequireAgent( ctor, pred )
+	local t = ObtainWorkTable()
+	for i, agent in ipairs( self.agents ) do
+		if pred( agent ) then
+			table.insert( t, agent )
+		end
+	end
+	local agent = self:ArrayPick( t )
+	ReleaseWorkTable( t )
+
+	if agent == nil then
+		agent = ctor( self )
+		assert( agent:IsSpawned(), "Not spawned" )
+	end
+
+	return agent
+
+end
+
+function World:Random( a, b )
+	if a == nil and b == nil then
+		return self.rng:random()
+	elseif b == nil then
+		return self.rng:random( a )
+	else
+		return self.rng:random( a, b )
+	end
+end
+
+function World:ArrayPick( t )
+	return t[ self:Random( #t ) ]
 end
 
 function World:AllAgents()

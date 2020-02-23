@@ -15,6 +15,17 @@ function Skill:AddTrainingReq( req )
 	table.insert( self.training_reqs, req )
 end
 
+function Skill:CanLearnSkill( actor )
+	for i, req in ipairs( self.training_reqs ) do
+		local ok, reason = req:IsSatisfied( actor )
+		if not ok then
+			return false, reason
+		end
+	end
+
+	return true
+end
+
 function Skill:Clone()
 	local clone = setmetatable( table.shallowcopy( self ), self._class )
 	clone.owner = nil -- Not transferrable.
@@ -24,6 +35,10 @@ end
 function Skill:GetName()
 	return self.name or self._classname
 end
+
+---------------------------------------------------------------
+
+local Fighter = class( "Skill.Fighter", Skill )
 
 ---------------------------------------------------------------
 

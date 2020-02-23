@@ -26,7 +26,7 @@ function Job:GetShortDesc( viewer )
 end
 
 function Job:RenderAgentDetails( ui, screen )
-	local job = self.agent:GetAspect( Job )
+	local job = self.owner:GetAspect( Job )
 	if job then
 		ui.Text( "Job:" )
 		ui.SameLine( 0, 5 )
@@ -40,7 +40,7 @@ function Job:RenderAgentDetails( ui, screen )
 		end
 		local hire_time = job:GetHireTime()
 		if hire_time then
-			local now = self.agent.world:GetDateTime()
+			local now = self.owner.world:GetDateTime()
 			ui.Text( loc.format( "  Hired for: {1}", Calendar.FormatDuration( now - hire_time )))
 		end
 	end
@@ -83,6 +83,7 @@ end
 function Job:SetShiftHours( start_time, end_time )
 	self.start_time = start_time
 	self.end_time = end_time
+	assert( self.end_time > self.start_time )
 end
 
 function Job:IsTimeForShift( datetime )
@@ -166,7 +167,9 @@ function Job:Interact()
 		if self.travel == nil then
 			self.travel = Verb.Travel( actor )
 		end
-		self.travel:DoVerb( actor, self:GetLocation() )
+		if self:GetLocation() then
+			self.travel:DoVerb( actor, self:GetLocation() )
+		end
 
 		if actor:GetLocation() == self:GetLocation() then
 			Msg:Speak( actor, "Time for work!" )

@@ -2,14 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(screen:ScreenToTile( 400, 0 ))",
-			"print(screen:ScreenToTile( 400, 400 ))",
-			"print(GetGUI():GetSize())",
-			"print(screen:ScreenToTile( 400, 300 ))",
-			"print(screen.camera.y)",
-			"print(screen.camera.x)",
-			"print(screen.camera.y)",
-			"print(t:CountAvailableExits())",
 			"print(world:GetLocationAt(-2,0))",
 			"print(world:GetLocationAt(-4,0))",
 			"print(world:GetLocationAt(-3,0))",
@@ -33,7 +25,15 @@ return {
 			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random( 10, 20 ))",
 			"rng = love.math.newRandomGenerator(); print( rng, rng:random(), rng:random())",
 			"print(t:FindStrategicPoint())",
-			"print(t:FindStrategicPoint( t.owner ))"
+			"print(t:FindStrategicPoint( t.owner ))",
+			"t:Recruit()",
+			"print( world.names )",
+			"print( #world.names.names )",
+			"print(t:GetLocation() )",
+			"print(t:IsTimeForShift())",
+			"print(t:IsTimeForShift( world:GetDateTime() ))",
+			"DBG(t)",
+			"print(t:IsTimeForShift( world:GetDateTime() ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

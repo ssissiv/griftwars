@@ -293,6 +293,15 @@ function MakeEnum(args)
     return enum, array
 end
 
+function MakeArrayFromEnum( enum )
+    local t = {}
+    for k, v in pairs( enum ) do
+        table.insert( t, k )
+    end
+    table.sort( t )
+    return t
+end
+
 function AppendEnum(enum, args)
     setmetatable( enum, nil )
     if type(args) == "table" then

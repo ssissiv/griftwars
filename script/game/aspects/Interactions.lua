@@ -246,11 +246,9 @@ function TrainSkill:CanInteract( actor )
 		return false, "Already known."
 	end
 
-	for i, req in self.skill:TrainingReqs() do
-		local ok, reason = req:IsSatisfied( actor )
-		if not ok then
-			return false, reason
-		end
+	local ok, reason = self.skill:CanLearnSkill( actor )
+	if not ok then
+		return reason
 	end
 
 	return TrainSkill._base.CanInteract( self, actor )

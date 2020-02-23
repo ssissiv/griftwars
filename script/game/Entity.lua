@@ -11,10 +11,6 @@ function Entity:ListenForEvent( event, listener, fn, priority )
 	self:GetEvents():ListenForEvent( event, listener, fn, priority )
 end
 
-function Entity:ListenForEvent( event, listener, fn, priority )
-	self:GetEvents():ListenForEvent( event, listener, fn, priority )
-end
-
 function Entity:RemoveListener( listener )
 	local events = self:GetEvents()
 	events:RemoveListener( listener )

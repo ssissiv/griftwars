@@ -2,23 +2,14 @@ local WorldGen = class( "WorldGen" )
 
 function WorldGen:init( world )
 	self.world = world
-	-- self.rng = love.math.newRandomGenerator( 3418323524, 20529293 )
-	self.rng = love.math.newRandomGenerator( 5235235, 120912 )
-	print( "WorldGen seeds:", self.rng:getSeed() )
 end
 
 function WorldGen:Random( a, b )
-	if a == nil and b == nil then
-		return self.rng:random()
-	elseif b == nil then
-		return self.rng:random( a )
-	else
-		return self.rng:random( a, b )
-	end
+	return self.world:Random( a, b )
 end
 
 function WorldGen:ArrayPick( t )
-	return t[ self:Random( #t ) ]
+	return self.world:ArrayPick( t )
 end
 
 function WorldGen:Sprout( room, fn, ... )

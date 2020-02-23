@@ -28,12 +28,20 @@ end
 function Agent:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
+	if self.species == SPECIES.NONE then
+		self.species = world:ArrayPick( SPECIES_ARRAY )
+	end
+
 	if self.name == nil and SPECIES_PROPS[ self.species ].name_pool then
 		self.name = world:GetAspect( Aspect.NamePool ):PickName()
 	end
 	
 	if self.gender == nil then
 		self.gender = math.random() < 0.5 and GENDER.MALE or GENDER.FEMALE
+	end
+	
+	if self.OnAgentEvent then
+		self:ListenForAny( self, self.OnAgentEvent )
 	end
 	
 	world:Log( "Spawned: {1}", self )
@@ -539,6 +547,12 @@ function Agent:Kill()
 	Msg:ActToRoom( "{1.Id} dies!", self )
 	Msg:Echo( self, "You die!" )
 	self.world:DespawnEntity( self )
+
+	self:GainAspect( Aspect.Killed() )
+end
+
+function Agent:IsDead()
+	return self:HasAspect( Aspect.Killed() )
 end
 
 function Agent:GetStatValue( stat )

@@ -83,6 +83,9 @@ AFFINITY = MakeEnum
 
 SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC" }
 
+SPECIES_ARRAY = MakeArrayFromEnum( SPECIES )
+table.arrayremove( SPECIES_ARRAY, SPECIES.NONE )
+
 SPECIES_PROPS =
 {
 	NONE =

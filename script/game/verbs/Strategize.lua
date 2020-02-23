@@ -1,4 +1,6 @@
 
+AppendEnum( AGENT_EVENT, "STRATEGIZE" )
+
 local Strategize = class( "Verb.Strategize", Verb )
 
 function Strategize:init( actor )
@@ -26,7 +28,9 @@ function Strategize:FindStrategicPoint( actor )
 	local pts = {}
 	local function IsStrategicPoint( location, depth )
 		if location:HasAspect( Feature.StrategicPoint ) then
-			table.insert( pts, location )
+			if not actor:IsAlly( location ) then
+				table.insert( pts, location )
+			end
 		end
 		return depth < 12
 	end
@@ -46,6 +50,9 @@ function Strategize:Interact( actor )
 		if self.target then
 			Msg:Speak( actor, "We must target {1}!", self.target )
 		end
+
+		actor:BroadcastEvent( AGENT_EVENT.STRATEGIZE, self.target )
+		actor:RecruitAll()
 
 		self:YieldForTime( ONE_HOUR )
 	end
