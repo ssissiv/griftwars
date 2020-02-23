@@ -8,6 +8,17 @@ function History:init()
 	self.count = 0
 end
 
+function History:SaveToFile( filename )
+	local file, err = love.filesystem.newFile( filename, "w" )
+	if not file then
+		print( "SaveToFile failed", filename, err )
+		return
+	end
+
+	self.file = file
+end
+
+
 function History:Log( fmt, ... )
 	local item = { fmt, ... }
 
@@ -24,6 +35,13 @@ function History:Log( fmt, ... )
 	while self.count > MAX_SIZE do
 		self.head = self.head.next
 		self.count = self.count - 1
+	end
+
+	if self.file then
+        local txt = loc.format( fmt, ... )
+        self.file:write( txt )
+        self.file:write( "\n" )
+        self.file:flush()
 	end
 end
 

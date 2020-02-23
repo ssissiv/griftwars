@@ -19,6 +19,7 @@ function World:init()
 	self:SpawnLocation( self.limbo )
 
 	self.history = self:GainAspect( Aspect.History() )
+	self.history:SaveToFile( "log.txt" )
 	self.map = self:GainAspect( Aspect.WorldMap() )
 
 	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
@@ -112,14 +113,18 @@ function World:SpawnAgent( agent, location )
 end
 
 function World:RequireAgent( ctor, pred )
-	local t = ObtainWorkTable()
-	for i, agent in ipairs( self.agents ) do
-		if pred( agent ) then
-			table.insert( t, agent )
+	local agent
+	
+	if pred then
+		local t = ObtainWorkTable()
+		for i, agent in ipairs( self.agents ) do
+			if pred( agent ) then
+				table.insert( t, agent )
+			end
 		end
+		agent = self:ArrayPick( t )
+		ReleaseWorkTable( t )
 	end
-	local agent = self:ArrayPick( t )
-	ReleaseWorkTable( t )
 
 	if agent == nil then
 		agent = ctor( self )
