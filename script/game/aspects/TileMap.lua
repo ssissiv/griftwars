@@ -1,10 +1,10 @@
-local WorldMap = class( "Aspect.WorldMap", Aspect )
+local TileMap = class( "Aspect.TileMap", Aspect )
 
-function WorldMap:init()
+function TileMap:init()
 	self.grid = {} -- array of arrays.
 end
 
-function WorldMap:AssignToGrid( location )
+function TileMap:AssignToGrid( location )
 	local x, y = location:GetCoordinate()
 
 	local row = self.grid[ y ]
@@ -22,7 +22,7 @@ function WorldMap:AssignToGrid( location )
 	end
 end
 
-function WorldMap:UnassignFromGrid( location )
+function TileMap:UnassignFromGrid( location )
 	local x, y = location:GetCoordinate()
 	local t = self.row[ y ][ x ]
 	if t == location then
@@ -39,7 +39,7 @@ function WorldMap:UnassignFromGrid( location )
 	end
 end
 
-function WorldMap:LookupGrid( x, y )
+function TileMap:LookupGrid( x, y )
 	local row = self.grid[ y ]
 	if row then
 		local t = row [ x ]

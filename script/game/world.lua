@@ -20,7 +20,7 @@ function World:init()
 
 	self.history = self:GainAspect( Aspect.History() )
 	self.history:SaveToFile( "log.txt" )
-	self.map = self:GainAspect( Aspect.WorldMap() )
+	self.map = self:GainAspect( Aspect.TileMap() )
 
 	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
 	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )

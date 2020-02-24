@@ -42,7 +42,7 @@ function Location:OnSpawn( world )
 	end
 
 	if self.x and self.y then
-		world:GetAspect( Aspect.WorldMap ):AssignToGrid( self )
+		world:GetAspect( Aspect.TileMap ):AssignToGrid( self )
 	end
 end
 
@@ -50,7 +50,7 @@ function Location:OnDespawn()
 	Entity.OnDespawn( self )
 
 	if self.x and self.y then
-		self.world:GetAspect( Aspect.WorldMap ):UnassignFromGrid( self )
+		self.world:GetAspect( Aspect.TileMap ):UnassignFromGrid( self )
 	end
 end
 
@@ -61,7 +61,7 @@ end
 
 function Location:SetCoordinate( x, y, z )
 	if self.x then
-		world:GetAspect( Aspect.WorldMap ):UnassignFromGrid( self )
+		world:GetAspect( Aspect.TileMap ):UnassignFromGrid( self )
 	end
 
 	self.x = x
@@ -69,7 +69,7 @@ function Location:SetCoordinate( x, y, z )
 	self.z = z
 
 	if self.world and self.x and self.y then
-		world:GetAspect( Aspect.WorldMap ):AssignToGrid( self )
+		world:GetAspect( Aspect.TileMap ):AssignToGrid( self )
 	end		
 end
 
