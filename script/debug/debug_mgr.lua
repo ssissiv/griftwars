@@ -32,7 +32,6 @@ function DebugManager:init()
 	self.debug_bindings = {}
 	self.debug_panels = {}
 
-	self:LoadDebugInspectors()
 	self:LoadConsoleSettings()
 
 	self.print_history = {}

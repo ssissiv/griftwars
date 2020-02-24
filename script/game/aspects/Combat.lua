@@ -59,7 +59,7 @@ function Combat:EvaluateTarget( target )
 	end
 	if not combat:IsTarget( self.owner ) then
 		-- TEMP. orcs attacksssss
-		if self.owner.species ~= SPECIES.ORC or target.species == SPECIES.ORC then
+		if not self.owner:IsEnemy( target ) then
 			return false
 		end
 	end

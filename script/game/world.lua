@@ -39,6 +39,13 @@ end
 
 function World:CreateFaction( name )
 	local faction = FactionData( name )
+	for i, f in ipairs( self.factions ) do
+		if self:Random() < 0.8 then
+			f:AddTag( faction, FACTION_TAG.ENEMY )
+			faction:AddTag( f, FACTION_TAG.ENEMY )
+		end
+	end
+
 	table.insert( self.factions, faction )
 	return faction
 end

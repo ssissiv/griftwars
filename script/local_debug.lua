@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"fl:open( \"w\" )",
-			"fl:write(\"FOOBAR!\")",
-			"fl:close()",
-			"print(fl:getFilename())",
 			"print(fl:isOpen())",
 			"print(love.filesystem.getIdentity())",
 			"print(t:GetLocation())",
@@ -33,7 +29,11 @@ return {
 			"print(t)",
 			"DBG(v:FindStrategicPoint(t))",
 			"DBG(t:FindStrategicPoint())",
-			"print( t.RenderAgentDetails )"
+			"print( t.RenderAgentDetails )",
+			"print(puppet:IsEnemy(t))",
+			"print(t:IsEnemy(puppet))",
+			"print(t:EvaluateTarget( puppet ))",
+			"DBG(world.factions)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

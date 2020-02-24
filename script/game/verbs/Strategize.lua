@@ -39,7 +39,7 @@ function Strategize:FindStrategicPoint( actor )
 
 	actor.location:Flood( IsStrategicPoint )
 
-	if #assault_pts > 0 and self.world:Random() > 0.0 then
+	if #assault_pts > 0 and self:GetWorld():Random() > 0.0 then
 		return self:GetWorld():ArrayPick( assault_pts )
 	else
 		return self:GetWorld():ArrayPick( defend_pts )
@@ -56,7 +56,7 @@ function Strategize:Interact( actor )
 		if self.target then
 			if actor:IsEnemy( self.target ) then
 				Msg:Speak( actor, "We must assault {1}!", self.target )
-				Msg:Speak( actor, "The {1} must be stopped.", self.target:GetAspect( Aspect.Faction ):GetName() )
+				Msg:Speak( actor, "{1} must be stopped.", self.target:GetAspect( Aspect.Faction ):GetName() )
 			elseif self.target == actor.location then
 				Msg:Speak( actor, "We will occupy this location." )
 			else

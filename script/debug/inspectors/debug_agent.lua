@@ -9,6 +9,13 @@ end
 function DebugAgent:RenderPanel( ui, panel, dbg )
 	ui.Text( tostring(self.agent) )
 	
+	local faction = self.agent:GetAspect( Aspect.Faction )
+	if faction then
+		ui.Text( "Faction:" )
+		ui.SameLine( 0, 5 )
+		panel:AppendTable( ui, faction.faction )
+	end
+
 	if not self.agent:IsPuppet() then
 		if self.agent:GetLocation() then
 			if ui.Button( loc.format( "Warp To {1}", self.agent:GetLocation()) ) then

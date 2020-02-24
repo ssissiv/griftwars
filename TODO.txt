@@ -1,6 +1,9 @@
 TODO
 ====
 
+* More strategic points, capturing strat points.
+* Map render from puppet POV : show ally/enemies, etc.
+
 * Return to AI Schedules.  Need predictability.
 * move exits array into a .Nav aspect?
 
