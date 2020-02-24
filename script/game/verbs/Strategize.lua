@@ -25,11 +25,13 @@ function Strategize:CalculateUtility( actor )
 end
 
 function Strategize:FindStrategicPoint( actor )
-	local pts = {}
+	local assault_pts, defend_pts = {}, {}
 	local function IsStrategicPoint( location, depth )
 		if location:HasAspect( Feature.StrategicPoint ) then
-			if not actor:IsAlly( location ) then
-				table.insert( pts, location )
+			if actor:IsEnemy( location ) then
+				table.insert( assault_pts, location )
+			elseif actor:IsAlly( location ) then
+				table.insert( defend_pts, location )
 			end
 		end
 		return depth < 12
@@ -37,7 +39,11 @@ function Strategize:FindStrategicPoint( actor )
 
 	actor.location:Flood( IsStrategicPoint )
 
-	return table.arraypick( pts )
+	if #assault_pts > 0 and self.world:Random() > 0.0 then
+		return self:GetWorld():ArrayPick( assault_pts )
+	else
+		return self:GetWorld():ArrayPick( defend_pts )
+	end
 end
 
 function Strategize:Interact( actor )
@@ -48,12 +54,21 @@ function Strategize:Interact( actor )
 
 		self.target = self:FindStrategicPoint( actor )
 		if self.target then
-			Msg:Speak( actor, "We must target {1}!", self.target )
+			if actor:IsEnemy( self.target ) then
+				Msg:Speak( actor, "We must assault {1}!", self.target )
+				Msg:Speak( actor, "The {1} must be stopped.", self.target:GetAspect( Aspect.Faction ):GetName() )
+			elseif self.target == actor.location then
+				Msg:Speak( actor, "We will occupy this location." )
+			else
+				Msg:Speak( actor, "We will occupy {1}.", self.target )
+			end
+		else
+			DBG( actor )
 		end
 
 		actor:BroadcastEvent( AGENT_EVENT.STRATEGIZE, self.target )
 		actor:RecruitAll()
 
-		self:YieldForTime( ONE_HOUR )
+		self:YieldForTime( HALF_DAY )
 	end
 end

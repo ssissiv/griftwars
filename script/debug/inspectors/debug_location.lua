@@ -7,12 +7,20 @@ function DebugLocation:init( location )
 end
 
 function DebugLocation:RenderPanel( ui, panel, dbg )
+    local faction = self.location:GetAspect( Aspect.Faction )
+    if faction then
+        ui.Text( "Faction:" )
+        ui.SameLine( 0, 10 )
+        panel:AppendTable( ui, faction.faction )
+    end
+
 	if ui.Button( "Warp To" ) then
 		self.location.world:DoAsync( function( world ) world:GetPuppet():WarpToLocation( self.location ) end )
 	end
     
     ui.Separator()
 
+    ui.Text( "Exits:" )
     local count = 0
     for i, exit in self.location:Exits() do
         local dest, addr = exit:GetDest( self.location )

@@ -327,7 +327,11 @@ function Location:Contents()
 end
 
 function Location:GetTitle()
-	return self.title or "No Title"
+	if type(self.title) == "function" then
+		return self.title( self )
+	else
+		return self.title or "No Title"
+	end
 end
 
 function Location:GetDesc()

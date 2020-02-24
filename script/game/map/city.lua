@@ -119,8 +119,11 @@ function City:SpawnTavern()
 end
 
 function City:SpawnMilitary()
+	local function GetName( room )
+		return loc.format( "War Chambers of {1}", room:GetAspect( Aspect.Faction ):GetName() )
+	end
 	local room = Location()
-	room:SetDetails( "War Chambers", "An open room crammed with old tech and metal debris.")
+	room:SetDetails( GetName, "An open room crammed with old tech and metal debris.")
 	room:GainAspect( Feature.StrategicPoint() )
 	room:GainAspect( Aspect.Faction( self.faction ))
 

@@ -278,6 +278,7 @@ TOKEN_TO_FACE =
 	},
 }
 
+FACTION_TAG = MakeEnum{ "ENEMY", "ALLY" }
 
 INFO = MakeEnum
 {

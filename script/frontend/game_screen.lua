@@ -201,6 +201,14 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 	end
 
 	ui.Text( location:GetTitle() )
+	if puppet:IsEnemy( location ) then
+		ui.SameLine( 0, 10 )
+		ui.TextColored( 255, 0, 0, 255, "(Enemy)")
+	elseif puppet:IsAlly( location ) then
+		ui.SameLine( 0, 10 )
+		ui.TextColored( 255, 255, 0, 255, "(Ally)")
+	end
+
 	if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
 		ui.SameLine( 0, 10 )
 		if ui.SmallButton( "!") then
@@ -230,13 +238,20 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 			else
 				ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
 			end
+
+			if puppet:IsEnemy( obj ) then
+				ui.SameLine( 0, 5 )
+				ui.TextColored( 255, 255, 255, 255, "(Enemy)" )
+			elseif puppet:IsAlly( obj ) then
+				ui.SameLine( 0, 5 )
+				ui.TextColored( 255, 255, 0, 255, "(Ally)" )
+			end
 	
 			if puppet:IsBusy() then
 				if combat and combat:IsTarget( puppet ) then
 					ui.Text( desc )
 				else
 					ui.Text( desc )
---					ui.TextColored( 1, 0, 0, 1, desc )
 				end
 			elseif ui.Selectable( desc, puppet:GetFocus() == obj ) then
 				puppet:SetFocus( obj )

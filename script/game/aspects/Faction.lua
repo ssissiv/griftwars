@@ -2,18 +2,28 @@ local FactionData = class( "FactionData" )
 
 function FactionData:init( name )
 	self.name = name
-	self.enemies = {}
-	self.allies = {}
+	self.tags = {}
 end
 
-function FactionData:AddEnemy( enemy )
-	table.insert( self.enemies, enemy )
-	table.insert( enemy.enemies, self )
+function FactionData:HasTag( faction, tag )
+	assert( IsEnum( tag, FACTION_TAG ))
+	local t = self.tags[ faction ]
+	return t and table.contains( t, tag )
 end
 
-function FactionData:AddAlly( ally )
-	table.insert( self.allies, ally )
-	table.insert( ally.allies, self )
+function FactionData:AddTag( faction, tag )
+	assert( IsEnum( tag, FACTION_TAG ))
+	local t = self:AffirmFaction( faction )
+	table.insert_unique( t, tag )
+end
+
+function FactionData:AffirmFaction( faction )
+	local t = self.tags[ faction ]
+	if t == nil then
+		t = {}
+		self.tags[ faction ] = t
+	end
+	return t
 end
 
 function FactionData:__tostring()
@@ -35,14 +45,20 @@ end
 
 function Faction:IsEnemy( other )
 	assert( is_instance( other, Faction ))
-	return table.contains( self.faction.enemies, other )
+	return self.faction:HasTag( other.faction, FACTION_TAG.ENEMY )
 end
 
 function Faction:IsAlly( other )
 	assert( is_instance( other, Faction ))
-	return self.faction == other.faction or table.contains( self.faction.allies, other )
+	return self.faction == other.faction or	self.faction:HasTag( other, FACTION_TAG.ALLY )
 end
 
+function Faction:AddEnemy( other )
+	assert( is_instance( other, Faction ))
+	self.faction:AddTag( other.faction, FACTION_TAG.ENEMY )
+end
+
+-- Assign our faction to agent's.
 function Faction:AssignFaction( agent )
 	local faction = agent:GetAspect( Aspect.Faction )
 	if faction then

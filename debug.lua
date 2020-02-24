@@ -1,8 +1,9 @@
+local pts = {}
+local function IsStrategicPoint( location, depth )
+	print( location, depth, rawstring(location))
+	if location:HasAspect( Feature.StrategicPoint ) then
+	end
+	return depth < 4
+end
 
-
-c = Creature.Fieldling()
-world:AddCreature( c ):MoveToTile( cx, cy )
-
-local tile = world.map:GetTile( cx, cy )
-print( tile )
-tile:DeltaProperty( TILE_PROP.CHAOS, 1 )
+puppet.location:Flood( IsStrategicPoint )	
