@@ -5,6 +5,7 @@ function Combat:init()
 end
 
 function Combat:OnSpawn( world )
+	Aspect.OnSpawn( self, world )
 	self:EvaluateTargets()
 	self.owner:ListenForEvent( AGENT_EVENT.LOCATION_CHANGED, self, self.OnLocationChanged )
 	self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
@@ -85,6 +86,7 @@ end
 function Combat:AddTarget( target )
 	assert( not table.contains( self.targets, target ))
 	table.insert( self.targets, target )
+
 	if #self.targets == 1 then
 		Msg:Echo( target, loc.format( "{1.Id} charges you!", self.owner:LocTable( target )))
 		Msg:Echo( self.owner, loc.format( "You charge {1.Id}!", target:LocTable( self.owner )))
@@ -96,6 +98,7 @@ function Combat:AddTarget( target )
 	end
 
 	self.owner:RegenVerbs()
+	self.owner:CancelInvalidVerbs()
 
 	local combat = target:GetAspect( Aspect.Combat )
 	if not combat:IsTarget( self.owner ) then

@@ -51,7 +51,13 @@ function Agent:OnDespawn()
 	self.world:Log( "Despawned: {1}", self )
 
 	self:WarpToNowhere()
-	assert( self.verbs == nil )
+
+	if self.verbs then
+		for i = #self.verbs, 1, -1 do
+			local verb = self.verbs[i]
+			verb:Cancel()
+		end
+	end
 
 	Entity.OnDespawn( self )
 end

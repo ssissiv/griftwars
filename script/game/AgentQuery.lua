@@ -20,6 +20,11 @@ function Agent:CanLearnSkill( skill )
 	end
 end
 
+function Agent:InCombat()
+	local combat = self:GetAspect( Aspect.Combat )
+	return combat and combat:HasTargets()
+end
+
 function Agent:IsEmployed()
 	return self:HasAspect( Job )
 end

@@ -2,13 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(fl:isOpen())",
-			"print(love.filesystem.getIdentity())",
-			"print(t:GetLocation())",
-			"print( location )",
-			"print( puppet.location)",
-			"print( pupp,et puppet.location)",
-			"print( puppet puppet.location)",
 			"print( puppet, puppet.location)",
 			"print( puppet, puppet:IsEnemy( puppet.location), puppet.location)",
 			"print( puppet, puppet:IsEnemy( puppet.location), puppet.location:GetAspect( Aspect.Faction ))",
@@ -33,7 +26,14 @@ return {
 			"print(puppet:IsEnemy(t))",
 			"print(t:IsEnemy(puppet))",
 			"print(t:EvaluateTarget( puppet ))",
-			"DBG(world.factions)"
+			"DBG(world.factions)",
+			"t:GetAspect( Aspect.Combat ):EvaluateTarets()",
+			"t:GetAspect( Aspect.Combat ):EvaluateTargets()",
+			"print(t:IsDoing())",
+			"print(t.owner)",
+			"print(t.owner:IsBusy(VERB_FLAGS.MOVEMENT))",
+			"print(t:CanInteract())",
+			"print(t:CanInteract(t.actor))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

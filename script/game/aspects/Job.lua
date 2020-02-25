@@ -167,14 +167,20 @@ function Job:Interact()
 		if self.travel == nil then
 			self.travel = Verb.Travel( actor )
 		end
-		if self:GetLocation() then
-			self.travel:DoVerb( actor, self:GetLocation() )
+		local job_location = self:GetLocation()
+		if job_location and actor:GetLocation() ~= job_location then
+			local ok, reason = self.travel:DoVerb( actor, job_location )
+			if actor:GetLocation() == self:GetLocation() then
+				Msg:Speak( actor, "Time for work!" )
+			end
 		end
 
 		if actor:GetLocation() == self:GetLocation() then
-			Msg:Speak( actor, "Time for work!" )
-
-			self:YieldForTime( self:GetShiftDuration() )
+			if self.DoJob then
+				self:DoJob()
+			else
+				self:YieldForTime( self:GetShiftDuration() )
+			end
 
 			if not self:IsCancelled() then
 				actor:GainXP( 5 )

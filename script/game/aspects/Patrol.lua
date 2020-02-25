@@ -28,6 +28,15 @@ function Patrol:RenderAgentDetails( ui, screen, viewer )
 	end
 end
 
+function Patrol:DoJob()
+	if self.owner:IsEnemy( self.owner:GetLocation() ) then
+		Msg:Speak( self.owner, "Stay alert! We're in enemy territory." )
+	else
+		Msg:Speak( self.owner, "Holding this location." )
+	end
+	self:YieldForTime( ONE_HOUR )
+end
+
 function Patrol:GetName()
 	local faction = self.employer:GetAspect( Aspect.Faction )
 	if faction then

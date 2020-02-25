@@ -187,7 +187,7 @@ function Verb:DoVerb( actor, ... )
 	local ok, reason = self:CanInteract( actor, ... )
 	if not ok then
 		-- print( "CANT DO", actor, self, reason )
-		return false
+		return false, reason
 	end
 
 	if not actor:HasAspect( self ) then
@@ -209,7 +209,7 @@ function Verb:DoVerb( actor, ... )
 	self:Interact( actor, ... )
 
 	if self.yield_ev then
-		self.actor.world:UnscheduleEvent( self.yield_ev )
+		actor.world:UnscheduleEvent( self.yield_ev )
 		self.yield_ev = nil
 	end
 
@@ -239,6 +239,11 @@ function Verb:Cancel()
 	end
 
 	self.cancelled = true
+
+	if self.transient then
+		self.transient = nil
+		self.actor:LoseAspect( self )
+	end
 
 	-- print ( "CANCEL", self, self.actor, debug.traceback())
 	if self.yield_ev then
@@ -276,14 +281,18 @@ function Verb:Resume( coro )
 	self.yield_ev = nil
 	self.yield_duration = nil
 
-	local ok, result = coroutine.resume( coro )
-	if not ok then
-		error( tostring(result) .. "\n" .. debug.traceback( coro ))
-	elseif coroutine.status( coro ) == "suspended" then
-		-- Waiting.
+	if not self:CanInteract( self.actor ) then
+		self:Cancel()
 	else
-		-- Done!
-		-- print( "DONE", self, coroutine.status(coro))
+		local ok, result = coroutine.resume( coro )
+		if not ok then
+			error( tostring(result) .. "\n" .. debug.traceback( coro ))
+		elseif coroutine.status( coro ) == "suspended" then
+			-- Waiting.
+		else
+			-- Done!
+			-- print( "DONE", self, coroutine.status(coro))
+		end
 	end
 end
 

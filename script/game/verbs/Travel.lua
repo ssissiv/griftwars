@@ -32,7 +32,12 @@ function Travel:CanInteract( actor )
 	if not actor:IsAlert() then
 		return false, "Not Alert"
 	end
-	
+	if not actor:IsSpawned() then
+		return false
+	end
+	if actor:InCombat() then
+		return false, "In combat"
+	end
 	return true
 end
 
