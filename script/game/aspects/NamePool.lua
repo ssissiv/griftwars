@@ -13,6 +13,10 @@ function NamePool:PickName()
 	return table.remove( self.names, math.random( #self.names ))
 end
 
+function NamePool:AddName( name )
+	table.insert( self.names, name )
+end
+
 -----------------------------------------------
 --
 

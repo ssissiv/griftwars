@@ -69,3 +69,9 @@ function Faction:AssignFaction( agent )
 
 	return faction -- return agent's Aspect.Faction
 end
+
+
+function Faction:__tostring()
+	return string.format( "%s [%s]", self._classname, tostring(self.faction))
+end
+

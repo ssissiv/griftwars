@@ -50,6 +50,10 @@ end
 function Agent:OnDespawn()
 	self.world:Log( "Despawned: {1}", self )
 
+	if self.name then
+		self.world.names:AddName( self.name )
+	end
+
 	self:WarpToNowhere()
 
 	if self.verbs then
@@ -553,6 +557,8 @@ function Agent:Kill()
 	if self:IsPuppet() then
 		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
 	end
+
+	print( self, self:GetAspect(  Aspect.Faction ), "died!" )
 
 	Msg:ActToRoom( "{1.Id} dies!", self )
 	Msg:Echo( self, "You die!" )

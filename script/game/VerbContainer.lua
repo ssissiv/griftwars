@@ -77,8 +77,11 @@ function VerbContainer:Verbs()
 	return ipairs( self.verbs )
 end
 
-function VerbContainer:ClearVerbs()
-	table.clear( self.verbs )
+function VerbContainer:CancelVerbs()
+	for i = #self.verbs, 1, -1 do
+		self.verbs[i]:Cancel()
+		table.remove( self.verbs, i )
+	end
 end
 
 function VerbContainer:PickRandom()
