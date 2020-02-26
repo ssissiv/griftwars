@@ -254,7 +254,11 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 					ui.Text( desc )
 				end
 			elseif ui.Selectable( desc, puppet:GetFocus() == obj ) then
-				puppet:SetFocus( obj )
+				if puppet:GetFocus() == obj then
+					puppet:SetFocus()
+				else
+					puppet:SetFocus( obj )
+				end
 			end
 			ui.PopStyleColor()
 	

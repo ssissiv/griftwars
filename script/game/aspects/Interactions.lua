@@ -1,4 +1,14 @@
 
+function Agent:GainTrustedInteractions( t )
+	table.shuffle( t )
+	for i, v in ipairs( t ) do
+		assert( is_instance( v, Aspect.Interaction ))
+
+		v:ReqTrust( i * math.floor( 100 / #t ))
+		self:GainAspect( v )
+	end
+end
+
 local Interaction = class( "Aspect.Interaction", Aspect )
 
 function Interaction:init()
@@ -184,24 +194,33 @@ local IntroduceAgent = class( "Interaction.IntroduceAgent", Befriend )
 
 function IntroduceAgent:init( friend )
 	Befriend.init( self )
-	assert( is_instance( friend, Agent ))
-	self.friend = friend
+	if is_instance( friend, Agent ) then
+		self.friend = friend
+	elseif is_class( friend ) then
+		self.friend_class = friend
+	end
 end
 
 function IntroduceAgent:OnSuccess( actor )
-	actor:Acquaint( self.friend )
-	Msg:Speak( self.owner, "Listen, {1.Id} is a friend of mine. {1.HeShe} can help you out.", self.friend:LocTable( actor ) )
-
-	local work = self.friend:GetAspect( Job )
-	if work and work:GetLocation() then
-		Msg:Speak( self.owner, "Works over at the {1}.", work:GetLocation():GetTitle() )
-	else
-		if self.friend:GetHome() then
-			Msg:Speak( self.owner, "Lives over at {1}.", self.friend:GetHome():GetLocation():GetTitle() )
-		end
+	if self.friend == nil and self.friend_class then
+		self.friend = actor.world:ArrayPick( actor.world:CreateBucketByClass( self.friend_class ) )
 	end
 
+	if self.friend then
+		actor:Acquaint( self.friend )
+		Msg:Speak( self.owner, "Listen, {1.Id} is a friend of mine. {1.HeShe} can help you out.", self.friend:LocTable( actor ) )
 
+		local work = self.friend:GetAspect( Job )
+		if work and work:GetLocation() then
+			Msg:Speak( self.owner, "Works over at the {1}.", work:GetLocation():GetTitle() )
+		else
+			if self.friend:GetHome() then
+				Msg:Speak( self.owner, "Lives over at {1}.", self.friend:GetHome():GetLocation():GetTitle() )
+			end
+		end
+	else
+		Msg:Speak( self.owner, "Fraid I don't really know anybody." )
+	end
 end
 
 
@@ -224,6 +243,27 @@ function RevealObject:Interact( actor )
 		actor:GetMemory():AddEngram( Engram.LearnWhereabouts( obj ))
 	else
 		Msg:Echo( actor, "{1.Id} reveals nothing of interest.", self.owner:LocTable( actor ) )
+	end
+end
+
+
+
+-----------------------------------------------------------------------------------
+
+local GiftObject = class( "Interaction.GiftObject", Interaction )
+
+function GiftObject:init( obj )
+	Interaction.init( self )
+	self.obj = obj
+end
+
+function GiftObject:Interact( actor )
+	if self.obj then
+		Msg:Speak( self.owner, "Here you go, friend" )
+		actor:GetInventory():AddItem( self.obj )
+		self.obj = nil
+	else
+		Msg:Speak( self.owner, "Sorry, I have nothing for you." )
 	end
 end
 

@@ -94,11 +94,13 @@ function Scavenger:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	self:SetDetails( nil, "Here's a guy.", GENDER.MALE )
 
-	local friend = table.arraypick( world:CreateBucketByClass( Agent.Shopkeeper ) )
-	if friend then
-		self:GainAspect( Interaction.IntroduceAgent( friend ) )
-	end
-	self:GainAspect( Interaction.RevealObject( Object.JunkHeap, 3 ))
+	local interactions =
+	{
+		Interaction.IntroduceAgent( Agent.Shopkeeper ),
+		Interaction.RevealObject( Object.JunkHeap, 3 ),
+		Interaction.GiftObject( Object.Jerky() ),
+	}
+	self:GainTrustedInteractions( interactions )
 end
 
 function Scavenger:OnLocationEntityEvent( event_name, entity, ... )
