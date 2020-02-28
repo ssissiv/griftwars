@@ -12,6 +12,8 @@
 
 local Captain = class( "Agent.Captain", Agent )
 
+Captain.MAP_CHAR = "C"
+
 function Captain:init()
 	Agent.init( self )
 	

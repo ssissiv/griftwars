@@ -1,4 +1,5 @@
 local Object = class( "Object", Entity )
+Object.MAP_CHAR = "."
 
 function Object:init()
 	Entity.init( self )
@@ -7,6 +8,10 @@ end
 
 function Object:GetName()
 	return "object"
+end
+
+function Object:GetMapChar()
+	return self.MAP_CHAR
 end
 
 function Object:GenerateLocTable( viewer )
@@ -90,6 +95,14 @@ end
 
 function Object:DeltaValue( delta )
 	self.value = math.max( self.value + delta, 0 )
+end
+
+function Object:SetCoordinate( x, y )
+	self.x, self.y = x, y
+end
+
+function Object:GetCoordinate()
+	return self.x, self.y
 end
 
 function Object:GetLocation()

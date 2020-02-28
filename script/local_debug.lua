@@ -2,18 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( puppet, puppet.location)",
-			"print( puppet, puppet:IsEnemy( puppet.location), puppet.location)",
-			"print( puppet, puppet:IsEnemy( puppet.location), puppet.location:GetAspect( Aspect.Faction ))",
-			"print( puppet, puppet:IsEnemy( puppet.location), puppet.location:GetAspect( Aspect.Faction ):GetName())",
-			"print(t)",
-			"print(puppet.location:IsAlly( t ))",
-			"print(puppet)",
-			"print(puppet:IsAlly( t ))",
-			"print(not puppet:IsAlly( t ))",
-			"print(puppet:IsAlly( t ))",
-			"print(t)",
-			"print(t:GetAspect( Aspect.StrategicPoint)))",
 			"print(t:GetAspect( Aspect.StrategicPoint))",
 			"print(t)",
 			"DBG(t:FindStrategicPoint())",
@@ -33,7 +21,19 @@ return {
 			"print(t.owner)",
 			"print(t.owner:IsBusy(VERB_FLAGS.MOVEMENT))",
 			"print(t:CanInteract())",
-			"print(t:CanInteract(t.actor))"
+			"print(t:CanInteract(t.actor))",
+			"print( location.map )",
+			"print(puppet.location)",
+			"print(puppet.location.map)",
+			"print(puppet.location.map:LookupGrid( 2, 2 ))",
+			"DBG(location.map)",
+			"print(puppet.location.map:LookupGrid( 2, 2 ))",
+			"print( is_instance( {} ))",
+			"print( is_instance( Entity() ))",
+			"print(puppet.location.map:LookupGrid( 2, 2 ))",
+			"DBG(location.map)",
+			"print(t.image)",
+			"DBG( location.map)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

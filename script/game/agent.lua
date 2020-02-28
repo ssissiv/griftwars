@@ -81,6 +81,10 @@ function Agent:SetMentalState( state )
 	end
 end
 
+function Agent:GetMapChar()
+	return self.MAP_CHAR
+end
+
 function Agent:IsAlert()
 	return self.mental_state == MSTATE.ALERT
 end
@@ -391,6 +395,14 @@ function Agent:Unfriend( other )
 	else
 		affinity:SetAffinity( AFFINITY.UNFRIEND )
 	end
+end
+
+function Agent:SetCoordinate( x, y )
+	self.x, self.y = x, y
+end
+
+function Agent:GetCoordinate()
+	return self.x, self.y
 end
 
 local function WarpToLocation( self, location )

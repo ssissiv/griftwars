@@ -2,7 +2,8 @@ local assets =
 {
 	FONTS =
 	{
-		TITLE = "Ayuthaya.ttf",
+		TITLE = { "Ayuthaya.ttf", 16 },
+		MAP_TILE = { "Ayuthaya.ttf", 48 }
 	},
 
 	AFFINITY_IMG =
@@ -24,9 +25,14 @@ local assets =
 		FOREST = "forest.png",
 	},
 
+	TILE_IMG =
+	{
+		GRASS = "grassland.png",
+	},
+
 	LoadAll = function( self )
-		for k, filename in pairs( self.FONTS ) do
-			self.FONTS[ k ] = love.graphics.newFont( string.format( "data/%s", filename ), 16 )
+		for k, t in pairs( self.FONTS ) do
+			self.FONTS[ k ] = love.graphics.newFont( string.format( "data/%s", t[1] ), t[2] )
 		end
 		 
 		for k, filename in pairs( self.AFFINITY_IMG ) do
@@ -35,6 +41,10 @@ local assets =
 
 		for k, filename in pairs( self.LOCATION_BGS ) do
 			self.LOCATION_BGS[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		end
+
+		for k, filename in pairs( self.TILE_IMG ) do
+			self.TILE_IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
 		end
 	end
 }

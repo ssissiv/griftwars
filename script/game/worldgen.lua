@@ -187,6 +187,7 @@ end
 function WorldGen:GeneratePlayer( world )
 
 	local player = Agent()
+	player.MAP_CHAR = "@"
 	player:SetDetails( "Han", nil, GENDER.MALE )
 	-- player:GainAspect( Skill.Scrounge() )
 	-- player:GainAspect( Skill.Socialize() )

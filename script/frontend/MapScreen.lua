@@ -123,7 +123,7 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 			if tile then
 				local x1, y1 = self.camera:WorldToScreen( tx, ty )
 				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
-				tile:RenderMapTile( self, x1, y1, x2, y2 )
+				tile:RenderLocationOnMap( self, x1, y1, x2, y2 )
 			end
 		end
 	end

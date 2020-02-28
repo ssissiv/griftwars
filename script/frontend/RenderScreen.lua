@@ -20,6 +20,10 @@ function RenderScreen:Box( x, y, w, h )
 	self.render_bounds[4] = h
 end
 
+function RenderScreen:Image( image, w, h, sx, sy )
+	love.graphics.draw( image, w, h, 0, sx, sy )
+end
+
 function RenderScreen:IsHovered()
 	local mx, my = love.mouse.getPosition()
 	local x, y, w, h = table.unpack( self.render_bounds )

@@ -15,6 +15,11 @@ function GameScreen:init()
 	-- List of window panels.
 	self.windows = {}
 
+	self.zoom_level = 0
+	self.camera = Camera()
+	self.camera:SetViewPort( GetGUI():GetSize() )
+	self.camera:ZoomToLevel( self.zoom_level )
+
 	return self
 end
 
@@ -30,13 +35,27 @@ end
 
 function GameScreen:UpdateScreen( dt )
 	self.world:UpdateWorld( dt )
+
+	self.camera:UpdateCamera( dt )
+
+	if self.is_panning then
+		self.hovered_tile = nil
+	else
+		local mx, my = love.mouse.getPosition()
+		self.hovered_tile = self:ScreenToTile( mx, my )
+
+		-- Calculate hover tile coordinates
+		local wx, wy = self.camera:ScreenToWorld( mx, my )
+		wx, wy = math.floor( wx ), math.floor( wy )
+		self.hoverx, self.hovery = wx, wy
+	end
 end
 
 function GameScreen:RenderScreen( gui )
 
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
-	ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
+	-- ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
@@ -75,13 +94,17 @@ function GameScreen:RenderScreen( gui )
     ui.Separator()
 
     -- Render the things at the player's location.
-    self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
+    -- self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
 
-    self:RenderPotentialVerbs( ui, puppet, "room" )
+    -- self:RenderPotentialVerbs( ui, puppet, "room" )
 
-    self:RenderBackground( ui, puppet )
+    self:RenderLocationTiles( puppet:GetLocation(), puppet )
 
     ui.End()
+
+    if self.hovered_tile then
+	    self:RenderHoveredLocation( gui, puppet )
+	end
 
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove" }
 	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.25 )
@@ -98,6 +121,28 @@ function GameScreen:RenderScreen( gui )
 
 	self:RenderTooltip( ui )
 end
+
+
+function GameScreen:RenderHoveredLocation( gui, puppet )
+	local ui = imgui
+    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoBringToFrontOnFocus" }
+    local mx, my = love.mouse.getPosition()
+	ui.SetNextWindowPos( mx + 20, my, 0 )
+
+    if ui.Begin( "LOCATION", true, flags ) then
+    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
+    	ui.Separator()
+    	for i, obj in self.hovered_tile:Contents() do
+    		local txt = obj:GetShortDesc( puppet )
+    		if txt then
+	    		ui.Text( txt )
+	    	end
+    	end
+    end
+
+    ui.End()
+end
+
 
 function GameScreen:AddWindow( window )
 	for i, w in ipairs( self.windows ) do
@@ -162,36 +207,36 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     	i = i + 1
     end
 
-    local tokens = puppet:GetAspect( Aspect.TokenHolder )
-    if tokens then
-    	local count, max_count = tokens:GetTokenCount()
-    	for i = 1, max_count do
-    		if i > 1 then
-		    	ui.SameLine( 0, 15 )
-		    end
-	    	local token = tokens:GetTokenAt( i )
-	    	if token then
-	    		ui.Text( "[" )
-	   			ui.SameLine( 0, 5 )
-	   			if token:IsCommitted() then
-			    	ui.TextColored( 0.4, 0.4, 0.4, 1.0, tostring(token) )
-			    	if ui.IsItemHovered() then
-			    		if type(token.committed) == "table" then
-				    		ui.SetTooltip( loc.format( "{1} ({2})", tostring(token.committed), Agent.GetAgentOwner( token.committed )))
-				    	else
-				    		ui.SetTooltip( tostring(token.committed) )
-				    	end
-			    	end
-	   			else
-			    	ui.TextColored( 0.7, 0.7, 0.2, 1.0, tostring(token) )
-			    end
-	   			ui.SameLine( 0, 5 )
-	    		ui.Text( "]" )
-		    else
-		    	ui.Text( "[ ]" )
-		    end
-	    end
-	end
+ --    local tokens = puppet:GetAspect( Aspect.TokenHolder )
+ --    if tokens then
+ --    	local count, max_count = tokens:GetTokenCount()
+ --    	for i = 1, max_count do
+ --    		if i > 1 then
+	-- 	    	ui.SameLine( 0, 15 )
+	-- 	    end
+	--     	local token = tokens:GetTokenAt( i )
+	--     	if token then
+	--     		ui.Text( "[" )
+	--    			ui.SameLine( 0, 5 )
+	--    			if token:IsCommitted() then
+	-- 		    	ui.TextColored( 0.4, 0.4, 0.4, 1.0, tostring(token) )
+	-- 		    	if ui.IsItemHovered() then
+	-- 		    		if type(token.committed) == "table" then
+	-- 			    		ui.SetTooltip( loc.format( "{1} ({2})", tostring(token.committed), Agent.GetAgentOwner( token.committed )))
+	-- 			    	else
+	-- 			    		ui.SetTooltip( tostring(token.committed) )
+	-- 			    	end
+	-- 		    	end
+	--    			else
+	-- 		    	ui.TextColored( 0.7, 0.7, 0.2, 1.0, tostring(token) )
+	-- 		    end
+	--    			ui.SameLine( 0, 5 )
+	--     		ui.Text( "]" )
+	-- 	    else
+	-- 	    	ui.Text( "[ ]" )
+	-- 	    end
+	--     end
+	-- end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
@@ -345,6 +390,45 @@ function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )
 	ui.Unindent( 20 )
 end
 
+function GameScreen:RenderLocationTiles( location, puppet )
+	local W, H = GetGUI():GetSize()
+
+	local wx0, wy0 = self.camera:ScreenToWorld( 0, 0 )
+	wx0, wy0 = math.floor( wx0 ), math.floor( wy0 )
+	local x0, y0 = self.camera:WorldToScreen( wx0, wy0 )
+
+	local wx1, wy1 = self.camera:ScreenToWorld( W, H )
+	wx1, wy1 = math.ceil( wx1 ), math.ceil( wy1 )
+	local x1, y1 = self.camera:WorldToScreen( wx1, wy1 )
+
+	self:RenderMapTiles( GetGUI(), location, wx0, wy0, wx1, wy1 )	
+end
+
+function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
+	local xtiles = wx1 - wx0
+	local ytiles = wy1 - wy0
+
+	-- Render all map tiles.
+	for dx = 1, xtiles do
+		for dy = ytiles, 1, -1 do
+			local tx, ty = wx0 + dx - 1, wy0 + dy - 1
+			local tile = location:GetTileAt( tx, ty )
+			if tile then
+				local x1, y1 = self.camera:WorldToScreen( tx, ty )
+				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
+				tile:RenderMapTile( self, x1, y1, x2, y2 )
+			end
+		end
+	end
+
+	if self.hoverx and self.hovery then
+		local x1, y1 = self.camera:WorldToScreen( self.hoverx, self.hovery )
+		local x2, y2 = self.camera:WorldToScreen( self.hoverx + 1, self.hovery + 1 )
+		love.graphics.setColor( 255, 255, 255 )
+		love.graphics.rectangle( "line", x1, y1, x2 - x1, y2 - y1 )
+	end
+end
+
 function GameScreen:RenderBackground( ui, agent )
     local _, h = ui:GetWindowSize()
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
@@ -417,6 +501,41 @@ function GameScreen:RenderSenses( ui, agent )
 	end
 end
 
+function GameScreen:ScreenToCell( mx, my )
+	local wx, wy = self.camera:ScreenToWorld( mx, my )
+	return math.floor( wx ), math.floor( wy )
+end
+
+function GameScreen:ScreenToTile( mx, my )
+	local cx, cy = self:ScreenToCell( mx, my )
+	local puppet = self.world:GetPuppet()
+	if puppet and puppet:GetLocation() then
+		return puppet:GetLocation():GetTileAt( cx, cy ), cx, cy
+	end
+end
+
+function GameScreen:Pan( px, py )
+	local screenw, screenh = love.graphics.getWidth(), love.graphics.getHeight()
+	local x0, y0 = self.camera:ScreenToWorld( 0, 0 )
+	local x1, y1 = self.camera:ScreenToWorld( screenw * px, screenh * py )
+	local dx, dy = x1 - x0, y1 - y0
+	self.camera:Pan( dx, dy )
+end
+
+function GameScreen:PanTo( x, y )
+	local x1, y1 = self.camera:ScreenToWorld( 0, 0 )
+	local x2, y2 = self.camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
+
+	self.camera:PanTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
+end
+
+function GameScreen:MoveTo( x, y )
+	local x1, y1 = self.camera:ScreenToWorld( 0, 0 )
+	local x2, y2 = self.camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
+
+	self.camera:MoveTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
+end
+
 function GameScreen:MouseMoved( mx, my )
 	if love.keyboard.isDown( "space" ) then
 	end
@@ -428,6 +547,12 @@ function GameScreen:MousePressed( mx, my, btn )
 			return true
 		end
 	end
+
+	if self.hovered_tile then
+		DBG(self.hovered_tile)
+		return true
+	end
+
 	return false
 end
 
@@ -437,6 +562,8 @@ function GameScreen:KeyPressed( key )
 			return true
 		end
 	end
+
+	local pan_delta = Input.IsShift() and 0.5 or 0.1
 
 	if key == "i" then
 		if self.inventory_window then
@@ -474,6 +601,30 @@ function GameScreen:KeyPressed( key )
 		self.world:GetPuppet():SetFocus()
 		return true
 
+	elseif key == "backspace" then
+		self:PanTo( 0, 0 )
+	elseif key == "left" or key == "a" then
+		local puppet = self.world:GetPuppet()
+		if puppet then
+		end
+
+		self:Pan( -pan_delta, 0 )
+	elseif key == "right" or key == "d" then
+		self:Pan( pan_delta, 0 )
+	elseif key == "up" or key == "w" then
+		self:Pan( 0, -pan_delta )
+	elseif key == "down" or key == "s" then
+		self:Pan( 0, pan_delta )
+	elseif key == "=" then
+		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
+		local mx, my = love.mouse.getPosition()
+		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+
+	elseif key == "-" then
+		self.zoom_level = math.max( (self.zoom_level - 1), -3 )
+		local mx, my = love.mouse.getPosition()
+		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+	
 	elseif tonumber(key) then
 		local puppet = self.world:GetPuppet()
 		if puppet and puppet:GetFocus() == nil then
@@ -481,7 +632,7 @@ function GameScreen:KeyPressed( key )
 			if verb then
 				local ok, details = verb:CanDo( self.world:GetPuppet() )
 				if ok then
-					self.world:GetPuppet():DoVerbAsync( verb )
+					puppet:DoVerbAsync( verb )
 				end
 			end
 		end

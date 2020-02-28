@@ -3,6 +3,8 @@
 
 local Fighter = class( "Agent.Fighter", Agent )
 
+Fighter.MAP_CHAR = "f"
+
 function Fighter:init()
 	Agent.init( self )
 	

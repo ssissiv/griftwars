@@ -122,9 +122,11 @@ function love.load(arg)
 
     assets:LoadAll()
 
-    local game = GameScreen()
+    require "game/Tile"
 
     gui = UI()
+
+    local game = GameScreen()
     gui:AddScreen( game )
 
     debug_mgr.game = game

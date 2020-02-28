@@ -70,6 +70,8 @@ end
 
 local Scavenger = class( "Agent.Scavenger", Agent )
 
+Scavenger.MAP_CHAR = "s"
+
 function Scavenger:init()
 	Agent.init( self )
 

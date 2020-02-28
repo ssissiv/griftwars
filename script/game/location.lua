@@ -128,6 +128,12 @@ function Location:AddEntity( entity )
 	end
 
 	entity:ListenForAny( self, self.OnEntityEvent )
+
+	if self.map then
+		self:PlaceEntity( entity )
+	elseif is_instance( entity, Agent ) and entity:IsPuppet() then
+		self:GenerateReality()
+	end
 end
 
 function Location:RemoveEntity( entity )
@@ -138,6 +144,17 @@ function Location:RemoveEntity( entity )
 
 	if is_instance( entity, Agent ) then
 		self:BroadcastEvent( LOCATION_EVENT.AGENT_REMOVED, entity )
+
+		if entity:IsPuppet() then
+			self:DisposeReality()
+		end
+	end
+
+	if self.map then
+		local x, y  = entity:GetCoordinate()
+		local tile = self.map:LookupGrid( x, y )
+		tile:RemoveEntity( entity )
+		entity:SetCoordinate( nil, nil )
 	end
 end
 
@@ -338,7 +355,46 @@ function Location:GetDesc()
 	return self.desc or "No Desc"
 end
 
-function Location:RenderMapTile( screen, x1, y1, x2, y2 )
+function Location:GenerateReality()
+	self.map = self:GainAspect( Aspect.TileMap() )
+
+	self.map:FillTiles( function( x, y ) return Tile.Grass( x, y ) end )
+
+	for i, obj in self:Contents() do
+		local x, y = obj:GetCoordinate()
+		if not x then
+			self:PlaceEntity( obj )
+		end
+	end
+end
+
+function Location:PlaceEntity( obj )
+	assert( not obj:GetCoordinate() )
+	local w, h = self.map:GetExtents()
+	local x, y = math.random( w ), math.random( h )
+	local tile = self.map:LookupGrid( x, y )
+	if not tile then
+		assert_warning( tile, string.format( "No tile at: %d, %d", x, y ))
+	else
+		obj:SetCoordinate( x, y )
+		tile:AddEntity( obj )
+	end
+end
+
+function Location:DisposeReality()
+	if self.map then
+		self:LoseAspect( self.map )
+		self.map = nil
+	end
+end
+
+function Location:GetTileAt( tx, ty )
+	if self.map then
+		return self.map:LookupGrid( tx, ty )
+	end
+end
+
+function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 	local w, h = x2 - x1, y2 - y1
 
 	love.graphics.setColor( table.unpack( self.map_colour ))
@@ -350,11 +406,7 @@ function Location:RenderMapTile( screen, x1, y1, x2, y2 )
 		local x, y = x1 + 4 + margin , y1 + 4 + margin
 		for i, obj in ipairs( self.contents ) do
 			if is_instance( obj, Agent ) then
-				if obj:IsPlayer() then
-					love.graphics.setColor( 255, 0, 255, 55 + 200 * (1.0 + math.sin( screen:ElapsedTime() * 10 )))
-				else
-					love.graphics.setColor( 255, 0, 255 )
-				end
+				love.graphics.setColor( 255, 0, 255 )
 			elseif is_instance( obj, Structure ) then
 				love.graphics.setColor( 0, 0, 0 )
 			else
