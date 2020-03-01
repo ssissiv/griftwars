@@ -356,7 +356,7 @@ function Location:GetDesc()
 end
 
 function Location:GenerateReality()
-	self.map = self:GainAspect( Aspect.TileMap() )
+	self.map = self:GainAspect( Aspect.TileMap( 32, 32 ) )
 
 	self.map:FillTiles( function( x, y ) return Tile.Grass( x, y ) end )
 

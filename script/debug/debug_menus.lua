@@ -75,7 +75,7 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="space"},
+        Binding = {key="return", CTRL = true },
         Text = "Toggle Pause",
         Enabled = function()
             return is_instance( GetGUI():GetTopScreen(), GameScreen )

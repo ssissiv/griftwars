@@ -15,7 +15,7 @@ function GameScreen:init()
 	-- List of window panels.
 	self.windows = {}
 
-	self.zoom_level = 0
+	self.zoom_level = 1.0
 	self.camera = Camera()
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
@@ -538,6 +538,11 @@ end
 
 function GameScreen:MouseMoved( mx, my )
 	if love.keyboard.isDown( "space" ) then
+		if self.is_panning then
+			local x1, y1 = self.camera:ScreenToWorld( mx, my )
+			local x0, y0 = self.camera:ScreenToWorld( self.pan_start_mx, self.pan_start_my )
+			self.camera:MoveTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
+		end
 	end
 end
 
@@ -565,7 +570,12 @@ function GameScreen:KeyPressed( key )
 
 	local pan_delta = Input.IsShift() and 0.5 or 0.1
 
-	if key == "i" then
+	if key == "space" then
+		self.is_panning = true
+		self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
+		self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
+
+	elseif key == "i" then
 		if self.inventory_window then
 			self:RemoveWindow( self.inventory_window )
 			self.inventory_window = nil
@@ -653,4 +663,8 @@ function GameScreen:KeyPressed( key )
 end
 
 function GameScreen:KeyReleased( key )
+	if key == "space" then
+		self.is_panning = false
+		return true
+	end
 end

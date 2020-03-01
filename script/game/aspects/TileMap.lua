@@ -1,8 +1,8 @@
 local TileMap = class( "Aspect.TileMap", Aspect )
 
-function TileMap:init()
+function TileMap:init( w, h )
 	self.grid = {} -- array of arrays.
-	self.w, self.h = 10, 10
+	self.w, self.h = w or 10, h or 10
 end
 
 function TileMap:GetExtents()

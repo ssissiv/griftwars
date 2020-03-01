@@ -45,7 +45,7 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 	if self.contents then
 		for i, obj in ipairs( self.contents ) do
 			love.graphics.setFont( assets.FONTS.MAP_TILE )
-			love.graphics.print( obj:GetMapChar() or "X", x1 + w/6, y1, 0, 1.5, 1 )
+			love.graphics.print( obj:GetMapChar() or "X", x1 + w/6, y1, 0, 0.8, 0.5 )
 
 			-- if is_instance( obj, Agent ) then
 			-- 	love.graphics.setColor( 255, 0, 255 )
