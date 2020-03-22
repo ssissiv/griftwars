@@ -249,7 +249,7 @@ function Agent:GenerateLocTable( viewer )
 		elseif viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
 			t.id = loc.format( "[{1}]", self.name )
 		else
-			t.id = "[Unknown]"
+			t.id = loc.format( "[{1} {2}]", self.species, self._classname )
 		end
 	else
 		t.id = loc.format( "[{1}]", self.species )

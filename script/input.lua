@@ -17,6 +17,10 @@ function Input.IsAlt()
 	return love.keyboard.isDown( "lalt" ) or love.keyboard.isDown( "ralt" )
 end
 
+function Input.IsModifierDown()
+    return Input.IsShift() or Input.IsControl() or Input.IsAlt()
+end
+
 function Input.GetBindingString( binding )
     -- TODO: refer to properly localized key names.
     local str = ""

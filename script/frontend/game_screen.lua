@@ -553,7 +553,7 @@ function GameScreen:MousePressed( mx, my, btn )
 		end
 	end
 
-	if self.hovered_tile then
+	if self.hovered_tile and Input.IsControl() then
 		DBG(self.hovered_tile)
 		return true
 	end
