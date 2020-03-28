@@ -77,20 +77,6 @@ function Location:GetCoordinate()
 	return self.x, self.y, self.z
 end
 
-function Location:GetClosestCoordinate()
-	if self.x == nil then
-		local x, y, z
-		local function HasCoordinate( location, depth )
-			x, y, z = location.x, location.y, location.z
-			return depth < 3, x ~= nil
-		end
-		self:Flood( HasCoordinate )
-		return x, y, z
-	else
-		return self.x, self.y, self.z
-	end
-end
-
 function Location:SetImage( image )
 	self.image = image
 end
@@ -339,6 +325,24 @@ function Location:SearchObject( fn, max_depth )
 	return candidates
 end
 
+function Location:FindPassableTile( x, y, obj )
+	local found_tile
+	local function IsPassable( tile, depth, obj )
+		if not tile:HasEntity( obj ) and tile:IsPassable( obj ) then
+			found_tile = tile
+			return false, false -- STOP
+		end
+		return true
+	end
+
+	local origin = self:GetTileAt( x, y )
+	assert( origin )
+
+	self.map:Flood( origin, IsPassable, obj )
+
+	return found_tile
+end
+
 function Location:Contents()
 	return ipairs( self.contents or table.empty )
 end
@@ -356,7 +360,7 @@ function Location:GetDesc()
 end
 
 function Location:GenerateReality()
-	self.map = self:GainAspect( Aspect.TileMap( 32, 32 ) )
+	self.map = self:GainAspect( Aspect.TileMap( 16, 16 ) )
 
 	self.map:FillTiles( function( x, y ) return Tile.Grass( x, y ) end )
 

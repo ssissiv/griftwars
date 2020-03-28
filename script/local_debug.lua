@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:GetAspect( Aspect.StrategicPoint))",
 			"print(t)",
 			"DBG(t:FindStrategicPoint())",
 			"print(t)",
@@ -33,7 +32,8 @@ return {
 			"print(puppet.location.map:LookupGrid( 2, 2 ))",
 			"DBG(location.map)",
 			"print(t.image)",
-			"DBG( location.map)"
+			"DBG( location.map)",
+			"print(32*32)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

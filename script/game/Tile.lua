@@ -13,6 +13,10 @@ function Tile:SetCoordinate( x, y )
 	self.x, self.y = x, y
 end
 
+function Tile:IsPassable( obj )
+	return true
+end
+
 function Tile:AddEntity( obj )
 	if self.contents == nil then
 		self.contents = {}
@@ -23,6 +27,10 @@ end
 
 function Tile:RemoveEntity( obj )
 	table.arrayremove( self.contents, obj )
+end
+
+function Tile:HasEntity( obj )
+	return self.contents and table.contains( self.contents, obj )
 end
 
 function Tile:Contents()
@@ -64,6 +72,9 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 	end
 end
 
+function Tile:__tostring()
+	return string.format( "[%s:%d,%d]", self._classname, tostring(self.x), tostring(self.y))
+end
 
 -----------------------------------------------------------------
 

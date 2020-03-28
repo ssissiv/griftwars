@@ -66,3 +66,42 @@ function TileMap:LookupGrid( x, y )
 	end
 end
 
+-- Breadth-first traversal applying fn().
+-- fn( location, depth ) returns two booleans:
+--		continue: if false, do not flood from this location
+--		stop: abort the Flood search entirely.
+
+function TileMap:Flood( origin, fn, ... )
+	assert( self:LookupGrid( origin:GetCoordinate() ) == origin )
+
+	local open, closed = { origin, 0 }, {}
+
+	while #open > 0 do
+		local x = table.remove( open, 1 )
+		local depth = table.remove( open, 1 )
+
+		table.insert( closed, x )
+		if #closed > 999 then
+			break
+		end
+
+		local continue, stop = fn( x, depth, ... )
+		if stop then
+			break
+		elseif continue then
+			for i, exit in ipairs( EXIT_ARRAY ) do
+				local x, y = x:GetCoordinate()
+				x, y = OffsetExit( x, y, exit )
+				local ntile = self:LookupGrid( x, y )
+				if ntile and not table.contains( open, ntile ) and not table.contains( closed, ntile ) then
+					table.insert( open, ntile )
+					table.insert( open, depth + 1 )
+				end
+			end
+		end
+	end
+
+	assert_warning( #closed <= 99, "Floodings lots of tiles!", #closed )
+end
+
+

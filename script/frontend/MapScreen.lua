@@ -10,11 +10,6 @@ function MapScreen:init( world )
 	self.camera = Camera()
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
-
-	local player = world:GetPlayer()
-	if player and player:GetLocation() then
-		self:MoveTo( player:GetLocation():GetClosestCoordinate() )
-	end
 end
 
 function MapScreen:ElapsedTime()
