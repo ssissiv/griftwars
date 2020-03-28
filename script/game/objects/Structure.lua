@@ -9,9 +9,19 @@ local Structure = class( "Structure", Object )
 function Structure:Connect( dest )
 	assert( self.location )
 	self.exit = self.location:Connect( dest, self )
+
+	local door = Object.Door()
+	door:WarpToLocation( self.location )
+
+	local door = Object.Door()
+	door:WarpToLocation( dest )
 end
 
 
 function Structure:GetName()
-	return self.exit:GetDest( self.location )
+	if self.exit == nil then
+		return "Nowwhere!"
+	else
+		return self.exit:GetDest( self.location )
+	end
 end

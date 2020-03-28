@@ -44,7 +44,7 @@ local Snoop = class( "Agent.Snoop", Agent )
 function Snoop:init()
 	Agent.init( self )
 
-	self.species = SPECIES.HUMAN
+	self:MakeHuman()
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))

@@ -8,8 +8,8 @@ Fighter.MAP_CHAR = "f"
 function Fighter:init()
 	Agent.init( self )
 	
-	self.species = SPECIES.HUMAN
-	
+	self:MakeHuman()
+
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Aspect.Combat() )
 	self:GainAspect( Skill.Fighter() )

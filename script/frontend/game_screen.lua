@@ -135,9 +135,9 @@ function GameScreen:RenderHoveredLocation( gui, puppet )
     if ui.Begin( "LOCATION", true, flags ) then
     	local hovered_tile, tx, ty = self:ScreenToTile( mx, my )
     	if hovered_tile then
-	    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
+	    	ui.TextColored( 0, 255, 255, 255, tostring(hovered_tile ))
 	    	ui.Separator()
-	    	for i, obj in self.hovered_tile:Contents() do
+	    	for i, obj in hovered_tile:Contents() do
 	    		local txt = obj:GetShortDesc( puppet )
 	    		if txt then
 		    		ui.Text( txt )

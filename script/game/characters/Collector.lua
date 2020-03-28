@@ -38,7 +38,8 @@ local Collector = class( "Agent.Collector", Agent )
 
 function Collector:init()
 	Agent.init( self )
-	self.species = SPECIES.HUMAN
+
+	self:MakeHuman()
 
 	self:GainAspect( Behaviour.Collector() )
 end

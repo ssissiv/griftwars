@@ -28,6 +28,10 @@ local assets =
 	TILE_IMG =
 	{
 		GRASS = "grassland.png",
+		STONE_FLOOR = "stone_floor.png",
+		STONE_WALL = "stone_wall.png",
+
+		DOOR = "door.png",
 	},
 
 	LoadAll = function( self )

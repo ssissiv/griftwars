@@ -752,6 +752,11 @@ function Agent.GetAgentOwner( obj )
 	end
 end
 
+function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
+	love.graphics.setFont( assets.FONTS.MAP_TILE )
+	love.graphics.print( self:GetMapChar() or "X", x1 + (x2-x1)/6, y1, 0, 0.8, 0.5 )
+end
+
 function Agent:__tostring()
 	return string.format( "[%s%s%s]",
 		self:IsPlayer() and "@" or "",

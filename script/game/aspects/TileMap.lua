@@ -9,6 +9,24 @@ function TileMap:GetExtents()
 	return self.w, self.h
 end
 
+function TileMap:GenerateTileMap()
+	self:FillTiles( function( x, y )
+		return Tile.Grass( x, y )
+	end )
+end
+
+function TileMap:FindTiles( fn )
+	local tiles = {}
+	for i, row in pairs( self.grid ) do
+		for j, tile in pairs( row ) do
+			if fn( tile ) then
+				table.insert( tiles, tile )
+			end
+		end
+	end
+	return tiles
+end
+
 function TileMap:FillTiles( fn )
 	for y = 1, self.h do
 		for x = 1, self.w do
@@ -32,6 +50,7 @@ function TileMap:AssignToGrid( location )
 		row[ x ] = location
 	elseif is_instance( row[ x ] ) then
 		row[ x ] = { row[ x ], location }
+		error()
 	else
 		table.insert( row[ x ], location )
 	end

@@ -2,13 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(puppet.location.map:LookupGrid( 2, 2 ))",
-			"print( is_instance( {} ))",
-			"print( is_instance( Entity() ))",
-			"print(puppet.location.map:LookupGrid( 2, 2 ))",
-			"DBG(location.map)",
-			"print(t.image)",
-			"DBG( location.map)",
 			"print(32*32)",
 			"print(screen.camera:ScreenToWorld( 0, 0 )",
 			")",
@@ -33,7 +26,14 @@ return {
 			"print( screen.camera:WorldToScreen( player:GetCoordinate() ))",
 			"print(screen.camera.view_height)",
 			"print(screen.camera.view_height/2)",
-			"print(screen.camera.view_width)"
+			"print(screen.camera.view_width)",
+			"print(location)",
+			"print(t:FindExit( EXIT.SOUTH ))",
+			"print(t:IsPassable(player))",
+			"print(location)",
+			"print(location:FindPassableTile( t.x, t.y, player ))",
+			"print(t)",
+			"print(location)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

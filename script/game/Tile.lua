@@ -14,6 +14,18 @@ function Tile:SetCoordinate( x, y )
 end
 
 function Tile:IsPassable( obj )
+	local impass = self:GetAspect( Aspect.Impass )
+	if impass and not impass:IsPassable( obj ) then
+		return false
+	end
+	if self.contents then
+		for i, obj in ipairs( self.contents ) do
+			local impass = obj:GetAspect( Aspect.Impass )
+			if impass and not impass:IsPassable( obj ) then
+				return false
+			end
+		end
+	end
 	return true
 end
 
@@ -52,8 +64,9 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 
 	if self.contents then
 		for i, obj in ipairs( self.contents ) do
-			love.graphics.setFont( assets.FONTS.MAP_TILE )
-			love.graphics.print( obj:GetMapChar() or "X", x1 + w/6, y1, 0, 0.8, 0.5 )
+			if obj.RenderMapTile then
+				obj:RenderMapTile( screen, self, x1, y1, x2, y2 )
+			end
 
 			-- if is_instance( obj, Agent ) then
 			-- 	love.graphics.setColor( 255, 0, 255 )
@@ -80,3 +93,15 @@ end
 
 local Grass = class( "Tile.Grass", Tile )
 Grass.image = assets.TILE_IMG.GRASS
+
+local StoneFloor = class( "Tile.StoneFloor", Tile )
+StoneFloor.image = assets.TILE_IMG.STONE_FLOOR
+
+local StoneWall = class( "Tile.StoneWall", Tile )
+StoneWall.image = assets.TILE_IMG.STONE_WALL
+
+function StoneWall:init( x, y )
+	StoneWall._base.init( self, x, y )
+	self:GainAspect( Aspect.Impass() )
+end
+

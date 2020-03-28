@@ -118,7 +118,8 @@ function Location:AddEntity( entity )
 	if self.map then
 		self:PlaceEntity( entity )
 	elseif is_instance( entity, Agent ) and entity:IsPuppet() then
-		self:GenerateReality()
+		self:GenerateTileMap()
+		self:PlaceEntity( entity )
 	end
 end
 
@@ -140,8 +141,9 @@ function Location:RemoveEntity( entity )
 		local x, y  = entity:GetCoordinate()
 		local tile = self.map:LookupGrid( x, y )
 		tile:RemoveEntity( entity )
-		entity:SetCoordinate( nil, nil )
 	end
+
+	entity:SetCoordinate( nil, nil )
 end
 
 function Location:AddAgent( agent )
@@ -330,7 +332,7 @@ function Location:FindPassableTile( x, y, obj )
 	local function IsPassable( tile, depth, obj )
 		if not tile:HasEntity( obj ) and tile:IsPassable( obj ) then
 			found_tile = tile
-			return false, false -- STOP
+			return false, true -- STOP
 		end
 		return true
 	end
@@ -359,10 +361,16 @@ function Location:GetDesc()
 	return self.desc or "No Desc"
 end
 
-function Location:GenerateReality()
-	self.map = self:GainAspect( Aspect.TileMap( 16, 16 ) )
+function Location:GenerateTileMap()
+	if self.map then
+		return
+	end
 
-	self.map:FillTiles( function( x, y ) return Tile.Grass( x, y ) end )
+	self.map = self:GetAspect( Aspect.TileMap )
+	if self.map == nil then
+		self.map = self:GainAspect( Aspect.TileMap( 8, 8 ))
+	end
+	self.map:GenerateTileMap()
 
 	for i, obj in self:Contents() do
 		local x, y = obj:GetCoordinate()
@@ -372,15 +380,20 @@ function Location:GenerateReality()
 	end
 end
 
+function Location:FindPortalTiles()
+	return self.map:FindTiles( function( tile ) return tile:HasAspect( Aspect.Portal ) end )
+end
+
+
 function Location:PlaceEntity( obj )
-	assert( not obj:GetCoordinate() )
+--	assert( not obj:GetCoordinate())
 	local w, h = self.map:GetExtents()
 	local x, y = math.random( w ), math.random( h )
-	local tile = self.map:LookupGrid( x, y )
+	local tile = self:FindPassableTile( x, y, obj )
 	if not tile then
 		assert_warning( tile, string.format( "No tile at: %d, %d", x, y ))
 	else
-		obj:SetCoordinate( x, y )
+		obj:SetCoordinate( tile.x, tile.y )
 		tile:AddEntity( obj )
 	end
 end

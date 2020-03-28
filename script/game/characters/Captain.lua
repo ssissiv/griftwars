@@ -17,7 +17,7 @@ Captain.MAP_CHAR = "C"
 function Captain:init()
 	Agent.init( self )
 	
-	self.species = SPECIES.HUMAN
+	Agent.MakeHuman( self )
 	
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize( self ))

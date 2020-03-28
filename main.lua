@@ -50,6 +50,7 @@ require "game/Token"
 require "game/inventory"
 require "game/AgentViz"
 require "game/agent"
+require "game/archetypes"
 require "game/AgentQuery"
 require "game/worldbase"
 require "game/world"
@@ -115,12 +116,13 @@ end
 function love.load(arg)
     math.randomseed( os.time() )
 
+    assets:LoadAll()
+
     LoadAllScripts( "game/aspects" )
     LoadAllScripts( "game/verbs" )
     LoadAllScripts( "game/characters" )
     LoadAllScripts( "game/objects" )
-
-    assets:LoadAll()
+    LoadAllScripts( "game/tilemaps" )
 
     require "game/Tile"
 

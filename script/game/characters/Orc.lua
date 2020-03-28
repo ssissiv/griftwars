@@ -5,7 +5,8 @@ local Orc = class( "Agent.Orc", Agent )
 
 function Orc:init()
 	Agent.init( self )
-	self.species = SPECIES.ORC
+
+	Agent.MakeOrc( self )
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))

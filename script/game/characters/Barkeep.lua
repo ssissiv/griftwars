@@ -7,8 +7,7 @@ local Barkeep = class( "Agent.Barkeep", Agent )
 function Barkeep:init()
 	Agent.init( self )
 
-	self.species = SPECIES.HUMAN
-	self.gender = GENDER.MALE
+	self:MakeHuman()
 
 	self.job = self:GainAspect( Job.Barkeep( self ) )
 

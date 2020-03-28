@@ -7,7 +7,7 @@ local Shopkeeper = class( "Agent.Shopkeeper", Agent )
 function Shopkeeper:init()
 	Agent.init( self )
 
-	self.species = SPECIES.HUMAN
+	self:MakeHuman()
 
 	self.job = self:GainAspect( Job.Shopkeep( self ) )
 
