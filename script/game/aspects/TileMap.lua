@@ -57,7 +57,7 @@ end
 function TileMap:LookupGrid( x, y )
 	local row = self.grid[ y ]
 	if row then
-		local t = row [ x ]
+		local t = row[ x ]
 		if is_instance( t ) then
 			return t
 		elseif t then

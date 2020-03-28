@@ -36,6 +36,9 @@ end
 function GameScreen:UpdateScreen( dt )
 	self.world:UpdateWorld( dt )
 
+	local cx, cy = self.world:GetPlayer():GetCoordinate()
+	self:WarpCameraTo( cx, cy )
+
 	self.camera:UpdateCamera( dt )
 
 	if self.is_panning then
@@ -102,9 +105,9 @@ function GameScreen:RenderScreen( gui )
 
     ui.End()
 
-    if self.hovered_tile then
+    -- if self.hovered_tile then
 	    self:RenderHoveredLocation( gui, puppet )
-	end
+	-- end
 
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove" }
 	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.25 )
@@ -130,14 +133,19 @@ function GameScreen:RenderHoveredLocation( gui, puppet )
 	ui.SetNextWindowPos( mx + 20, my, 0 )
 
     if ui.Begin( "LOCATION", true, flags ) then
-    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
-    	ui.Separator()
-    	for i, obj in self.hovered_tile:Contents() do
-    		local txt = obj:GetShortDesc( puppet )
-    		if txt then
-	    		ui.Text( txt )
+    	local hovered_tile, tx, ty = self:ScreenToTile( mx, my )
+    	if hovered_tile then
+	    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
+	    	ui.Separator()
+	    	for i, obj in self.hovered_tile:Contents() do
+	    		local txt = obj:GetShortDesc( puppet )
+	    		if txt then
+		    		ui.Text( txt )
+		    	end
 	    	end
-    	end
+	    else
+	    	ui.Text( string.format( "%d, %d", tx, ty ))
+	    end
     end
 
     ui.End()
@@ -529,11 +537,11 @@ function GameScreen:PanTo( x, y )
 	self.camera:PanTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
-function GameScreen:MoveTo( x, y )
+function GameScreen:WarpCameraTo( x, y )
 	local x1, y1 = self.camera:ScreenToWorld( 0, 0 )
 	local x2, y2 = self.camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
 
-	self.camera:MoveTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
+	self.camera:WarpTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
 function GameScreen:MouseMoved( mx, my )
@@ -541,7 +549,7 @@ function GameScreen:MouseMoved( mx, my )
 		if self.is_panning then
 			local x1, y1 = self.camera:ScreenToWorld( mx, my )
 			local x0, y0 = self.camera:ScreenToWorld( self.pan_start_mx, self.pan_start_my )
-			self.camera:MoveTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
+			self.camera:WarpTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
 		end
 	end
 end
@@ -616,15 +624,27 @@ function GameScreen:KeyPressed( key )
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
 		if puppet then
+			puppet:Walk( EXIT.WEST )
 		end
 
-		self:Pan( -pan_delta, 0 )
 	elseif key == "right" or key == "d" then
-		self:Pan( pan_delta, 0 )
+		local puppet = self.world:GetPuppet()
+		if puppet then
+			puppet:Walk( EXIT.EAST )
+		end
+
 	elseif key == "up" or key == "w" then
-		self:Pan( 0, -pan_delta )
+		local puppet = self.world:GetPuppet()
+		if puppet then
+			puppet:Walk( EXIT.SOUTH )
+		end
+
 	elseif key == "down" or key == "s" then
-		self:Pan( 0, pan_delta )
+		local puppet = self.world:GetPuppet()
+		if puppet then
+			puppet:Walk( EXIT.NORTH )
+		end
+
 	elseif key == "=" then
 		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
 		local mx, my = love.mouse.getPosition()

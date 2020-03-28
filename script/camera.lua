@@ -44,7 +44,7 @@ function Camera:ZoomToLevel( level, x, y )
 	end
 end
 
-function Camera:MoveTo( x, y )
+function Camera:WarpTo( x, y )
 	self.x, self.y = x, y
 	self.targetx, self.targety = self.x, self.y
 end

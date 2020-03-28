@@ -405,6 +405,19 @@ function Agent:GetCoordinate()
 	return self.x, self.y
 end
 
+function Agent:Walk( exit )
+	local x, y = OffsetExit( self.x, self.y, exit )
+	local tile = self.location:GetTileAt( x, y )
+	if tile and tile:IsPassable( self ) then
+		local current_tile = self.location:GetTileAt( self.x, self.y )
+		current_tile:RemoveEntity (self )
+
+		self.x, self.y = x, y
+
+		tile:AddEntity( self )
+	end
+end
+
 local function WarpToLocation( self, location )
 	local prev_location = self.location
 	if self.location then

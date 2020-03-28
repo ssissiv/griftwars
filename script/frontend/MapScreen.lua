@@ -156,11 +156,11 @@ function MapScreen:PanTo( x, y )
 	self.camera:PanTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
-function MapScreen:MoveTo( x, y )
+function MapScreen:WarpTo( x, y )
 	local x1, y1 = self.camera:ScreenToWorld( 0, 0 )
 	local x2, y2 = self.camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
 
-	self.camera:MoveTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
+	self.camera:WarpTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
 function MapScreen:MouseMoved( mx, my )
@@ -168,7 +168,7 @@ function MapScreen:MouseMoved( mx, my )
 		if self.is_panning then
 			local x1, y1 = self.camera:ScreenToWorld( mx, my )
 			local x0, y0 = self.camera:ScreenToWorld( self.pan_start_mx, self.pan_start_my )
-			self.camera:MoveTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
+			self.camera:WarpTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
 		end
 	end
 end
