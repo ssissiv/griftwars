@@ -13,6 +13,10 @@ function Tile:SetCoordinate( x, y )
 	self.x, self.y = x, y
 end
 
+function Tile:Neighbours( map )
+	return map:Neighbours( self )
+end
+
 function Tile:IsPassable( obj )
 	local impass = self:GetAspect( Aspect.Impass )
 	if impass and not impass:IsPassable( obj ) then

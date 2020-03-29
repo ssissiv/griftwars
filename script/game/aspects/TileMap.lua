@@ -15,6 +15,24 @@ function TileMap:GenerateTileMap()
 	end )
 end
 
+local function IterateNeighbours( state, i )
+	local tile
+	local exit = EXIT_ARRAY[ state.exit_idx ]
+	while not tile and exit do
+		local x, y = OffsetExit( state.tile.x, state.tile.y, exit )
+		tile = state.map:LookupGrid( x, y )
+		state.exit_idx = state.exit_idx + 1
+		exit = EXIT_ARRAY[ state.exit_idx ]
+	end
+	if tile then
+		return (i or 0) + 1, tile
+	end
+end
+
+function TileMap:Neighbours( tile )
+	return IterateNeighbours, { map = self, tile = tile, exit_idx = 1 }
+end
+
 function TileMap:FindTiles( fn )
 	local tiles = {}
 	for i, row in pairs( self.grid ) do

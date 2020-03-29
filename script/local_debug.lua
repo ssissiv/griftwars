@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(32*32)",
-			"print(screen.camera:ScreenToWorld( 0, 0 )",
-			")",
-			"print(screen.camera:ScreenToWorld( 0, 0 ))",
 			"print(screen.camera:ScreenToWorld( 1, 0 ))",
 			"print(screen.camera:ScreenToWorld( 1, 1 ))",
 			"print(screen.camera:ScreenToWorld( 32, 32 ))",
@@ -33,7 +29,11 @@ return {
 			"print(location)",
 			"print(location:FindPassableTile( t.x, t.y, player ))",
 			"print(t)",
-			"print(location)"
+			"print(location)",
+			"print(map)",
+			"for i, k in map:Neighbours(t) do print( i, k ) end",
+			"print( t )",
+			"for i, k in map:Neighbours(t) do print( i, k ) end"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

@@ -117,9 +117,9 @@ function Location:AddEntity( entity )
 
 	if self.map then
 		self:PlaceEntity( entity )
+
 	elseif is_instance( entity, Agent ) and entity:IsPuppet() then
 		self:GenerateTileMap()
-		self:PlaceEntity( entity )
 	end
 end
 
@@ -386,7 +386,7 @@ end
 
 
 function Location:PlaceEntity( obj )
---	assert( not obj:GetCoordinate())
+	assert( not obj:GetCoordinate())
 	local w, h = self.map:GetExtents()
 	local x, y = math.random( w ), math.random( h )
 	local tile = self:FindPassableTile( x, y, obj )
