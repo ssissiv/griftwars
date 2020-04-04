@@ -8,14 +8,5 @@ function BuildingTileMap:GenerateTileMap()
 			return Tile.StoneFloor( x, y )
 		end
 	end )
-
-	-- local tile = self:LookupGrid( math.random( self.w - 2 ) + 1, self.random( self.h - 2 ) + 1 )
-	-- local north = self:FindExit( EXIT.NORTH )
-	-- if north then
-	-- 	for x = 1, 16 do
-	-- 		self.map:LookupGrid( x, 1 ):GainAspect( Aspect.Portal( north, x, 16 ))
-	-- 		error()
-	-- 	end
-	-- end
 end
 

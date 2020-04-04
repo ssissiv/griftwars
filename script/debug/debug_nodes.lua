@@ -59,6 +59,11 @@ function DebugTable:GetUID()
 end
 
 function DebugTable:RenderPanel( ui, panel )
+    if self.t.RenderDebugPanel then
+        self.t:RenderDebugPanel( ui, panel )
+        ui.Separator()
+    end
+
     ui.Text( string.format( "%d fields", table.count( self.t ) ))
     ui.Separator()
     

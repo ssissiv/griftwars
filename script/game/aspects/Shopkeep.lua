@@ -8,7 +8,6 @@ local Shopkeep = class( "Job.Shopkeep", Job )
 Shopkeep.salary = 30
 
 function Shopkeep:OnInit()
-	self:RegisterHandler( AGENT_EVENT.LOCATION_CHANGED, self.OnLocationChanged )
 	self:SetShiftHours( 8, 18 )
 end
 
@@ -49,7 +48,7 @@ function Shopkeep:OnSpawn( world )
 	end
 end
 
-function Shopkeep:OnLocationChanged( event_name, agent, prev_location, location )
+function Shopkeep:OnLocationChanged( prev_location, location )
 	if prev_location then
 		prev_location:RemoveListener( self )
 	end

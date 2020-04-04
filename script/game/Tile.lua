@@ -71,20 +71,17 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 			if obj.RenderMapTile then
 				obj:RenderMapTile( screen, self, x1, y1, x2, y2 )
 			end
+		end
+	end
+end
 
-			-- if is_instance( obj, Agent ) then
-			-- 	love.graphics.setColor( 255, 0, 255 )
-			-- elseif is_instance( obj, Structure ) then
-			-- 	love.graphics.setColor( 0, 0, 0 )
-			-- else
-			-- 	love.graphics.setColor( 255, 255, 0 )
-			-- end
 
-			-- screen:Rectangle( x, y, sz, sz )
-			-- x = x + sz + margin
-			-- if x >= x2 - margin - 4 then
-			-- 	x, y = x1 + 4 + margin, y + sz + margin
-			-- end
+function Tile:RenderDebugPanel( ui, panel )
+	if self.contents and next(self.contents) then
+		ui.Text( "Contents:" )
+		for i, obj in ipairs( self.contents ) do
+			ui.SameLine( 0, 10 )
+			panel:AppendTable( ui, obj )
 		end
 	end
 end

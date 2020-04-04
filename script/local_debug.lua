@@ -2,18 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(screen.camera:ScreenToWorld( 1, 0 ))",
-			"print(screen.camera:ScreenToWorld( 1, 1 ))",
-			"print(screen.camera:ScreenToWorld( 32, 32 ))",
-			"print( screen.camera:WorldToScreen( 1, 1 ))",
-			"print( screen.camera:WorldToScreen( 1, 2 ))",
-			"print( screen.camera:WorldToScreen( 1, 3 ))",
-			"print( screen.camera.view_height )",
-			"print( screen.camera.x )",
-			"print( screen.camera.y )",
-			"print( screen.camera:WorldToScreen( 0, 0 ))",
-			"print( screen.camera.y )",
-			"print( player:GetCoordinate() )",
 			"print( screen.camera:WorldToScreen( 0, 0 ))",
 			"print( screen.camera:WorldToScreen( 1, 0 ))",
 			"print( screen.camera:WorldToScreen( 1, 1 ))",
@@ -33,7 +21,19 @@ return {
 			"print(map)",
 			"for i, k in map:Neighbours(t) do print( i, k ) end",
 			"print( t )",
-			"for i, k in map:Neighbours(t) do print( i, k ) end"
+			"for i, k in map:Neighbours(t) do print( i, k ) end",
+			"for k, v in pairs( location:GetPortals() ) do print( k, v ) end",
+			"for k, v in location:Portals() do print( k, v ) end",
+			"for k, v in location:Portals() do print( k, v, v.location ) end",
+			"print(t:GetCoordinate())",
+			"print( t:GetAspect( Aspect.Combat ))",
+			"print( t:GetAspect( Aspect.Combat ):EvaluateTarget( player ))",
+			"print( player:GetAspect( Aspect.Combat ))",
+			"print(t)",
+			"print(t:IsEnemy( player ))",
+			"print(player.combat)",
+			"print(player.faction)",
+			"print(t.faction)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

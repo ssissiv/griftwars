@@ -14,6 +14,7 @@ local Location = class( "Location", Entity )
 function Location:init()
 	Entity.init( self )
 	self.exits = {}
+	self.portals = {}
 	self.available_exits = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
 	self.map_colour = constants.colours.DEFAULT_TILE
 end
@@ -112,7 +113,7 @@ function Location:AddEntity( entity )
 	elseif entity.world and self.world == nil then
 		SpawnLocation( self, entity.world )
 	end
-
+	
 	entity:ListenForAny( self, self.OnEntityEvent )
 
 	if self.map then
@@ -255,6 +256,18 @@ end
 -- Depth-first traversal applying fn().
 function Location:Visit( fn, ... )
 	VisitInternal( {}, self, fn, ... )
+end
+
+function Location:Portals()
+	return ipairs( self.portals )
+end
+
+function Location:AddPortal( portal )
+	table.insert( self.portals, portal )
+end
+
+function Location:RemovePortal( portal )
+	table.arrayremove( self.portals, portal )
 end
 
 -- Breadth-first traversal applying fn().
@@ -424,7 +437,7 @@ function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 		for i, obj in ipairs( self.contents ) do
 			if is_instance( obj, Agent ) then
 				love.graphics.setColor( 255, 0, 255 )
-			elseif is_instance( obj, Structure ) then
+			elseif is_instance( obj, Door ) then
 				love.graphics.setColor( 0, 0, 0 )
 			else
 				love.graphics.setColor( 255, 255, 0 )

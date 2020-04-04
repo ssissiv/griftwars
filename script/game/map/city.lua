@@ -79,24 +79,23 @@ function City:SpawnHome( resident )
 		home:AddResident( resident )
 	end
 
-	local structure = Structure()
-	structure:WarpToLocation( self:RandomRoad() )
-	structure:Connect( room )
+	local door = Object.Door()
+	door:WarpToLocation( self:RandomRoad() )
+	door:Connect( room )
 
 	table.insert( self.rooms, room )
 	return room
 end
 
 function City:SpawnShop()
-	local shop_room = Location()
-	shop_room:SetImage( assets.LOCATION_BGS.SHOP )
-	local shop = shop_room:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
+	local shop_room = Location.Shop()
+	self.world:SpawnLocation( shop_room )
 
-	local structure = Structure()
-	structure:WarpToLocation( self:RandomRoad() )
-	structure:Connect( shop_room )
+	local door = Object.Door()
+	door:WarpToLocation( self:RandomRoad() )
+	door:Connect( shop_room )
 
-	local shopkeep = shop:SpawnShopOwner()
+	local shopkeep = shop_room:GetAspect( Feature.Shop ):SpawnShopOwner()
 	local home = self:SpawnHome( shopkeep )
 
 	table.insert( self.rooms, shop_room )
@@ -106,11 +105,13 @@ end
 function City:SpawnTavern()
 	local room = Location()
 	room:SetImage( assets.LOCATION_BGS.SHOP )
+	self.world:SpawnLocation( room )
+
 	local tavern = room:GainAspect( Feature.Tavern())
 
-	local structure = Structure()
-	structure:WarpToLocation( self:RandomRoad() )
-	structure:Connect( room )
+	local door = Object.Door()
+	door:WarpToLocation( self:RandomRoad() )
+	door:Connect( room )
 
 	local barkeep = tavern:SpawnBarkeep()
 	local home = self:SpawnHome( barkeep )
@@ -127,10 +128,15 @@ function City:SpawnMilitary()
 	room:GainAspect( Feature.StrategicPoint() )
 	room:GainAspect( Aspect.Faction( self.faction ))
 	room:GainAspect( Aspect.BuildingTileMap( 16, 16 ))
+	self.world:SpawnLocation( room )
 
-	local structure = Structure()
-	structure:WarpToLocation( self:RandomRoad() )
-	structure:Connect( room )
+	local door = Object.Door()
+	door:WarpToLocation( self:RandomRoad() )
+	door:Connect( room )
+
+	local rdoor = Object.Door()
+	rdoor:WarpToLocation( room )
+	rdoor:Connect( door.location )
 
 	local commander = Agent.Captain()
 	commander:GainAspect( Aspect.Faction( self.faction ))

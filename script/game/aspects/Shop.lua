@@ -22,7 +22,7 @@ function Shop:AssignShopOwner( agent )
 end
 
 function Shop:SpawnShopOwner()
-	local world = self:GetWorld()
+	local world = self:GetWorld()	
 	local stock = {}
 	local shop_type = self.shop_type
 	if shop_type == SHOP_TYPE.FOOD then

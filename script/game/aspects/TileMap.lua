@@ -141,4 +141,12 @@ function TileMap:Flood( origin, fn, ... )
 	assert_warning( #closed <= 99, "Floodings lots of tiles!", #closed )
 end
 
+function TileMap:FindInteractables( agent )
+end
+
+function TileMap:RenderDebugPanel( ui, panel )
+	ui.Text( "HI" )
+end
+
+
 

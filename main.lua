@@ -122,6 +122,7 @@ function love.load(arg)
     LoadAllScripts( "game/verbs" )
     LoadAllScripts( "game/characters" )
     LoadAllScripts( "game/objects" )
+    LoadAllScripts( "game/locations" )
     LoadAllScripts( "game/tilemaps" )
 
     require "game/Tile"

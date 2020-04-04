@@ -4,6 +4,10 @@ function Aspect:GetID()
 	return self._classname
 end
 
+function Aspect:IsSpawned()
+	return self:GetWorld() ~= nil
+end
+
 function Aspect:GetWorld()
 	local owner = self.owner
 	while owner do
@@ -18,6 +22,12 @@ function Aspect:OnGainAspect( owner )
 	assert( owner )
 	assert( self.owner == nil )
 	self.owner = owner
+
+	if self.TABLE_KEY then
+		assert( self.owner[ self.TABLE_KEY ] == nil, tostring(self))
+		self.owner[ self.TABLE_KEY ] = self
+	end
+
 	if self.event_handlers then
 		for event, fn in pairs( self.event_handlers ) do
 			if not IsEnum( event, WORLD_EVENT ) then
@@ -40,6 +50,11 @@ function Aspect:OnSpawn( world )
 end
 
 function Aspect:OnLoseAspect( owner )
+	if self.TABLE_KEY then
+		assert( self.owner[ self.TABLE_KEY ] == self, tostring(self))
+		self.owner[ self.TABLE_KEY ] = nil
+	end
+
 	self.owner:RemoveListener( self )
 	self.owner = nil
 end

@@ -49,6 +49,15 @@ local function WarpToLocation( self, location )
 		self.location = location
 		location:AddEntity( self )
 	end
+
+	if self.OnLocationChanged then
+		self:OnLocationChanged( prev_location, location )
+	end
+	for i, aspect in self:Aspects() do
+		if aspect.OnLocationChanged then
+			aspect:OnLocationChanged( prev_location, location )
+		end
+	end
 end
 
 function Object:WarpToNowhere()
@@ -114,5 +123,5 @@ function Object:GetLocation()
 end
 
 function Object:__tostring()
-	return string.format( "[%s]", self:GetName() )
+	return string.format( "<%s>", self:GetName() )
 end

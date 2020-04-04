@@ -34,6 +34,8 @@ end
 
 local Faction = class( "Aspect.Faction", Aspect )
 
+Faction.TABLE_KEY = "faction"
+
 function Faction:init( faction )
 	assert( is_instance( faction, FactionData ))
 	self.faction = faction

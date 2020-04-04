@@ -79,3 +79,83 @@ function PathFinder:GetEndRoom()
 		error()
 	end
 end
+
+
+--------------------------------------------------------------------
+
+local TilePathFinder = class( "TilePathFinder" )
+
+function TilePathFinder:init( map, source, target )
+	assert( is_instance( map, TileMap ))
+	assert( is_instance( source, Tile ))
+	assert( is_instance( target, Tile ))
+	self.map = map
+	self.source = source
+	self.target = target
+end
+
+-- Generate a path from start_room -> end_room.
+-- returns nil if no path can be found (or end_room == start_room),
+-- or an array of rooms leading from [start_room, end_room], inclusive.
+function TilePathFinder:CalculatePath()
+	local start_room = self:GetStartRoom()
+	local end_room = self:GetEndRoom()
+	if start_room == end_room then
+		return
+	end
+	local queue = { start_room }
+	assert( start_room )
+	assert( end_room )
+	local from_to = {} -- map of room -> next room back to start
+	local path
+	local sanity = 0
+
+	while #queue > 0 do
+		local room = table.remove( queue, 1 )
+
+		if room == end_room then
+			-- Found it! Generate path by walking back to start.
+			path = {}
+			local i = 0
+			while room and i < 20 do
+				table.insert( path, room )
+				i = i + 1
+				room = from_to[ room ]
+			end
+			table.reverse( path )
+			break
+		end
+
+		for i, dest in self.map:Neighbours( room ) do
+			if from_to[ dest ] == nil and dest ~= start_room then
+				assert( dest ~= start_room )
+				from_to[ dest ] = room
+				table.insert( queue, dest )
+			end
+		end
+		sanity = sanity + 1
+		assert( sanity < 1000 )
+	end
+
+	return path
+end
+
+function TilePathFinder:GetPath()
+	if self.path == nil then
+		self.path = self:CalculatePath()
+
+	end
+
+	return self.path
+end
+
+function TilePathFinder:GetStartRoom()
+	return self.source
+end
+
+
+function TilePathFinder:GetEndRoom()
+	return self.target
+end
+
+

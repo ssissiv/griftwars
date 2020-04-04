@@ -1,5 +1,7 @@
 local Combat = class( "Aspect.Combat", Aspect )
 
+Combat.TABLE_KEY = "combat"
+
 function Combat:init()
 	self.targets = {}
 end
@@ -7,11 +9,11 @@ end
 function Combat:OnSpawn( world )
 	Aspect.OnSpawn( self, world )
 	self:EvaluateTargets()
-	self.owner:ListenForEvent( AGENT_EVENT.LOCATION_CHANGED, self, self.OnLocationChanged )
-	self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
+	-- self.owner:ListenForEvent( AGENT_EVENT.LOCATION_CHANGED, self, self.OnLocationChanged )
+	-- self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
 end
 
-function Combat:OnLocationChanged( event_name, agent, prev_location, location )
+function Combat:OnLocationChanged( prev_location, location )
 	if prev_location then
 		prev_location:RemoveListener( self )
 	end

@@ -434,7 +434,11 @@ local function WarpToLocation( self, location )
 		location:AddAgent( self )
 	end
 
-	self:BroadcastEvent( AGENT_EVENT.LOCATION_CHANGED, prev_location, self.location )
+	for i, aspect in self:Aspects() do
+		if aspect.OnLocationChanged then
+			aspect:OnLocationChanged( prev_location, location )
+		end
+	end
 end
 
 function Agent:WarpToNowhere()
@@ -754,7 +758,9 @@ end
 
 function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	love.graphics.setFont( assets.FONTS.MAP_TILE )
-	love.graphics.print( self:GetMapChar() or "X", x1 + (x2-x1)/6, y1, 0, 0.8, 0.5 )
+	local ch, clr = self:GetMapChar()
+	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
+	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 0.8, 0.5 )
 end
 
 function Agent:__tostring()

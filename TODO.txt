@@ -1,6 +1,14 @@
 TODO
 ====
 
+
+diplomacy 1d6
+resist. 2
+suspicious +2 resist vs. diplomacy.
+When you roll diplomacy, reduce will (blue hearts?). after X times (patience - bar with discrete segments, regens but very slowly)
+If you reduce will to 0, you gain: the shtuff.
+
+
 * More strategic points, capturing strat points.
 * Map render from puppet POV : show ally/enemies, etc.
 
