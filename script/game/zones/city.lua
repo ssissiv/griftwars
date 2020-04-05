@@ -59,6 +59,7 @@ function City:SpawnRoad( road )
 	road:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 
 	table.insert( self.roads, road )
+	table.insert( self.rooms, road )
 
 	if self.worldgen:Random() < 0.2 then
 		Object.JunkHeap():WarpToLocation( road )
@@ -68,7 +69,6 @@ function City:SpawnRoad( road )
 end
 
 function City:SpawnHome( resident )
-
 	local room = Location()
 	room:SetDetails( loc.format( "Residence #{1}", #self.rooms ), "This is somebody's residence." )
 	room:SetImage( assets.LOCATION_BGS.INSIDE )

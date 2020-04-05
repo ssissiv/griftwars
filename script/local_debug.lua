@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( screen.camera:WorldToScreen( 0, 0 ))",
-			"print( screen.camera:WorldToScreen( 1, 0 ))",
-			"print( screen.camera:WorldToScreen( 1, 1 ))",
-			"print( screen.camera:WorldToScreen( 1, 2 ))",
 			"print( screen.camera:WorldToScreen( 1, 12 ))",
 			"print( screen.camera:WorldToScreen( player:GetCoordinate() ))",
 			"print(screen.camera.view_height)",
@@ -33,7 +29,11 @@ return {
 			"print(t:IsEnemy( player ))",
 			"print(player.combat)",
 			"print(player.faction)",
-			"print(t.faction)"
+			"print(t.faction)",
+			"print(t:GetBounds())",
+			"for i, v in ipairs( t.rooms ) do print( i, v:GetCoordinate() ) end",
+			"print(location:GetCoordinate())",
+			"print(t:GetBounds())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

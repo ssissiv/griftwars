@@ -44,6 +44,15 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
             self.filter_str = filter_str
         end
 
+        if ui.TreeNodeEx( "Zones" ) then
+            for i, zone in ipairs( self.game.world:GetBucket( Zone )) do
+                if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
+                    panel:AppendTable( ui, zone )
+                end
+            end
+            ui.TreePop()
+        end
+
         if ui.TreeNodeEx( "Locations", "DefaultOpen" ) then
             if puppet and puppet:GetLocation() then
                 panel:AppendTable( ui, puppet:GetLocation(), string.format( "**%s", tostring(puppet:GetLocation())) )

@@ -179,6 +179,9 @@ function WorldGen:GenerateWorld()
 
 	--------------------------------------------------------------------------------------
 
+	local zones = world:CreateBucketByClass( Zone )
+	print( table.count( zones ), " total zones." )
+
 	return self.world
 end
 
