@@ -151,9 +151,8 @@ function WorldGen:GenerateWorld()
 
 	Msg:SetWorld( world )
 
-
-	local city = WorldGen.City( self )
-	city:GenerateCity( nil, 6 )
+	local city = WorldGen.City( self, nil, 3 )
+	world:SpawnEntity( city )
 	
 	--------------------------------------------------------------------------------------
 	-- Forest!
@@ -161,20 +160,19 @@ function WorldGen:GenerateWorld()
 	for i = 1, 2 do
 		local origin = self:RandomAvailableLocation( city:GetRoads(), 6 )
 		if origin then
-			local forest = WorldGen.Forest( self )
+			local forest = WorldGen.Forest( self, origin, 6 )
 			world:SpawnEntity( forest )
-			forest:Generate( origin, 6 )
-			forest:PopulateOrcs()
 
 			local city_origin = self:RandomAvailableLocation( forest:GetRooms(), 6 )
 			if city_origin then
-				local city = WorldGen.City( self )
-				city:GenerateCity( city_origin, 6 )
+				local city = WorldGen.City( self, city_origin, math.random( 1, 3 ) )
+				world:SpawnEntity( city )
 			end
 		end
 	end
 
 	--------------------------------------------------------------------------------------
+	-- Place the player.
 
 	local player = self:GeneratePlayer( self.world )
 	world:SpawnAgent( player, city:RandomRoad() )
@@ -189,9 +187,6 @@ function WorldGen:GeneratePlayer( world )
 	local player = Agent()
 	player.MAP_CHAR = "@"
 	player:SetDetails( "Han", nil, GENDER.MALE )
-	-- player:GainAspect( Skill.Scrounge() )
-	-- player:GainAspect( Skill.Socialize() )
-	-- player:GainAspect( Skill.RumourMonger() )
 	player:GainAspect( Aspect.Player() )
 	player:GainAspect( Aspect.Combat() )
 	player:GainAspect( Aspect.Impass() )

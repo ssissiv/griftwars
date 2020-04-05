@@ -437,8 +437,6 @@ function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 		for i, obj in ipairs( self.contents ) do
 			if is_instance( obj, Agent ) then
 				love.graphics.setColor( 255, 0, 255 )
-			elseif is_instance( obj, Door ) then
-				love.graphics.setColor( 0, 0, 0 )
 			else
 				love.graphics.setColor( 255, 255, 0 )
 			end

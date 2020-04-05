@@ -58,11 +58,7 @@ require "game/PathFinder"
 require "game/worldgen"
 require "game/Req"
 require "game/VerbContainer"
-
-require "game/map/Line"
-require "game/map/City"
-require "game/map/Forest"
-require "game/map/CorpHQ"
+require "game/map/Zone"
 
 require "game/relationships/Relationship"
 require "game/relationships/Affinity"
@@ -122,6 +118,7 @@ function love.load(arg)
     LoadAllScripts( "game/verbs" )
     LoadAllScripts( "game/characters" )
     LoadAllScripts( "game/objects" )
+    LoadAllScripts( "game/map" )
     LoadAllScripts( "game/locations" )
     LoadAllScripts( "game/tilemaps" )
 

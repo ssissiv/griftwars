@@ -1,40 +1,13 @@
-local Forest = class( "WorldGen.Forest", Entity )
+local Forest = class( "WorldGen.Forest", Zone )
 
-function Forest:init( worldgen )
-	self.rooms = {}
-	self.worldgen = worldgen
+function Forest:init( worldgen, origin, size )
+	Zone.init( self, worldgen )
 
-	-- local max_rooms = math.random( 10, 30 )
-	-- local open = { self:CreateRoom() }
-	-- while #open > 0 do
-	-- 	local room = table.remove( open, 1 )
-
-	-- 	local maxn = math.min( 3, max_rooms - (#open + #self.rooms) )
-	-- 	local n = math.random( 1, 3 )
-	-- 	for i = 1, math.min( n, maxn ) do
-	-- 		local neighbour = self:CreateRoom()
-	-- 		neighbour:Connect( room )
-	-- 		table.insert( open, neighbour )
-	-- 	end
-
-	-- 	if #self.rooms > 0 and math.random() < 0.2 then
-	-- 		local r = self:RandomRoom()
-	-- 		if not room:IsConnected( r ) then
-	-- 			room:Connect( r )
-	-- 		end
-	-- 	end
-
-	-- 	table.insert( self.rooms, room )
-	-- end
-
-	self:PopulateOrcs()
+	self.origin = origin
+	self.size = size
 end
 
-function Forest:OnSpawn( world )
-	Forest._base.OnSpawn( self, world )
-end
-
-function Forest:Generate( location, count )
+function Forest:GenerateZone()
 	local function CreateRoom( room )
 		room:SetDetails( loc.format( "The Forest [{1}]", #self.rooms ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
 		room:SetImage( assets.LOCATION_BGS.FOREST )
@@ -46,7 +19,9 @@ function Forest:Generate( location, count )
 		table.insert( self.rooms, room )
 	end
 
-	self.worldgen:SproutLocations( location, count, CreateRoom )
+	self.worldgen:SproutLocations( self.origin, self.size, CreateRoom )
+
+	-- self:PopulateOrcs()
 end
 
 function Forest:PopulateOrcs()

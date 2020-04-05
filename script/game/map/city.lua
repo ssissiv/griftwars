@@ -1,24 +1,22 @@
-local City = class( "WorldGen.City", Entity )
+local City = class( "WorldGen.City", Zone )
 
-function City:init( worldgen )
-	self.worldgen = worldgen
-	self.world = worldgen.world
-	self.rooms = {}
+function City:init( worldgen, origin, sz )
+	assert( sz )
+	Zone.init( self, worldgen )
 	self.roads = {}
 	self.home_count = 0
+	self.origin = origin
+	self.size = sz or 1
 end
 
-function City:GenerateCity( origin, sz )
+function City:GenerateZone()
 	local world = self.world
 
 	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
 	self.faction = world:CreateFaction( self.name )
 
-	if origin == nil then
-		origin = self:SpawnRoad()
-	end
-
-	self.worldgen:SproutLocations( origin, sz, function( location ) self:SpawnRoad( location ) end )
+	local origin = self.origin or self:SpawnRoad()
+	self.worldgen:SproutLocations( origin, self.size, function( location ) self:SpawnRoad( location ) end )
 
 	-- Shops
 	for i = 1, 1 do
