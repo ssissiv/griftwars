@@ -36,6 +36,8 @@ local colours =
 	HOME_TILE = { 0, 0, 140 },
 	SHOP_TILE = { 200, 200, 0 },
 	FOREST_TILE = { 0, 200, 0 },
+	HILLS_TILE = { 150, 200, 0 },
+	MOUNTAINS_TILE = { 150, 150, 150 },
 }
 
 

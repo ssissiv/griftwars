@@ -27,3 +27,19 @@ function Zone:GetBounds()
 
 	return x1, y1, x2, y2
 end
+
+function Zone:RandomRoom()
+	return self.worldgen:ArrayPick( self.rooms )
+end
+
+function Zone:GetRooms()
+	return self.rooms
+end
+
+function Zone:RoomAt( i )
+	return self.rooms[ i ]
+end
+
+function Zone:__tostring()
+	return string.format( "[%s | %s]", self._classname, self.name or "" )
+end

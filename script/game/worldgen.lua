@@ -12,6 +12,10 @@ function WorldGen:ArrayPick( t )
 	return self.world:ArrayPick( t )
 end
 
+function WorldGen:TablePick( t )
+	return self.world:TablePick( t )
+end
+
 function WorldGen:Sprout( room, fn, ... )
 	if room == nil then
 		return
@@ -151,21 +155,28 @@ function WorldGen:GenerateWorld()
 
 	Msg:SetWorld( world )
 
-	local city = WorldGen.City( self, nil, 3 )
+	local city = WorldGen.City( self, nil, 1 )
 	world:SpawnEntity( city )
 	
 	--------------------------------------------------------------------------------------
 	-- Forest!
 
-	for i = 1, 2 do
+	local wilderness = {
+		[10] = WorldGen.Forest,
+		[5] = WorldGen.Hills,
+		[3] = WorldGen.Mountains,
+	}
+
+	for i = 1, 3 do
 		local origin = self:RandomAvailableLocation( city:GetRoads(), 6 )
 		if origin then
-			local forest = WorldGen.Forest( self, origin, 6 )
+			local wt, zone_class = self:TablePick( wilderness )
+			local forest = zone_class( self, origin, 6 )
 			world:SpawnEntity( forest )
 
 			local city_origin = self:RandomAvailableLocation( forest:GetRooms(), 6 )
 			if city_origin then
-				local city = WorldGen.City( self, city_origin, math.random( 1, 3 ) )
+				local city = WorldGen.City( self, city_origin, 1 )
 				world:SpawnEntity( city )
 			end
 		end

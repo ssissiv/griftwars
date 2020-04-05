@@ -150,7 +150,3 @@ end
 function City:GetRoads()
 	return self.roads
 end
-
-function City:RoomAt( i )
-	return self.rooms[ i ]
-end

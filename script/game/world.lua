@@ -156,6 +156,17 @@ function World:ArrayPick( t )
 	return t[ self:Random( #t ) ]
 end
 
+function World:TablePick( t )
+    local num = table.count( t )
+    local i = self:Random( num )
+    for k, v in pairs(t) do
+        i = i - 1
+        if i <= 0 then
+            return k, v
+        end
+    end
+end
+
 function World:AllAgents()
 	return ipairs( self.agents )
 end
