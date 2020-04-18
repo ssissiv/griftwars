@@ -16,7 +16,7 @@ function WorldNexus:ChooseBuyItem( owner, buyer )
 	assert( window.owner )
 	self.screen:AddWindow( window )
 
-	return window:ChooseBuyItem()
+	return window:ChooseBuyItem( self.world )
 end
 
 function WorldNexus:Sleep( agent )
@@ -90,7 +90,7 @@ function WorldNexus:ConfirmChoice( title, body )
 	local window = ChoiceWindow( title, body )
 	self.screen:AddWindow( window )
 
-	return window:Show()
+	return window:Show( self.world )
 end
 
 

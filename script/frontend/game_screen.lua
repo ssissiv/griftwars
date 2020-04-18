@@ -474,6 +474,12 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 
 	if self.puppet then
 		local verbs = self.puppet:GetPotentialVerbs( "room" )
+		if self.active_tiles == nil then
+			self.active_tiles = {}
+		else
+			table.clear( self.active_tiles )
+		end
+		local active_tile
 		for i, verb in verbs:Verbs() do
 			local tx, ty
 			if verb:GetTarget() then
@@ -482,18 +488,27 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 				tx, ty = self.puppet:GetCoordinate()
 			end
 			if tx and ty then
-				local x1, y1 = self.camera:WorldToScreen( tx, ty )
-				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
-				local w, h = x2 - x1, y2 - y1
-
+				local tile = location:GetTileAt( tx, ty )
+				table.insert_unique( self.active_tiles, tile )
 				if verb == self.current_verb then
-					love.graphics.setColor( 255, 255, 0, 255 )
-				else
-					love.graphics.setColor( 255, 255, 255, 255 )
+					active_tile = tile
 				end
-				self:Box(x1, y1, w, h )
-				self:Box(x1 + 1, y1 + 1, w - 2, h - 2 )
 			end
+		end
+
+		for i, tile in ipairs( self.active_tiles ) do
+			local tx, ty = tile:GetCoordinate()
+			local x1, y1 = self.camera:WorldToScreen( tx, ty )
+			local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
+			local w, h = x2 - x1, y2 - y1
+
+			if tile == active_tile then
+				love.graphics.setColor( 255, 255, 0, 255 )
+			else
+				love.graphics.setColor( 255, 255, 255, 255 )
+			end
+			self:Box(x1, y1, w, h )
+			self:Box(x1 + 1, y1 + 1, w - 2, h - 2 )
 		end
 	end
 
@@ -757,25 +772,25 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
 			puppet:Walk( EXIT.WEST )
 		end
 
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
 			puppet:Walk( EXIT.EAST )
 		end
 
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
 			puppet:Walk( EXIT.SOUTH )
 		end
 
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
 			puppet:Walk( EXIT.NORTH )
 		end
 
@@ -783,6 +798,12 @@ function GameScreen:KeyPressed( key )
 		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
 		local mx, my = love.mouse.getPosition()
 		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+
+	elseif key == "." then
+		local puppet = self.world:GetPuppet()
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
+			puppet:AttemptVerb( Verb.Wait )
+		end
 
 	elseif key == "." and Input.IsShift() then
 		local puppet = self.world:GetPuppet()
@@ -799,7 +820,7 @@ function GameScreen:KeyPressed( key )
 		self:CycleVerbs()
 
 	elseif key == "return" then
-		if self.current_verb then
+		if self.current_verb and self.current_verb:CanDo( self.puppet ) then
 			self.puppet:DoVerbAsync( self.current_verb )
 		end
 

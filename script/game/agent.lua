@@ -120,9 +120,11 @@ function Agent:GetShortDesc( viewer )
 	local desc
 	if self.verbs then
 		for i, verb in ipairs( self.verbs ) do
-			desc = verb:GetShortDesc( viewer )
-			if desc ~= nil then
-				break
+			if not verb:IsCancelled() then
+				desc = verb:GetShortDesc( viewer )
+				if desc ~= nil then
+					break
+				end
 			end
 		end
 	end
@@ -501,6 +503,14 @@ function Agent:IsDoing( verb )
 		end
 	end
 	return false
+end
+
+function Agent:AttemptVerb( verb_class )
+	local verbs = self:GetPotentialVerbs( "room" )
+	local verb = verbs:FindVerbClass( verb_class )
+	if verb and verb:CanDo( self ) then
+		self:DoVerbAsync( verb )
+	end
 end
 
 function Agent:DoVerbAsync( verb, ... )

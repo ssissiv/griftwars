@@ -46,7 +46,12 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
     ui.End()
 end
 
-function ShopWindow:ChooseBuyItem()
+function ShopWindow:ChooseBuyItem( world )
+	world:TogglePause( PAUSE_TYPE.NEXUS )
+
 	self.coro = coroutine.running()
-	return coroutine.yield()
+	coroutine.yield()
+
+	world:TogglePause( PAUSE_TYPE.NEXUS )
 end
+

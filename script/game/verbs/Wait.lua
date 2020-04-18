@@ -1,5 +1,5 @@
 local Wait = class( "Verb.Wait", Verb )
-Wait.ACT_RATE = 8.0
+Wait.ACT_RATE = 16.0
 
 function Wait:GetDesc()
 	return "Wait"

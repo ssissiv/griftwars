@@ -14,6 +14,7 @@ function VerbContainer:CollectVerbs( actor, ... )
 	table.clear( self.verbs )
 	
 	self.dirty = false
+	self.actor = actor
 
 	if not actor:IsSpawned() then
 		return
@@ -50,7 +51,6 @@ function VerbContainer:SetDirty()
 end
 
 function VerbContainer:AddVerb( v )
-	assert_warning( v:GetActor(), tostring(v))
 	table.insert( self.verbs, v )
 end
 
@@ -60,6 +60,14 @@ end
 
 function VerbContainer:FindVerb( verb )
 	return table.arrayfind( self.verbs, verb )
+end
+
+function VerbContainer:FindVerbClass( verb_class )
+	for i, verb in ipairs( self.verbs ) do
+		if is_instance( verb, verb_class ) then
+			return verb
+		end
+	end
 end
 
 function VerbContainer:Verbs()

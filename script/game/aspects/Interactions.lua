@@ -91,6 +91,13 @@ function Interaction:SatisfyReqs( actor )
 	end
 end
 
+function Interaction:CollectVerbs( verbs, actor, obj )
+	local ok, reason = self:CanInteract( actor )
+	if ok or reason then
+		verbs:AddVerb( Verb.Interact( actor, self ))
+	end
+end
+
 function Interaction:CanInteract( actor )
 	if self:IsCooldown() then
 		return false, loc.format( "Cooldown: {1#realtime}", self:GetCooldown() )
@@ -98,6 +105,10 @@ function Interaction:CanInteract( actor )
 
 	if self.satisfied_by and table.contains( self.satisfied_by, actor ) then
 		return false -- "Already satisfied"
+	end
+
+	if not actor:IsAdjacent( self.owner ) then
+		return false, "Too far away"
 	end
 
 	if self.owner:IsBusy( VERB_FLAGS.ATTENTION ) then

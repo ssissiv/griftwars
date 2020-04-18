@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"puppet:RegenVerbs( \"tile\" ); puppet:CollectPotentialVerbs( \"tile\" )",
 			"puppet:RegenVerbs(\"room\" ); DBG(puppet)",
 			"print(tostr(puppet:GetPotentialVerbs(\"room\" ))",
 			")",
@@ -33,7 +32,8 @@ return {
 			"print(debug.traceback(t.coro))",
 			"print(puppet)",
 			"print(puppet.location)",
-			"print(puppet.location.map)"
+			"print(puppet.location.map)",
+			"print(tostr(world.pause))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

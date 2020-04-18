@@ -13,6 +13,10 @@ function Interact:EqualVerb( verb )
 	return self.actor == verb.actor and self.interaction == verb.interaction
 end
 
+function Interact:GetTarget()
+	return self.interaction.owner
+end
+
 function Interact:GetDesc()
 	return self.interaction:GetDesc()
 end
@@ -20,23 +24,6 @@ end
 function Interact:RenderTooltip( ui, viewer )
 	self.interaction:RenderTooltip( ui, viewer )
 end
-
--- function Interact:CollectVerbs( verbs, actor, obj )
--- 	local focus = actor:GetFocus()
--- 	if focus and focus == obj then
--- 		for i, aspect in focus:Aspects() do
--- 			if is_instance( aspect, Aspect.Interaction ) then
--- 				local ok, reason = true
--- 				if aspect.CanInteract then
--- 					ok, reason = aspect:CanInteract( actor )
--- 				end
--- 				if ok or reason then
--- 					verbs:AddVerb( Verb.Interact( actor, aspect ))
--- 				end
--- 			end
--- 		end
--- 	end
--- end
 
 function Interact:CanInteract( actor, ... )
 	local ok, reason = self.interaction:CanInteract( actor )

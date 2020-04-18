@@ -48,7 +48,13 @@ function ChoiceWindow:RenderImGuiWindow( ui, screen )
 	end
 end
 
-function ChoiceWindow:Show()
+function ChoiceWindow:Show( world )
+	world:TogglePause( PAUSE_TYPE.NEXUS )
+
 	self.coro = coroutine.running()
-	return coroutine.yield()
+	local result = coroutine.yield()
+
+	world:TogglePause( PAUSE_TYPE.NEXUS )
+
+	return result
 end

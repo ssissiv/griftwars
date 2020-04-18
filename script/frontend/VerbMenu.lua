@@ -18,11 +18,10 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
         end
 
     	for i, verb in self.verbs:Verbs() do
-            assert(verb:GetTarget() or verb:GetActor(), tostring(verb))
-            local tx, ty = AccessCoordinate( verb:GetTarget() or verb:GetActor() )
+            local tx, ty = AccessCoordinate( verb:GetTarget() or verb:GetActor() or self.verbs.actor )
             if tx == tx0 and ty == ty0 then
-
-                local ok, details = verb:CanDo()
+                assert( self.verbs.actor )
+                local ok, details = verb:CanDo( self.verbs.actor )
                 local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
                 if verb == self.current_verb then
                     txt = "> "..txt
@@ -44,15 +43,15 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                     ui.PopStyleColor()
                 end
 
-                if ui.IsItemHovered() and (details or verb.RenderTooltip) then
-                    ui.BeginTooltip()
+                if details or verb.RenderTooltip then
+                    ui.Indent( 20 )
                     if verb.RenderTooltip then
                         verb:RenderTooltip( ui, verb.actor )
                     end
                     if details then
-                        ui.TextColored( 1, 1, 0.5, 1, details )
+                        ui.TextColored( 1, 0, 0, 1, details )
                     end
-                    ui.EndTooltip()
+                    ui.Unindent( 20 )
                 end
             end
     	end

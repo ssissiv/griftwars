@@ -156,18 +156,18 @@ function Verb:CheckDC()
 	return math.random( 1, 20 ) >= self:GetDC()
 end
 
-function Verb:CanDo( ... )
+function Verb:CanDo( actor, ... )
 	if self.coro then
 		return false, "Already executing"
 	end
 
-	for i, verb in self.actor:Verbs() do
+	for i, verb in actor:Verbs() do
 		if verb:EqualVerb( self ) then
 			return false, "Already executing copy"
 		end
 	end
 
-	local ok, reason = self:CanInteract( ... )
+	local ok, reason = self:CanInteract( actor, ... )
 	if not ok then
 		return false, reason
 	end
