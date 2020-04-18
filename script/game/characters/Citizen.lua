@@ -2,6 +2,7 @@
 -- A "normal" citizen.
 
 local Citizen = class( "Agent.Citizen", Agent )
+Citizen.MAP_CHAR = "c"
 
 function Citizen:init()
 	Agent.init( self )

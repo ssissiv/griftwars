@@ -93,6 +93,10 @@ function City:SpawnShop()
 	door:WarpToLocation( self:RandomRoad() )
 	door:Connect( shop_room )
 
+	local rdoor = Object.Door()
+	rdoor:WarpToLocation( shop_room )
+	rdoor:Connect( door.location )
+
 	local shopkeep = shop_room:GetAspect( Feature.Shop ):SpawnShopOwner()
 	local home = self:SpawnHome( shopkeep )
 

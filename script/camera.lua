@@ -17,6 +17,10 @@ function Camera:UpdateCamera( dt )
 	self.y = (self.y + self.targety) * 0.5
 end
 
+function Camera:GetZoom()
+	return self.zoom
+end
+
 function Camera:ZoomTo( zoom )
 	assert( zoom > 0 )
 	self.zoom = zoom
