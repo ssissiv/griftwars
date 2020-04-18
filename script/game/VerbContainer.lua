@@ -73,8 +73,16 @@ function VerbContainer:VerbAt( idx )
 	return self.verbs[ idx ]
 end
 
+function VerbContainer:FindVerb( verb )
+	return table.arrayfind( self.verbs, verb )
+end
+
 function VerbContainer:Verbs()
 	return ipairs( self.verbs )
+end
+
+function VerbContainer:CountVerbs()
+	return #self.verbs
 end
 
 function VerbContainer:CancelVerbs()

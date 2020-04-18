@@ -114,6 +114,12 @@ function Object:GetCoordinate()
 	return self.x, self.y
 end
 
+function Object:GetTile()
+	if self.location then
+		return self.location:GetTileAt( self.x, self.y )
+	end
+end
+
 function Object:GetLocation()
 	if self.location then
 		return self.location

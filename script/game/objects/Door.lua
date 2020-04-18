@@ -20,6 +20,21 @@ function Door:GetName()
 	end
 end
 
+function Door:Open()
+	self:LoseAspect( self:GetAspect( Aspect.Impass ))
+end
+
+function Door:Close()
+	self:GainAspect( Aspect.Impass() )
+end
+
+
+function Door:CollectVerbs( verbs, agent )
+	if agent:GetTile() == self:GetTile() then
+		verbs:AddVerb( Verb.LeaveLocation( agent, self.portal:GetDest() ))
+	end
+end
+
 function Door:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	local sx, sy = (x2 - x1) / self.image:getWidth(), (y2 - y1) / self.image:getHeight()
 	love.graphics.setColor( 255, 255, 255, 255 )

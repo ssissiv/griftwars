@@ -8,6 +8,8 @@ function GameScreen:init()
 	self.nexus = WorldNexus( self.world, self )
 	self.world:SetNexus( self.nexus )
 	self.world:Start()
+	self.world:ListenForAny( self, self.OnWorldEvent )
+	self.puppet = self.world:GetPuppet()
 
 	-- List of objects and vergbs in the currently rendered location.
 	self.objects = {}
@@ -19,6 +21,7 @@ function GameScreen:init()
 	self.camera = Camera()
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
+	self:PanToCurrentInterest()
 
 	return self
 end
@@ -36,9 +39,6 @@ end
 function GameScreen:UpdateScreen( dt )
 	self.world:UpdateWorld( dt )
 
-	local cx, cy = self.world:GetPlayer():GetCoordinate()
-	self:WarpCameraTo( cx, cy )
-
 	self.camera:UpdateCamera( dt )
 
 	if self.is_panning then
@@ -51,6 +51,32 @@ function GameScreen:UpdateScreen( dt )
 		local wx, wy = self.camera:ScreenToWorld( mx, my )
 		wx, wy = math.floor( wx ), math.floor( wy )
 		self.hoverx, self.hovery = wx, wy
+	end
+end
+
+function GameScreen:OnWorldEvent( event_name, world, ... )
+	if event_name == WORLD_EVENT.PUPPET_CHANGED then
+		local puppet = ...
+		self:OnPuppetChanged( puppet )
+	end
+end
+
+function GameScreen:OnPuppetChanged( puppet )
+	if self.puppet then
+		self.puppet:RemoveListener( self )
+	end
+
+	self.puppet = puppet
+	self:PanToCurrentInterest()
+
+	if puppet then
+		puppet:ListenForAny( self.OnPuppetEvent, self )
+	end
+end
+
+function GameScreen:OnPuppetEvent( event_name, ... )
+	if event_name == AGENT_EVENT.LOCATION_CHANGED then
+		self:PanToCurrentInterest()
 	end
 end
 
@@ -429,6 +455,31 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 		end
 	end
 
+	if self.puppet then
+		local verbs = self.puppet:GetPotentialVerbs( "room" )
+		for i, verb in verbs:Verbs() do
+			local tx, ty
+			if verb:GetTarget() then
+				tx, ty = AccessCoordinate( verb:GetTarget() )
+			else
+				tx, ty = self.puppet:GetCoordinate()
+			end
+			if tx and ty then
+				local x1, y1 = self.camera:WorldToScreen( tx, ty )
+				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
+				local w, h = x2 - x1, y2 - y1
+
+				if verb == self.current_verb then
+					love.graphics.setColor( 255, 255, 0, 255 )
+				else
+					love.graphics.setColor( 255, 255, 255, 255 )
+				end
+				self:Box(x1, y1, w, h )
+				self:Box(x1 + 1, y1 + 1, w - 2, h - 2 )
+			end
+		end
+	end
+
 	if self.hoverx and self.hovery then
 		local x1, y1 = self.camera:WorldToScreen( self.hoverx, self.hovery )
 		local x2, y2 = self.camera:WorldToScreen( self.hoverx + 1, self.hovery + 1 )
@@ -537,11 +588,74 @@ function GameScreen:PanTo( x, y )
 	self.camera:PanTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
+function GameScreen:PanToCurrentInterest()
+	if self.current_verb then
+		local tx, ty = AccessCoordinate( self.current_verb:GetTarget() or self.current_verb:GetActor() )
+		if tx and ty then
+			self:PanTo( tx, ty )
+		end
+
+	else
+		local cx, cy
+		if self.puppet then
+			cx, cy = self.puppet:GetCoordinate()
+			if cx then
+				self:PanTo( cx, cy )
+			end
+		end
+	end	
+end
+
 function GameScreen:WarpCameraTo( x, y )
 	local x1, y1 = self.camera:ScreenToWorld( 0, 0 )
 	local x2, y2 = self.camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
 
 	self.camera:WarpTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
+end
+
+function GameScreen:CycleVerbs()
+	if not self.puppet then
+		return
+	end
+
+	local verbs = self.puppet:GetPotentialVerbs( "room" )
+	local idx = verbs:FindVerb( self.current_verb )
+	if idx == nil then
+		idx = 1
+	elseif idx == verbs:CountVerbs() then
+		idx = nil
+	else
+		idx = (idx % verbs:CountVerbs()) + 1
+	end
+
+	self:SetCurrentVerb( verbs:VerbAt( idx ) )
+end
+
+function GameScreen:SetCurrentVerb( verb )
+	self.current_verb = verb
+
+	local verb_window = self:FindWindow( VerbMenu )
+	if verb_window == nil and verb ~= nil then
+		-- Show window.
+		verb_window = VerbMenu()
+		self:AddWindow( verb_window )
+
+	elseif verb_window and verb == nil then
+		-- No verb: clear window.
+		self:RemoveWindow( verb_window )
+		verb_window = nil
+	end
+
+	if verb_window then
+		-- Refresh verb window.
+		local verbs = self.puppet:GetPotentialVerbs( "room" )
+		verb_window:RefreshContents( verb, verbs )
+		self:PanToCurrentInterest()
+	else
+		self:PanToCurrentInterest()
+	end
+
+	print( "CURRENT VERB:", self.current_verb)
 end
 
 function GameScreen:MouseMoved( mx, my )
@@ -619,8 +733,6 @@ function GameScreen:KeyPressed( key )
 		self.world:GetPuppet():SetFocus()
 		return true
 
-	elseif key == "backspace" then
-		self:PanTo( 0, 0 )
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
 		if puppet then
@@ -649,6 +761,25 @@ function GameScreen:KeyPressed( key )
 		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
 		local mx, my = love.mouse.getPosition()
 		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+
+	elseif key == "." and Input.IsShift() then
+		local puppet = self.world:GetPuppet()
+		if puppet then
+			local tile = puppet:GetTile()
+			if tile then
+				-- local leave = puppet:GetPotentialVerbs()
+				-- puppet:DoVerb( )
+				-- puppet:Walk( EXIT.SOUTH )
+			end
+		end
+
+	elseif key == "tab" then
+		self:CycleVerbs()
+
+	elseif key == "return" then
+		if self.current_verb then
+			self.puppet:DoVerbAsync( self.current_verb )
+		end
 
 	elseif key == "-" then
 		self.zoom_level = math.max( (self.zoom_level - 1), -3 )

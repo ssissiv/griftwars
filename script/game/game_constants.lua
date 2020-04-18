@@ -1,3 +1,5 @@
+require "game/event_constants"
+
 -- 1.0 unit of datetime is meant to represent 1 hour,
 -- so a WALL_TO_GAME_TIME of 1.0 means every real world second is equivalent to 1 game hour.
 WALL_TO_GAME_TIME = 1/60.0 -- eg. 1 wall second == 1 game minute / 1 wall minute = 1 game hour
@@ -35,7 +37,7 @@ DEBUG_WORLD_SPEEDS =
 DEFAULT_DEBUG_SPEED = table.find( DEBUG_WORLD_SPEEDS, 1.0 )
 assert( DEFAULT_DEBUG_SPEED )
 
-PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS", "GAME_OVER" }
+PAUSE_TYPE = MakeEnum{ "DEBUG", "CONSOLE", "FOCUS_MODE", "NEXUS", "GAME_OVER", "IDLE" }
 
 GENDER = MakeEnum
 {
@@ -130,28 +132,6 @@ SENSOR = MakeEnum
 {
 	"ECHO", -- Meta sense. Game logging.
 	"VISION", -- in-game vision
-}
-WORLD_EVENT = MakeEnum{
-	"LOG",
-	"START", -- Start() occurs after all entities have been spawned.
-	"VERB_FINISH",	
-}
-
-ENTITY_EVENT = MakeEnum{
-	"ASPECT_GAINED",
-	"ASPECT_LOST",
-}
-
-AGENT_EVENT = MakeEnum{
-	"VERB_UNASSIGNED",
-	"FOCUS_CHANGED",
-	"COLLECT_VERBS",
-}
-
-LOCATION_EVENT = MakeEnum{
-	"AGENT_ADDED",
-	"AGENT_REMOVED",
-	"ENTITY_EVENT",
 }
 
 EXIT = MakeEnum{ "NORTH", "EAST", "WEST", "SOUTH" }
@@ -279,6 +259,8 @@ TOKEN_TO_FACE =
 }
 
 FACTION_TAG = MakeEnum{ "ENEMY", "ALLY" }
+
+IMPASS = MakeEnum{ "WALL", "DOOR", "BODY" }
 
 INFO = MakeEnum
 {

@@ -63,6 +63,14 @@ function Verb:GetRandomActor()
 	end
 end
 
+function Verb:GetActor()
+	return self.actor
+end
+
+function Verb:GetTarget()
+	return self.obj
+end
+
 function Verb:EqualVerb( verb )
 	return self.actor == verb.actor and self.obj == verb.obj
 end

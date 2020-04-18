@@ -61,10 +61,12 @@ function LeaveLocation:Interact( actor )
 
 	local dest = self.obj
 	assert( dest == nil or is_instance( dest, Location ))
+
 	if dest == nil then
+		-- Chose a random accessible portal out of here.
 		local dests = {}
-		for i, exit in actor.location:Exits() do
-			local dest = exit:GetDest( actor.location )
+		for i, portal in actor.location:Portals() do
+			local dest = portal:GetDest()
 			assert( dest ~= actor.location )
 			table.insert( dests, dest )
 		end

@@ -159,9 +159,8 @@ end
 
 function Location:CollectVerbs( verbs, actor, obj )
 	if verbs.id == "room" then
-		for i, exit in ipairs( self.exits ) do
-			local dest, addr = exit:GetDest( self )
-			verbs:AddVerb( Verb.LeaveLocation( actor, dest ))
+		for i, portal in ipairs( self.portals ) do
+			verbs:AddVerb( Verb.LeaveLocation( actor, portal ))
 		end
 	end
 end

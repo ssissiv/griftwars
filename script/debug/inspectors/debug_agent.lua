@@ -64,11 +64,13 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	if puppet == self.agent and ui.CollapsingHeader( "Potential Verbs" ) then
 		for id, verbs in pairs( self.agent.potential_verbs ) do
-			if ui.TreeNode( id ) then
-				ui.Text( id )
-				
+			if ui.TreeNode( id ) then				
 				for j, verb in verbs:Verbs() do
 					verb:RenderDebugPanel( ui, panel, dbg )
+				end
+				if ui.Button( "Refresh" ) then
+					self.agent:RegenVerbs( id )
+					self.agent:CollectPotentialVerbs( id )
 				end
 				ui.TreePop()
 			end

@@ -23,9 +23,13 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
     ui.Text( "Exits:" )
     ui.Columns( 2 )
     local count = 0
-    for i, exit in self.location:Exits() do
-        local dest, addr = exit:GetDest( self.location )
-        ui.Text( tostring(addr) )
+    for i, portal in self.location:Portals() do
+        local dest, x, y = portal:GetDest()
+        if x then
+            ui.Text( loc.format( "{1} ({2}, {3})", dest, x, y ))
+        else
+            ui.Text( tostring(dest))
+        end
         ui.NextColumn()
 
     	panel:AppendTable( ui, dest )

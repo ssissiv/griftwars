@@ -104,7 +104,7 @@ function World:SpawnEntity( ent, location )
 		if ent:IsPlayer() then
 			assert( self.player == nil )
 			self.player = ent
-			self.puppet = ent
+			self:SetPuppet( ent )
 		end
 
 	elseif is_instance( ent, Location ) then
@@ -190,6 +190,8 @@ function World:SetPuppet( agent )
 	assert( agent == nil or is_instance( agent, Agent ))
 
 	self.puppet = agent
+
+	self:BroadcastEvent( WORLD_EVENT.PUPPET_CHANGED, agent )
 	self:RefreshTimeSpeed()
 
 	if self:IsPaused( PAUSE_TYPE.FOCUS_MODE ) ~= is_instance( agent:GetFocus(), Agent ) then
@@ -198,6 +200,10 @@ function World:SetPuppet( agent )
 end
 
 function World:RefreshTimeSpeed()
+	if self.puppet:IsBusy() == self:IsPaused( PAUSE_TYPE.IDLE ) then
+		self:TogglePause( PAUSE_TYPE.IDLE )
+	end
+
 	self.puppet_time_speed = self.puppet:CalculateTimeSpeed()
 end
 

@@ -405,6 +405,12 @@ function Agent:GetCoordinate()
 	return self.x, self.y
 end
 
+function Agent:GetTile()
+	if self.location then
+		return self.location:GetTileAt( self.x, self.y )
+	end
+end
+
 function Agent:Walk( exit )
 	local x, y = OffsetExit( self.x, self.y, exit )
 	local tile = self.location:GetTileAt( x, y )
@@ -439,6 +445,8 @@ local function WarpToLocation( self, location )
 			aspect:OnLocationChanged( prev_location, location )
 		end
 	end
+
+	self:BroadcastEvent( AGENT_EVENT.LOCATION_CHANGED, location, prev_location )
 end
 
 function Agent:WarpToNowhere()
