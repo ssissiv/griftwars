@@ -89,7 +89,10 @@ function Verb:OnLoseAspect( owner )
 end
 
 function Verb:GetWorld()
-	return self:GetOwner().world
+	local owner = self:GetOwner()
+	if owner then
+		return owner.world
+	end
 end
 
 function Verb:AddChildVerb( verb )
@@ -247,6 +250,7 @@ function Verb:Cancel()
 	end
 
 	self.cancelled = true
+	self.cancelled_trace = debug.traceback()
 
 	if self.transient then
 		self.transient = nil
@@ -289,7 +293,9 @@ function Verb:Resume( coro )
 	self.yield_ev = nil
 	self.yield_duration = nil
 
-	if not self:CanInteract( self.actor ) then
+	local ok, reason = self:CanInteract( self.actor )
+	if not ok then
+		self.cant_reason = reason
 		self:Cancel()
 	else
 		local ok, result = coroutine.resume( coro )

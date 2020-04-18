@@ -398,7 +398,10 @@ function Agent:Unfriend( other )
 end
 
 function Agent:SetCoordinate( x, y )
-	self.x, self.y = x, y
+	if x ~= self.x or y ~= self.y then
+		self.x, self.y = x, y
+		self:BroadcastEvent( AGENT_EVENT.TILE_CHANGED, x, y )
+	end
 end
 
 function Agent:GetCoordinate()
@@ -421,6 +424,8 @@ function Agent:Walk( exit )
 		self.x, self.y = x, y
 
 		tile:AddEntity( self )
+
+		self:BroadcastEvent( AGENT_EVENT.TILE_CHANGED, x, y )
 	end
 end
 
@@ -470,7 +475,7 @@ function Agent:IsBusy( flags )
 	if self.verbs then
 		for i, verb in ipairs( self.verbs ) do
 			if verb:HasBusyFlag( flags ) then
-				return true
+				return true, verb
 			end
 		end
 	end

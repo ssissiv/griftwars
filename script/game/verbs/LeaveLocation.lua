@@ -25,12 +25,20 @@ LeaveLocation.ENTER_STRINGS =
 	"{1.Id} enters."
 }
 
+
 function LeaveLocation:GetShortDesc( viewer )
 	if self.obj then
-		if self.actor:IsPuppet() then
-			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), self.obj:LocTable( viewer ))
+		local dest
+		if is_instance( self.obj, Aspect.Portal ) then
+			dest = self.obj:GetDest()
 		else
-			return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.obj:LocTable( viewer ))
+			dest = self.obj
+		end
+
+		if self.actor:IsPuppet() then
+			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), dest:LocTable( viewer ))
+		else
+			return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), dest:LocTable( viewer ))
 		end
 	else
 		if self.actor:IsPuppet() then
@@ -42,16 +50,20 @@ function LeaveLocation:GetShortDesc( viewer )
 end
 
 function LeaveLocation:GetDesc()
-	if self.obj then
+	if is_instance( self.obj, Location ) then
 		return loc.format( "Leave to {1}", self.obj:GetTitle() )
+	elseif is_instance( self.obj, Aspect.Portal ) then
+		return loc.format( "Leave to {1}", self.obj:GetDest():GetTitle() )
 	else
 		return "Leave somewhere"
 	end
 end
 
 function LeaveLocation:CanInteract( actor, obj )
-	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
-		return false, "Moving"
+	for i, verb in actor:Verbs() do
+		if verb ~= self and verb:HasBusyFlag( VERB_FLAGS.MOVEMENT ) then
+			return false, "Moving"
+		end
 	end
 	return self._base.CanInteract( self, actor )
 end
@@ -59,10 +71,8 @@ end
 function LeaveLocation:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
-	local dest = self.obj
-	assert( dest == nil or is_instance( dest, Location ))
-
-	if dest == nil then
+	local dest
+	if self.obj == nil then
 		-- Chose a random accessible portal out of here.
 		local dests = {}
 		for i, portal in actor.location:Portals() do
@@ -72,6 +82,15 @@ function LeaveLocation:Interact( actor )
 		end
 
 		dest = table.arraypick( dests )
+
+	elseif is_instance( self.obj, Aspect.Portal ) then
+		dest = self.obj:GetDest()
+
+	elseif is_instance( self.obj, Location ) then
+		dest = self.obj
+
+	else
+		error(tostring(self.obj))
 	end
 
 	self:YieldForTime( ONE_MINUTE )

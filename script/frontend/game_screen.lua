@@ -9,7 +9,7 @@ function GameScreen:init()
 	self.world:SetNexus( self.nexus )
 	self.world:Start()
 	self.world:ListenForAny( self, self.OnWorldEvent )
-	self.puppet = self.world:GetPuppet()
+	self.world:SetPuppet( self.world:GetPlayer() )
 
 	-- List of objects and vergbs in the currently rendered location.
 	self.objects = {}
@@ -70,13 +70,23 @@ function GameScreen:OnPuppetChanged( puppet )
 	self:PanToCurrentInterest()
 
 	if puppet then
-		puppet:ListenForAny( self.OnPuppetEvent, self )
+		puppet:ListenForAny( self, self.OnPuppetEvent)
 	end
 end
 
-function GameScreen:OnPuppetEvent( event_name, ... )
+function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	if event_name == AGENT_EVENT.LOCATION_CHANGED then
 		self:PanToCurrentInterest()
+	elseif event_name == AGENT_EVENT.TILE_CHANGED then
+		self:PanToCurrentInterest()
+	elseif event_name == AGENT_EVENT.COLLECT_VERBS then
+		-- Verbs refreshed: if our current selected one is no lngoer valid, clear it.
+		if self.current_verb then
+			local verbs = ...
+			if verbs:FindVerb( self.current_verb ) == nil then
+				self:SetCurrentVerb( nil )
+			end
+		end
 	end
 end
 

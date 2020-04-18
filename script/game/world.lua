@@ -104,7 +104,6 @@ function World:SpawnEntity( ent, location )
 		if ent:IsPlayer() then
 			assert( self.player == nil )
 			self.player = ent
-			self:SetPuppet( ent )
 		end
 
 	elseif is_instance( ent, Location ) then

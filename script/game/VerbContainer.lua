@@ -21,9 +21,6 @@ function VerbContainer:CollectVerbs( actor, ... )
 		return
 	end
 
-	-- Event registrants...
-	actor:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self, ... )
-
 	-- Static VerbClasses...
 	if VERB_CLASSES == nil then
 		VERB_CLASSES = {}
@@ -46,6 +43,9 @@ function VerbContainer:CollectVerbs( actor, ... )
 			self:CollectVerbsFromEntity( obj, actor, ... )
 		end
 	end
+
+	-- Event registrants...
+	actor:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self, ... )
 end
 
 function VerbContainer:CollectVerbsFromEntity( entity, actor, ... )

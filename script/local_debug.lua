@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"for k, v in pairs( location:GetPortals() ) do print( k, v ) end",
-			"for k, v in location:Portals() do print( k, v ) end",
-			"for k, v in location:Portals() do print( k, v, v.location ) end",
-			"print(t:GetCoordinate())",
-			"print( t:GetAspect( Aspect.Combat ))",
 			"print( t:GetAspect( Aspect.Combat ):EvaluateTarget( player ))",
 			"print( player:GetAspect( Aspect.Combat ))",
 			"print(t)",
@@ -33,6 +28,11 @@ return {
 			"print(tostr(location.exits))",
 			"print(tostr(location.portals))",
 			"print(t:GetTarget())",
+			"print(screen.current_verb)",
+			"print(player.location)",
+			"DBG(screen.current_verb)",
+			"print(tostr(screen.current_verb))",
+			"screen:PanToCurrentInterest()",
 			"print(screen.current_verb)"
 		}
 	},
