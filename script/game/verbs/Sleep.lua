@@ -23,15 +23,6 @@ function Sleep:RenderAgentDetails( ui, screen, viewer )
 	end
 end
 
-function Sleep:CollectVerbs( verbs, agent, obj )
-	if obj == nil then
-		local home = agent:GetLocation():GetAspect( Feature.Home )
-		if home and home:IsResident( agent ) then
-			verbs:AddVerb( Verb.Sleep( agent ))
-		end
-	end
-end
-
 function Sleep:CanInteract( actor )
 	if not self:IsDoing() then
 		if not actor:IsAlert() then
@@ -41,6 +32,12 @@ function Sleep:CanInteract( actor )
 	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Busy"
 	end
+
+	local home = actor:GetLocation():GetAspect( Feature.Home )
+	if not home or not home:IsResident( actor ) then
+		return false, "This is not your home"
+	end
+
 	return true
 end
 

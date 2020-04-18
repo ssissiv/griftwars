@@ -3,6 +3,7 @@ Shopkeeps maintain a stock of items, and sells them in a store.
 --]]
 
 local Shopkeeper = class( "Agent.Shopkeeper", Agent )
+Shopkeeper.MAP_CHAR = "S"
 
 function Shopkeeper:init()
 	Agent.init( self )

@@ -18,13 +18,41 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
         end
 
     	for i, verb in self.verbs:Verbs() do
+            assert(verb:GetTarget() or verb:GetActor(), tostring(verb))
             local tx, ty = AccessCoordinate( verb:GetTarget() or verb:GetActor() )
             if tx == tx0 and ty == ty0 then
-                local txt = tostring(verb)
+
+                local ok, details = verb:CanDo()
+                local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
                 if verb == self.current_verb then
-                    ui.TextColored( 255, 255, 0, 255, "> "..txt )
+                    txt = "> "..txt
+                end
+
+                if not ok then
+                    ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+                    details = details or "Can't do."
+
                 else
+                    if verb.COLOUR then
+                        ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
+                    else
+                        ui.PushStyleColor( "Text", 1, 1, 0, 1 )
+                    end
+
             		ui.Text( txt )
+
+                    ui.PopStyleColor()
+                end
+
+                if ui.IsItemHovered() and (details or verb.RenderTooltip) then
+                    ui.BeginTooltip()
+                    if verb.RenderTooltip then
+                        verb:RenderTooltip( ui, verb.actor )
+                    end
+                    if details then
+                        ui.TextColored( 1, 1, 0.5, 1, details )
+                    end
+                    ui.EndTooltip()
                 end
             end
     	end
@@ -32,3 +60,4 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
 
     ui.End()
 end
+

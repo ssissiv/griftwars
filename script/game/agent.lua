@@ -408,6 +408,11 @@ function Agent:GetCoordinate()
 	return self.x, self.y
 end
 
+function Agent:IsAdjacent( obj )
+	local x, y = AccessCoordinate( obj )
+	return x and y and IsAdjacentCoordinate( x, y, self.x, self.y )
+end
+
 function Agent:GetTile()
 	if self.location then
 		return self.location:GetTileAt( self.x, self.y )

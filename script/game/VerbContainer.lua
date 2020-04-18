@@ -1,5 +1,3 @@
-local VERB_CLASSES = nil
-
 local VerbContainer = class( "VerbContainer" )
 
 function VerbContainer:init( id )
@@ -14,25 +12,11 @@ function VerbContainer:CollectVerbs( actor, ... )
 	end
 
 	table.clear( self.verbs )
-
+	
 	self.dirty = false
 
 	if not actor:IsSpawned() then
 		return
-	end
-
-	-- Static VerbClasses...
-	if VERB_CLASSES == nil then
-		VERB_CLASSES = {}
-		for id, class in pairs( CLASSES ) do
-			if is_class( class, Verb ) and class.CollectVerbs then
-				table.insert( VERB_CLASSES, class )
-			end
-		end
-	end
-
-	for i, class in ipairs( VERB_CLASSES ) do
-		class.CollectVerbs( nil, self, actor, ... )
 	end
 
 	local location = actor:GetLocation()
@@ -66,6 +50,7 @@ function VerbContainer:SetDirty()
 end
 
 function VerbContainer:AddVerb( v )
+	assert_warning( v:GetActor(), tostring(v))
 	table.insert( self.verbs, v )
 end
 

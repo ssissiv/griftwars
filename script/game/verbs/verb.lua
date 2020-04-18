@@ -175,8 +175,8 @@ function Verb:CanDo( ... )
 	return true
 end
 
-function Verb:CanInteract( actor, ... )
-	return actor:IsSpawned()
+function Verb:CanInteract( actor )
+	return (actor or self.actor):IsSpawned()
 end
 
 function Verb:GetDesc()
@@ -344,6 +344,9 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 		if ui.Button( "Cancel" ) then
 			self:Cancel()
 		end
+	elseif self.actor == nil then
+		ui.TextColored( 1, 0, 0, 1, "No Actor" )
+
 	else
 		local ok, reason = self:CanDo( self.actor )
 		if not ok then

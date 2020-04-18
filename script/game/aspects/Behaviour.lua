@@ -154,9 +154,4 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 	ui.Columns( 1 )
 end
 
-function Behaviour:__tostring()
-	return string.format( "[%s]", self._classname )
-end
-
-
 

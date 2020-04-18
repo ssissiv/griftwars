@@ -397,6 +397,10 @@ function OffsetExit( x, y, exit )
     end
 end
 
+function IsAdjacentCoordinate( x1, y1, x2, y2 )
+    return (x1 == x2 and math.abs( y1 - y2 ) == 1 ) or (y1 == y2 and math.abs( x1 - x2 ) == 1 )
+end
+
 function LoadLinesFromFile( filename )
     local t = {}
     for line in io.lines( filename ) do

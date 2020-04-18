@@ -113,7 +113,8 @@ function DebugManager:TryExecuteDebugFile( filename )
 		if not f then
 			print( "Failed: " .. tostring(e))
 		else
-			local results = { xpcall( f, generic_error ) }
+			local coro = coroutine.create( f )
+			local results = { coroutine.resume( coro ) }
 			if not results[1] then
 				print( results[2] )
 			else

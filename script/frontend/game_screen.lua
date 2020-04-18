@@ -70,6 +70,10 @@ function GameScreen:OnPuppetChanged( puppet )
 	self:PanToCurrentInterest()
 
 	if puppet then
+		if puppet.location then
+			puppet.location:GenerateTileMap()
+		end
+		
 		puppet:ListenForAny( self, self.OnPuppetEvent)
 	end
 end
@@ -77,8 +81,11 @@ end
 function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	if event_name == AGENT_EVENT.LOCATION_CHANGED then
 		self:PanToCurrentInterest()
+
 	elseif event_name == AGENT_EVENT.TILE_CHANGED then
+		self:RefreshVerbs()	 -- Hack: critical game state changed!
 		self:PanToCurrentInterest()
+
 	elseif event_name == AGENT_EVENT.COLLECT_VERBS then
 		-- Verbs refreshed: if our current selected one is no lngoer valid, clear it.
 		if self.current_verb then
@@ -610,7 +617,7 @@ function GameScreen:PanToCurrentInterest()
 		if self.puppet then
 			cx, cy = self.puppet:GetCoordinate()
 			if cx then
-				self:PanTo( cx, cy )
+				self:WarpCameraTo( cx, cy )
 			end
 		end
 	end	
@@ -639,6 +646,11 @@ function GameScreen:CycleVerbs()
 	end
 
 	self:SetCurrentVerb( verbs:VerbAt( idx ) )
+end
+
+function GameScreen:RefreshVerbs()
+	self.puppet:RegenVerbs()
+	self:SetCurrentVerb( self.current_verb )
 end
 
 function GameScreen:SetCurrentVerb( verb )
@@ -745,25 +757,25 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
-		if puppet then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
 			puppet:Walk( EXIT.WEST )
 		end
 
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
-		if puppet then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
 			puppet:Walk( EXIT.EAST )
 		end
 
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
-		if puppet then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
 			puppet:Walk( EXIT.SOUTH )
 		end
 
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
-		if puppet then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
 			puppet:Walk( EXIT.NORTH )
 		end
 

@@ -116,4 +116,7 @@ function StatValue:RenderDebugPanel( ui, panel, dbg )
 	end
 end
 
+function StatValue:__tostring()
+	return string.format( "%s[%s:%d]", self._classname, self.stat, self.value )
+end
 

@@ -59,13 +59,13 @@ function LeaveLocation:GetDesc()
 	end
 end
 
-function LeaveLocation:CanInteract( actor, obj )
-	for i, verb in actor:Verbs() do
+function LeaveLocation:CanInteract()
+	for i, verb in self.actor:Verbs() do
 		if verb ~= self and verb:HasBusyFlag( VERB_FLAGS.MOVEMENT ) then
 			return false, "Moving"
 		end
 	end
-	return self._base.CanInteract( self, actor )
+	return self._base.CanInteract( self, self.actor )
 end
 
 function LeaveLocation:Interact( actor )
@@ -82,6 +82,9 @@ function LeaveLocation:Interact( actor )
 		end
 
 		dest = table.arraypick( dests )
+		if dest == nil then
+			return
+		end
 
 	elseif is_instance( self.obj, Aspect.Portal ) then
 		dest = self.obj:GetDest()

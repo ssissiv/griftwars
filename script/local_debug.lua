@@ -2,19 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( t:GetAspect( Aspect.Combat ):EvaluateTarget( player ))",
-			"print( player:GetAspect( Aspect.Combat ))",
-			"print(t)",
-			"print(t:IsEnemy( player ))",
-			"print(player.combat)",
-			"print(player.faction)",
-			"print(t.faction)",
-			"print(t:GetBounds())",
-			"for i, v in ipairs( t.rooms ) do print( i, v:GetCoordinate() ) end",
-			"print(location:GetCoordinate())",
-			"print(t:GetBounds())",
-			"puppet:CollectPotentialVerbs()",
-			"puppet:CollectPotentialVerbs( \"tile\" )",
 			"puppet:RegenVerbs( \"tile\" ); puppet:CollectPotentialVerbs( \"tile\" )",
 			"puppet:RegenVerbs(\"room\" ); DBG(puppet)",
 			"print(tostr(puppet:GetPotentialVerbs(\"room\" ))",
@@ -33,7 +20,20 @@ return {
 			"DBG(screen.current_verb)",
 			"print(tostr(screen.current_verb))",
 			"screen:PanToCurrentInterest()",
-			"print(screen.current_verb)"
+			"print(screen.current_verb)",
+			"print(t)",
+			"print(t:IsAdjacent( player ))",
+			"print(t:GetCoordinate())",
+			"print(t:IsAdjacent( player ))",
+			"print(t:GetCoordinate())",
+			"print(t:IsAdjacent( player ))",
+			"print(player)",
+			"print(player:GetCoordinate())",
+			"DBG(screen.windows[1])",
+			"print(debug.traceback(t.coro))",
+			"print(puppet)",
+			"print(puppet.location)",
+			"print(puppet.location.map)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
