@@ -5,6 +5,14 @@ function AccessCoordinate( obj )
 		if obj.owner then
 			return obj.owner:GetCoordinate()
 		end
+	elseif is_instance( obj, Verb ) then
+		if obj:GetTarget() then
+			return obj:GetTarget():GetCoordinate()
+		elseif obj:GetActor() then
+			return obj:GetActor():GetCoordinate()
+		else
+			print( "NO COORD:", obj )
+		end
 	end
 end
 

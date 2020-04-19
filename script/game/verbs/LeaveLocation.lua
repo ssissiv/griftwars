@@ -25,6 +25,9 @@ LeaveLocation.ENTER_STRINGS =
 	"{1.Id} enters."
 }
 
+function LeaveLocation:init( dest )
+	Verb.init( self, nil, dest )
+end
 
 function LeaveLocation:GetShortDesc( viewer )
 	if self.obj then
@@ -59,13 +62,13 @@ function LeaveLocation:GetDesc()
 	end
 end
 
-function LeaveLocation:CanInteract()
-	for i, verb in self.actor:Verbs() do
+function LeaveLocation:CanInteract( actor )
+	for i, verb in actor:Verbs() do
 		if verb ~= self and verb:HasBusyFlag( VERB_FLAGS.MOVEMENT ) then
 			return false, "Moving"
 		end
 	end
-	return self._base.CanInteract( self, self.actor )
+	return self._base.CanInteract( self, actor )
 end
 
 function LeaveLocation:Interact( actor )

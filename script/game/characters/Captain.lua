@@ -20,7 +20,7 @@ function Captain:init()
 	Agent.MakeHuman( self )
 	
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Verb.Strategize( self ))
+	self:GainAspect( Verb.Strategize())
 	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 

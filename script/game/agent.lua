@@ -172,7 +172,7 @@ function Agent:RegenVerbs( id )
 end
 
 function Agent:CollectPotentialVerbs( id, ... )
-	assert( id )
+	id = id or "room"
 	local verbs = self.potential_verbs[ id ]
 	if verbs == nil then
 		verbs = VerbContainer( id )
@@ -789,7 +789,7 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	local ch, clr = self:GetMapChar()
 	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
-	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 0.8 * scale )
+	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
 end
 
 function Agent:__tostring()

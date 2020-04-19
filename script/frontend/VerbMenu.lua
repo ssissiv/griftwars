@@ -1,6 +1,7 @@
 local VerbMenu = class( "VerbMenu", NexusWindow )
 
-function VerbMenu:RefreshContents( current_verb, verbs )
+function VerbMenu:RefreshContents( actor, current_verb, verbs )
+    self.actor = actor
     self.current_verb = current_verb
 	self.verbs = verbs
 end
@@ -14,7 +15,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
     if shown and self.verbs then
         local tx0, ty0
         if self.current_verb then
-            tx0, ty0 = AccessCoordinate( self.current_verb:GetTarget() or self.current_verb:GetActor() )
+            tx0, ty0 = AccessCoordinate( self.current_verb:GetTarget() or self.actor )
         end
 
     	for i, verb in self.verbs:Verbs() do

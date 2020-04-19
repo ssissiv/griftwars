@@ -622,7 +622,7 @@ end
 
 function GameScreen:PanToCurrentInterest()
 	if self.current_verb then
-		local tx, ty = AccessCoordinate( self.current_verb:GetTarget() or self.current_verb:GetActor() )
+		local tx, ty = AccessCoordinate( self.current_verb )
 		if tx and ty then
 			self:PanTo( tx, ty )
 		end
@@ -686,13 +686,29 @@ function GameScreen:SetCurrentVerb( verb )
 	if verb_window then
 		-- Refresh verb window.
 		local verbs = self.puppet:GetPotentialVerbs( "room" )
-		verb_window:RefreshContents( verb, verbs )
+		verb_window:RefreshContents( self.puppet, verb, verbs )
 		self:PanToCurrentInterest()
 	else
 		self:PanToCurrentInterest()
 	end
 
 	print( "CURRENT VERB:", self.current_verb)
+end
+
+function GameScreen:GetVerbAt( mx, my )
+	local x, y = self:ScreenToCell( mx, my )
+	local verbs = self.puppet:GetPotentialVerbs()
+	for i, verb in verbs:Verbs() do
+        local tx, ty
+        if verb:GetTarget() then
+			tx, ty = AccessCoordinate( verb:GetTarget() )
+		else
+			tx, ty = self.puppet:GetCoordinate()
+		end
+        if tx == x and ty == y then
+        	return verb
+        end
+    end
 end
 
 function GameScreen:MouseMoved( mx, my )
@@ -712,9 +728,15 @@ function GameScreen:MousePressed( mx, my, btn )
 		end
 	end
 
-	if self.hovered_tile and Input.IsControl() then
-		DBG(self.hovered_tile)
-		return true
+	if self.hovered_tile then
+		if Input.IsControl() then
+			DBG(self.hovered_tile)
+			return true
+		else
+			local verb = self:GetVerbAt( mx, my )
+			self:SetCurrentVerb( verb )
+			return true
+		end
 	end
 
 	return false

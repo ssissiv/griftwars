@@ -1,8 +1,7 @@
 local Verb = class( "Verb", Aspect )
 
 function Verb:init( actor, obj )
-	assert( is_instance( actor, Agent ))
-	self.actor = actor
+	assert( actor == nil )
 	self.obj = obj
 	self.utility = 0
 end

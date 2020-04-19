@@ -204,7 +204,6 @@ function WorldGen:GeneratePlayer( world )
 	player:GainAspect( Aspect.Player() )
 	player:GainAspect( Aspect.Combat() )
 	player:GainAspect( Aspect.Impass() )
-	player:GainAspect( Verb.Scrounge( player ) )
 
 	local tokens = player:GainAspect( Aspect.TokenHolder() )
 	tokens:AddToken( Token( DIE_FACE.DIPLOMACY, 1 ) )

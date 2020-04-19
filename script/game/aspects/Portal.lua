@@ -2,6 +2,7 @@ local Portal = class( "Aspect.Portal", Aspect )
 
 function Portal:init( location, x, y )
 	self:Connect( location, x, y )
+	self.leave_verb = Verb.LeaveLocation( self )
 end
 
 function Portal:Connect( location, x, y )

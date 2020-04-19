@@ -23,12 +23,12 @@ local Scavenge = class( "Verb.Scavenge", Verb )
 
 Scavenge.ACT_RATE = 8.0
 
-function Scavenge:init( actor )
-	Scavenge._base.init( self, actor )
+function Scavenge:init()
+	Scavenge._base.init( self )
 
-	self.scrounge = self:AddChildVerb( Verb.Scrounge( actor ) )
-	self.idle = self:AddChildVerb( Verb.Idle( actor ) )
-	self.leave = self:AddChildVerb( Verb.LeaveLocation( actor ) )
+	self.scrounge = self:AddChildVerb( Verb.Scrounge() )
+	self.idle = self:AddChildVerb( Verb.Idle() )
+	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
 end
 
 function Scavenge:RenderAgentDetails( ui, screen, viewer )

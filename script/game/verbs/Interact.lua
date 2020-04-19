@@ -3,9 +3,9 @@
 
 local Interact = class( "Verb.Interact", Verb )
 
-function Interact:init( actor, aspect )
+function Interact:init( aspect )
 	assert( is_instance( aspect, Aspect.Interaction ))
-	Verb.init( self, actor, actor:GetFocus() )
+	Verb.init( self )
 	self.interaction = aspect
 end
 

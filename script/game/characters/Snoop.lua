@@ -1,9 +1,9 @@
 
 local FindInformation = class( "Verb.FindInformation", Verb )
 
-function FindInformation:init( actor )
-	FindInformation._base.init( self, actor )
-	self.travel = self:AddChildVerb( Verb.Travel( actor ))
+function FindInformation:init()
+	FindInformation._base.init( self )
+	self.travel = self:AddChildVerb( Verb.Travel())
 end
 
 function FindInformation:RenderAgentDetails( ui, screen, viewer )

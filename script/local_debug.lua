@@ -2,13 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(tostr(puppet:GetPotentialVerbs(\"room\" ),2))",
-			"puppet:SetFocus(t)",
-			"puppet:CollectPotentialVerbs(\"room\")",
-			"print(screen.puppet)",
-			"print(location)",
-			"print(tostr(location.exits))",
-			"print(tostr(location.portals))",
 			"print(t:GetTarget())",
 			"print(screen.current_verb)",
 			"print(player.location)",
@@ -33,7 +26,14 @@ return {
 			"print(screen.camera)",
 			"print(screen.camera:GetZoom())",
 			"print(screen.camera.zoom)",
-			"print( screen.camera:GetZoom() / DEFAULT_ZOOM )"
+			"print( screen.camera:GetZoom() / DEFAULT_ZOOM )",
+			"print(t)",
+			"print(t.actor, t.obj)",
+			"print(AccessCoordinate(t))",
+			"print(t.actor)",
+			"print(t.actor:GetCoordinate())",
+			"print(tostr(dbg))",
+			"print(tostr(dbg.debug_panels))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

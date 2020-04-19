@@ -7,6 +7,6 @@ function Player:init()
 end
 
 function Player:CollectVerbs( verbs, actor )
-	verbs:AddVerb( Verb.Wait( actor ))
+	verbs:AddVerb( Verb.Wait())
 end
 

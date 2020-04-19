@@ -157,14 +157,6 @@ function Location:RemoveAgent( agent )
 	self:RemoveEntity( agent )
 end
 
-function Location:CollectVerbs( verbs, actor, obj )
-	if verbs.id == "room" then
-		for i, portal in ipairs( self.portals ) do
-			verbs:AddVerb( Verb.LeaveLocation( actor, portal ))
-		end
-	end
-end
-
 function Location:HasEntity( ent )
 	for i, obj in ipairs( self.contents ) do
 		if obj == ent then

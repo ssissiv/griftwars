@@ -30,9 +30,11 @@ end
 
 
 function Door:CollectVerbs( verbs, agent )
-	if agent:GetTile() == self:GetTile() then
-		verbs:AddVerb( Verb.LeaveLocation( agent, self.portal:GetDest() ))
+	-- if agent:GetTile() == self:GetTile() then
+	if self.portal then
+		verbs:AddVerb( Verb.LeaveLocation( self.portal ))
 	end
+	-- end
 end
 
 function Door:RenderMapTile( screen, tile, x1, y1, x2, y2 )

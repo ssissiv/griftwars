@@ -66,7 +66,6 @@ end
 
 
 function Job:OnSpawn( world )
-	self.actor = self.owner
 	self.owner:Acquaint( self.employer )
 	self.employer:Acquaint( self.owner )
 	self.hire_time = self:GetWorld():GetDateTime()
@@ -165,7 +164,7 @@ function Job:Interact()
 	-- Track job location and stay around there.
 	while self:IsTimeForShift( self:GetWorld():GetDateTime() ) do
 		if self.travel == nil then
-			self.travel = Verb.Travel( actor )
+			self.travel = Verb.Travel()
 		end
 		local job_location = self:GetLocation()
 		if job_location and actor:GetLocation() ~= job_location then

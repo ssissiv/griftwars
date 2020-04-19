@@ -94,7 +94,7 @@ end
 function Interaction:CollectVerbs( verbs, actor, obj )
 	local ok, reason = self:CanInteract( actor )
 	if ok or reason then
-		verbs:AddVerb( Verb.Interact( actor, self ))
+		verbs:AddVerb( Verb.Interact( self ))
 	end
 end
 

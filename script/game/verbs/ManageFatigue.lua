@@ -1,10 +1,10 @@
 local ManageFatigue = class( "Verb.ManageFatigue", Verb )
 
-function ManageFatigue:init( actor )
-	ManageFatigue._base.init( self, actor )
-	self.rest = self:AddChildVerb( Verb.ShortRest( actor ))
-	self.sleep = self:AddChildVerb( Verb.Sleep( actor ))
-	self.travel = self:AddChildVerb( Verb.Travel( actor ))
+function ManageFatigue:init()
+	ManageFatigue._base.init( self )
+	self.rest = self:AddChildVerb( Verb.ShortRest())
+	self.sleep = self:AddChildVerb( Verb.Sleep())
+	self.travel = self:AddChildVerb( Verb.Travel())
 end
 
 function ManageFatigue:CalculateUtility( actor )
