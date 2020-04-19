@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:GetTarget())",
 			"print(screen.current_verb)",
 			"print(player.location)",
 			"DBG(screen.current_verb)",
@@ -33,7 +32,8 @@ return {
 			"print(t.actor)",
 			"print(t.actor:GetCoordinate())",
 			"print(tostr(dbg))",
-			"print(tostr(dbg.debug_panels))"
+			"print(tostr(dbg.debug_panels))",
+			"DBG({})"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
