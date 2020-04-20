@@ -397,6 +397,22 @@ function OffsetExit( x, y, exit )
     end
 end
 
+function OffsetToExit( x1, y1, x2, y2 )
+    if x1 == x2 then
+        if y1 < y2 then
+            return EXIT.NORTH
+        elseif y1 > y2 then
+            return EXIT.SOUTH
+        end
+    elseif y1 == y2 then
+        if x1 < x2 then
+            return EXIT.EAST
+        elseif x1 > x2 then
+            return EXIT.WEST
+        end
+    end    
+end
+
 function IsAdjacentCoordinate( x1, y1, x2, y2 )
     return (x1 == x2 and math.abs( y1 - y2 ) == 1 ) or (y1 == y2 and math.abs( x1 - x2 ) == 1 )
 end

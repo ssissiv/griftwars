@@ -334,7 +334,11 @@ end
 function Location:FindPassableTile( x, y, obj )
 	local found_tile
 	local function IsPassable( tile, depth, obj )
-		if not tile:HasEntity( obj ) and tile:IsPassable( obj ) then
+		if tile:HasEntity( obj ) then
+			-- Already at this tile, exclude it.
+			return true 
+		elseif tile:IsPassable( obj ) then
+			-- Found a tile passable by this object.
 			found_tile = tile
 			return false, true -- STOP
 		end

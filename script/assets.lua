@@ -30,8 +30,10 @@ local assets =
 		GRASS = "grassland.png",
 		STONE_FLOOR = "stone_floor.png",
 		STONE_WALL = "stone_wall.png",
+		WOODEN_FLOOR = "wooden_floor.png",
 
 		DOOR = "door.png",
+		BED = "bed.png",
 	},
 
 	LoadAll = function( self )

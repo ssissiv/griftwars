@@ -128,6 +128,22 @@ function Object:GetLocation()
 	end
 end
 
+function Object:RenderMapTile( screen, tile, x1, y1, x2, y2 )
+	if self.image then
+		print( self )
+		local sx, sy = (x2 - x1) / self.image:getWidth(), (y2 - y1) / self.image:getHeight()
+		love.graphics.setColor( 255, 255, 255, 255 )
+		screen:Image( self.image, x1, y1, sx, sy )
+
+	else
+		love.graphics.setFont( assets.FONTS.MAP_TILE )
+		local ch, clr = self:GetMapChar()
+		love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
+		local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
+		love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
+	end
+end
+
 function Object:__tostring()
 	return string.format( "<%s>", self:GetName() )
 end

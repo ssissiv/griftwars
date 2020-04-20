@@ -71,6 +71,26 @@ function LeaveLocation:CanInteract( actor )
 	return self._base.CanInteract( self, actor )
 end
 
+function LeaveLocation:PathToPortal( actor, portal )
+	-- Path tiles to dest.
+	local pather = TilePathFinder( actor:GetLocation().map, actor, portal.owner:GetTile() )
+	while actor:GetTile() ~= pather:GetEndRoom() do
+		self:YieldForTime( 2 * ONE_SECOND )
+
+		if self:IsCancelled() then
+			break
+		end
+
+		local path = pather:CalculatePath()
+		if path then
+			local x1, y1 = path[1]:GetCoordinate()
+			local x2, y2 = path[2]:GetCoordinate()
+			local exit = OffsetToExit( x1, y1, x2, y2 )
+			actor:Walk( exit )
+		end
+	end
+end
+
 function LeaveLocation:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
@@ -99,7 +119,11 @@ function LeaveLocation:Interact( actor )
 		error(tostring(self.obj))
 	end
 
-	self:YieldForTime( ONE_MINUTE )
+	if actor:GetLocation().map and is_instance( self.obj, Aspect.Portal )then
+		self:PathToPortal( actor, self.obj )
+	else
+		self:YieldForTime( ONE_MINUTE )
+	end
 
 	if self:IsCancelled() then
 		return
@@ -111,16 +135,6 @@ function LeaveLocation:Interact( actor )
 	actor:WarpToLocation( dest )
 
 	Msg:Action( self.ENTER_STRINGS, actor, dest )
-
-	-- TODO: Followers don't lose fatigue, or take time to leave.
-	local leader = actor:GetAspect( Trait.Leader )
-	if leader then
-		for i, follower in leader:Followers() do
-			if follower:GetLocation() == prev_location then
-				follower:WarpToLocation( dest )
-			end
-		end
-	end
 end
 
 ---------------------------------------------------------------

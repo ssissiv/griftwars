@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(screen.current_verb)",
 			"print(player.location)",
 			"DBG(screen.current_verb)",
 			"print(tostr(screen.current_verb))",
@@ -33,7 +32,8 @@ return {
 			"print(t.actor:GetCoordinate())",
 			"print(tostr(dbg))",
 			"print(tostr(dbg.debug_panels))",
-			"DBG({})"
+			"DBG({})",
+			"puppet:RegenVerbs()"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

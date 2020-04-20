@@ -99,11 +99,14 @@ Grass.image = assets.TILE_IMG.GRASS
 local StoneFloor = class( "Tile.StoneFloor", Tile )
 StoneFloor.image = assets.TILE_IMG.STONE_FLOOR
 
+local WoodenFloor = class( "Tile.WoodenFloor", Tile )
+WoodenFloor.image = assets.TILE_IMG.WOODEN_FLOOR
+
 local StoneWall = class( "Tile.StoneWall", Tile )
 StoneWall.image = assets.TILE_IMG.STONE_WALL
 
 function StoneWall:init( x, y )
 	StoneWall._base.init( self, x, y )
-	self:GainAspect( Aspect.Impass() )
+	self:GainAspect( Aspect.Impass() ):SetWall( true )
 end
 

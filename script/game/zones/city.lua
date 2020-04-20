@@ -69,17 +69,19 @@ function City:SpawnRoad( road )
 end
 
 function City:SpawnHome( resident )
-	local room = Location()
-	room:SetDetails( loc.format( "Residence #{1}", #self.rooms ), "This is somebody's residence." )
-	room:SetImage( assets.LOCATION_BGS.INSIDE )
-	local home = room:GainAspect( Feature.Home() )
+	local room = Location.Residence()
 	if resident then
-		home:AddResident( resident )
+		room:SetResident( resident )
 	end
+	self.world:SpawnLocation( room )
 
 	local door = Object.Door()
 	door:WarpToLocation( self:RandomRoad() )
 	door:Connect( room )
+
+	local rdoor = Object.Door()
+	rdoor:WarpToLocation( room )
+	rdoor:Connect( door.location )
 
 	table.insert( self.rooms, room )
 	return room
