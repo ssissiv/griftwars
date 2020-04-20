@@ -133,9 +133,9 @@ function Verb.RecurseSubclasses( class, fn )
 	end
 end
 
-function Verb:GetRoomDesc()
+function Verb:GetRoomDesc( viewer )
 	local dc = self:GetDC()
-	local desc = self:GetDesc()
+	local desc = self:GetDesc( viewer )
 
 	if dc == 0 then
 		return desc

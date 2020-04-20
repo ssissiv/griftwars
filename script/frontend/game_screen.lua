@@ -622,7 +622,7 @@ end
 
 function GameScreen:PanToCurrentInterest()
 	if self.current_verb then
-		local tx, ty = AccessCoordinate( self.current_verb )
+		local tx, ty = AccessCoordinate( self.current_verb:GetTarget() or self.puppet )
 		if tx and ty then
 			self:PanTo( tx, ty )
 		end
@@ -651,13 +651,22 @@ function GameScreen:CycleVerbs()
 	end
 
 	local verbs = self.puppet:GetPotentialVerbs( "room" )
+	verbs:SortByDistanceTo( self.puppet:GetCoordinate() )
+
 	local idx = verbs:FindVerb( self.current_verb )
 	if idx == nil then
 		idx = 1
-	elseif idx == verbs:CountVerbs() then
-		idx = nil
 	else
-		idx = (idx % verbs:CountVerbs()) + 1
+		local x0, y0 = AccessCoordinate( self.current_verb:GetTarget() or self.puppet )
+		for j = 1, verbs:CountVerbs() do
+			local k = (idx + j - 1) % verbs:CountVerbs() + 1
+			local next_verb = verbs:VerbAt( k )
+			local x1, y1 = AccessCoordinate( next_verb:GetTarget() or self.puppet )
+			if x1 ~= x0 or y1 ~= y0 then
+				idx = k
+				break
+			end
+		end
 	end
 
 	self:SetCurrentVerb( verbs:VerbAt( idx ) )
@@ -687,11 +696,9 @@ function GameScreen:SetCurrentVerb( verb )
 		-- Refresh verb window.
 		local verbs = self.puppet:GetPotentialVerbs( "room" )
 		verb_window:RefreshContents( self.puppet, verb, verbs )
-		self:PanToCurrentInterest()
-	else
-		self:PanToCurrentInterest()
 	end
 
+	self:PanToCurrentInterest()
 	print( "CURRENT VERB:", self.current_verb)
 end
 
@@ -788,10 +795,6 @@ function GameScreen:KeyPressed( key )
 		local screen = MapScreen( self.world )
 		GetGUI():AddScreen( screen )
 
-	elseif key == "f" then
-		self.world:GetPuppet():SetFocus()
-		return true
-
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
@@ -816,64 +819,25 @@ function GameScreen:KeyPressed( key )
 			puppet:Walk( EXIT.NORTH )
 		end
 
-	elseif key == "=" then
-		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
-		local mx, my = love.mouse.getPosition()
-		self.camera:ZoomToLevel( self.zoom_level, mx, my )
-
 	elseif key == "." then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
 			puppet:AttemptVerb( Verb.Wait )
 		end
 
-	elseif key == "." and Input.IsShift() then
-		local puppet = self.world:GetPuppet()
-		if puppet then
-			local tile = puppet:GetTile()
-			if tile then
-				-- local leave = puppet:GetPotentialVerbs()
-				-- puppet:DoVerb( )
-				-- puppet:Walk( EXIT.SOUTH )
-			end
-		end
-
 	elseif key == "tab" then
 		self:CycleVerbs()
 
-	elseif key == "return" then
-		if self.current_verb and self.current_verb:CanDo( self.puppet ) then
-			self.puppet:DoVerbAsync( self.current_verb )
-		end
+	elseif key == "=" then
+		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
+		local mx, my = love.mouse.getPosition()
+		self.camera:ZoomToLevel( self.zoom_level, mx, my )
 
 	elseif key == "-" then
 		self.zoom_level = math.max( (self.zoom_level - 1), -3 )
 		local mx, my = love.mouse.getPosition()
 		self.camera:ZoomToLevel( self.zoom_level, mx, my )
-	
-	elseif tonumber(key) then
-		local puppet = self.world:GetPuppet()
-		if puppet and puppet:GetFocus() == nil then
-			local verb = puppet:GetPotentialVerbs( "room" ):VerbAt( tonumber(key) )
-			if verb then
-				local ok, details = verb:CanDo( self.world:GetPuppet() )
-				if ok then
-					puppet:DoVerbAsync( verb )
-				end
-			end
 		end
-		return true
-	else
-		local obj_idx = string.byte(key) - 97 + 1
-		local obj = self.objects[ obj_idx ]
-		if obj then
-			if self.world:GetPuppet():GetFocus() == obj then
-				self.world:GetPuppet():SetFocus( nil )
-			else
-				self.world:GetPuppet():SetFocus( obj )
-			end
-		end
-	end
 
 	return false
 end

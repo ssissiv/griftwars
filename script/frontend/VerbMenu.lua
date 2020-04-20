@@ -4,6 +4,7 @@ function VerbMenu:RefreshContents( actor, current_verb, verbs )
     self.actor = actor
     self.current_verb = current_verb
 	self.verbs = verbs
+    self.shown_verbs = {}
 end
 
 function VerbMenu:RenderImGuiWindow( ui, screen )
@@ -18,15 +19,16 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
             tx0, ty0 = AccessCoordinate( self.current_verb:GetTarget() or self.actor )
         end
 
+        table.clear( self.shown_verbs )
+
     	for i, verb in self.verbs:Verbs() do
-            local tx, ty = AccessCoordinate( verb:GetTarget() or verb:GetActor() or self.verbs.actor )
+            local tx, ty = AccessCoordinate( verb:GetTarget() or self.actor )
             if tx == tx0 and ty == ty0 then
-                assert( self.verbs.actor )
-                local ok, details = verb:CanDo( self.verbs.actor )
-                local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
-                if verb == self.current_verb then
-                    txt = "> "..txt
-                end
+                -- Track shown verbs for hotkey access.
+                table.insert( self.shown_verbs, verb )
+
+                local ok, details = verb:CanDo( self.actor )
+                local txt = loc.format( "{1}] {2}", #self.shown_verbs, verb:GetRoomDesc( self.actor ) )
 
                 if not ok then
                     ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
@@ -59,5 +61,13 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
     end
 
     ui.End()
+end
+
+function VerbMenu:KeyPressed( key, screen )
+    local idx = tonumber(key)
+    local verb = self.shown_verbs[ idx ]
+    if verb and verb:CanDo( self.actor ) then
+        self.actor:DoVerbAsync( verb )
+    end
 end
 

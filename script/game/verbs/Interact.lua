@@ -17,8 +17,8 @@ function Interact:GetTarget()
 	return self.interaction.owner
 end
 
-function Interact:GetDesc()
-	return self.interaction:GetDesc()
+function Interact:GetDesc( viewer )
+	return self.interaction:GetDesc( viewer )
 end
 
 function Interact:RenderTooltip( ui, viewer )

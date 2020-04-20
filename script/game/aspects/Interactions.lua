@@ -404,6 +404,10 @@ local BuyFromShop = class( "Interaction.BuyFromShop", Interaction )
 
 BuyFromShop.can_repeat = true -- This interaction can take place multiple times.
 
+function BuyFromShop:GetDesc( viewer )
+	return loc.format( "Buy goods from {1.Id}", self.owner:LocTable( viewer ))
+end
+
 function BuyFromShop:CanInteract( actor )
 	local job = self.owner:GetAspect( Job.Shopkeep )
 	if not job:IsDoing() then

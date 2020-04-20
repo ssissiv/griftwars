@@ -85,6 +85,24 @@ function VerbContainer:CancelVerbs()
 	end
 end
 
+function VerbContainer:SortByDistanceTo( x, y )
+	local function fn( v1, v2 )
+		local tx1, ty1
+		if v1:GetTarget() then
+			tx1, ty1 = AccessCoordinate( v1:GetTarget() )
+		end
+		local dist1 = distance( tx1 or x, ty1 or y, x, y )
+		local tx2, ty2
+		if v2:GetTarget() then
+			tx2, ty2 = AccessCoordinate( v2:GetTarget() )
+		end
+		local dist2 = distance( tx2 or x, ty2 or y, x, y )
+		return dist1 < dist2
+	end
+
+	table.sort( self.verbs, fn )
+end
+
 function VerbContainer:PickRandom()
 	return table.arraypick( self.verbs )
 end
