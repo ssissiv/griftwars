@@ -104,8 +104,7 @@ function City:SpawnShop()
 end
 
 function City:SpawnTavern()
-	local room = Location()
-	room:SetImage( assets.LOCATION_BGS.SHOP )
+	local room = Location.Tavern()
 	self.world:SpawnLocation( room )
 
 	local tavern = room:GainAspect( Feature.Tavern())

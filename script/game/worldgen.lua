@@ -212,6 +212,6 @@ function WorldGen:GeneratePlayer( world )
 
 	player:CreateStat( STAT.XP, 0, 100 )
 
-	player:GetInventory():DeltaMoney( 1 )
+	player:GetInventory():DeltaMoney( 10 )
 	return player
 end
