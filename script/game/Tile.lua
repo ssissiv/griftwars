@@ -77,14 +77,13 @@ end
 
 
 function Tile:RenderDebugPanel( ui, panel )
-	ui.Text( "WUT" )
-	-- if self.contents and next(self.contents) then
-	-- 	ui.Text( "Contents:" )
-	-- 	for i, obj in ipairs( self.contents ) do
-	-- 		ui.SameLine( 0, 10 )
-	-- 		panel:AppendTable( ui, obj )
-	-- 	end
-	-- end
+	if self.contents and next(self.contents) then
+		ui.Text( "Contents:" )
+		for i, obj in ipairs( self.contents ) do
+			ui.SameLine( 0, 10 )
+			panel:AppendTable( ui, obj )
+		end
+	end
 end
 
 function Tile:__tostring()
@@ -92,6 +91,8 @@ function Tile:__tostring()
 end
 
 -----------------------------------------------------------------
+
+local Void = class( "Tile.Void", Tile )
 
 local Grass = class( "Tile.Grass", Tile )
 Grass.image = assets.TILE_IMG.GRASS

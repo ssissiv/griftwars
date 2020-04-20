@@ -50,13 +50,10 @@ end
 
 function City:SpawnRoad( road )
 	if road == nil then
-		road = Location()
+		road = Location.Road( self )
 		road:SetCoordinate( 0, 0 )
 		self.world:SpawnLocation( road )
 	end
-
-	road:SetDetails( loc.format( "City of {1}", self.name), "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	road:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 
 	table.insert( self.roads, road )
 	table.insert( self.rooms, road )
@@ -116,6 +113,10 @@ function City:SpawnTavern()
 	local door = Object.Door()
 	door:WarpToLocation( self:RandomRoad() )
 	door:Connect( room )
+
+	local rdoor = Object.Door()
+	rdoor:WarpToLocation( room )
+	rdoor:Connect( door.location )
 
 	local barkeep = tavern:SpawnBarkeep()
 	local home = self:SpawnHome( barkeep )

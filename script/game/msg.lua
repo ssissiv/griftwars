@@ -22,7 +22,7 @@ function Msg:Act( msgs, actor, target, ... )
 				local txt = loc.format( msgs[2], self:LocTable( actor ), self:LocTable( target ), ... )
 				obj:Sense( txt )
 
-			elseif msgs[3] then
+			elseif obj ~= actor and obj ~= target and msgs[3] then
 				-- This message goes to everybody else
 				local txt = loc.format( msgs[3], self:LocTable( actor ), target and self:LocTable( target ), ... )
 				obj:Sense( txt )

@@ -18,13 +18,6 @@ LeaveLocation.EXIT_STRINGS =
 	"{1.Id} leaves to {2.title}.",
 }
 
-LeaveLocation.ENTER_STRINGS =
-{
-	"You enter {2.title}.",
-	nil,
-	"{1.Id} enters."
-}
-
 function LeaveLocation:init( dest )
 	Verb.init( self, nil, dest )
 end
@@ -73,7 +66,7 @@ end
 
 function LeaveLocation:PathToPortal( actor, portal )
 	-- Path tiles to dest.
-	local pather = TilePathFinder( actor:GetLocation().map, actor, portal.owner:GetTile() )
+	local pather = TilePathFinder( actor:GetLocation().map, actor, actor, portal.owner:GetTile() )
 	while actor:GetTile() ~= pather:GetEndRoom() do
 		self:YieldForTime( 2 * ONE_SECOND )
 
@@ -92,7 +85,6 @@ function LeaveLocation:PathToPortal( actor, portal )
 end
 
 function LeaveLocation:Interact( actor )
-	Msg:Action( self.EXIT_STRINGS, actor, actor:GetLocation() )
 
 	local dest
 	if self.obj == nil then
@@ -131,10 +123,13 @@ function LeaveLocation:Interact( actor )
 	
 	local prev_location = actor:GetLocation()
 
+	Msg:Action( self.EXIT_STRINGS, actor, dest )
+
 	actor:DeltaStat( STAT.FATIGUE, 5 )
 	actor:WarpToLocation( dest )
 
-	Msg:Action( self.ENTER_STRINGS, actor, dest )
+	Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
+	Msg:ActToRoom( "{1.Id} enters.", actor )
 end
 
 ---------------------------------------------------------------

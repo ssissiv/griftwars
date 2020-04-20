@@ -85,9 +85,10 @@ end
 
 local TilePathFinder = class( "TilePathFinder" )
 
-function TilePathFinder:init( map, source, target )
+function TilePathFinder:init( map, actor, source, target )
 	assert( is_instance( map, Aspect.TileMap ))
 	self.map = map
+	self.actor = actor
 	self.source = source
 	self.target = target
 end
@@ -125,7 +126,7 @@ function TilePathFinder:CalculatePath()
 		end
 
 		for i, dest in self.map:Neighbours( room ) do
-			if from_to[ dest ] == nil and dest ~= start_room then
+			if from_to[ dest ] == nil and dest ~= start_room and (self.actor == nil or dest:IsPassable( self.actor )) then
 				assert( dest ~= start_room )
 				from_to[ dest ] = room
 				table.insert( queue, dest )

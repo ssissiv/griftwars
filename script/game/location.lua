@@ -121,6 +121,9 @@ function Location:AddEntity( entity )
 
 	elseif is_instance( entity, Agent ) and entity:IsPuppet() then
 		self:GenerateTileMap()
+
+	else
+		assert( entity:GetCoordinate() == nil )
 	end
 end
 
@@ -361,7 +364,7 @@ function Location:GetTitle()
 	if type(self.title) == "function" then
 		return self.title( self )
 	else
-		return self.title or "No Title"
+		return self.title or tostring(self._classname)
 	end
 end
 
@@ -382,7 +385,10 @@ function Location:GenerateTileMap()
 
 	for i, obj in self:Contents() do
 		local x, y = obj:GetCoordinate()
-		if not x then
+		local tile = x and y and self.map:LookupGrid( x, y )
+		if tile then
+			tile:AddEntity( obj )
+		else
 			self:PlaceEntity( obj )
 		end
 	end
@@ -408,7 +414,7 @@ end
 
 function Location:DisposeReality()
 	if self.map then
-		self:LoseAspect( self.map )
+		self.map:ClearTileMap()
 		self.map = nil
 	end
 end

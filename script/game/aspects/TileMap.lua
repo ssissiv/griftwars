@@ -9,9 +9,13 @@ function TileMap:GetExtents()
 	return self.w, self.h
 end
 
+function TileMap:ClearTileMap()
+	self.grid = {}
+end
+
 function TileMap:GenerateTileMap()
 	self:FillTiles( function( x, y )
-		return Tile.Grass( x, y )
+		return Tile.Void( x, y )
 	end )
 end
 
@@ -139,9 +143,6 @@ function TileMap:Flood( origin, fn, ... )
 	end
 
 	assert_warning( #closed <= 99, "Floodings lots of tiles!", #closed )
-end
-
-function TileMap:FindInteractables( agent )
 end
 
 function TileMap:RenderDebugPanel( ui, panel )

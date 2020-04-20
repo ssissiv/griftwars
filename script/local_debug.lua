@@ -2,16 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(player.location)",
-			"DBG(screen.current_verb)",
-			"print(tostr(screen.current_verb))",
-			"screen:PanToCurrentInterest()",
-			"print(screen.current_verb)",
-			"print(t)",
-			"print(t:IsAdjacent( player ))",
-			"print(t:GetCoordinate())",
-			"print(t:IsAdjacent( player ))",
-			"print(t:GetCoordinate())",
 			"print(t:IsAdjacent( player ))",
 			"print(player)",
 			"print(player:GetCoordinate())",
@@ -33,7 +23,17 @@ return {
 			"print(tostr(dbg))",
 			"print(tostr(dbg.debug_panels))",
 			"DBG({})",
-			"puppet:RegenVerbs()"
+			"puppet:RegenVerbs()",
+			"print(t:GetCoordinate())",
+			"print(t:GetTile())",
+			"print(tostr(t:GetTile().contents))",
+			"print(debug.getinfo())",
+			"print(debug.getinfo(1))",
+			"print(tostr(debug.getinfo(1)))",
+			"print(tostr(debug.getinfo(2)))",
+			"print('wut')",
+			"sdf",
+			"for i, v in world:Locations() do print( i, v ) end"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
