@@ -400,9 +400,12 @@ end
 
 
 function Location:PlaceEntity( obj )
-	assert( not obj:GetCoordinate())
-	local w, h = self.map:GetExtents()
-	local x, y = math.random( w ), math.random( h )
+	local x, y = obj:GetCoordinate()
+	print( "Place", obj, self, x, y )
+	if not x then
+		local w, h = self.map:GetExtents()
+		x, y = math.random( w ), math.random( h )
+	end
 	local tile = self:FindPassableTile( x, y, obj )
 	if not tile then
 		assert_warning( tile, string.format( "No tile at: %d, %d", x, y ))

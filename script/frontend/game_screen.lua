@@ -484,8 +484,6 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 			local tx, ty
 			if verb:GetTarget() then
 				tx, ty = AccessCoordinate( verb:GetTarget() )
-			else
-				tx, ty = self.puppet:GetCoordinate()
 			end
 			if tx and ty then
 				local tile = location:GetTileAt( tx, ty )
@@ -653,14 +651,15 @@ function GameScreen:CycleVerbs()
 	local verbs = self.puppet:GetPotentialVerbs( "room" )
 	verbs:SortByDistanceTo( self.puppet:GetCoordinate() )
 
-	local idx = verbs:FindVerb( self.current_verb )
-	if idx == nil then
-		idx = 1
-	else
-		local x0, y0 = AccessCoordinate( self.current_verb:GetTarget() or self.puppet )
-		for j = 1, verbs:CountVerbs() do
-			local k = (idx + j - 1) % verbs:CountVerbs() + 1
-			local next_verb = verbs:VerbAt( k )
+	local idx = verbs:FindVerb( self.current_verb ) or 0
+	local x0, y0
+	if self.current_verb then
+		x0, y0 = AccessCoordinate( self.current_verb:GetTarget() or self.puppet )
+	end
+	for j = 1, verbs:CountVerbs() do
+		local k = (idx + j - 1) % verbs:CountVerbs() + 1
+		local next_verb = verbs:VerbAt( k )
+		if next_verb:GetTarget() then
 			local x1, y1 = AccessCoordinate( next_verb:GetTarget() or self.puppet )
 			if x1 ~= x0 or y1 ~= y0 then
 				idx = k

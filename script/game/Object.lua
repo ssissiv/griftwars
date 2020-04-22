@@ -35,7 +35,7 @@ function Object:LocTable( viewer )
 	return self.loc_table
 end
 
-function Object:GetShortDesc()
+function Object:GetShortDesc( viewer )
 	return loc.format( "{1} is here.", tostring(self))
 end
 

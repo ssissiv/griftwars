@@ -436,7 +436,7 @@ function Agent:Walk( exit )
 	end
 end
 
-local function WarpToLocation( self, location )
+local function WarpToLocation( self, location, x, y )
 	local prev_location = self.location
 	if self.location then
 		self:SetFocus( nil )
@@ -449,6 +449,7 @@ local function WarpToLocation( self, location )
 
 	if location then
 		self.location = location
+		self:SetCoordinate( x, y )
 		location:AddAgent( self )
 	end
 
@@ -465,13 +466,13 @@ function Agent:WarpToNowhere()
 	WarpToLocation( self )
 end
 
-function Agent:WarpToLocation( location )
+function Agent:WarpToLocation( location, x, y )
 	assert( is_instance( location, Location ), tostring(location))
-	WarpToLocation( self, location )
+	WarpToLocation( self, location, x, y )
 end
 
 function Agent:WarpToAgent( agent )
-	self:WarpToLocation( agent:GetLocation() )
+	self:WarpToLocation( agent:GetLocation(), agent:GetCoordinate() )
 end
 
 function Agent:GetLocation()
