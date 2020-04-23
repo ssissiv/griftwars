@@ -98,3 +98,10 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
     ui.End()
 end
+
+function AgentDetailsWindow:KeyPressed( key, screen )
+	if key == "return" or key == "escape" then
+		screen:RemoveWindow( self )
+		return true
+	end
+end

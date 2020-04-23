@@ -461,29 +461,17 @@ function DebugManager:RemoveBindingGroup( bindings )
 	table.arrayremove( self.debug_bindings, bindings )
 end
 
-local function CheckModifiers( binding )
-	if binding.SHIFT and not Input.IsShift() then
-		return false
-	end
-	if binding.CTRL and not Input.IsControl() then
-		return false
-	end
-	if binding.ALT and not Input.IsAlt() then
-		return false
-	end
-	return true
-end
 
 function DebugManager:KeyPressed( key )
 	for j = #self.debug_bindings, 1, -1 do
 		local debug_menu = self.debug_bindings[j]
 	    for i, debug_option in ipairs(debug_menu) do
-	    	local ok = debug_option.Binding and debug_option.Binding.key == key and CheckModifiers( debug_option.Binding )
+	    	local ok = debug_option.Binding and debug_option.Binding:CheckBinding( key )
 	    	ok = ok and (not self.console_open or debug_option.EnabledForConsole)
 	    	ok = ok and (debug_option.Enabled == nil or debug_option.Enabled( self ))
 	    	if not ok and debug_option.Bindings then
 		    	for i, binding in ipairs(debug_option.Bindings) do
-			    	if binding and binding.key == key and CheckModifiers( binding ) then
+			    	if binding and binding:CheckBinding( key ) then
 			    		ok = true
 			    		break
 			        end

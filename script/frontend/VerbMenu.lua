@@ -1,5 +1,9 @@
 local VerbMenu = class( "VerbMenu", NexusWindow )
 
+function VerbMenu:init( world )
+    self.world = world
+end
+
 function VerbMenu:RefreshContents( actor, current_verb, verbs )
     self.actor = actor
     self.current_verb = current_verb
@@ -43,6 +47,10 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
             end
 
             ui.Text( ent:GetShortDesc( self.actor ))
+            ui.SameLine( 0, 10 )
+            if ui.SmallButton( "?" ) then
+                self.world.nexus:Inspect( self.actor, ent )
+            end
             ui.Separator()
 
             for j, verb in ipairs( self.shown_verbs ) do
@@ -85,10 +93,19 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
 end
 
 function VerbMenu:KeyPressed( key, screen )
-    local idx = tonumber(key)
-    local verb = self.shown_verbs[ idx ]
-    if verb and verb:CanDo( self.actor ) then
-        self.actor:DoVerbAsync( verb )
+    if key == "/" and Input.IsShift() then
+        for i, target in ipairs( self.verb_targets ) do
+            self.world.nexus:Inspect( self.actor, target )
+            return true
+        end
+
+    else
+        local idx = tonumber(key)
+        local verb = self.shown_verbs[ idx ]
+        if verb and verb:CanDo( self.actor ) then
+            self.actor:DoVerbAsync( verb )
+            return true
+        end
     end
 end
 

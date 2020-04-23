@@ -15,8 +15,8 @@ function City:GenerateZone()
 	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
 	self.faction = world:CreateFaction( self.name )
 
-	local origin = self.origin or self:SpawnRoad()
-	self.worldgen:SproutLocations( origin, self.size, function( location ) self:SpawnRoad( location ) end )
+	local origin = self.origin or self:SpawnRoad( 0, 0 )
+	self.worldgen:SproutLocations( origin, self.size, function() return self:SpawnRoad() end )
 
 	-- Shops
 	for i = 1, 1 do
@@ -27,9 +27,11 @@ function City:GenerateZone()
 	self:SpawnMilitary()
 
 	-- Scavengers
-	local poor_house = self.worldgen:Sprout( self.worldgen:RandomAvailableLocation( self.roads, 1 ), function( location )
+	local poor_house = self.worldgen:Sprout( self.worldgen:RandomAvailableLocation( self.roads, 1 ), function()
+			local location = Location()
 			location:GainAspect( Feature.Home() )
 			location:SetDetails( "Under a Bridge" )
+			return location
 		end )
 
 	for i = 1, 3 do
@@ -48,11 +50,11 @@ function City:GenerateZone()
 	end
 end
 
-function City:SpawnRoad( road )
-	if road == nil then
-		road = Location.Road( self )
-		road:SetCoordinate( 0, 0 )
-		self.world:SpawnLocation( road )
+function City:SpawnRoad( x, y )
+	local road = Location.Road( self )
+	if x and y then
+		road:SetCoordinate( x, y )
+		self:SpawnLocation( road )
 	end
 
 	table.insert( self.roads, road )
@@ -70,7 +72,7 @@ function City:SpawnHome( resident )
 	if resident then
 		room:SetResident( resident )
 	end
-	self.world:SpawnLocation( room )
+	self:SpawnLocation( room )
 
 	local door = Object.Door()
 	door:WarpToLocation( self:RandomRoad() )
@@ -86,7 +88,7 @@ end
 
 function City:SpawnShop()
 	local shop_room = Location.Shop()
-	self.world:SpawnLocation( shop_room )
+	self:SpawnLocation( shop_room )
 
 	local door = Object.Door()
 	door:WarpToLocation( self:RandomRoad() )
@@ -105,7 +107,7 @@ end
 
 function City:SpawnTavern()
 	local room = Location.Tavern()
-	self.world:SpawnLocation( room )
+	self:SpawnLocation( room )
 
 	local tavern = room:GainAspect( Feature.Tavern())
 
@@ -132,7 +134,7 @@ function City:SpawnMilitary()
 	room:GainAspect( Feature.StrategicPoint() )
 	room:GainAspect( Aspect.Faction( self.faction ))
 	room:GainAspect( Aspect.BuildingTileMap( 16, 16 ))
-	self.world:SpawnLocation( room )
+	self:SpawnLocation( room )
 
 	local door = Object.Door()
 	door:WarpToLocation( self:RandomRoad() )

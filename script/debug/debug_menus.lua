@@ -5,7 +5,7 @@
 local SHARED_BINDINGS =
 {
     {
-        Binding = {key ="`", CTRL = true },
+        Binding = InputBinding{key ="`", CTRL = true },
         EnabledForConsole = true,
         Text = "Toggle Console",
         Do = function( dbg )
@@ -13,13 +13,13 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="backspace", CTRL = true },
+        Binding = InputBinding{key="backspace", CTRL = true },
         Text = "Toggle Debug Render",
         Do = function( dbg )
         end
     },
     {
-        Binding = {key = "`", SHIFT = true },
+        Binding = InputBinding{key = "`", SHIFT = true },
         Text = "Create Inspector Panel",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
@@ -29,7 +29,7 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key = "`"},
+        Binding = InputBinding{key = "`"},
         Text = "Toggle Inspector Panel",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
@@ -39,7 +39,7 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="d", CTRL = true},
+        Binding = InputBinding{key="d", CTRL = true},
         EnabledForConsole = true,
         Text = function()
             return string.format( "Execute '%s'", DebugUtil.GetLocalDebugData( "DEBUG_FILE" ))
@@ -49,13 +49,13 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="r", CTRL = true},
+        Binding = InputBinding{key="r", CTRL = true},
         Text = "Reload Game",
         Do = function( dbg )
         end
     },
     {
-        Binding = {key="=", CTRL = true},
+        Binding = InputBinding{key="=", CTRL = true},
         Text = "Speed Up",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
@@ -65,7 +65,7 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="-", CTRL = true},
+        Binding = InputBinding{key="-", CTRL = true},
         Text = "Speed Down",
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
@@ -75,7 +75,7 @@ local SHARED_BINDINGS =
         end
     },
     {
-        Binding = {key="return", CTRL = true },
+        Binding = InputBinding{key="return", CTRL = true },
         Text = "Toggle Pause",
         Enabled = function()
             return is_instance( GetGUI():GetTopScreen(), GameScreen )
@@ -103,7 +103,7 @@ local GAME_BINDINGS =
 {
     name = "Game",
     {
-        Binding = { key = "t", CTRL = true },
+        Binding = InputBinding{ key = "t", CTRL = true },
         Text = "Debug Tile",
         Do = function( dbg )
             local env = dbg:GetDebugEnv()
@@ -113,7 +113,7 @@ local GAME_BINDINGS =
     },
 
     {
-        Binding = { key = "f8" },
+        Binding = InputBinding{ key = "f8" },
         Text = "Quick Save",
         Do = function( dbg )
             local env = dbg:GetDebugEnv()
@@ -122,7 +122,7 @@ local GAME_BINDINGS =
     },
 
     {
-        Binding = { key = "f9" },
+        Binding = InputBinding{ key = "f9" },
         Text = "Quick Load",
         Do = function( dbg )
             local env = dbg:GetDebugEnv()

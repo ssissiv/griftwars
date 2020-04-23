@@ -215,7 +215,7 @@ function DebugPanel:AddDebugMenu( dbg, ui, menu, menu_params )
                 txt = option.Text( dbg, table.unpack( menu_params ) )
             end
             if option.Binding then
-                txt = (txt or "") .. string.format( " (%s)", Input.GetBindingString( option.Binding ))
+                txt = (txt or "") .. string.format( " (%s)", option.Binding:GetBindingString() )
             end
 
             if txt == nil then

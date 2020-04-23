@@ -8,7 +8,8 @@ function Forest:init( worldgen, origin, size )
 end
 
 function Forest:GenerateZone()
-	local function CreateRoom( room )
+	local function CreateRoom()
+		local room = Location()
 		room:SetDetails( loc.format( "The Forest [{1}]", #self.rooms ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
 		room:SetImage( assets.LOCATION_BGS.FOREST )
 		if self.worldgen:Random() < 0.5 then
@@ -17,6 +18,7 @@ function Forest:GenerateZone()
 		room.map_colour = constants.colours.FOREST_TILE
 
 		table.insert( self.rooms, room )
+		return room
 	end
 
 	self.worldgen:SproutLocations( self.origin, self.size, CreateRoom )

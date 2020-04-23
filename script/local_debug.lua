@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:IsAdjacent( player ))",
 			"print(player)",
 			"print(player:GetCoordinate())",
 			"DBG(screen.windows[1])",
@@ -33,7 +32,8 @@ return {
 			"print(tostr(debug.getinfo(2)))",
 			"print('wut')",
 			"sdf",
-			"for i, v in world:Locations() do print( i, v ) end"
+			"for i, v in world:Locations() do print( i, v ) end",
+			"print(t._classname)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

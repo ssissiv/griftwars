@@ -29,8 +29,7 @@ function WorldGen:Sprout( room, fn, ... )
 
 		local adj = self.world:GetLocationAt( x, y )
 		if adj == nil then
-			local new_room = Location()
-			fn( new_room, ... )
+			local new_room = fn( ... )
 			room:Connect( new_room, exit )
 			return new_room
 		end

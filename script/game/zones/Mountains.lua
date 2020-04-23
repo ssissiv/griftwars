@@ -9,11 +9,13 @@ end
 
 function Mountains:GenerateZone()
 	local function CreateRoom( room )
+		local room = Location()
 		room:SetDetails( loc.format( "Mountains [{1}]", #self.rooms ), "High altitude, treacherous terrain.")
 		room:SetImage( assets.LOCATION_BGS.MOUNTAINS )
 		room.map_colour = constants.colours.MOUNTAINS_TILE
 
 		table.insert( self.rooms, room )
+		return room
 	end
 
 	self.worldgen:SproutLocations( self.origin, self.size, CreateRoom )

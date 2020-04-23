@@ -1,4 +1,5 @@
 require "game/event_constants"
+require "game/input_constants"
 
 -- 1.0 unit of datetime is meant to represent 1 hour,
 -- so a WALL_TO_GAME_TIME of 1.0 means every real world second is equivalent to 1 game hour.

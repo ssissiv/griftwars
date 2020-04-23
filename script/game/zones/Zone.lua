@@ -28,6 +28,11 @@ function Zone:GetBounds()
 	return x1, y1, x2, y2
 end
 
+function Zone:SpawnLocation( location )
+	location:AssignZone( self )
+	self.world:SpawnLocation( location )
+end
+
 function Zone:RandomRoom()
 	return self.worldgen:ArrayPick( self.rooms )
 end

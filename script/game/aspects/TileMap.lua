@@ -72,7 +72,7 @@ function TileMap:AssignToGrid( location )
 		row[ x ] = location
 	elseif is_instance( row[ x ] ) then
 		row[ x ] = { row[ x ], location }
-		error()
+		error( string.format( "%d, %d: %s", x, y, location ))
 	else
 		table.insert( row[ x ], location )
 	end

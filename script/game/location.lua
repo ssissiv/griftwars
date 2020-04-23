@@ -60,6 +60,15 @@ function Location:LocTable()
 	return self
 end
 
+function Location:AssignZone( zone )
+	assert( is_instance( zone, Zone ))
+	self.zone = zone
+end
+
+function Location:GetZone()
+	return self.zone
+end
+
 function Location:SetCoordinate( x, y, z )
 	if self.x then
 		world:GetAspect( Aspect.TileMap ):UnassignFromGrid( self )
@@ -87,8 +96,12 @@ function Location:GetImage( image )
 end
 
 function Location:SetDetails( title, desc )
-	self.title = title
-	self.desc = desc
+	if title then
+		self.title = title
+	end
+	if desc then
+		self.desc = desc
+	end
 end
 
 

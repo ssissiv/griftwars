@@ -682,7 +682,7 @@ function GameScreen:SetCurrentVerb( verb )
 	local verb_window = self:FindWindow( VerbMenu )
 	if verb_window == nil and verb ~= nil then
 		-- Show window.
-		verb_window = VerbMenu()
+		verb_window = VerbMenu( self.world )
 		self:AddWindow( verb_window )
 
 	elseif verb_window and verb == nil then
