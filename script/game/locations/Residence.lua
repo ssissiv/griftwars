@@ -15,6 +15,9 @@ end
 
 local Residence = class( "Location.Residence", Location )
 
+Residence.WORLDGEN_TAGS = { "residence exit" }
+
+
 function Residence:init()
 	Location.init( self )
 	self:SetDetails( "Residence", "This is somebody's residence." )
@@ -24,6 +27,8 @@ function Residence:init()
 	self:GainAspect( Feature.Home() )
 
 	Object.Bed():WarpToLocation( self )
+
+	Object.Door( "residence exit"):WarpToLocation( self )
 end
 
 function Residence:SetResident( resident )

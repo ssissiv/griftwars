@@ -19,7 +19,13 @@ function City:GenerateZone()
 	table.insert( self.roads, self.origin )
 	self:SpawnLocation( self.origin )
 
-	self:GeneratePortals( self.origin )
+	local locations = { self.origin }
+	local count = 0
+	while #locations > 0 and count < 8 do
+		local location = table.remove( locations, 1 )
+		self:GeneratePortals( location, locations )
+		count = count + 1
+	end
 end
 
 

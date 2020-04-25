@@ -197,6 +197,15 @@ CR3 = 3
 CR4 = 4
 CR5 = 5
 
+MATCH_TAGS =
+{
+	west = "east",
+	east = "west",
+	north = "south",
+	south = "north",
+	entry = "exit",
+	exit = "entry"
+}
 
 DIE_FACE = MakeEnum
 {

@@ -13,8 +13,33 @@ function Portal:GetWorldGenTag()
 	return self.worldgen_tag
 end
 
-function Portal:MatchWorldGenTag( tag )
-	return self.worldgen_tag == tag
+function Portal:MatchWorldGenTag( tagstr )
+	local tags = tagstr and tagstr:split( " " )
+	if tags == nil or #tags == 0 then
+		return false
+	end
+	local our_tags = self.worldgen_tag:split( " " )
+	if our_tags == nil or #our_tags == 0 then
+		return false
+	end
+
+	-- All incoming tags must match.
+	for i, tag in ipairs( tags ) do
+		tag = MATCH_TAGS[ tag ] or tag
+		if not table.contains( our_tags, tag ) then
+			return false
+		end
+	end
+
+	-- All our tags must match to incoming.
+	for i, tag in ipairs( our_tags ) do
+		tag = MATCH_TAGS[ tag ] or tag
+		if not table.contains( tags, tag ) then
+			return false
+		end
+	end
+
+	return true
 end
 
 function Portal:Connect( location, x, y )

@@ -28,7 +28,7 @@ function Zone:GetBounds()
 	return x1, y1, x2, y2
 end
 
-function Zone:GeneratePortals( location )
+function Zone:GeneratePortals( location, new_locations )
 	for i, obj in location:Contents() do
 		local portal = obj:GetAspect( Aspect.Portal )
 		if portal and portal:GetDest() == nil then
@@ -43,6 +43,7 @@ function Zone:GeneratePortals( location )
 
 			local class = table.arraypick( classes )
 			if class then
+				print( "Match:", location, portal:GetWorldGenTag(), class._classname )
 				local new_location = class( self )
 				self:SpawnLocation( new_location )
 
@@ -53,6 +54,10 @@ function Zone:GeneratePortals( location )
 						portal:Connect( new_location, obj2:GetCoordinate() )
 						portal2:Connect( location, obj:GetCoordinate() )
 					end
+				end
+
+				if new_locations then
+					table.insert( new_locations, new_location )
 				end
 
 			else

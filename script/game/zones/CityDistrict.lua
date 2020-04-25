@@ -15,8 +15,8 @@ function District:OnSpawn( world )
 
 	local w, h = map:GetExtents()
 
-	local exit = Object.Portal( "district" ):WarpToLocation( self, 1, math.floor(h/2) )
-	local exit = Object.Portal( "district" ):WarpToLocation( self, w, math.floor(h/2) )
+	local exit = Object.Portal( "district west" ):WarpToLocation( self, 1, math.floor(h/2) )
+	local exit = Object.Portal( "district east" ):WarpToLocation( self, w, math.floor(h/2) )
 end
 
 local CityDistrictTileMap = class( "Aspect.CityDistrictTileMap", Aspect.TileMap )
@@ -31,24 +31,24 @@ end
 
 local District1 = class( "Location.CityDistrict1", District )
 
-District1.WORLDGEN_TAGS = { "district", "city_shop" }
+District1.WORLDGEN_TAGS = { "district west", "district east", "shop entry" }
 
 function District1:OnSpawn( world )
 	District.OnSpawn( self, world )
 
-	Object.Door( "city_shop" ):WarpToLocation( self )
-	Object.Door( "city_shop" ):WarpToLocation( self )
+	Object.Door( "shop entry" ):WarpToLocation( self )
+	Object.Door( "shop entry" ):WarpToLocation( self )
 end
 
 ---------------------------------------------------
 
 local District2 = class( "Location.CityDistrict2", District )
 
-District2.WORLDGEN_TAGS = { "district", "city_residence" }
+District2.WORLDGEN_TAGS = { "district west", "district east", "residence entry" }
 
-function District1:OnSpawn( world )
+function District2:OnSpawn( world )
 	District.OnSpawn( self, world )
 
-	Object.Door( "city_residence" ):WarpToLocation( self )
-	Object.Door( "city_residence" ):WarpToLocation( self )
+	Object.Door( "residence entry" ):WarpToLocation( self )
+	Object.Door( "residence entry" ):WarpToLocation( self )
 end

@@ -822,7 +822,11 @@ function GameScreen:KeyPressed( key )
 	elseif key == "." then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
-			puppet:AttemptVerb( Verb.Wait )
+			if Input.IsShift() then
+				puppet:AttemptVerb( Verb.LeaveLocation )
+			else
+				puppet:AttemptVerb( Verb.Wait )
+			end
 		end
 
 	elseif key == "tab" then

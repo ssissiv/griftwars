@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(screen.windows[1])",
-			"print(debug.traceback(t.coro))",
-			"print(puppet)",
-			"print(puppet.location)",
 			"print(puppet.location.map)",
 			"print(tostr(world.pause))",
 			"print(screen.camera)",
@@ -33,7 +29,11 @@ return {
 			"for i, v in world:Locations() do print( i, v ) end",
 			"print(t._classname)",
 			"print(t:GetName())",
-			"print(t.portal)"
+			"print(t.portal)",
+			"print(string.split( \"foo bar\" ))",
+			"print(string.split( \"foo bar\", {} ))",
+			"print(string.split( \"foo bar\", \" \" ))",
+			"print(tostr(string.split( \"foo bar\", \" \" )))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
