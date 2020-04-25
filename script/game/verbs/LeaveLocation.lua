@@ -86,23 +86,25 @@ end
 
 function LeaveLocation:Interact( actor )
 
-	local dest
+	local dest, destx, desty
 	if self.obj == nil then
 		-- Chose a random accessible portal out of here.
-		local dests = {}
+		local portals = {}
 		for i, portal in actor.location:Portals() do
-			local dest = portal:GetDest()
-			assert( dest ~= actor.location )
-			table.insert( dests, dest )
+			if portal:GetDest() and portal:GetDesc() ~= actor.location then
+				table.insert( portals, portal )
+			end
 		end
 
-		dest = table.arraypick( dests )
-		if dest == nil then
+		local portal = table.arraypick( portals )
+		if portal == nil then
 			return
+		else
+			dest, destx, desty = portal:GetDest()
 		end
 
 	elseif is_instance( self.obj, Aspect.Portal ) then
-		dest = self.obj:GetDest()
+		dest, destx, desty = self.obj:GetDest()
 
 	elseif is_instance( self.obj, Location ) then
 		dest = self.obj
@@ -126,7 +128,7 @@ function LeaveLocation:Interact( actor )
 	Msg:Action( self.EXIT_STRINGS, actor, dest )
 
 	actor:DeltaStat( STAT.FATIGUE, 5 )
-	actor:WarpToLocation( dest )
+	actor:WarpToLocation( dest, destx, desty )
 
 	Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
 	Msg:ActToRoom( "{1.Id} enters.", actor )

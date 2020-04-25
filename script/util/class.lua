@@ -198,6 +198,15 @@ is_class = function(class, base_class)
     end
 end
 
+recurse_subclasses = function( class, fn )
+    class = class or Verb
+    fn( class )
+
+    for i, subclass in ipairs( class._subclasses ) do
+        recurse_subclasses( subclass, fn )
+    end
+end
+
 
 is_instance = function(inst, class)
     if type(inst) == "table" then

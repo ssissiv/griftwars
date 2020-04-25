@@ -28,6 +28,40 @@ function Zone:GetBounds()
 	return x1, y1, x2, y2
 end
 
+function Zone:GeneratePortals( location )
+	for i, obj in location:Contents() do
+		local portal = obj:GetAspect( Aspect.Portal )
+		if portal and portal:GetDest() == nil then
+			local classes = {}
+			recurse_subclasses( Location, function( subclass )
+				for j, tag in ipairs( subclass.WORLDGEN_TAGS or table.empty ) do
+					if portal:MatchWorldGenTag( tag ) then
+						table.insert( classes, subclass )
+					end
+				end
+			end )
+
+			local class = table.arraypick( classes )
+			if class then
+				local new_location = class( self )
+				self:SpawnLocation( new_location )
+
+				-- Connect the matching Portal.
+				for j, obj2 in new_location:Contents() do
+					local portal2 = obj2:GetAspect( Aspect.Portal )
+					if portal2 and portal2:GetDest() == nil and portal2:MatchWorldGenTag( portal:GetWorldGenTag() ) then
+						portal:Connect( new_location, obj2:GetCoordinate() )
+						portal2:Connect( location, obj:GetCoordinate() )
+					end
+				end
+
+			else
+				print( "Could not match portal", location, obj, portal.worldgen_tag )
+			end
+		end
+	end
+end
+
 function Zone:SpawnLocation( location )
 	location:AssignZone( self )
 	self.world:SpawnLocation( location )

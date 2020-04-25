@@ -5,8 +5,23 @@ function Portal:init( location, x, y )
 	self.leave_verb = Verb.LeaveLocation( self )
 end
 
+function Portal:SetWorldGenTag( tag )
+	self.worldgen_tag = tag
+end
+
+function Portal:GetWorldGenTag()
+	return self.worldgen_tag
+end
+
+function Portal:MatchWorldGenTag( tag )
+	return self.worldgen_tag == tag
+end
+
 function Portal:Connect( location, x, y )
 	self.location, self.x, self.y = location, x, y
+	if location then
+		assert( location ~= self.owner.location )
+	end
 end
 
 function Portal:GetDest()
@@ -22,16 +37,9 @@ function Portal:OnLocationChanged( prev_location, location )
 	end
 end
 
-function Portal:OnSpawn( world )
-	Aspect.OnSpawn( self, world )
-	if self.owner.location then
-		self.owner.location:AddPortal( self )
-	end
-end
-
-function Portal:OnDespawn( )
-	if self.owner.location then
-		self.owner.location:RemovePortal( self )
+function Portal:CollectVerbs( verbs, agent )
+	if self.location then
+		verbs:AddVerb( Verb.LeaveLocation( self ))
 	end
 end
 

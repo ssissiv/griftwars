@@ -270,6 +270,7 @@ function Location:Portals()
 end
 
 function Location:AddPortal( portal )
+	assert( not table.contains( self.portals, portal ))
 	table.insert( self.portals, portal )
 end
 
@@ -386,25 +387,25 @@ function Location:GetDesc()
 end
 
 function Location:GenerateTileMap()
-	if self.map then
-		return
-	end
-
-	self.map = self:GetAspect( Aspect.TileMap )
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 8, 8 ))
-	end
-	self.map:GenerateTileMap()
+		self.map = self:GetAspect( Aspect.TileMap )
+		if self.map == nil then
+			self.map = self:GainAspect( Aspect.TileMap( 8, 8 ))
+		end
+		self.map:GenerateTileMap()
 
-	for i, obj in self:Contents() do
-		local x, y = obj:GetCoordinate()
-		local tile = x and y and self.map:LookupGrid( x, y )
-		if tile then
-			tile:AddEntity( obj )
-		else
-			self:PlaceEntity( obj )
+		for i, obj in self:Contents() do
+			local x, y = obj:GetCoordinate()
+			local tile = x and y and self.map:LookupGrid( x, y )
+			if tile then
+				tile:AddEntity( obj )
+			else
+				self:PlaceEntity( obj )
+			end
 		end
 	end
+
+	return self.map
 end
 
 function Location:FindPortalTiles()

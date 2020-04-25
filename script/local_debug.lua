@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(player)",
-			"print(player:GetCoordinate())",
 			"DBG(screen.windows[1])",
 			"print(debug.traceback(t.coro))",
 			"print(puppet)",
@@ -33,7 +31,9 @@ return {
 			"print('wut')",
 			"sdf",
 			"for i, v in world:Locations() do print( i, v ) end",
-			"print(t._classname)"
+			"print(t._classname)",
+			"print(t:GetName())",
+			"print(t.portal)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

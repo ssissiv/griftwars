@@ -39,7 +39,7 @@ function Object:GetShortDesc( viewer )
 	return loc.format( "{1} is here.", tostring(self))
 end
 
-local function WarpToLocation( self, location )
+local function WarpToLocation( self, location, x, y )
 	local prev_location = self.location
 	if self.location then
 		self.location:RemoveEntity( self )
@@ -47,6 +47,7 @@ local function WarpToLocation( self, location )
 
 	if location then
 		self.location = location
+		self:SetCoordinate( x, y )
 		location:AddEntity( self )
 	end
 
@@ -64,9 +65,9 @@ function Object:WarpToNowhere()
 	WarpToLocation( self )
 end
 
-function Object:WarpToLocation( location )
+function Object:WarpToLocation( location, x, y )
 	assert( is_instance( location, Location ))
-	WarpToLocation( self, location )
+	WarpToLocation( self, location, x, y )
 end
 
 function Object:WarpToAgent( agent )

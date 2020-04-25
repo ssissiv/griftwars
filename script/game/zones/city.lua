@@ -15,6 +15,20 @@ function City:GenerateZone()
 	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
 	self.faction = world:CreateFaction( self.name )
 
+	self.origin = Location.CityDistrict( self )
+	table.insert( self.roads, self.origin )
+	self:SpawnLocation( self.origin )
+
+	self:GeneratePortals( self.origin )
+end
+
+
+function City:_GenerateZone()
+	local world = self.world
+
+	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
+	self.faction = world:CreateFaction( self.name )
+
 	local origin = self.origin or self:SpawnRoad( 0, 0 )
 	self.worldgen:SproutLocations( origin, self.size, function() return self:SpawnRoad() end )
 

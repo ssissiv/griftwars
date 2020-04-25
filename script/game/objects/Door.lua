@@ -2,6 +2,11 @@ local Door = class( "Object.Door", Object )
 
 Door.image = assets.TILE_IMG.DOOR
 
+function Door:init( worldgen_tag )
+	self.portal = self:GainAspect( Aspect.Portal() )
+	self.portal:SetWorldGenTag( worldgen_tag )
+end
+
 function Door:Connect( dest )
 	local portal = self:GetAspect( Aspect.Portal )
 	if portal == nil then
@@ -26,13 +31,4 @@ end
 
 function Door:Close()
 	self:GainAspect( Aspect.Impass() )
-end
-
-
-function Door:CollectVerbs( verbs, agent )
-	-- if agent:GetTile() == self:GetTile() then
-	if self.portal then
-		verbs:AddVerb( Verb.LeaveLocation( self.portal ))
-	end
-	-- end
 end

@@ -9,7 +9,6 @@ function GameScreen:init()
 	self.world:SetNexus( self.nexus )
 	self.world:Start()
 	self.world:ListenForAny( self, self.OnWorldEvent )
-	self.world:SetPuppet( self.world:GetPlayer() )
 
 	-- List of objects and vergbs in the currently rendered location.
 	self.objects = {}
@@ -22,6 +21,8 @@ function GameScreen:init()
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
 	self:PanToCurrentInterest()
+
+	self.world:SetPuppet( self.world:GetPlayer() )
 
 	return self
 end
