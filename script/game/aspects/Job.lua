@@ -46,7 +46,7 @@ function Job:RenderAgentDetails( ui, screen )
 	end
 end
 
-function Job:GetLocation()
+function Job:GetWaypoint()
 	error( tostring(self) ) -- Define location for job.
 end
 
@@ -102,7 +102,10 @@ function Job:ShouldDo()
 	if not self:IsTimeForShift( self:GetWorld():GetDateTime() ) then
 		return false, "Not time for shift"
 	end
-	if owner:GetLocation() ~= self:GetLocation() then
+	local wp = self:GetWaypoint()
+	if wp == nil then
+		return false, "No job location"
+	elseif not wp:AtWaypoint( owner ) then
 		return false, "Not at job location"
 	end
 	return true
@@ -166,15 +169,15 @@ function Job:Interact()
 		if self.travel == nil then
 			self.travel = Verb.Travel()
 		end
-		local job_location = self:GetLocation()
-		if job_location and actor:GetLocation() ~= job_location then
-			local ok, reason = self.travel:DoVerb( actor, job_location )
-			if actor:GetLocation() == self:GetLocation() then
+		local waypoint = self:GetWaypoint()
+		if waypoint and not waypoint:AtWaypoint( actor ) then
+			local ok, reason = self.travel:DoVerb( actor, waypoint )
+			if ok then
 				Msg:Speak( actor, "Time for work!" )
 			end
 		end
 
-		if actor:GetLocation() == self:GetLocation() then
+		if waypoint and waypoint:AtWaypoint( actor ) then
 			if self.DoJob then
 				self:DoJob()
 			else

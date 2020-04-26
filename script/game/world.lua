@@ -59,7 +59,7 @@ function World:SpawnLocation( location )
 end
 
 function World:GetLocationAt( x, y )
-	return self.map:LookupGrid( x, y )
+	return self.map:LookupTile( x, y )
 end
 
 function World:AllLocations()

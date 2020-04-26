@@ -20,6 +20,11 @@ function RenderScreen:Box( x, y, w, h )
 	self.render_bounds[4] = h
 end
 
+function RenderScreen:SetColour( clr )
+	local r, g, b, a = HexColour255( clr )
+	love.graphics.setColor( r, g, b, a )
+end
+
 function RenderScreen:Image( image, w, h, sx, sy )
 	love.graphics.draw( image, w, h, 0, sx, sy )
 end

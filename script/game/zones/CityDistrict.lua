@@ -4,7 +4,6 @@ function District:init( zone )
 	Location.init( self )
 	self:GainAspect( Aspect.CityDistrictTileMap( math.random( 6, 12 ), math.random( 6, 12 ) ))
 	self:SetDetails( loc.format( "District of {1}{2}", zone.name, math.random(1,9999)), "These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-	self:SetImage( assets.LOCATION_BGS.JUNKYARD_STRIP )
 end
 
 function District:OnSpawn( world )

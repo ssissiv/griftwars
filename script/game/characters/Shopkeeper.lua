@@ -10,7 +10,7 @@ function Shopkeeper:init()
 
 	self:MakeHuman()
 
-	self.job = self:GainAspect( Job.Shopkeep( self ) )
+	self.job = self:GainAspect( Job.ManageShop( self ) )
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.ManageFatigue( self ))

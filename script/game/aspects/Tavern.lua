@@ -2,7 +2,7 @@
 -- Marks a location used as a Tavern.
 --
 -- Locations have: Feature.Tavern (shop_owner: Agent)
--- Agents have: Job.Shopkeep (shop: Location)
+-- Agents have: Job.ManageShop (shop: Location)
 
 local Tavern = class( "Feature.Tavern", Feature )
 

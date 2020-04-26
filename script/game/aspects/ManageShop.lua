@@ -3,23 +3,23 @@
 -- Links to: Feature.Shop (Location-side model of this job)
 -- Owner gains: Interaction.BuyFromShop (so that agents can interact with this shopkeeper)
 -- 
-local Shopkeep = class( "Job.Shopkeep", Job )
+local ManageShop = class( "Job.ManageShop", Job )
 
-Shopkeep.salary = 30
+ManageShop.salary = 30
 
-function Shopkeep:OnInit()
+function ManageShop:OnInit()
 	self:SetShiftHours( 8, 18 )
 end
 
-function Shopkeep:GetName()
+function ManageShop:GetName()
 	return loc.format( "Shopkeeper at the {1}", self.shop:GetTitle() )
 end
 
-function Shopkeep:GetLocation()
-	return self.shop
+function ManageShop:GetWaypoint()
+	return self.shop:GetWaypoint( WAYPOINT.KEEPER )
 end
 
-function Shopkeep:AssignShop( shop )
+function ManageShop:AssignShop( shop )
 	assert( shop == nil or is_instance( shop, Location ))
 	if shop ~= self.shop then
 		self.shop = shop
@@ -29,7 +29,7 @@ function Shopkeep:AssignShop( shop )
 	end
 end
 
-function Shopkeep:OnSpawn( world )
+function ManageShop:OnSpawn( world )
 	Job.OnSpawn( self, world )
 
 	-- People can buy from us.
@@ -48,7 +48,7 @@ function Shopkeep:OnSpawn( world )
 	end
 end
 
-function Shopkeep:OnLocationChanged( prev_location, location )
+function ManageShop:OnLocationChanged( prev_location, location )
 	if prev_location then
 		prev_location:RemoveListener( self )
 	end
@@ -57,14 +57,14 @@ function Shopkeep:OnLocationChanged( prev_location, location )
 	end
 end
 
-function Shopkeep:IsAssistant( agent )
+function ManageShop:IsAssistant( agent )
 	if self.assistant_job then
 		return self.assistant_job.owner == agent
 	end
 	return false
 end
 
-function Shopkeep:OnLocationEvent( event_name, location, ... )
+function ManageShop:OnLocationEvent( event_name, location, ... )
 	if event_name == LOCATION_EVENT.AGENT_ADDED and location == self.owner:GetLocation() and location == self.shop then
 		local agent = ...
 		if not self:IsAssistant( agent ) then
@@ -77,13 +77,13 @@ function Shopkeep:OnLocationEvent( event_name, location, ... )
 	end
 end
 
-function Shopkeep:AddShopItem( item )
+function ManageShop:AddShopItem( item )
 	self.owner:GetInventory():AddItem( item )
 end
 
 --------------------------------------------------------------
 
-function Shopkeep:SellToBuyer( item, buyer )
+function ManageShop:SellToBuyer( item, buyer )
 	local cost = self:GetBuyCost( item, buyer )
 	buyer:DeltaMoney( -cost )
 
@@ -94,11 +94,11 @@ function Shopkeep:SellToBuyer( item, buyer )
 	Msg:Echo( self.owner, "You sell a {1} to {2}.", item, buyer )
 end
 
-function Shopkeep:GetBuyCost( item, buyer )
+function ManageShop:GetBuyCost( item, buyer )
 	return item:GetValue()
 end
 
-function Shopkeep:BuyFromSeller( item, seller )
+function ManageShop:BuyFromSeller( item, seller )
 	seller:GetInventory():RemoveItem( item )
 	self.owner:GetInventory():AddItem( item )
 	Msg:Echo( self.owner, "You bought a {1} from {2}.", item:GetName(), seller )

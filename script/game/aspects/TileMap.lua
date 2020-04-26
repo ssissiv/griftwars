@@ -24,7 +24,7 @@ local function IterateNeighbours( state, i )
 	local exit = EXIT_ARRAY[ state.exit_idx ]
 	while not tile and exit do
 		local x, y = OffsetExit( state.tile.x, state.tile.y, exit )
-		tile = state.map:LookupGrid( x, y )
+		tile = state.map:LookupTile( x, y )
 		state.exit_idx = state.exit_idx + 1
 		exit = EXIT_ARRAY[ state.exit_idx ]
 	end
@@ -95,7 +95,7 @@ function TileMap:UnassignFromGrid( location )
 	end
 end
 
-function TileMap:LookupGrid( x, y )
+function TileMap:LookupTile( x, y )
 	local row = self.grid[ y ]
 	if row then
 		local t = row[ x ]
@@ -113,7 +113,7 @@ end
 --		stop: abort the Flood search entirely.
 
 function TileMap:Flood( origin, fn, ... )
-	assert( self:LookupGrid( origin:GetCoordinate() ) == origin )
+	assert( self:LookupTile( origin:GetCoordinate() ) == origin )
 
 	local open, closed = { origin, 0 }, {}
 
@@ -133,7 +133,7 @@ function TileMap:Flood( origin, fn, ... )
 			for i, exit in ipairs( EXIT_ARRAY ) do
 				local x, y = x:GetCoordinate()
 				x, y = OffsetExit( x, y, exit )
-				local ntile = self:LookupGrid( x, y )
+				local ntile = self:LookupTile( x, y )
 				if ntile and not table.contains( open, ntile ) and not table.contains( closed, ntile ) then
 					table.insert( open, ntile )
 					table.insert( open, depth + 1 )

@@ -42,8 +42,11 @@ end
 function Captain:OnAgentEvent( event_name, agent, ... )
 	if event_name == AGENT_EVENT.STRATEGIZE then
 		local target = ...
+		local waypoint = Waypoint()
+		waypoint:TrackLocation( target )
+		
 		for i, job in ipairs( self.patrols ) do
-			job:SetLocation( target )
+			job:SetWaypoint( waypoint )
 		end
 	end
 end

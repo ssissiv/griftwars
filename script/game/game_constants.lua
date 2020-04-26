@@ -197,6 +197,11 @@ CR3 = 3
 CR4 = 4
 CR5 = 5
 
+WAYPOINT = MakeEnum
+{
+	"KEEPER",
+}
+
 MATCH_TAGS =
 {
 	west = "east",

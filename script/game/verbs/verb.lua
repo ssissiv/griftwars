@@ -233,6 +233,8 @@ function Verb:DoVerb( actor, ... )
 		self.transient = nil
 		actor:LoseAspect( self )
 	end
+
+	return true
 end
 
 function Verb:IsDoing()

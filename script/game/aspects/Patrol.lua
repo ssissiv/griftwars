@@ -7,23 +7,24 @@ function Patrol:OnInit()
 	self:SetShiftHours( 0, 24 )
 end
 
-function Patrol:GetLocation()
-	return self.location
+function Patrol:GetWaypoint()
+	return self.waypoint
 end
 
-function Patrol:SetLocation( location )
-	self.location = location
+function Patrol:SetWaypoint( waypoint )
+	self.waypoint = waypoint
 end
 
 function Patrol:RenderAgentDetails( ui, screen, viewer )
-	if self.location then
+	local location = self.waypoint and self.waypoint:GetLocation()
+	if location then
 		ui.Bullet()
-		if self.owner:IsAlly( self.location ) then
-			ui.Text( loc.format( "Defending {1}", self.location ))
-		elseif self.owner:IsEnemy( self.location ) then
-			ui.Text( loc.format( "Assaulting {1}", self.location ))
+		if self.owner:IsAlly( location ) then
+			ui.Text( loc.format( "Defending {1}", location ))
+		elseif self.owner:IsEnemy( location ) then
+			ui.Text( loc.format( "Assaulting {1}", location ))
 		else
-			ui.Text( loc.format( "Occupying {1}", self.location ))
+			ui.Text( loc.format( "Occupying {1}", location ))
 		end
 	end
 end

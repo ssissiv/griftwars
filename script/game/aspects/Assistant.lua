@@ -8,8 +8,8 @@ function Assistant:OnInit()
 	self:SetShiftHours( 8, 16 )
 end
 
-function Assistant:GetLocation()
-	return self.employer:GetLocation()
+function Assistant:GetWaypoint()
+	-- return self.employer:GetWaypoint()
 end
 
 function Assistant:GetName()

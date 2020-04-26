@@ -15,6 +15,7 @@ function Location:init()
 	Entity.init( self )
 	self.exits = {}
 	self.portals = {}
+	self.waypoints = {}
 	self.available_exits = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
 	self.map_colour = constants.colours.DEFAULT_TILE
 end
@@ -87,12 +88,12 @@ function Location:GetCoordinate()
 	return self.x, self.y, self.z
 end
 
-function Location:SetImage( image )
-	self.image = image
+function Location:GetWaypoint( id )
+	return self.waypoints[ id ]
 end
 
-function Location:GetImage( image )
-	return self.image
+function Location:SetWaypoint( id, waypoint )
+	self.waypoints[ id ] = waypoint
 end
 
 function Location:SetDetails( title, desc )
@@ -156,7 +157,7 @@ function Location:RemoveEntity( entity )
 
 	if self.map then
 		local x, y  = entity:GetCoordinate()
-		local tile = self.map:LookupGrid( x, y )
+		local tile = self.map:LookupTile( x, y )
 		tile:RemoveEntity( entity )
 	end
 
@@ -386,6 +387,18 @@ function Location:GetDesc()
 	return self.desc or "No Desc"
 end
 
+function Location:PlaceContents()
+	for i, obj in self:Contents() do
+		local x, y = obj:GetCoordinate()
+		local tile = x and y and self.map:LookupTile( x, y )
+		if tile then
+			tile:AddEntity( obj )
+		else
+			self:PlaceEntity( obj )
+		end
+	end
+end
+
 function Location:GenerateTileMap()
 	if self.map == nil then
 		self.map = self:GetAspect( Aspect.TileMap )
@@ -394,15 +407,7 @@ function Location:GenerateTileMap()
 		end
 		self.map:GenerateTileMap()
 
-		for i, obj in self:Contents() do
-			local x, y = obj:GetCoordinate()
-			local tile = x and y and self.map:LookupGrid( x, y )
-			if tile then
-				tile:AddEntity( obj )
-			else
-				self:PlaceEntity( obj )
-			end
-		end
+		self:PlaceContents()
 	end
 
 	return self.map
@@ -438,7 +443,7 @@ end
 
 function Location:GetTileAt( tx, ty )
 	if self.map then
-		return self.map:LookupGrid( tx, ty )
+		return self.map:LookupTile( tx, ty )
 	end
 end
 

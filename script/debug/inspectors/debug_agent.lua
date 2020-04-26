@@ -4,6 +4,7 @@ DebugAgent.REGISTERED_CLASS = Agent
 function DebugAgent:init( agent )
 	DebugTable.init( self, agent )
 	self.agent = agent
+	DBSET( "agent", agent )
 end
 
 function DebugAgent:RenderPanel( ui, panel, dbg )

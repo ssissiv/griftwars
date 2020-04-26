@@ -66,7 +66,7 @@ end
 
 function LeaveLocation:PathToPortal( actor, portal )
 	-- Path tiles to dest.
-	local pather = TilePathFinder( actor:GetLocation().map, actor, actor, portal.owner:GetTile() )
+	local pather = TilePathFinder( actor, actor:GetTile(), portal.owner:GetTile() )
 	while actor:GetTile() ~= pather:GetEndRoom() do
 		self:YieldForTime( 2 * ONE_SECOND )
 

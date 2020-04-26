@@ -13,8 +13,8 @@ function Barkeep:GetName()
 	return loc.format( "Barkeep at the {1}", self.tavern:GetTitle() )
 end
 
-function Barkeep:GetLocation()
-	return self.tavern
+function Barkeep:GetWaypoint()
+	return self.tavern:GetWaypoint( WAYPOINT.KEEPER )
 end
 
 function Barkeep:AssignTavern( tavern )

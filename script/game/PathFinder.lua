@@ -85,9 +85,10 @@ end
 
 local TilePathFinder = class( "TilePathFinder" )
 
-function TilePathFinder:init( map, actor, source, target )
-	assert( is_instance( map, Aspect.TileMap ))
-	self.map = map
+function TilePathFinder:init( actor, source, target )
+	assert( actor.location, tostring(actor) )
+	self.map = actor.location.map
+	assert( is_instance( self.map, Aspect.TileMap ), tostring(actor.location))
 	self.actor = actor
 	self.source = source
 	self.target = target
@@ -152,6 +153,7 @@ function TilePathFinder:GetStartRoom()
 	if is_instance( self.source, Agent ) then
 		return self.source:GetTile()
 	else
+		assert( is_instance( self.source, Tile ))
 		return self.source
 	end
 end
@@ -161,6 +163,7 @@ function TilePathFinder:GetEndRoom()
 	if is_instance( self.target, Agent ) then
 		return self.target:GetTile()
 	else
+		assert( is_instance( self.target, Tile ))
 		return self.target
 	end
 end

@@ -409,7 +409,7 @@ function BuyFromShop:GetDesc( viewer )
 end
 
 function BuyFromShop:CanInteract( actor )
-	local job = self.owner:GetAspect( Job.Shopkeep )
+	local job = self.owner:GetAspect( Job.ManageShop )
 	if not job:IsDoing() then
 		local ok, reason = job:ShouldDo()
 		if not ok then
@@ -426,7 +426,7 @@ function BuyFromShop:Interact( actor )
 	assert( actor )
 	local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )
 	if item then
-		self.owner:GetAspect( Job.Shopkeep ):SellToBuyer( item, actor )
+		self.owner:GetAspect( Job.ManageShop ):SellToBuyer( item, actor )
 	end
 end
 

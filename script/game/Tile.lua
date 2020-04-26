@@ -73,6 +73,12 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 			end
 		end
 	end
+
+	for i, aspect in self:Aspects() do
+		if aspect.RenderMapTile then
+			aspect:RenderMapTile( screen, self, x1, y1, x2, y2 )
+		end
+	end
 end
 
 

@@ -21,7 +21,6 @@ Residence.WORLDGEN_TAGS = { "residence exit" }
 function Residence:init()
 	Location.init( self )
 	self:SetDetails( "Residence", "This is somebody's residence." )
-	self:SetImage( assets.LOCATION_BGS.INSIDE )
 	self:GainAspect( Aspect.ResidenceTileMap( 8, 8 ))
 
 	self:GainAspect( Feature.Home() )

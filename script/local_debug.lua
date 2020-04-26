@@ -2,19 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(puppet.location.map)",
-			"print(tostr(world.pause))",
-			"print(screen.camera)",
-			"print(screen.camera:GetZoom())",
-			"print(screen.camera.zoom)",
-			"print( screen.camera:GetZoom() / DEFAULT_ZOOM )",
-			"print(t)",
-			"print(t.actor, t.obj)",
-			"print(AccessCoordinate(t))",
-			"print(t.actor)",
-			"print(t.actor:GetCoordinate())",
-			"print(tostr(dbg))",
-			"print(tostr(dbg.debug_panels))",
 			"DBG({})",
 			"puppet:RegenVerbs()",
 			"print(t:GetCoordinate())",
@@ -33,7 +20,20 @@ return {
 			"print(string.split( \"foo bar\" ))",
 			"print(string.split( \"foo bar\", {} ))",
 			"print(string.split( \"foo bar\", \" \" ))",
-			"print(tostr(string.split( \"foo bar\", \" \" )))"
+			"print(tostr(string.split( \"foo bar\", \" \" )))",
+			"print(table.count(world.entities))",
+			"print( location:GetWaypoint( WAYPOINT.KEEPER ))",
+			"print( Waypoint)",
+			"print( Waypoint.GetLocation)",
+			"print( Waypoint())",
+			"print( Waypoint(location))",
+			"print( location:GetWaypoint( WAYPOINT.KEEPER ))",
+			"print(t:GetWaypoint()",
+			"print(t:GetWaypoint())",
+			"print(agent)",
+			"print(t:GetWaypoint())",
+			"print(t:GetWaypoint():AtWaypoint( agent ))",
+			"print(t:GetWaypoint())"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
