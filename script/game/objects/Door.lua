@@ -7,21 +7,11 @@ function Door:init( worldgen_tag )
 	self.portal:SetWorldGenTag( worldgen_tag )
 end
 
-function Door:Connect( dest )
-	local portal = self:GetAspect( Aspect.Portal )
-	if portal == nil then
-		portal = self:GainAspect( Aspect.Portal() )
-	end
-
-	portal:Connect( dest )
-	self.portal = portal
-end
-
 function Door:GetName()
-	if self.portal == nil or self.portal.location == nil then
+	if self.portal == nil or self.portal:GetDest() == nil then
 		return "Door to nowhere!"
 	else
-		return loc.format( "Door to {1}", self.portal.location )
+		return loc.format( "Door to {1}", self.portal:GetDest() )
 	end
 end
 

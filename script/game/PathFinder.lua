@@ -143,7 +143,6 @@ end
 function TilePathFinder:GetPath()
 	if self.path == nil then
 		self.path = self:CalculatePath()
-
 	end
 
 	return self.path

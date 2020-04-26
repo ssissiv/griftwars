@@ -46,6 +46,8 @@ function Location:OnSpawn( world )
 	if self.x and self.y then
 		world:GetAspect( Aspect.TileMap ):AssignToGrid( self )
 	end
+
+	self:GenerateTileMap()
 end
 
 function Location:OnDespawn()
@@ -435,10 +437,10 @@ function Location:PlaceEntity( obj )
 end
 
 function Location:DisposeReality()
-	if self.map then
-		self.map:ClearTileMap()
-		self.map = nil
-	end
+	-- if self.map then
+	-- 	self.map:ClearTileMap()
+	-- 	self.map = nil
+	-- end
 end
 
 function Location:GetTileAt( tx, ty )

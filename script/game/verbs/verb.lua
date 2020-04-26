@@ -283,12 +283,25 @@ function Verb:GetActingProgress()
 end
 
 
-function Verb:YieldForTime( duration )
+function Verb:YieldForTime( duration, act_rate )
 	assert( duration > 0 )
+
+	local prev_rate = self.ACT_RATE
+	if act_rate then
+		self.ACT_RATE = act_rate
+		self.actor.world:RefreshTimeSpeed()
+	end
 
 	self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self, coroutine.running() )
 	self.yield_duration = duration
-	return coroutine.yield()
+	local result = coroutine.yield()
+
+	if act_rate then
+		self.ACT_RATE = prev_rate
+		self.actor.world:RefreshTimeSpeed()
+	end
+	
+	return result
 end
 
 function Verb:Resume( coro )

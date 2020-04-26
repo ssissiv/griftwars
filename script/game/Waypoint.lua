@@ -27,6 +27,11 @@ function Waypoint:GetCoordinate()
 	end
 end
 
+function Waypoint:GetDest()
+	local location, x, y = self:GetLocation(), self:GetCoordinate()
+	return location, x, y
+end
+
 function Waypoint:GetLocation()
 	if self.entity then
 		return self.entity:GetLocation()

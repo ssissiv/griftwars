@@ -93,6 +93,7 @@ DebugCoroutine.REGISTERED_TYPE = "thread"
 
 function DebugCoroutine:init( c )
     self.c = c
+    self.locals = {}
 end
 
 function DebugCoroutine:GetName()
@@ -100,9 +101,47 @@ function DebugCoroutine:GetName()
 end
 
 function DebugCoroutine:RenderPanel( ui, panel )
-    ui.TextColored( 0, 1, 1, 1, coroutine.status( self.c ))
-    ui.Text( debug.traceback( self.c ))
+    ui.Text( "Status:" )
+    ui.SameLine( 0, 5 )
+    ui.TextColored( 255, 90, 255, 255, coroutine.status( self.c ))
+    ui.Text( "stack traceback:" )
+
+    local i = 1
+    while true do
+        local info = debug.getinfo( self.c, i )
+        if info then
+            local fnname = info.name or string.format( "<%s:%d>", info.short_src, info.linedefined )
+            local txt = string.format( "%s:%d in function '%s'", info.short_src, info.currentline, fnname )
+            if ui.Selectable( txt ) then
+                self.selected_frame = i
+            end
+            if self.selected_frame == i then
+                ui.Indent( 20 )
+                self:RenderLocals( ui, panel, i, info )
+                ui.Unindent( 20 )
+            end
+            i = i + 1
+        else
+            break
+        end
+    end
 end
+
+function DebugCoroutine:RenderLocals( ui, panel, frame_idx, info )
+    table.clear( self.locals )
+    local i = 1
+    while true do
+        local k, v = debug.getlocal( self.c, frame_idx, i )
+        if k == nil then
+            break
+        else
+            self.locals[ k ] = v
+            i = i + 1
+        end
+    end
+    panel:AppendKeyValues( ui, self.locals )
+end
+
 
 --------------------------------------------------------------------
 -- Dynamic, custom inspector

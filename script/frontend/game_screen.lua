@@ -108,6 +108,8 @@ function GameScreen:RenderScreen( gui )
     ui.Begin( "ROOM", true, flags )
     local puppet = self.world:GetPuppet()
 
+    ui.Dummy( love.graphics.getWidth(), 0 )
+
     -- Render details about the player.
     local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
     local timestr = Calendar.FormatTime( self.world:GetDateTime(), use_seconds )
@@ -147,20 +149,14 @@ function GameScreen:RenderScreen( gui )
 
     self:RenderLocationTiles( puppet:GetLocation(), puppet )
 
+    self:RenderSenses( ui, puppet )
+	ui.SetScrollHere()
+
     ui.End()
 
     -- if self.hovered_tile then
 	    self:RenderHoveredLocation( gui, puppet )
 	-- end
-
-    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove" }
-	ui.SetNextWindowSize( love.graphics.getWidth(), love.graphics.getHeight() * 0.25 )
-	ui.SetNextWindowPos( 0, love.graphics.getHeight() * 0.75 )
-
-    ui.Begin( "OUTPUT", true, flags )
-	    self:RenderSenses( ui, puppet )
-	ui.SetScrollHere()
-    ui.End()
 
 	for i, window in ipairs( self.windows ) do
 		window:RenderImGuiWindow( ui, self )
@@ -486,7 +482,16 @@ end
 
 function GameScreen:RenderSenses( ui, agent )
 	local now = self.world:GetDateTime()
-	for i, sense in agent:Senses() do
+	local senses = agent:GetSenses()
+	if self.sense_log == nil then
+		self.sense_log = {}
+	else
+		table.clear( self.sense_log )
+	end
+
+	local count = 0
+	for i = #senses, 1, -1 do
+		local sense = senses[i]
 		if sense.when then
 			local elapsed = now - sense.when
 			local duration, r, g, b, a
@@ -508,9 +513,24 @@ function GameScreen:RenderSenses( ui, agent )
 				a = 1.0
 			end
 			if a > 0.0 then
-				ui.TextColored( r, g, b, a, tostring(sense.desc))
+				table.insert( self.sense_log, r )
+				table.insert( self.sense_log, g )
+				table.insert( self.sense_log, b )
+				table.insert( self.sense_log, a )
+				table.insert( self.sense_log, tostring(sense.desc) )
+			end
+
+			count = count + 1
+			if count > 5 then
+				break
 			end
 		end
+	end
+
+	for i = #self.sense_log, 1, -5 do
+		local r, g, b, a = self.sense_log[i-4], self.sense_log[i-3], self.sense_log[i-2], self.sense_log[i-1]
+		local desc = self.sense_log[i]
+		ui.TextColored( r, g, b, a, desc )
 	end
 end
 

@@ -92,9 +92,9 @@ function Travel:Interact( actor, dest )
 			break
 		end
 
-		local path = pather:CalculatePath()
-		if path then
-			self:PathToDest( path[2] )
+		self.path = pather:CalculatePath()
+		if self.path then
+			self:PathToDest( self.path[2] )
 		end
 		
 		self:YieldForTime( ONE_MINUTE )

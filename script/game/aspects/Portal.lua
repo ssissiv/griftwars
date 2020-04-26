@@ -43,14 +43,17 @@ function Portal:MatchWorldGenTag( tagstr )
 end
 
 function Portal:Connect( location, x, y )
-	self.location, self.x, self.y = location, x, y
-	if location then
-		assert( location ~= self.owner.location )
+	if location == nil then
+		self.waypoint = nil
+	else
+		self.waypoint = Waypoint( location, x, y )
 	end
 end
 
 function Portal:GetDest()
-	return self.location, self.x, self.y
+	if self.waypoint then
+		return self.waypoint:GetDest()
+	end
 end
 
 function Portal:OnLocationChanged( prev_location, location )
@@ -63,8 +66,12 @@ function Portal:OnLocationChanged( prev_location, location )
 end
 
 function Portal:CollectVerbs( verbs, agent )
-	if self.location then
+	if self.waypoint then
 		verbs:AddVerb( Verb.LeaveLocation( self ))
 	end
+end
+
+function Portal:__tostring()
+	return string.format( "Aspect.Portal<%s>", tostring(self.waypoint))
 end
 

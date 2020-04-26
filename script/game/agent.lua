@@ -511,6 +511,7 @@ function Agent:AttemptVerb( verb_class )
 	verbs:SortByDistanceTo( self:GetCoordinate() )
 	local verb = verbs:FindVerbClass( verb_class )
 	if verb and verb:CanDo( self ) then
+		print( verb, verb.obj )
 		self:DoVerbAsync( verb )
 	end
 end
@@ -658,6 +659,10 @@ end
 
 function Agent:Senses()
 	return ipairs( self.sense_log )
+end
+
+function Agent:GetSenses()
+	return self.sense_log
 end
 
 function Agent:SetFocus( focus )

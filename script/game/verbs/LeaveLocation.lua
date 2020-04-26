@@ -66,7 +66,7 @@ end
 
 function LeaveLocation:PathToPortal( actor, portal )
 	-- Path tiles to dest.
-	local pather = TilePathFinder( actor, actor:GetTile(), portal.owner:GetTile() )
+	local pather = TilePathFinder( actor, actor, portal.owner:GetTile() )
 	while actor:GetTile() ~= pather:GetEndRoom() do
 		self:YieldForTime( 2 * ONE_SECOND )
 
@@ -115,9 +115,9 @@ function LeaveLocation:Interact( actor )
 
 	if actor:GetLocation().map and is_instance( self.obj, Aspect.Portal )then
 		self:PathToPortal( actor, self.obj )
-	else
-		self:YieldForTime( ONE_MINUTE )
 	end
+
+	self:YieldForTime( 5 * ONE_MINUTE, 16.0 )
 
 	if self:IsCancelled() then
 		return
