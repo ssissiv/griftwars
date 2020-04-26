@@ -22,7 +22,11 @@ function ManageFatigue:CalculateUtility( actor )
 		end
 
 		local t = actor:GetStat( STAT.FATIGUE ):GetPercent()
-		utility = utility + Easing.inQuad( t, 0, UTILITY.EMERGENCY - utility, 1.0 )
+		if t < 0.2 then
+			utility = 0
+		else
+			utility = utility + Easing.inQuad( t, 0, UTILITY.EMERGENCY - utility, 1.0 )
+		end
 	end
 
 	return utility

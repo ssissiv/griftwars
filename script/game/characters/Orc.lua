@@ -9,7 +9,6 @@ function Orc:init()
 	Agent.MakeOrc( self )
 
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Verb.ManageFatigue( self ))
 	self:GainAspect( Aspect.Combat() )
 end
 

@@ -96,6 +96,8 @@ function Travel:Interact( actor, dest )
 		if path then
 			self:PathToDest( path[2] )
 		end
+		
+		self:YieldForTime( ONE_MINUTE )
 	end
 
 	if is_instance( dest, Waypoint ) then

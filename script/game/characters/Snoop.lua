@@ -47,7 +47,6 @@ function Snoop:init()
 	self:MakeHuman()
 
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Verb.ManageFatigue( self ))
 	self:GainAspect( Verb.FindInformation( self ))
 end
 

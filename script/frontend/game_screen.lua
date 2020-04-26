@@ -141,7 +141,7 @@ function GameScreen:RenderScreen( gui )
     ui.Separator()
 
     -- Render the things at the player's location.
-    -- self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
+    self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
 
     -- self:RenderPotentialVerbs( ui, puppet, "room" )
 
@@ -292,110 +292,33 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
-	if location == nil then
-		ui.Text( "Afterlife!" )
+	if not location.map then
 		return
 	end
 
-	ui.Text( location:GetTitle() )
+	local w, h = location.map:GetExtents()
+	local x, y = self.camera:WorldToScreen( 1, 0 )
+
+	love.graphics.setFont( assets.FONTS.TITLE )
+	love.graphics.print( location:GetTitle(), x, y )
+
 	if puppet:IsEnemy( location ) then
-		ui.SameLine( 0, 10 )
-		ui.TextColored( 255, 0, 0, 255, "(Enemy)")
+		love.graphics.setFont( assets.FONTS.SUBTITLE )
+		self:SetColour( constants.colours.RED )
+		love.graphics.print( "ENEMY", x, y - 16 )
+
 	elseif puppet:IsAlly( location ) then
-		ui.SameLine( 0, 10 )
-		ui.TextColored( 255, 255, 0, 255, "(Ally)")
+		love.graphics.setFont( assets.FONTS.SUBTITLE )
+		self:SetColour( constants.colours.CYAN )
+		love.graphics.print( "ALLY", x, y - 16 )
 	end
 
-	if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
-		ui.SameLine( 0, 10 )
-		if ui.SmallButton( "!") then
-			puppet:GetMemory():AddEngram( Engram.LearnWhereabouts( location ))
-		end
-	end
-	ui.TextColored( 0.8, 0.8, 0.8, 1.0, location:GetDesc() )
-	ui.Spacing()
-
-	ui.Indent( 20 )
-
-	table.clear( self.objects )
-
-	-- Can only view location if not focussed on something else
-	local count = 0
-	for i, obj in location:Contents() do
-		ui.PushID(i)
-		if puppet ~= obj then
-			count = count + 1
-			self.objects[ count ] = obj
-
-			local hotkey = string.char( count + 96 )
-			local desc = loc.format( "{1}) {2}", hotkey, obj:GetShortDesc( puppet ) )
-			local combat = puppet:GetAspect( Aspect.Combat )
-			if combat and combat:IsTarget( obj ) then
-				ui.PushStyleColor( ui.Style_Text, 1, 0, 0, 1 )
-			else
-				ui.PushStyleColor( ui.Style_Text, 0, 1, 1, 1 )
-			end
-
-			if puppet:IsEnemy( obj ) then
-				ui.SameLine( 0, 5 )
-				ui.TextColored( 255, 255, 255, 255, "(Enemy)" )
-			elseif puppet:IsAlly( obj ) then
-				ui.SameLine( 0, 5 )
-				ui.TextColored( 255, 255, 0, 255, "(Ally)" )
-			end
-	
-			if puppet:IsBusy() then
-				if combat and combat:IsTarget( puppet ) then
-					ui.Text( desc )
-				else
-					ui.Text( desc )
-				end
-			elseif ui.Selectable( desc, puppet:GetFocus() == obj ) then
-				if puppet:GetFocus() == obj then
-					puppet:SetFocus()
-				else
-					puppet:SetFocus( obj )
-				end
-			end
-			ui.PopStyleColor()
-	
-			if DEV and Input.IsControl() and ui.IsItemClicked() then
-				DBG( obj )
-				break
-			end
-
-			if is_instance( obj, Agent ) then
-				local affinity = obj:GetAffinity( puppet )
-				if assets.AFFINITY_IMG[ affinity ] then
-					ui.SameLine( 0, 10 )
-					ui.Image( assets.AFFINITY_IMG[ affinity ], 16, 16 )
-				end
-			end
-
-			if puppet:GetFocus() == obj then
-				ui.SameLine( 0, 10 )
-				if ui.Text( "(Focus)" ) then
-					puppet:SetFocus( nil )
-				end
-
-				if puppet:IsPuppet() then
-					ui.Indent( 20 )
-					-- Make a verb.
-					self:RenderPotentialVerbs( ui, puppet, "focus", obj )
-					ui.Unindent( 20 )
-				end
-			end
-
-			if combat and combat:IsTarget( obj ) then
-				ui.SameLine( 0, 10 )
-				ui.TextColored( 1, 0, 0, 1, loc.format( "{1}/{2}", obj:GetHealth() ))
-			end
-		end
-
-		ui.PopID()
-	end
-
-	ui.Unindent( 20 )
+	-- if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
+	-- 	ui.SameLine( 0, 10 )
+	-- 	if ui.SmallButton( "!") then
+	-- 		puppet:GetMemory():AddEngram( Engram.LearnWhereabouts( location ))
+	-- 	end
+	-- end
 end
 
 function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )

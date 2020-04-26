@@ -14,7 +14,6 @@ function Barkeep:init()
 	self.job = self:GainAspect( Job.Barkeep( self ) )
 
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Verb.ManageFatigue( self ))
 end
 
 function Barkeep:GetTitle()

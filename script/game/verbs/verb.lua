@@ -252,6 +252,7 @@ function Verb:Cancel()
 
 	self.cancelled = true
 	self.cancelled_trace = debug.traceback()
+	self.cancelled_time = self.actor.world:GetDateTime()
 
 	if self.transient then
 		self.transient = nil
@@ -340,6 +341,10 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 	if self.cancelled then
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 1, 0, 0, 1, "Cancelled" )
+		if self.cancelled_time then
+			ui.SameLine( 0, 10 )
+			Calendar.RenderDatetime( ui, self.cancelled_time, self:GetWorld() )
+		end
 	
 	elseif self:IsDoing() then
 		if ui.Button( "Cancel" ) then

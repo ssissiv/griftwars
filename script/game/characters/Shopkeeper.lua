@@ -13,7 +13,6 @@ function Shopkeeper:init()
 	self.job = self:GainAspect( Job.ManageShop( self ) )
 
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Verb.ManageFatigue( self ))
 end
 
 function Shopkeeper:GetTitle()

@@ -21,7 +21,12 @@ function RenderScreen:Box( x, y, w, h )
 end
 
 function RenderScreen:SetColour( clr )
-	local r, g, b, a = HexColour255( clr )
+	local r, g, b, a
+	if type(clr) == "table" then
+		r, g, b, a = table.unpack( clr )
+	else
+		r, g, b, a = HexColour255( clr )
+	end
 	love.graphics.setColor( r, g, b, a )
 end
 

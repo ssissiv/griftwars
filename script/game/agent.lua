@@ -508,6 +508,7 @@ end
 
 function Agent:AttemptVerb( verb_class )
 	local verbs = self:GetPotentialVerbs( "room" )
+	verbs:SortByDistanceTo( self:GetCoordinate() )
 	local verb = verbs:FindVerbClass( verb_class )
 	if verb and verb:CanDo( self ) then
 		self:DoVerbAsync( verb )

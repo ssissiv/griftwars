@@ -3,6 +3,7 @@ local assets =
 	FONTS =
 	{
 		TITLE = { "Ayuthaya.ttf", 16 },
+		SUBTITLE = { "Ayuthaya.ttf", 12 },
 		MAP_TILE = { "Ayuthaya.ttf", 48 }
 	},
 
