@@ -141,7 +141,9 @@ end
  
 function love.update(dt)
     imgui.NewFrame()
+    debug.sethook( function(...) print( "HOOK, ... " ) error() end, "", 10000000 )
     gui:Update( dt )
+    debug.sethook()
 end
  
 function love.draw()

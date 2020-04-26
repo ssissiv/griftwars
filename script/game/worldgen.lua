@@ -16,66 +16,6 @@ function WorldGen:TablePick( t )
 	return self.world:TablePick( t )
 end
 
-function WorldGen:Sprout( room, fn, ... )
-	if room == nil then
-		return
-	end
-
-	local exits = table.shallowcopy( room.available_exits )
-	while #exits > 0 do
-		local exit = table.remove( exits, self:Random( #exits ))
-		local x, y = room:GetCoordinate()
-		x, y = OffsetExit( x, y, exit )
-
-		local adj = self.world:GetLocationAt( x, y )
-		if adj == nil then
-			local new_room = fn( ... )
-			room:Connect( new_room, exit )
-			return new_room
-		end
-	end
-
-	-- print( "COULD NOT SPROUT FROM", room, tostr(room.available_exits), debug.traceback() )
-end
-
-function WorldGen:SproutLocations( start, max_count, fn, ... )
-	assert( is_instance( start, Location ))
-	local locations = {}
-	local stack = { start }
-
-	while max_count > #locations and #stack > 0 do
-		local room = stack[ #stack ]
-		local new_room = self:Sprout( room, fn, ... )
-		if new_room then
-			--
-			table.insert( stack, new_room )
-			table.insert( locations, new_room )
-		else
-			table.remove( stack )
-		end
-	end
-
-	if #locations < max_count then
-		print( string.format( "only spawned %d/%d locations", #locations, max_count ))
-		print( start, start:GetCoordinate() )
-		print( debug.traceback() )
-	end
-
-	local p = 0.5
-	for i, room in ipairs( locations ) do
-		local x, y = room:GetCoordinate()
-		for i, exit in ipairs( room.available_exits ) do
-			local x1, y1 = OffsetExit( x, y, exit )
-			local adj = self.world:GetLocationAt( x1, y1 )
-			if adj and table.contains( locations, adj ) then
-				if self:Random() < p then
-					room:Connect( adj, exit )
-				end
-			end
-		end
-	end
-end
-
 local function FindCoordinate( coords, x, y )
 	for i = 1, #coords, 2 do
 		if coords[i] == x and coords[i+1] == y then

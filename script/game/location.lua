@@ -13,41 +13,30 @@ local Location = class( "Location", Entity )
 
 function Location:init()
 	Entity.init( self )
-	self.exits = {}
 	self.portals = {}
 	self.waypoints = {}
-	self.available_exits = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
 	self.map_colour = constants.colours.DEFAULT_TILE
 end
 
 function Location:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
-	if self.contents then
-		for i, v in ipairs( self.contents ) do
-			if not v:IsSpawned() then
-				world:SpawnEntity( v )
-			end
-		end
-	end
-
-	for i, exit in pairs( self.exits ) do
-		local dest, addr = exit:GetDest( self )
-		if IsEnum( addr, EXIT ) then
-			local x, y = OffsetExit( dest.x, dest.y, REXIT[ addr ] )
-			if self.x == nil or self.y == nil then
-				self.x, self.y = x, y
-			else
-				assert( self.x == x and self.y == y )
-			end
-		end
-	end
-
-	if self.x and self.y then
-		world:GetAspect( Aspect.TileMap ):AssignToGrid( self )
-	end
-
 	self:GenerateTileMap()
+
+	if self.contents then
+		for i, obj in ipairs( self.contents ) do		
+			local x, y = obj:GetCoordinate()
+			local tile = x and y and self.map:LookupTile( x, y )
+			if tile then
+				tile:AddEntity( obj )
+			else
+				self:PlaceEntity( obj )
+			end
+			if not obj:IsSpawned() then
+				world:SpawnEntity( obj )
+			end
+		end
+	end
 end
 
 function Location:OnDespawn()
@@ -84,10 +73,6 @@ function Location:SetCoordinate( x, y, z )
 	if self.world and self.x and self.y then
 		world:GetAspect( Aspect.TileMap ):AssignToGrid( self )
 	end		
-end
-
-function Location:GetCoordinate()
-	return self.x, self.y, self.z
 end
 
 function Location:GetWaypoint( id )
@@ -196,66 +181,14 @@ function Location:OnEntityEvent( event_name, entity, ... )
 	end
 end
 
-
-function Location:IsConnected( other )
-	return table.find( self.exits, other ) ~= nil
-end
-
-
-function Location:Connect( other, addr )
-	assert( other ~= nil )
-	assert( is_instance( other, Location ))
-	assert( not self:FindExit( addr ))
-
-	local exit = Exit()
-
-	if IsEnum( addr, EXIT ) then
-		local raddr = REXIT[ addr ]
-		assert( not other:FindExit( raddr ))
-
-		table.arrayremove( self.available_exits, addr )
-		table.arrayremove( other.available_exits, raddr )
-
-		exit:Connect( self, addr, other, raddr )
-	
-	else
-		exit:Connect( self, addr, other, addr )
-	end
-
-
-	table.insert( self.exits, exit )
-	table.insert( other.exits, exit )
-
-	if not self:IsSpawned() and other:IsSpawned() then
-		self:Visit( SpawnLocation, other.world, self )
-	elseif self:IsSpawned() and not other:IsSpawned() then
-		other:Visit( SpawnLocation, self.world, self )
-	end
-
-	return exit
-end
-
-function Location:FindExit( addr )
-	for i, exit in ipairs( self.exits ) do
-		local dest, dest_addr = exit:GetDest( self )
-		if dest_addr == addr then
-			return exit
-		end
-	end
-end
-
-function Location:Exits()
-	return ipairs( self.exits )
-end
-
 local function VisitInternal( visited, location, fn, ... )
 	visited[ location ] = true
 	if not fn( location, ... ) then
 		return
 	end
 
-	for i, exit in ipairs( location.exits ) do
-		local dest = exit:GetDest( location )
+	for i, portal in ipairs( location.portals ) do
+		local dest = portal:GetDest( location )
 		assert( dest )
 		if visited[ dest ] == nil then
 			VisitInternal( visited, dest, fn, ... )
@@ -302,8 +235,8 @@ function Location:Flood( fn, ... )
 		if stop then
 			break
 		elseif continue then
-			for i, exit in ipairs( x.exits ) do
-				local dest = exit:GetDest( x )
+			for i, portal in ipairs( x.portals ) do
+				local dest = portal:GetDest( x )
 				if not table.contains( open, dest ) and not table.contains( closed, dest ) then
 					table.insert( open, dest )
 					table.insert( open, depth + 1 )
@@ -338,8 +271,8 @@ function Location:SearchObject( fn, max_depth )
 
 		if depth < max_depth then
 			-- recurse
-			for i, exit in ipairs( x.exits ) do
-				local dest = exit:GetDest( x )
+			for i, portal in ipairs( x.portals ) do
+				local dest = portal:GetDest( x )
 				if not table.contains( open, dest ) and not closed[ dest ] then
 					table.insert( open, dest )
 					closed[ dest ] = depth + 1
@@ -389,18 +322,6 @@ function Location:GetDesc()
 	return self.desc or "No Desc"
 end
 
-function Location:PlaceContents()
-	for i, obj in self:Contents() do
-		local x, y = obj:GetCoordinate()
-		local tile = x and y and self.map:LookupTile( x, y )
-		if tile then
-			tile:AddEntity( obj )
-		else
-			self:PlaceEntity( obj )
-		end
-	end
-end
-
 function Location:GenerateTileMap()
 	if self.map == nil then
 		self.map = self:GetAspect( Aspect.TileMap )
@@ -409,7 +330,6 @@ function Location:GenerateTileMap()
 		end
 		self.map:GenerateTileMap()
 
-		self:PlaceContents()
 	end
 
 	return self.map
@@ -422,8 +342,8 @@ end
 
 function Location:PlaceEntity( obj )
 	local x, y = obj:GetCoordinate()
-	print( "Place", obj, self, x, y )
 	if not x then
+		print( "Place", obj, self, x, y )
 		local w, h = self.map:GetExtents()
 		x, y = math.random( w ), math.random( h )
 	end
@@ -470,29 +390,6 @@ function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 			x = x + sz + margin
 			if x >= x2 - margin - 4 then
 				x, y = x1 + 4 + margin, y + sz + margin
-			end
-		end
-	end
-
-	love.graphics.setColor( table.unpack( self.map_colour ))
-
-	local exit_sz = math.floor( w / 6 ) -- width of exit
-	for i, exit in pairs( self.exits ) do
-		local dest, addr = exit:GetDest( self )
-		if IsEnum( addr, EXIT ) then
-			local x, y = OffsetExit( self.x, self.y, addr )
-			if x == dest.x and y == dest.y then
-				if addr == EXIT.NORTH then
-					screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
-				elseif addr == EXIT.EAST then
-					screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
-				elseif addr == EXIT.WEST then
-					screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
-				elseif addr == EXIT.SOUTH then
-					screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
-				end
-			else
-
 			end
 		end
 	end

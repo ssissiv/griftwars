@@ -14,9 +14,6 @@ If you reduce will to 0, you gain: the shtuff.
 
 * Return to AI Schedules.  Need predictability.
 
-* Just generate all tiles.
-* Get rid of Location exits, available_exits.
-* Link Locations via specific Portals, cell-to-cell so that going through one puts you in the right consistent damn place.
 
 STARDEW:
 	* Start with Parsnip Seeds.

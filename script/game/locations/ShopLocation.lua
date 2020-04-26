@@ -29,6 +29,5 @@ function ShopLocation:GenerateTileMap()
 		end )
 
 		self:SetWaypoint( WAYPOINT.KEEPER, Waypoint( self, 4, 2 ))
-		self:PlaceContents()
 	end
 end
