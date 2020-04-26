@@ -200,12 +200,12 @@ function Verb:DoVerb( actor, ... )
 		return false, reason
 	end
 
-	if not actor:HasAspect( self ) then
-		self.transient = true
-		actor:GainAspect( self )
-	end
+	-- if not actor:HasAspect( self ) then
+	-- 	self.transient = true
+	-- 	actor:GainAspect( self )
+	-- end
 
-	assert( self:GetOwner() == actor and actor )
+	-- assert( self:GetOwner() == actor and actor )
 	actor:_AddVerb( self )
 
 	self.cancelled = nil
@@ -229,10 +229,10 @@ function Verb:DoVerb( actor, ... )
 
 	actor:_RemoveVerb( self )
 
-	if self.transient then
-		self.transient = nil
-		actor:LoseAspect( self )
-	end
+	-- if self.transient then
+	-- 	self.transient = nil
+	-- 	actor:LoseAspect( self )
+	-- end
 
 	return true
 end

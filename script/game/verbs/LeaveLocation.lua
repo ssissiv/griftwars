@@ -91,7 +91,7 @@ function LeaveLocation:Interact( actor )
 		-- Chose a random accessible portal out of here.
 		local portals = {}
 		for i, portal in actor.location:Portals() do
-			if portal:GetDest() and portal:GetDesc() ~= actor.location then
+			if portal:GetDest() and portal:GetDest() ~= actor.location then
 				table.insert( portals, portal )
 			end
 		end

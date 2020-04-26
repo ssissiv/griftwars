@@ -44,7 +44,7 @@ function Zone:GeneratePortals( location, new_locations )
 			local class = table.arraypick( classes )
 			if class then
 				-- print( "Match:", location, portal:GetWorldGenTag(), class._classname )
-				local new_location = class( self )
+				local new_location = class( self, portal )
 				self:SpawnLocation( new_location )
 
 				-- Connect the matching Portal.

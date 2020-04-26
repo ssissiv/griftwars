@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG({})",
-			"puppet:RegenVerbs()",
 			"print(t:GetCoordinate())",
 			"print(t:GetTile())",
 			"print(tostr(t:GetTile().contents))",
@@ -33,7 +31,9 @@ return {
 			"print(agent)",
 			"print(t:GetWaypoint())",
 			"print(t:GetWaypoint():AtWaypoint( agent ))",
-			"print(t:GetWaypoint())"
+			"print(t:GetWaypoint())",
+			"print(agent:HasAspect( Verb.Idle ))",
+			"print(agent:HasAspect( Verb.Idle() ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

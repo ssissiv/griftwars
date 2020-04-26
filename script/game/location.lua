@@ -237,7 +237,7 @@ function Location:Flood( fn, ... )
 		elseif continue then
 			for i, portal in ipairs( x.portals ) do
 				local dest = portal:GetDest( x )
-				if not table.contains( open, dest ) and not table.contains( closed, dest ) then
+				if dest and not table.contains( open, dest ) and not table.contains( closed, dest ) then
 					table.insert( open, dest )
 					table.insert( open, depth + 1 )
 				end

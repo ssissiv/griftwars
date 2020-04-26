@@ -642,7 +642,7 @@ function GameScreen:SetCurrentVerb( verb )
 	end
 
 	self:PanToCurrentInterest()
-	print( "CURRENT VERB:", self.current_verb)
+	-- print( "CURRENT VERB:", self.current_verb)
 end
 
 function GameScreen:GetVerbAt( mx, my )
