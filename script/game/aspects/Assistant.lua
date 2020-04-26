@@ -9,7 +9,10 @@ function Assistant:OnInit()
 end
 
 function Assistant:GetWaypoint()
-	-- return self.employer:GetWaypoint()
+	if self.waypoint == nil then
+		self.waypoint = Waypoint( self.employer )
+	end
+	return self.waypoint
 end
 
 function Assistant:GetName()
