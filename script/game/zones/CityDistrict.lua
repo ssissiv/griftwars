@@ -11,20 +11,31 @@ function District:OnSpawn( world )
 
 	local w, h = self.map:GetExtents()
 
-	if (self.gen_portal and self.gen_portal:MatchWorldGenTag( "district east" )) or math.random() < 0.5 then
-		local exit = Object.Portal( "district west" ):WarpToLocation( self, 1, math.floor(h/2) )
-	end
+	local districts = table.shuffle{ "east", "west", "north", "south" }
+	local n = math.random( 1, 4 )
+	local m = math.random( 0, 4 - n )
+	for i = 1, 4 do
+		local tag = districts[i]
+		local portal
+		if self.gen_portal and self.gen_portal:MatchWorldGenTag( "district "..tag ) then
+			portal = Object.Portal( "district "..tag )
+		elseif i <= n then
+			portal = Object.Portal( "district "..tag )
+		elseif i <= n + m then
+			portal = Object.Portal( "outskirts "..tag )
+		end
 
-	if (self.gen_portal and self.gen_portal:MatchWorldGenTag( "district west" )) or math.random() < 0.5 then
-		local exit = Object.Portal( "district east" ):WarpToLocation( self, w, math.floor(h/2) )
-	end
-
-	if (self.gen_portal and self.gen_portal:MatchWorldGenTag( "district north" )) or math.random() < 0.5 then
-		local exit = Object.Portal( "district south" ):WarpToLocation( self, math.floor(w/2), 1 )
-	end
-
-	if (self.gen_portal and self.gen_portal:MatchWorldGenTag( "district south" )) or math.random() < 0.5 then
-		local exit = Object.Portal( "district north" ):WarpToLocation( self, math.floor(w/2), h )
+		if portal then
+			if tag == "east" then
+				portal:WarpToLocation( self, w, math.floor(h/2) )
+			elseif tag == "west" then
+				portal:WarpToLocation( self, 1, math.floor(h/2) )
+			elseif tag == "south" then
+				portal:WarpToLocation( self, math.floor(w/2), h )
+			elseif tag == "north" then
+				portal:WarpToLocation( self, math.floor(w/2), 1 )
+			end
+		end
 	end
 
 	if math.random() < 0.5 then

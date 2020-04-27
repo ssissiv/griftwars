@@ -94,7 +94,7 @@ function WorldGen:GenerateWorld()
 
 	Msg:SetWorld( world )
 
-	local city = WorldGen.City( self, nil, 1 )
+	local city = WorldGen.City( self, 6 )
 	world:SpawnEntity( city )
 	
 	--------------------------------------------------------------------------------------

@@ -37,6 +37,7 @@ function Zone:GeneratePortals( location, new_locations )
 				for j, tag in ipairs( subclass.WORLDGEN_TAGS or table.empty ) do
 					if portal:MatchWorldGenTag( tag ) then
 						table.insert( classes, subclass )
+					print( subclass._classname, tag )
 					end
 				end
 			end )
@@ -53,8 +54,11 @@ function Zone:GeneratePortals( location, new_locations )
 					if portal2 and portal2:GetDest() == nil and portal2:MatchWorldGenTag( portal:GetWorldGenTag() ) then
 						portal:Connect( new_location, obj2:GetCoordinate() )
 						portal2:Connect( location, obj:GetCoordinate() )
+						break
 					end
 				end
+
+				assert( portal:GetDest(), "Could not connect portal", location ,new_location, portal:GetWorldGenTag() )
 
 				if new_locations then
 					table.insert( new_locations, new_location )

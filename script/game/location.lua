@@ -343,7 +343,7 @@ end
 function Location:PlaceEntity( obj )
 	local x, y = obj:GetCoordinate()
 	if not x then
-		print( "Place", obj, self, x, y )
+		-- print( "Place", obj, self, x, y )
 		local w, h = self.map:GetExtents()
 		x, y = math.random( w ), math.random( h )
 	end

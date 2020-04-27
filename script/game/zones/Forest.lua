@@ -1,30 +1,31 @@
 local Forest = class( "WorldGen.Forest", Zone )
 
-function Forest:init( worldgen, origin, size )
+function Forest:init( worldgen, size )
 	Zone.init( self, worldgen )
-
-	self.origin = origin
-	self.size = size
+	self.size = size or 1
 end
 
 function Forest:GenerateZone()
-	local function CreateRoom()
-		local room = Location()
-		room:SetDetails( loc.format( "The Forest [{1}]", #self.rooms ), "A generic forest, this area abounds with trees, shrubs, and wildlife.")
-		room:SetImage( assets.LOCATION_BGS.FOREST )
-		if self.worldgen:Random() < 0.5 then
-			room:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ) )
-		end
-		room.map_colour = constants.colours.FOREST_TILE
+	local world = self.world
 
-		table.insert( self.rooms, room )
-		return room
+	local adj = world.adjectives:PickName()
+	self.name = loc.format( "The {1} Forest", adj )
+
+	self.origin = Location.Thicket( self )
+	self:SpawnLocation( self.origin )
+
+	self.thickets = { self.origin }
+
+	local locations = { self.origin }
+	local count = 0
+	while #locations > 0 and count < 8 do
+		local location = table.remove( locations, 1 )
+		self:GeneratePortals( location, locations )
+		table.insert( self.districts, location )
+		count = count + 1
 	end
-
-	self.worldgen:SproutLocations( self.origin, self.size, CreateRoom )
-
-	-- self:PopulateOrcs()
 end
+
 
 function Forest:PopulateOrcs()
 	local n = self.worldgen:Random( 3 )
@@ -45,13 +46,6 @@ function Forest:PopulateOrcs()
 end
 
 function Forest:RandomRoom()
-	return self.worldgen:ArrayPick( self.rooms )
+	return self.worldgen:ArrayPick( self.thickets )
 end
 
-function Forest:GetRooms()
-	return self.rooms
-end
-
-function Forest:RoomAt( i )
-	return self.rooms[ i ]
-end

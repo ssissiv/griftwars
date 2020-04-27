@@ -2,14 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:GetCoordinate())",
-			"print(t:GetTile())",
-			"print(tostr(t:GetTile().contents))",
-			"print(debug.getinfo())",
-			"print(debug.getinfo(1))",
-			"print(tostr(debug.getinfo(1)))",
-			"print(tostr(debug.getinfo(2)))",
-			"print('wut')",
 			"sdf",
 			"for i, v in world:Locations() do print( i, v ) end",
 			"print(t._classname)",
@@ -33,7 +25,15 @@ return {
 			"print(t:GetWaypoint():AtWaypoint( agent ))",
 			"print(t:GetWaypoint())",
 			"print(agent:HasAspect( Verb.Idle ))",
-			"print(agent:HasAspect( Verb.Idle() ))"
+			"print(agent:HasAspect( Verb.Idle() ))",
+			"for k, v in pairs(world.entities) do print( k, v ) end",
+			"for k, v in pairs(world.entities) do print( k, v, v._classname ) end",
+			"print( math.random(0))",
+			"print( math.random(1))",
+			"print( math.random(-2))",
+			"print( math.random(0))",
+			"print( math.random(0, 0))",
+			"print( math.random(0, 1))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

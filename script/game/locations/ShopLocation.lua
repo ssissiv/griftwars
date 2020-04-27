@@ -6,12 +6,12 @@ function ShopLocation:init()
 	Location.init( self )
 
 	local shop = self:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
-	Object.Door( "shop exit" ):WarpToLocation( self )
 end
 
 function ShopLocation:OnSpawn( world )
 	Location.OnSpawn( self, world )
 
+	Object.Door( "shop exit" ):WarpToLocation( self )
 	local shopkeep = self:GetAspect( Feature.Shop ):SpawnShopOwner()
 	-- local home = self:SpawnHome( shopkeep )
 end
