@@ -103,6 +103,9 @@ local Void = class( "Tile.Void", Tile )
 local Grass = class( "Tile.Grass", Tile )
 Grass.image = assets.TILE_IMG.GRASS
 
+local Tree = class( "Tile.Tree", Tile )
+Tree.image = assets.TILE_IMG.TREE
+
 local StoneFloor = class( "Tile.StoneFloor", Tile )
 StoneFloor.image = assets.TILE_IMG.STONE_FLOOR
 

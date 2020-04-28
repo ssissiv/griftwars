@@ -29,6 +29,7 @@ local assets =
 	TILE_IMG =
 	{
 		GRASS = "grassland.png",
+		TREE = "tree.png",
 		STONE_FLOOR = "stone_floor.png",
 		STONE_WALL = "stone_wall.png",
 		WOODEN_FLOOR = "wooden_floor.png",

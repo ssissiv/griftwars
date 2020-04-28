@@ -43,7 +43,11 @@ function Thicket:GenerateTileMap()
 	if self.map == nil then
 		self.map = self:GainAspect( Aspect.TileMap( 12, 12 ))
 		self.map:FillTiles( function( x, y )
-			return Tile.Grass( x, y )
+			if math.random() < 0.2 then
+				return Tile.Tree( x, y )
+			else
+				return Tile.Grass( x, y )
+			end
 		end )
 	end
 end
