@@ -94,38 +94,21 @@ function WorldGen:GenerateWorld()
 
 	Msg:SetWorld( world )
 
-	local city = WorldGen.City( self, 6 )
+
+	local city = Zone.City( self, 3 )
 	world:SpawnEntity( city )
-	
-	--------------------------------------------------------------------------------------
-	-- Forest!
 
-	-- local wilderness = {
-	-- 	[10] = WorldGen.Forest,
-	-- 	[5] = WorldGen.Hills,
-	-- 	[3] = WorldGen.Mountains,
-	-- }
+	local forest = Zone.Forest( self, 4 )
+	forest.origin = city:RandomBoundaryPortal().owner.location
+	world:SpawnEntity( forest )
 
-	-- for i = 1, 3 do
-	-- 	local origin = self:RandomAvailableLocation( city:GetRoads(), 6 )
-	-- 	if origin then
-	-- 		local wt, zone_class = self:TablePick( wilderness )
-	-- 		local forest = zone_class( self, origin, 6 )
-	-- 		world:SpawnEntity( forest )
 
-	-- 		local city_origin = self:RandomAvailableLocation( forest:GetRooms(), 6 )
-	-- 		if city_origin then
-	-- 			local city = WorldGen.City( self, city_origin, 1 )
-	-- 			world:SpawnEntity( city )
-	-- 		end
-	-- 	end
-	-- end
-
+			
 	--------------------------------------------------------------------------------------
 	-- Place the player.
 
 	local player = self:GeneratePlayer( self.world )
-	world:SpawnAgent( player, city:RandomRoad() )
+	world:SpawnAgent( player, city:RandomRoom() )
 
 	--------------------------------------------------------------------------------------
 

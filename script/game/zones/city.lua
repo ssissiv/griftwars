@@ -1,10 +1,6 @@
-local City = class( "WorldGen.City", Zone )
+local City = class( "Zone.City", Zone )
 
-function City:init( worldgen, sz )
-	assert( sz )
-	Zone.init( self, worldgen )
-	self.size = sz or 1
-end
+City.LOCATIONS = { Location.CityDistrict1, Location.CityDistrict2, Location.Tavern, Location.Residence, Location.Shop }
 
 function City:GenerateZone()
 	local world = self.world
@@ -12,22 +8,15 @@ function City:GenerateZone()
 	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
 	self.faction = world:CreateFaction( self.name )
 
-	self.origin = Location.CityDistrict( self )
-	self:SpawnLocation( self.origin )
+	local depth = 0
 
-	self.districts = { self.origin }
+	self.origin = Location.CityDistrict( self )
+	self:SpawnLocation( self.origin, depth )
 
 	local locations = { self.origin }
-	local count = 0
-	while #locations > 0 and count < 8 do
+	while #locations > 0 and locations[1]:GetZoneDepth() < self.max_depth do
 		local location = table.remove( locations, 1 )
-		self:GeneratePortals( location, locations )
-		table.insert( self.districts, location )
-		count = count + 1
+		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
 	end
-end
-
-function City:RandomRoad()
-	return table.arraypick( self.districts )
 end
 

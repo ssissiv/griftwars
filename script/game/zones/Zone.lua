@@ -1,7 +1,13 @@
 local Zone = class( "Zone", Entity )
 
-function Zone:init( worldgen )
+function Zone:init( worldgen, max_depth )
+	assert( max_depth )
 	self.worldgen = worldgen
+	self.max_depth = max_depth or 1
+end
+
+function Zone:GetMaxDepth()
+	return self.max_depth
 end
 
 function Zone:OnSpawn( world )
@@ -9,6 +15,7 @@ function Zone:OnSpawn( world )
 
 	if self.rooms == nil then
 		self.rooms = {}
+		print( "Zone:OnSpawn", self )
 		self:GenerateZone()
 	end
 end
@@ -28,25 +35,25 @@ function Zone:GetBounds()
 	return x1, y1, x2, y2
 end
 
-function Zone:GeneratePortals( location, new_locations )
+-- Takes a location and attempts to spawn new Locations for each of its disconnected portals.
+function Zone:GeneratePortals( location, new_locations, depth )
 	for i, obj in location:Contents() do
 		local portal = obj:GetAspect( Aspect.Portal )
 		if portal and portal:GetDest() == nil then
 			local classes = {}
-			recurse_subclasses( Location, function( subclass )
+			for i, subclass in ipairs( self.LOCATIONS ) do
 				for j, tag in ipairs( subclass.WORLDGEN_TAGS or table.empty ) do
 					if portal:MatchWorldGenTag( tag ) then
 						table.insert( classes, subclass )
-					print( subclass._classname, tag )
 					end
 				end
-			end )
+			end
 
 			local class = table.arraypick( classes )
 			if class then
 				-- print( "Match:", location, portal:GetWorldGenTag(), class._classname )
 				local new_location = class( self, portal )
-				self:SpawnLocation( new_location )
+				self:SpawnLocation( new_location, depth )
 
 				-- Connect the matching Portal.
 				for j, obj2 in new_location:Contents() do
@@ -71,9 +78,24 @@ function Zone:GeneratePortals( location, new_locations )
 	end
 end
 
-function Zone:SpawnLocation( location )
-	location:AssignZone( self )
+
+function Zone:SpawnLocation( location, depth )
+	location:AssignZone( self, depth )
 	self.world:SpawnLocation( location )
+	table.insert( self.rooms, location )
+end
+
+function Zone:RandomBoundaryPortal()
+	local portals = {}
+	for i, room in ipairs( self.rooms ) do
+		for j, portal in room:Portals() do
+			if portal:GetDest() == nil and portal:HasWorldGenTag( "boundary" ) then
+				table.insert( portals, portal )
+			end
+		end
+	end
+
+	return self.world:ArrayPick( portals )
 end
 
 function Zone:RandomRoom()

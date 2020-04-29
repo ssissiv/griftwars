@@ -1,9 +1,6 @@
-local Forest = class( "WorldGen.Forest", Zone )
+local Forest = class( "Zone.Forest", Zone )
 
-function Forest:init( worldgen, size )
-	Zone.init( self, worldgen )
-	self.size = size or 1
-end
+Forest.LOCATIONS = { Location.Thicket }
 
 function Forest:GenerateZone()
 	local world = self.world
@@ -11,18 +8,19 @@ function Forest:GenerateZone()
 	local adj = world.adjectives:PickName()
 	self.name = loc.format( "The {1} Forest", adj )
 
-	self.origin = Location.Thicket( self )
-	self:SpawnLocation( self.origin )
+	local depth = 0
 
-	self.thickets = { self.origin }
+	if self.origin == nil then
+		self.origin = Location.Thicket( self )
+		self:SpawnLocation( self.origin, depth )
+	end
+
+	print( self.origin )
 
 	local locations = { self.origin }
-	local count = 0
-	while #locations > 0 and count < 8 do
+	while #locations > 0 and locations[1]:GetZoneDepth() < self.max_depth do
 		local location = table.remove( locations, 1 )
-		self:GeneratePortals( location, locations )
-		table.insert( self.districts, location )
-		count = count + 1
+		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
 	end
 end
 
@@ -44,8 +42,3 @@ function Forest:PopulateOrcs()
 		orc:WarpToLocation( self:RandomRoom() )
 	end
 end
-
-function Forest:RandomRoom()
-	return self.worldgen:ArrayPick( self.thickets )
-end
-

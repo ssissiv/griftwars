@@ -1,6 +1,7 @@
 local Thicket = class( "Location.Thicket", Location )
 
-Thicket.WORLDGEN_TAGS = { "outskirts east", "outskirts west", "outskirts south", "outskirts north" }
+Thicket.WORLDGEN_TAGS = { "boundary east", "boundary west", "boundary south", "boundary north",
+	"forest east", "forest west", "forest south", "forest north", }
 
 function Thicket:init( zone, portal )
 	Location.init( self )
@@ -18,8 +19,8 @@ function Thicket:OnSpawn( world )
 	for i = 1, 4 do
 		local tag = districts[i]
 		local portal
-		if self.gen_portal and self.gen_portal:MatchWorldGenTag( "outskirts "..tag ) then
-			portal = Object.Portal( "outskirts "..tag )
+		if self.gen_portal and self.gen_portal:MatchWorldGenTag( "boundary "..tag ) then
+			portal = Object.Portal( "boundary "..tag )
 		elseif i <= n then
 			portal = Object.Portal( "forest "..tag )
 		end

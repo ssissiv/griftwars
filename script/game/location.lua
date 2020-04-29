@@ -52,13 +52,18 @@ function Location:LocTable()
 	return self
 end
 
-function Location:AssignZone( zone )
+function Location:AssignZone( zone, depth )
 	assert( is_instance( zone, Zone ))
 	self.zone = zone
+	self.zone_depth = depth
 end
 
 function Location:GetZone()
 	return self.zone
+end
+
+function Location:GetZoneDepth()
+	return self.zone_depth
 end
 
 function Location:SetCoordinate( x, y, z )
@@ -89,6 +94,22 @@ function Location:SetDetails( title, desc )
 	end
 	if desc then
 		self.desc = desc
+	end
+end
+
+function Location:SpawnPerimeterPortal( tag, exit_tag )
+	local portal = Object.Portal( tag .. " " .. exit_tag )
+	local w, h = self.map:GetExtents()
+	if exit_tag == "east" then
+		portal:WarpToLocation( self, w, math.floor(h/2) )
+	elseif exit_tag == "west" then
+		portal:WarpToLocation( self, 1, math.floor(h/2) )
+	elseif exit_tag == "south" then
+		portal:WarpToLocation( self, math.floor(w/2), h )
+	elseif exit_tag == "north" then
+		portal:WarpToLocation( self, math.floor(w/2), 1 )
+	else
+		error( exit_tag )
 	end
 end
 

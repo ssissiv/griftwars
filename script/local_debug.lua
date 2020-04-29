@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"sdf",
 			"for i, v in world:Locations() do print( i, v ) end",
 			"print(t._classname)",
 			"print(t:GetName())",
@@ -33,7 +32,8 @@ return {
 			"print( math.random(-2))",
 			"print( math.random(0))",
 			"print( math.random(0, 0))",
-			"print( math.random(0, 1))"
+			"print( math.random(0, 1))",
+			"print(location.zone, location.zone_depth)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

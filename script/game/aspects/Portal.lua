@@ -1,3 +1,7 @@
+-- Portals connect Locations together.
+-- They are 'matched' together according to worldgen_tag, which is a space-delimited string that functions
+-- like the edge of a puzzle piece.
+
 local Portal = class( "Aspect.Portal", Aspect )
 
 function Portal:init( location, x, y )
@@ -11,6 +15,10 @@ end
 
 function Portal:GetWorldGenTag()
 	return self.worldgen_tag
+end
+
+function Portal:HasWorldGenTag( tagstr )
+	return self.worldgen_tag and self.worldgen_tag:find(tagstr) ~= nil
 end
 
 function Portal:MatchWorldGenTag( tagstr )
