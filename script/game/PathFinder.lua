@@ -39,7 +39,7 @@ function PathFinder:CalculatePath()
 
 		for i, portal in room:Portals() do
 			local dest = portal:GetDest()
-			if from_to[ dest ] == nil and dest ~= start_room then
+			if dest and from_to[ dest ] == nil and dest ~= start_room then
 				assert( dest ~= start_room )
 				from_to[ dest ] = room
 				table.insert( queue, dest )

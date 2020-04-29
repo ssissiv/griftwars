@@ -43,7 +43,7 @@ function District:OnSpawn( world )
 	end
 
 	if math.random() < 0.2 then
-		-- local snoop = world:SpawnAgent( Agent.Snoop(), self )
+		local snoop = world:SpawnAgent( Agent.Snoop(), self )
 	end
 end
 

@@ -94,7 +94,7 @@ function Travel:Interact( actor, dest )
 
 		self.path = pather:CalculatePath()
 		if self.path then
-			self:PathToDest( self.path[2] )
+			self:PathToDest( actor, self.path[2] )
 		end
 		
 		self:YieldForTime( ONE_MINUTE )

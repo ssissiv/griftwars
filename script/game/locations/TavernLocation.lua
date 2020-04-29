@@ -24,7 +24,7 @@ function TavernLocation:GenerateTileMap()
 		local w, h = 10, 8
 		self.map = self:GainAspect( Aspect.TileMap( w, h ))
 		self.map:FillTiles( function( x, y )
-			if x == 1 or y == 1 or x == self.w or y == self.h then
+			if x == 1 or y == 1 or x == w or y == h then
 				return Tile.StoneWall( x, y )
 			else
 				return Tile.WoodenFloor( x, y )

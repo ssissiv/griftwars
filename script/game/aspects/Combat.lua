@@ -27,8 +27,11 @@ end
 function Combat:OnLocationEvent( event_name, location, ... )
 	if event_name == LOCATION_EVENT.AGENT_ADDED then
 		local agent = ...
-		if not self:IsTarget( agent ) and self:EvaluateTarget( agent ) then
-			self:AddTarget( agent )
+		if not self:IsTarget( agent ) then
+			local ok, reason = self:EvaluateTarget( agent )
+			if ok then
+				self:AddTarget( agent )
+			end
 		end
 	elseif event_name == LOCATION_EVENT.AGENT_REMOVED then
 		local agent = ...
@@ -48,22 +51,22 @@ end
 
 function Combat:EvaluateTarget( target )
 	if target == self.owner then
-		return false
+		return false, "self"
 	end
 	if not is_instance( target, Agent ) then
-		return false
+		return false, "not agent"
 	end
 	if target:GetLocation() ~= self.owner:GetLocation() then
-		return false
+		return false, "not in location"
 	end
 	local combat = target:GetAspect( Aspect.Combat )
 	if not combat then
-		return false
+		return false, "no combat"
 	end
 	if not combat:IsTarget( self.owner ) then
 		-- TEMP. orcs attacksssss
 		if not self.owner:IsEnemy( target ) then
-			return false
+			return false, "not enemy"
 		end
 	end
 	return true
