@@ -56,7 +56,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
             ui.Separator()
 
             for j, verb in ipairs( self.shown_verbs ) do
-                if verb:GetTarget() or self.actor == target then
+                if verb:GetTarget() == target then
                     local ok, details = verb:CanDo( self.actor )
                     local txt = loc.format( "{1}] {2}", j, verb:GetRoomDesc( self.actor ) )
 
@@ -104,7 +104,7 @@ function VerbMenu:KeyPressed( key, screen )
     else
         local idx = tonumber(key)
         local verb = self.shown_verbs[ idx ]
-        if verb and verb:CanDo( self.actor ) then
+        if verb then
             self.actor:DoVerbAsync( verb )
             return true
         end

@@ -39,6 +39,7 @@ function PathFinder:CalculatePath()
 
 		for i, portal in room:Portals() do
 			local dest = portal:GetDest()
+			-- TODO: can we even path to this portal?
 			if dest and from_to[ dest ] == nil and dest ~= start_room then
 				assert( dest ~= start_room )
 				from_to[ dest ] = room

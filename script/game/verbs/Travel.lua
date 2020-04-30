@@ -17,6 +17,11 @@ Travel.ENTER_STRINGS =
 	"{1.Id} enters."
 }
 
+function Travel:init()
+	Verb.init( self )
+	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
+end
+
 function Travel:GetDesc()
 	return loc.format( "Travel to {1}", tostring(self.obj) )
 end
@@ -94,10 +99,10 @@ function Travel:Interact( actor, dest )
 
 		self.path = pather:CalculatePath()
 		if self.path then
-			self:PathToDest( actor, self.path[2] )
+			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
+			self.leave:DoVerb( actor, portal )
 		end
 		
-		self:YieldForTime( ONE_MINUTE )
 	end
 
 	if is_instance( dest, Waypoint ) then

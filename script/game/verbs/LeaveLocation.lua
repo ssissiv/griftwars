@@ -84,10 +84,13 @@ function LeaveLocation:PathToPortal( actor, portal )
 	end
 end
 
-function LeaveLocation:Interact( actor )
+function LeaveLocation:Interact( actor, target )
+	target = target or self:GetTarget()
 
 	local dest, destx, desty
-	if self.obj == nil then
+	local portal
+
+	if target == nil then
 		-- Chose a random accessible portal out of here.
 		local portals = {}
 		for i, portal in actor.location:Portals() do
@@ -96,25 +99,28 @@ function LeaveLocation:Interact( actor )
 			end
 		end
 
-		local portal = table.arraypick( portals )
+		portal = table.arraypick( portals )
 		if portal == nil then
+			-- No such portal, guess we're done.
 			return
 		else
 			dest, destx, desty = portal:GetDest()
 		end
 
-	elseif is_instance( self.obj, Aspect.Portal ) then
-		dest, destx, desty = self.obj:GetDest()
+	elseif is_instance( target, Aspect.Portal ) then
+		dest, destx, desty = target:GetDest()
+		portal = target
 
-	elseif is_instance( self.obj, Location ) then
-		dest = self.obj
+	elseif is_instance( target, Location ) then
+		dest = target
 
 	else
-		error(tostring(self.obj))
+		error(tostring(target))
 	end
 
-	if actor:GetLocation().map and is_instance( self.obj, Aspect.Portal )then
-		self:PathToPortal( actor, self.obj )
+	-- If we have a specific Portal, path to it.
+	if actor:GetLocation().map and portal then
+		self:PathToPortal( actor, portal )
 	end
 
 	self:YieldForTime( 5 * ONE_MINUTE, 16.0 )
@@ -123,8 +129,7 @@ function LeaveLocation:Interact( actor )
 		return
 	end
 	
-	local prev_location = actor:GetLocation()
-
+	-- Warp to dest Location.
 	Msg:Action( self.EXIT_STRINGS, actor, dest )
 
 	actor:DeltaStat( STAT.FATIGUE, 5 )

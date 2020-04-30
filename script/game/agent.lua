@@ -510,13 +510,17 @@ function Agent:AttemptVerb( verb_class )
 	local verbs = self:GetPotentialVerbs( "room" )
 	verbs:SortByDistanceTo( self:GetCoordinate() )
 	local verb = verbs:FindVerbClass( verb_class )
-	if verb and verb:CanDo( self ) then
-		print( verb, verb.obj )
+	if verb then
 		self:DoVerbAsync( verb )
 	end
 end
 
 function Agent:DoVerbAsync( verb, ... )
+	if not verb:CanDo( self, ... ) then
+		print( "No can do!", self, verb, ... )
+		return
+	end
+
 	local coro = coroutine.create( verb.DoVerb )
 	local ok, result = coroutine.resume( coro, verb, self, ... )
 	if not ok then

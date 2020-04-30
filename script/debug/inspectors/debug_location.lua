@@ -14,10 +14,17 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
         panel:AppendTable( ui, faction.faction )
     end
 
-	if ui.Button( "Warp To" ) then
-		self.location.world:DoAsync( function( world ) world:GetPuppet():WarpToLocation( self.location ) end )
-	end
-    
+    local puppet = self.location.world and self.location.world:GetPuppet()
+    if puppet then
+    	if ui.Button( "Warp To" ) then
+    		self.location.world:DoAsync( function( world ) puppet:WarpToLocation( self.location ) end )
+    	end
+        
+        ui.SameLine( 0, 10 )
+        if ui.Button( "Travel To" ) then
+            puppet:DoVerbAsync( Verb.Travel(), self.location )
+        end
+    end
     ui.Separator()
 
     ui.Text( "Exits:" )

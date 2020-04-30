@@ -235,6 +235,14 @@ function Location:RemovePortal( portal )
 	table.arrayremove( self.portals, portal )
 end
 
+function Location:FindPortalTo( dest )
+	for i, portal in ipairs( self.portals ) do
+		if portal:GetDest() == dest then
+			return portal
+		end
+	end
+end
+
 -- Breadth-first traversal applying fn().
 -- fn( location, depth ) returns two booleans:
 --		continue: if false, do not flood from this location
