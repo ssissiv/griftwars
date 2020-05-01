@@ -45,7 +45,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
         end
 
         if ui.TreeNodeEx( "Zones" ) then
-            for i, zone in ipairs( self.game.world:GetBucket( Zone )) do
+            for i, zone in ipairs( self.game.world:GetBucketByClass( Zone )) do
                 if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
                     panel:AppendTable( ui, zone )
                 end

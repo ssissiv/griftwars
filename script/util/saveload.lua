@@ -13,6 +13,7 @@ local function RecurseTable( t, seen, fn )
     end
 end
 
+-- class.__serialize assigns a classname value to t for save-load purposes, must now remove it.
 local function Declassify( t )
     t._classname = nil
 end
@@ -24,8 +25,20 @@ local function Classify( t )
     end
 end
 
-function SerializeToFile( obj, filename )
+function Serialize( obj )
     local s = Serpent.dump( obj, { indent = "\t" } )
+    RecurseTable( obj, {}, Declassify )
+    return s
+end
+
+function Deserialize( s )
+    local t = assert( loadstring( s ))()
+    RecurseTable( t, {}, Classify )
+    return t    
+end
+
+function SerializeToFile( obj, filename )
+    local s = Serpent.dump( obj, { indent = "  " } )
     local file = io.open( filename, "w+" )
     file:write( s )
     file:close()

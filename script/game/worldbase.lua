@@ -158,28 +158,33 @@ end
 
 function WorldBase:CreateBucketByAspect( aspect )
 	assert( is_class( aspect, Aspect ))
+	local bucket_id = aspect._classname
+	assert( self.buckets[ bucket_id ] == nil )
+
 	for i, ent in ipairs( self.entities ) do
 		if ent:HasAspect( aspect ) then
-			self:RegisterToBucket( aspect, ent )
+			self:RegisterToBucket( bucket_id, ent )
 		end
 	end
 
-	return self.buckets[ aspect ]
+	return self.buckets[ bucket_id ]
 end
 
 function WorldBase:CreateBucketByClass( class )
 	assert( is_class( class ))
+	local bucket_id = class._classname
+	assert( self.buckets[ bucket_id ] == nil )
+
 	for i, ent in ipairs( self.entities ) do
 		if is_instance( ent, class ) then
-			self:RegisterToBucket( class, ent )
+			self:RegisterToBucket( bucket_id, ent )
 		end
 	end
 
-	return self.buckets[ class ]
+	return self.buckets[ bucket_id ]
 end
 
 function WorldBase:RegisterToBucket( key, obj )
-	assert( is_class( key ))
 	local bucket = self.buckets[ key ]
 	if bucket == nil then
 		bucket = {}
@@ -199,6 +204,10 @@ end
 
 function WorldBase:Bucket( key )
 	return pairs( self.buckets[ key ] or table.empty )
+end
+
+function WorldBase:GetBucketByClass( class )
+	return self.buckets[ class._classname ]
 end
 
 function WorldBase:GetBucket( key )

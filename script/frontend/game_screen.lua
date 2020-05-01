@@ -1,13 +1,16 @@
 local GameScreen = class( "GameScreen", RenderScreen )
 
-function GameScreen:init()
+function GameScreen:init( world )
 	RenderScreen.init( self )
 	
-	local gen = WorldGen()
-	self.world = gen:GenerateWorld()
+	if world == nil then
+		local gen = WorldGen()
+		world = gen:GenerateWorld()
+		world:Start()
+	end
+	self.world = world
 	self.nexus = WorldNexus( self.world, self )
 	self.world:SetNexus( self.nexus )
-	self.world:Start()
 	self.world:ListenForAny( self, self.OnWorldEvent )
 
 	-- List of objects and vergbs in the currently rendered location.
@@ -24,17 +27,27 @@ function GameScreen:init()
 
 	self.world:SetPuppet( self.world:GetPlayer() )
 
+	GetDbg().game = self
+	
 	return self
+end
+
+function GameScreen:CloseScreen()
+	self.world:RemoveListener( self )
+	GetGUI():RemoveScreen( self )
 end
 
 function GameScreen:SaveWorld( filename )
 	assert( filename )
 	SerializeToFile( self.world, filename )
+	print( "Saved to", filename )
 end
 
 function GameScreen:LoadWorld( filename )
 	assert( filename )
-	self.world = DeserializeFromFile( filename )
+	print( "Loading from ", filename )
+	local world = DeserializeFromFile( filename )
+	GetGUI():AddScreen( GameScreen( world ))
 end
 
 function GameScreen:UpdateScreen( dt )

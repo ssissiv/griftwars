@@ -17,12 +17,12 @@ end
 
 function Home:OnSpawn( world )
 	Aspect.OnSpawn( self, world )
-	world:RegisterToBucket( self._class, self )
+	world:RegisterToBucket( self._classname, self )
 	self.owner.map_colour = constants.colours.HOME_TILE
 end
 
 function Home:OnDespawn()
-	self:GetWorld():UnregisterFromBucket( self._class, self )
+	self:GetWorld():UnregisterFromBucket( self._classname, self )
 end
 
 function Home:AddResident( agent )
