@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(location.zone, location.zone_depth)",
 			"print( is_class( Agent ))",
 			"print( is_class( Agent() ))",
 			"print(tostr(Agent()))",
@@ -33,7 +32,8 @@ return {
 			"s = \"district two west\"; print(tostr(s:split( \" \" )))",
 			"s = \"distric t two west\"; print(tostr(s:split( \" \" )))",
 			"s = \"distric t two  west\"; print(tostr(s:split( \" \" )))",
-			"s = \"distric td two  west\"; print(tostr(s:split( \" \" )))"
+			"s = \"distric td two  west\"; print(tostr(s:split( \" \" )))",
+			"print(location.world)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

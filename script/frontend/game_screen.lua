@@ -725,7 +725,7 @@ function GameScreen:KeyPressed( key )
 			self.inventory_window = nil
 		else
 			local puppet = self.world:GetPuppet()
-			self.inventory_window = InventoryWindow( puppet, puppet )
+			self.inventory_window = InventoryWindow( self.world, puppet, puppet )
 			self:AddWindow( self.inventory_window )
 		end
 		return true

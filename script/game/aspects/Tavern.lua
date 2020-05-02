@@ -19,13 +19,6 @@ end
 function Tavern:SpawnBarkeep()
 	local world = self:GetWorld()
 	
-	if self.name == nil then
-		local adj = world.adjectives:PickName()
-		local noun = world.nouns:PickName()
-		local name = loc.format( "The {1} {2} Tavern", adj, noun )
-		self.location:SetDetails( name )
-	end
-
 	local barkeep = Agent.Barkeep()
 	barkeep:WarpToLocation( self.location )
 

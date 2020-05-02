@@ -11,6 +11,10 @@ function Shop:init( shop_type )
 	self.shop_type = shop_type
 end
 
+function Shop:GetShopType()
+	return self.shop_type
+end
+
 function Shop:AssignShopOwner( agent )
 	assert( is_instance( agent, Agent ))
 	if agent ~= self.shop_owner then
@@ -30,21 +34,6 @@ function Shop:SpawnShopOwner()
 
 	elseif shop_type == SHOP_TYPE.EQUIPMENT then
 		table.insert( stock, Weapon.Dirk() )
-	end
-
-	if self.name == nil then
-		local adj = world.adjectives:PickName()
-		local noun = world.nouns:PickName()
-		local name
-		if shop_type == SHOP_TYPE.FOOD then
-			name = loc.format( "The {1} {2} Restaurant", adj, noun )
-		elseif shop_type == SHOP_TYPE.EQUIPMENT then
-			name = loc.format( "{1} {2}'s' Equipment", adj, noun )
-		else
-			name = loc.format( "The {1} {2} General Store", adj, noun )
-		end
-
-		self.location:SetDetails( name )
 	end
 
 	local shopkeep = Agent.Shopkeeper()

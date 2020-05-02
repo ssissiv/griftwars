@@ -14,8 +14,9 @@ end
 
 local InventoryWindow = class( "InventoryWindow" )
 
-function InventoryWindow:init( viewer, agent )
+function InventoryWindow:init( world, viewer, agent )
 	assert( agent )
+    self.world = world
 	self.viewer = viewer
 	self.agent = agent
 end
@@ -46,9 +47,59 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
             self.viewer:RegenVerbs( "object" )
         end
         if self.selected_obj == obj then
+            ui.SameLine( 0, 10 )
+            if ui.SmallButton( "?" ) then
+                self.world:GetNexus():Inspect( self.viewer, obj )
+            end
             screen:RenderPotentialVerbs( ui, self.viewer, "object", obj )
+            self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj )
         end
 	end
 
     ui.End()
 end
+
+function InventoryWindow:SelectObject( obj )
+    self.selected_obj = obj
+    self.viewer:RegenVerbs( "object" )
+end
+
+function InventoryWindow:KeyPressed( key, screen )
+    if key == "/" and Input.IsShift() then
+        if self.selected_obj then
+            self.world.nexus:Inspect( self.viewer, self.selected_obj )
+            return true
+        end
+
+    elseif key == "tab" then
+        local items = self.viewer:GetInventory():GetItems()
+        local idx = table.arrayfind( items, self.selected_obj ) or 0
+        self:SelectObject( items[ (idx % #items) + 1 ] )
+        return true
+
+    elseif key == "up" then
+        local items = self.viewer:GetInventory():GetItems()
+        local idx = table.arrayfind( items, self.selected_obj ) or 0
+        self:SelectObject( items[ math.max( 1, idx - 1 ) ])
+        return true
+
+    elseif key == "down" then
+        local items = self.viewer:GetInventory():GetItems()
+        local idx = table.arrayfind( items, self.selected_obj ) or 0
+        self:SelectObject( items[ math.min( #items, idx + 1 ) ])
+        return true
+
+    elseif key == "left" or key == "right" then
+        return true
+
+    elseif self.shown_verbs then
+        local idx = tonumber(key)
+        local verb = self.shown_verbs:VerbAt( idx )
+        if verb then
+            self.viewer:DoVerbAsync( verb, self.selected_obj )
+            return true
+        end
+    end
+end
+
+

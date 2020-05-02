@@ -41,6 +41,10 @@ function Inventory:GetRandomItem()
 	return table.arraypick( self.items )
 end
 
+function Inventory:GetItems()
+	return self.items
+end
+
 function Inventory:Items()
 	return ipairs( self.items )
 end

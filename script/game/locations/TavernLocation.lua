@@ -14,6 +14,11 @@ end
 function TavernLocation:OnSpawn( world )
 	Location.OnSpawn( self, world )
 
+	local adj = world.adjectives:PickName()
+	local noun = world.nouns:PickName()
+	local name = loc.format( "The {1} {2} Tavern", adj, noun )
+	self:SetDetails( name )
+
 	Object.Door( "tavern exit" ):WarpToLocation( self )
 	local barkeep = self:GetAspect( Feature.Tavern ):SpawnBarkeep()
 	-- local home = self:SpawnHome( barkeep )
