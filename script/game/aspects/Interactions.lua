@@ -92,9 +92,11 @@ function Interaction:SatisfyReqs( actor )
 end
 
 function Interaction:CollectVerbs( verbs, actor, obj )
-	local ok, reason = self:CanInteract( actor )
-	if ok or reason then
-		verbs:AddVerb( Verb.Interact( self ))
+	if obj == self.owner then
+		local ok, reason = self:CanInteract( actor )
+		if ok or reason then
+			verbs:AddVerb( Verb.Interact( self ))
+		end
 	end
 end
 

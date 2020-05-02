@@ -6,7 +6,7 @@ function VerbContainer:init( id )
 	self.dirty = true
 end
 
-function VerbContainer:CollectVerbs( actor, ... )
+function VerbContainer:CollectVerbs( actor, obj )
 	if not self.dirty then
 		return
 	end
@@ -22,26 +22,30 @@ function VerbContainer:CollectVerbs( actor, ... )
 
 	local location = actor:GetLocation()
 	if location then
-		self:CollectVerbsFromEntity( location, actor, ... )
+		self:CollectVerbsFromEntity( location, actor, obj )
 
-		for i, obj in location:Contents() do
-			self:CollectVerbsFromEntity( obj, actor, ... )
+		for i, v in location:Contents() do
+			self:CollectVerbsFromEntity( v, actor, obj )
 		end
 	end
 
+	if obj then
+		self:CollectVerbsFromEntity( obj, actor, obj )
+	end
+
 	-- Event registrants...
-	actor:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self, ... )
+	actor:BroadcastEvent( AGENT_EVENT.COLLECT_VERBS, self, obj )
 end
 
-function VerbContainer:CollectVerbsFromEntity( entity, actor, ... )
+function VerbContainer:CollectVerbsFromEntity( entity, actor, obj )
 	if entity.CollectVerbs then
-		entity:CollectVerbs( self, actor, ... )
+		entity:CollectVerbs( self, actor, obj )
 	end
 
 	-- Verbs get a say.
 	for i, aspect in entity:Aspects() do
 		if aspect.CollectVerbs then
-			aspect:CollectVerbs( self, actor, ... )
+			aspect:CollectVerbs( self, actor, obj)
 		end
 	end
 end

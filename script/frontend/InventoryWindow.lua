@@ -1,3 +1,17 @@
+local function GetObjectDesc( obj )
+    local txt
+    local wearable = obj:GetAspect( Aspect.Wearable )
+    if wearable and wearable:IsEquipped() then
+        local slot = wearable:GetEqSlot()
+        txt = loc.format( "{1} <{2}>", obj:GetName(), EQ_SLOT_NAMES[ slot ] )
+    else
+        txt = obj:GetName()
+    end
+    return txt
+end
+
+------------------------------------------------------
+
 local InventoryWindow = class( "InventoryWindow" )
 
 function InventoryWindow:init( viewer, agent )
@@ -25,12 +39,7 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
 	end
 
 	for i, obj in self.agent:GetInventory():Items() do 
-        local txt
-        if obj:IsEquipped() then
-            txt = loc.format( "[E] {1}", obj:GetName() )
-        else
-            txt = obj:GetName()
-        end
+        local txt = GetObjectDesc( obj )
 
 		if ui.Selectable( txt, self.selected_obj == obj ) then
             self.selected_obj = obj

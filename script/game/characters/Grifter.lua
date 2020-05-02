@@ -11,6 +11,7 @@ function Grifter:init()
 	self:CreateStat( STAT.XP, 0, 100 )
 
 	self:GetInventory():DeltaMoney( 10 )
+	self:GetInventory():AddItem( Weapon.Dirk() )
 end
 
 function Grifter:GetMapChar()

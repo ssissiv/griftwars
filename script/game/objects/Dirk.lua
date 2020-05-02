@@ -1,11 +1,12 @@
 local Dirk = class( "Weapon.Dirk", Object )
 
-Dirk.EQ_SLOT = EQ_SLOT.HAND
+function Dirk:init()
+	Object.init( self )
+	self.value = 12
 
-function Dirk:GetName()
-	return "Dirk"
+	self:GainAspect( Aspect.Wearable( EQ_SLOT.HAND ))
 end
 
-function Dirk:GetValue()
-	return 12
+function Dirk:GetName()
+	return "dirk"
 end

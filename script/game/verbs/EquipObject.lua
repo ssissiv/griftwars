@@ -1,35 +1,29 @@
 local EquipObject = class( "Verb.EquipObject", Verb )
 
 function EquipObject:GetDesc()
-	return "Un/Equip Object"
+	local wearable = self.obj:GetAspect( Aspect.Wearable )
+	if wearable and wearable:IsEquipped() then
+		return loc.format( "Remove {1}", tostring(self.obj) )
+	else
+		return loc.format( "Equip {1}", tostring(self.obj) )
+	end
 end
-
-function EquipObject:CollectVerbs( verbs, actor, obj )
-	if not self then
-		return false
-	end
-	if not is_instance( obj, Object ) then
-		return false
-	end
-
-	if obj.EQ_SLOT == nil then
-		return false
-	end
-
-	verbs:AddVerb( EquipObject( actor, obj ))
-end
-
 
 function EquipObject:CanInteract( actor, obj )
+	local wearable = obj:GetAspect( Aspect.Wearable )
+	if not wearable then
+		return false, "Cannot wear"
+	end
 	return true
 end
 
 function EquipObject:Interact( actor, obj )	
-	if obj:IsEquipped() then
+	local wearable = obj:GetAspect( Aspect.Wearable )
+	if wearable:IsEquipped() then
 		Msg:Echo( actor, "You unequip {1}.", obj )
-		obj:Unequip()
+		wearable:Unequip()
 	else
 		Msg:Echo( actor, "You equip {1}.", obj )
-		obj:Equip()
+		wearable:Equip()
 	end
 end

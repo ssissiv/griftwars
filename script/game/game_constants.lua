@@ -113,6 +113,18 @@ EQ_SLOT = MakeEnum
 	"HEAD",
 	"BODY",
 	"FEET",
+	"RING",
+}
+
+EQ_SLOT_NAMES =
+{
+	[EQ_SLOT.HAND] = "both hands",
+	[EQ_SLOT.LHAND] = "left hands",
+	[EQ_SLOT.RHAND] = "right hand",
+	[EQ_SLOT.HEAD] = "head",
+	[EQ_SLOT.BODY] = "body",
+	[EQ_SLOT.FEET] = "feet",
+	[EQ_SLOT.RING] = "ring",
 }
 
 QUALITY =

@@ -51,8 +51,8 @@ function Portal:OnLocationChanged( prev_location, location )
 	end
 end
 
-function Portal:CollectVerbs( verbs, agent )
-	if self.waypoint then
+function Portal:CollectVerbs( verbs, agent, obj )
+	if self.waypoint and (obj == nil or obj == self.owner) then
 		verbs:AddVerb( Verb.LeaveLocation( self ))
 	end
 end
