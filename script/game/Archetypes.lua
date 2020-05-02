@@ -25,4 +25,5 @@ end
 function Agent:MakeBiological()
 	self:GainAspect( Verb.ManageFatigue( self ))
 	self:GainAspect( Verb.Idle() )
+	self:GainAspect( Aspect.Combat() )
 end

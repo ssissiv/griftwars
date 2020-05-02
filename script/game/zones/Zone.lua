@@ -39,7 +39,7 @@ end
 function Zone:GeneratePortals( location, new_locations, depth )
 	for i, obj in location:Contents() do
 		local portal = obj:GetAspect( Aspect.Portal )
-		if portal and portal:GetDest() == nil then
+		if portal and portal:GetDest() == nil and (depth <= self.max_depth or portal:HasWorldGenTag( "entry" )) then
 			local classes = {}
 			for i, subclass in ipairs( self.LOCATIONS ) do
 				for j, tag in ipairs( subclass.WORLDGEN_TAGS or table.empty ) do

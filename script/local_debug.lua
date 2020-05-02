@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t:GetWaypoint())",
 			"print(agent)",
 			"print(t:GetWaypoint())",
 			"print(t:GetWaypoint():AtWaypoint( agent ))",
@@ -33,7 +32,8 @@ return {
 			"print(getmetatable(puppet))",
 			"print(getmetatable(puppet), Agent)",
 			"print(player)",
-			"print(player.location)"
+			"print(player.location)",
+			"print(location.zone_depth)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

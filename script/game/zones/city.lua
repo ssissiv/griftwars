@@ -14,9 +14,12 @@ function City:GenerateZone()
 	self:SpawnLocation( self.origin, depth )
 
 	local locations = { self.origin }
-	while #locations > 0 and locations[1]:GetZoneDepth() < self.max_depth do
+	local sanity = 0
+	while #locations > 0 do
 		local location = table.remove( locations, 1 )
 		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
+		sanity = sanity + 1
+		assert( sanity < 99 )
 	end
 end
 
