@@ -12,31 +12,7 @@ end
 function Thicket:OnSpawn( world )
 	Location.OnSpawn( self, world )
 
-	local w, h = self.map:GetExtents()
-
-	local districts = table.shuffle{ "east", "west", "north", "south" }
-	local n = math.random( 1, 4 )
-	for i = 1, 4 do
-		local tag = districts[i]
-		local portal
-		if self.gen_portal and self.gen_portal:MatchWorldGenTag( "boundary "..tag ) then
-			portal = Object.Portal( "boundary "..tag )
-		elseif i <= n then
-			portal = Object.Portal( "forest "..tag )
-		end
-
-		if portal then
-			if tag == "east" then
-				portal:WarpToLocation( self, w, math.floor(h/2) )
-			elseif tag == "west" then
-				portal:WarpToLocation( self, 1, math.floor(h/2) )
-			elseif tag == "south" then
-				portal:WarpToLocation( self, math.floor(w/2), h )
-			elseif tag == "north" then
-				portal:WarpToLocation( self, math.floor(w/2), 1 )
-			end
-		end
-	end
+	self:SpawnPerimeterPortals( "forest" )
 end
 
 

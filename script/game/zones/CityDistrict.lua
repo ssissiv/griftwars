@@ -11,26 +11,7 @@ function District:OnSpawn( world )
 	self:SetDetails( loc.format( "District of {1}{2}", self.zone.name, world:Random(1,9999)),
 		"These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 
-	local w, h = self.map:GetExtents()
-
-	local districts = table.shuffle{ "east", "west", "north", "south" }
-	local n = world:Random( 1, 4 )
-	for i = 1, 4 do
-		local tag = districts[i]
-		local portal
-
-		-- We are connecting to this direction: must include it.
-		if self.gen_portal and self.gen_portal:MatchWorldGenTag( "district "..tag ) then
-			self:SpawnPerimeterPortal( "district", tag )
-
-		elseif i <= n then
-			if self.zone_depth >= self.zone:GetMaxDepth() then
-				self:SpawnPerimeterPortal( "boundary", tag )
-			else
-				self:SpawnPerimeterPortal( "district", tag )
-			end
-		end
-	end
+	self:SpawnPerimeterPortals( "district" )
 
 	-- if math.random() < 0.5 then
 	-- 	local scavenger = world:SpawnAgent( Agent.Scavenger(), self )

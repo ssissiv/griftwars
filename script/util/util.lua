@@ -268,7 +268,9 @@ function string:split( inSplitPattern, outResults )
    local theStart = 1
    local theSplitStart, theSplitEnd = string.find( self, inSplitPattern, theStart )
    while theSplitStart do
-      table.insert( outResults, string.sub( self, theStart, theSplitStart-1 ) )
+        if theSplitStart-1 >= theStart then
+          table.insert( outResults, string.sub( self, theStart, theSplitStart-1 ) )
+      end
       theStart = theSplitEnd + 1
       theSplitStart, theSplitEnd = string.find( self, inSplitPattern, theStart )
    end

@@ -2,6 +2,7 @@ local Forest = class( "Zone.Forest", Zone )
 
 Forest.LOCATIONS = { Location.Thicket }
 
+
 function Forest:GenerateZone()
 	local world = self.world
 
@@ -10,15 +11,16 @@ function Forest:GenerateZone()
 
 	local depth = 0
 
-	if self.origin == nil then
+	if self.origin_portal then
+		print( "Generating from ", self.origin_portal:GetLocation() )
+		self.origin = self:GeneratePortalDest( self.origin_portal, depth )
+	else
 		self.origin = Location.Thicket( self )
 		self:SpawnLocation( self.origin, depth )
 	end
 
-	print( self.origin )
-
 	local locations = { self.origin }
-	while #locations > 0 and locations[1]:GetZoneDepth() < self.max_depth do
+	while #locations > 0 do
 		local location = table.remove( locations, 1 )
 		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
 	end

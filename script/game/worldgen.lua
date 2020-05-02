@@ -1,5 +1,34 @@
 local WorldGen = class( "WorldGen" )
 
+function WorldGen.MatchWorldGenTag( match_tag, tagstr )
+	local tags = tagstr and tagstr:split( " " )
+	if tags == nil or #tags == 0 then
+		return false
+	end
+	local our_tags = match_tag:split( " " )
+	if our_tags == nil or #our_tags == 0 then
+		return false
+	end
+
+	-- All incoming tags must match.
+	for i, tag in ipairs( tags ) do
+		tag = MATCH_TAGS[ tag ] or tag
+		if not table.contains( our_tags, tag ) then
+			return false
+		end
+	end
+
+	-- All our tags must match to incoming.
+	for i, tag in ipairs( our_tags ) do
+		tag = MATCH_TAGS[ tag ] or tag
+		if not table.contains( tags, tag ) then
+			return false
+		end
+	end
+
+	return true
+end
+
 function WorldGen:init( world )
 	self.world = world
 end
@@ -45,9 +74,11 @@ function WorldGen:GenerateWorld()
 	local city = Zone.City( self, 3 )
 	world:SpawnEntity( city )
 
-	local forest = Zone.Forest( self, 4 )
-	forest.origin = city:RandomBoundaryPortal().owner.location
-	world:SpawnEntity( forest )
+	local portal = city:RandomUnusedPortal( "boundary east" )
+	if portal then
+		local forest = Zone.Forest( self, 3, portal )
+		world:SpawnEntity( forest )
+	end
 
 
 			

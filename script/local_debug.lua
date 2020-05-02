@@ -2,20 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(agent)",
-			"print(t:GetWaypoint())",
-			"print(t:GetWaypoint():AtWaypoint( agent ))",
-			"print(t:GetWaypoint())",
-			"print(agent:HasAspect( Verb.Idle ))",
-			"print(agent:HasAspect( Verb.Idle() ))",
-			"for k, v in pairs(world.entities) do print( k, v ) end",
-			"for k, v in pairs(world.entities) do print( k, v, v._classname ) end",
-			"print( math.random(0))",
-			"print( math.random(1))",
-			"print( math.random(-2))",
-			"print( math.random(0))",
-			"print( math.random(0, 0))",
-			"print( math.random(0, 1))",
 			"print(location.zone, location.zone_depth)",
 			"print( is_class( Agent ))",
 			"print( is_class( Agent() ))",
@@ -33,7 +19,21 @@ return {
 			"print(getmetatable(puppet), Agent)",
 			"print(player)",
 			"print(player.location)",
-			"print(location.zone_depth)"
+			"print(location.zone_depth)",
+			"s = \"district east\"; print( s:gsub( MATCH_TAGS[ 'east' ], \"\" ))",
+			"s = \"district east\"; print( \"::\", s:gsub( MATCH_TAGS[ 'east' ], \"\" ))",
+			"s = \"district east\"; print( \"::\", s:gsub( \"east\", \"\" ))",
+			"s = \"district east\"; print( \"::\", s:gsub( MATCH_TAGS.west, \"\" ))",
+			"s = \"foo  bar\"; print(tostr(s:split( \" \" )))",
+			"s = \"foo    bar\"; print(tostr(s:split( \" \" )))",
+			"s = \"district\"; print(tostr(s:split( \" \" )))",
+			"s = \"district west\"; print(tostr(s:split( \" \" )))",
+			"s = \"distric  t west\"; print(tostr(s:split( \" \" )))",
+			"s = \"district  west\"; print(tostr(s:split( \" \" )))",
+			"s = \"district two west\"; print(tostr(s:split( \" \" )))",
+			"s = \"distric t two west\"; print(tostr(s:split( \" \" )))",
+			"s = \"distric t two  west\"; print(tostr(s:split( \" \" )))",
+			"s = \"distric td two  west\"; print(tostr(s:split( \" \" )))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

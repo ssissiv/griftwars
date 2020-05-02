@@ -101,8 +101,10 @@ function Travel:Interact( actor, dest )
 		if self.path then
 			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
 			self.leave:DoVerb( actor, portal )
+		else
+			print( "No path!", actor, dest )
+			self:YieldForTime( HALF_HOUR )
 		end
-		
 	end
 
 	if is_instance( dest, Waypoint ) then

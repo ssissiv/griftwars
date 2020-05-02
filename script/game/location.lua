@@ -113,6 +113,29 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 	end
 end
 
+function Location:SpawnPerimeterPortals( tag )
+	local w, h = self.map:GetExtents()
+	local exits = table.shuffle{ "east", "west", "north", "south" }
+	local n = self.world:Random( 1, 4 )
+	for i = 1, 4 do
+		local exit_tag = exits[i]
+		local portal
+
+		-- We are connecting to this direction: must include it.
+		if self.gen_portal and self.gen_portal:HasWorldGenTag( MATCH_TAGS[ exit_tag ] ) then
+			local t1 = self.gen_portal:GetWorldGenTag():gsub( MATCH_TAGS[ exit_tag ], "" )
+			self:SpawnPerimeterPortal( t1, exit_tag )
+
+		elseif i <= n then
+			if self.zone_depth >= self.zone:GetMaxDepth() then
+				self:SpawnPerimeterPortal( "boundary", exit_tag )
+			else
+				self:SpawnPerimeterPortal( tag, exit_tag )
+			end
+		end
+	end
+end
+
 
 function Location:AddEntity( entity )
 	assert( is_instance( entity, Entity ))
