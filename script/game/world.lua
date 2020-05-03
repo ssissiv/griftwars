@@ -50,6 +50,10 @@ function World:CreateFaction( name )
 	return faction
 end
 
+function World:GetWorldMap()
+	return self.map
+end
+
 function World:Factions()
 	return ipairs( self.factions )
 end

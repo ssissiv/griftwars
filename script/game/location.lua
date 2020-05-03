@@ -15,7 +15,6 @@ function Location:init()
 	Entity.init( self )
 	self.portals = {}
 	self.waypoints = {}
-	self.map_colour = constants.colours.DEFAULT_TILE
 end
 
 function Location:OnSpawn( world )
@@ -66,9 +65,13 @@ function Location:GetZoneDepth()
 	return self.zone_depth
 end
 
+function Location:GetCoordinate()
+	return self.x, self.y, self.z
+end
+
 function Location:SetCoordinate( x, y, z )
 	if self.x then
-		world:GetAspect( Aspect.TileMap ):UnassignFromGrid( self )
+		self.world:GetWorldMap():UnassignFromGrid( self )
 	end
 
 	self.x = x
@@ -76,7 +79,7 @@ function Location:SetCoordinate( x, y, z )
 	self.z = z
 
 	if self.world and self.x and self.y then
-		world:GetAspect( Aspect.TileMap ):AssignToGrid( self )
+		self.world:GetWorldMap():AssignToGrid( self )
 	end		
 end
 
@@ -97,6 +100,7 @@ function Location:SetDetails( title, desc )
 	end
 end
 
+-- Spawns a portal on the perimter of this Location's TileMap with the given 'tag'.
 function Location:SpawnPerimeterPortal( tag, exit_tag )
 	local portal = Object.Portal( tag .. " " .. exit_tag )
 	local w, h = self.map:GetExtents()
@@ -113,14 +117,17 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 	end
 end
 
+-- Randomly spawns portals on the perimeter, one for each cardinal direction.
+-- If there is a 'gen_portal' assigned, there is guaranteed to be a perimeter
+-- portal that matches it for future connectivity.
 function Location:SpawnPerimeterPortals( tag )
 	local w, h = self.map:GetExtents()
-	local exits = table.shuffle{ "east", "west", "north", "south" }
+	local exits = table.shuffle{ EXIT.EAST, EXIT.WEST, EXIT.NORTH, EXIT.SOUTH }
 	local n = self.world:Random( 1, 4 )
 	for i = 1, 4 do
-		local exit_tag = exits[i]
+		local exit = exits[i]
+		local exit_tag = EXIT_TAG[ exit ]
 		local portal
-
 		-- We are connecting to this direction: must include it.
 		if self.gen_portal and self.gen_portal:HasWorldGenTag( MATCH_TAGS[ exit_tag ] ) then
 			local t1 = self.gen_portal:GetWorldGenTag():gsub( MATCH_TAGS[ exit_tag ], "" )
@@ -423,8 +430,9 @@ end
 
 function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 	local w, h = x2 - x1, y2 - y1
+	local map_colour = self.map_colour or (self.zone and self.zone.MAP_COLOUR) or constants.colours.DEFAULT_TILE
 
-	love.graphics.setColor( table.unpack( self.map_colour ))
+	love.graphics.setColor( table.unpack( map_colour ))
 	screen:Rectangle( x1 + 4, y1 + 4, w - 8, h - 8 )
 
 	if self.contents then
@@ -432,16 +440,50 @@ function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 		local margin = math.ceil( sz / 2 )
 		local x, y = x1 + 4 + margin , y1 + 4 + margin
 		for i, obj in ipairs( self.contents ) do
+			local skip = false
 			if is_instance( obj, Agent ) then
 				love.graphics.setColor( 255, 0, 255 )
+			elseif obj:HasAspect( Aspect.Portal ) then
+				if obj:GetAspect( Aspect.Portal ):GetExitFromTag() then
+					skip = true
+				else
+					love.graphics.setColor( 100, 100, 100 )
+				end
 			else
 				love.graphics.setColor( 255, 255, 0 )
 			end
 
-			screen:Rectangle( x, y, sz, sz )
-			x = x + sz + margin
-			if x >= x2 - margin - 4 then
-				x, y = x1 + 4 + margin, y + sz + margin
+			if not skip then
+				screen:Rectangle( x, y, sz, sz )
+				x = x + sz + margin
+				if x >= x2 - margin - 4 then
+					x, y = x1 + 4 + margin, y + sz + margin
+				end
+			end
+		end
+	end
+
+	if self.x then
+		local exit_sz = math.floor( w / 6 ) -- width of exit
+		for i, portal in pairs( self.portals ) do
+			local exit = portal:GetExitFromTag()
+			if exit then
+				if portal:GetDest() then
+					love.graphics.setColor( table.unpack( map_colour ))
+				else
+					love.graphics.setColor( 0, 0, 0 )
+				end
+
+				local x, y = OffsetExit( self.x, self.y, exit )
+				if exit == EXIT.NORTH then
+					screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
+				elseif exit == EXIT.EAST then
+					screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
+				elseif exit == EXIT.WEST then
+					screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
+				elseif exit == EXIT.SOUTH then
+					screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
+				end
 			end
 		end
 	end

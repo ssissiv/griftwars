@@ -27,27 +27,13 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
     end
     ui.Separator()
 
-    ui.Text( "Exits:" )
-    ui.Columns( 2 )
-    local count = 0
-    for i, portal in self.location:Portals() do
-        local dest, x, y = portal:GetDest()
-        if x then
-            ui.Text( loc.format( "{1} ({2}, {3})", dest, x, y ))
-        else
-            ui.Text( tostring(dest))
-        end
-        ui.NextColumn()
-
-    	panel:AppendTable( ui, dest )
-        ui.NextColumn()
-        count = count + 1
-    end
-
-    ui.Columns( 1 )
-
-    if count > 0 then
-        ui.Separator()
+    ui.Text( "Zone:" )
+    ui.SameLine( 0, 5 )
+    local zone, zone_depth = self.location:GetZone(), self.location:GetZoneDepth()
+    panel:AppendTable( ui, self.location:GetZone(), loc.format( "{1} (depth: {2})", zone, zone_depth ))
+    local wx, wy = self.location:GetCoordinate()
+    if wx and wy then
+        ui.Text( loc.format( "<{1}, {2}>", wx, wy ))
     end
 
     for i, obj in self.location:Contents() do

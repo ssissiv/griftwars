@@ -24,6 +24,27 @@ function Portal:MatchWorldGenTag( tagstr )
 	return WorldGen.MatchWorldGenTag( self.worldgen_tag, tagstr )
 end
 
+function Portal:GetExitFromTag()
+	for i, exit in ipairs( EXIT_ARRAY ) do
+		if self:HasWorldGenTag( EXIT_TAG[ exit ] ) then
+			return exit
+		end
+	end
+end
+
+function Portal:IsExitOccupied()
+	local exit = self:GetExitFromTag()
+	if exit then
+		local wx, wy = self:GetLocation():GetCoordinate()
+		wx, wy = OffsetExit( wx, wy, exit )
+		if self:GetWorld():GetWorldMap():LookupTile( wx, wy ) then
+			return true
+		end
+	end
+
+	return false
+end
+
 function Portal:Connect( location, x, y )
 	if location == nil then
 		self.waypoint = nil

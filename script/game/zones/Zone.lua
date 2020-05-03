@@ -51,7 +51,7 @@ function Zone:RandomLocationClass( match_tags )
 end
 
 -- Takes a portal, generates a destination to it.
-function Zone:GeneratePortalDest( portal, depth )
+function Zone:GeneratePortalDest( portal, depth )	
 	local class = self:RandomLocationClass( portal:GetWorldGenTag() )
 	if class then
 		-- print( "Match:", location, portal:GetWorldGenTag(), class._classname )
@@ -59,7 +59,7 @@ function Zone:GeneratePortalDest( portal, depth )
 		local new_location = class( self, portal )
 		self:SpawnLocation( new_location, depth )
 
-		-- Connect the matching Portal.
+		-- Find and connect the matching Portal.
 		for j, obj2 in new_location:Contents() do
 			local portal2 = obj2:GetAspect( Aspect.Portal )
 			if portal2 and portal2:GetDest() == nil and portal2:MatchWorldGenTag( portal:GetWorldGenTag() ) then
@@ -77,6 +77,14 @@ function Zone:GeneratePortalDest( portal, depth )
 			end
 			error( "couldn't connect portal" )
 		end
+
+		local exit = portal:GetExitFromTag()
+		if exit then
+			local wx, wy = portal:GetLocation():GetCoordinate()
+			wx, wy = OffsetExit( wx, wy, exit )
+			new_location:SetCoordinate( wx, wy )
+		end
+
 		return new_location
 
 	else
@@ -89,9 +97,11 @@ function Zone:GeneratePortals( location, new_locations, depth )
 	for i, obj in location:Contents() do
 		local portal = obj:GetAspect( Aspect.Portal )
 		if portal and portal:GetDest() == nil and (depth <= self.max_depth or portal:HasWorldGenTag( "entry" )) then
-			local new_location = self:GeneratePortalDest( portal, depth )
-			if new_location then
-				table.insert( new_locations, new_location )
+			if not portal:IsExitOccupied() then
+				local new_location = self:GeneratePortalDest( portal, depth )
+				if new_location then
+					table.insert( new_locations, new_location )
+				end
 			end
 		end
 	end
@@ -109,7 +119,9 @@ function Zone:RandomUnusedPortal( tag )
 	for i, room in ipairs( self.rooms ) do
 		for j, portal in room:Portals() do
 			if portal:GetDest() == nil and portal:HasWorldGenTag( tag ) then
-				table.insert( portals, portal )
+				if not portal:IsExitOccupied() then
+					table.insert( portals, portal )
+				end
 			end
 		end
 	end

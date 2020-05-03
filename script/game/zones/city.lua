@@ -12,6 +12,7 @@ function City:GenerateZone()
 
 	self.origin = Location.CityDistrict( self )
 	self:SpawnLocation( self.origin, depth )
+	self.origin:SetCoordinate( 0, 0 )
 
 	local locations = { self.origin }
 	while #locations > 0 do

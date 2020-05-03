@@ -157,6 +157,14 @@ REXIT = {
 
 EXIT_ARRAY = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
 
+EXIT_TAG =
+{
+	[ EXIT.NORTH ] = "north",
+	[ EXIT.SOUTH ] = "south",
+	[ EXIT.EAST ] = "east",
+	[ EXIT.WEST ] = "west",
+}
+
 SHOP_TYPE = MakeEnum{
 	"GENERAL",
 	"FOOD",

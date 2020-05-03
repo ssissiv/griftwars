@@ -1,7 +1,7 @@
 local Forest = class( "Zone.Forest", Zone )
 
 Forest.LOCATIONS = { Location.Thicket }
-
+Forest.MAP_COLOUR = { 0, 200, 0 }
 
 function Forest:GenerateZone()
 	local world = self.world
