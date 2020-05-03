@@ -13,7 +13,9 @@ function DebugRoot:init( game )
 end
 
 function DebugRoot:RenderPanel( ui, panel, dbg )
-    ui.Text( string.format( "%s\n\n", "BUILD_ID" ))
+    ui.Text( string.format( "%s", "BUILD_ID" ))
+    ui.Text( string.format( 'Mem: %.2f MB', collectgarbage('count') / 1000))
+
     ui.Separator()
 
     if ui.Button( "UI" ) then
