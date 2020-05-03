@@ -45,6 +45,10 @@ function WorldGen:TablePick( t )
 	return self.world:TablePick( t )
 end
 
+function WorldGen:WeightedPick( t )
+	return self.world:WeightedPick( t )
+end
+
 function WorldGen:GenerateTinyWorld()
 	local world = World()
 	self.world = world
@@ -74,13 +78,22 @@ function WorldGen:GenerateWorld()
 	local city = Zone.City( self, 3 )
 	world:SpawnEntity( city )
 
-	local portal = city:RandomUnusedPortal( "boundary east" )
-	if portal then
-		local forest = Zone.Forest( self, 3, portal )
-		world:SpawnEntity( forest )
+	local zones = { city }
+	local zone_count = 0
+	while #zones > 0 and zone_count < 3 do
+		local zone = table.remove( zones, 1 )
+		for i, exit in ipairs( EXIT_ARRAY ) do
+			local exit_tag = EXIT_TAG[ exit ]
+			local portal = zone:RandomUnusedPortal( "boundary "..exit_tag )
+			local class_name = zone:RandomZoneClass()
+			local zone_class = CLASSES[ class_name ]
+			if portal and zone_class then
+				local new_zone = zone_class( self, 3, portal )
+				world:SpawnEntity( new_zone )
+				zone_count = zone_count + 1
+			end
+		end
 	end
-
-
 			
 	--------------------------------------------------------------------------------------
 	-- Place the player.

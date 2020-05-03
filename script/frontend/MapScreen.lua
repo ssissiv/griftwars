@@ -10,6 +10,21 @@ function MapScreen:init( world )
 	self.camera = Camera()
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
+
+	self:ResetCamera()
+end
+
+function MapScreen:ResetCamera()
+	local x, y, z
+	do
+		local puppet = self.world:GetPuppet()
+		if puppet then
+			x, y, z = puppet:GetLocation():GetCoordinate()
+		end
+	end
+	if x then
+		self:WarpTo( x, y )
+	end
 end
 
 function MapScreen:ElapsedTime()
@@ -110,11 +125,18 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 	local xtiles = wx1 - wx0
 	local ytiles = wy1 - wy0
 
+	local puppet = self.world:GetPuppet()
+	local x0, y0, z0
+	if puppet then
+		x0, y0, z0 = puppet:GetLocation():GetCoordinate()
+	end
+	z0 = z0 or 0
+
 	-- Render all map tiles.
 	for dx = 1, xtiles do
 		for dy = ytiles, 1, -1 do
 			local tx, ty = wx0 + dx - 1, wy0 + dy - 1
-			local tile = self.world:GetLocationAt( tx, ty )
+			local tile = self.world:GetLocationAt( tx, ty, z0 )
 			if tile then
 				local x1, y1 = self.camera:WorldToScreen( tx, ty )
 				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )

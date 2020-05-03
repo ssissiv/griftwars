@@ -1,22 +1,19 @@
-local Hills = class( "WorldGen.Hills", Zone )
+local Hills = class( "Zone.Hills", Zone )
 
-function Hills:init( worldgen, origin, size )
-	Zone.init( self, worldgen )
+Hills.LOCATIONS =
+{
+	[ Location.OpenHills ] = 1,
+}
 
-	self.origin = origin
-	self.size = size
+Hills.ZONE_ADJACENCY =
+{
+	["Zone.Forest"] = 2,
+	["Zone.City"] = 1,
+}
+Hills.ZONE_COLOUR = { 100, 150, 0 }
+
+
+function Hills:OnGenerateZone()
+	local adj = self.world.adjectives:PickName()
+	self.name = loc.format( "The {1} Hills", adj )
 end
-
-function Hills:GenerateZone()
-	local function CreateRoom( room )
-		room:SetDetails( loc.format( "Hills [{1}]", #self.rooms ), "Hilly, untamed terrain. Progress is inconsistent.")
-		room:SetImage( assets.LOCATION_BGS.HILLS )
-		room.map_colour = constants.colours.HILLS_TILE
-
-		table.insert( self.rooms, room )
-	end
-
-	self.worldgen:SproutLocations( self.origin, self.size, CreateRoom )
-end
-
-

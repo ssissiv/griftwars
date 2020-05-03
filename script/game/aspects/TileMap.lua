@@ -1,22 +1,51 @@
 local TileMap = class( "Aspect.TileMap", Aspect )
 
 function TileMap:init( w, h )
-	self.grid = {} -- array of arrays.
 	self.w, self.h = w or 10, h or 10
+	self:ClearTileMap()
 end
 
 function TileMap:GetExtents()
 	return self.w, self.h
 end
 
+function TileMap:GetTightExtents( z )
+	local ymin, ymax, xmin, xmax = math.huge, -math.huge, math.huge, -math.huge
+
+	if z == nil then
+		for z, layer in pairs( self.layers ) do
+			local xmin_layer, ymin_layers, xmax_layer, ymax_layer = self:GetTightExtents( z )
+			ymin, ymax = math.min( ymin, ymin_layer ), math.max( ymax, ymax_layer )
+			xmin, xmax = math.min( xmin, xmin_layer ), math.max( xmax, xmax_layer )
+		end
+
+	else
+		local layer = self.layers[ z ]
+		if layer then
+			local ymin, ymax, xmin, xmax = math.huge, -math.huge, math.huge, -math.huge
+			for y, row in pairs( layer ) do
+				ymin, ymax = math.min( ymin, y ), math.max( ymax, y )
+				xmin, xmax = math.min( xmin, x ), math.max( xmax, x )
+			end
+		end
+	end
+
+	return xmin, ymin, xmax, ymax
+end
+
 function TileMap:ClearTileMap()
-	self.grid = {}
+	self.layers = { [0] = {} } -- array of arrays.
+	self.max_depth = 0
 end
 
 function TileMap:GenerateTileMap()
 	self:FillTiles( function( x, y )
 		return Tile.Void( x, y )
 	end )
+end
+
+function TileMap:GetMaxDepth()
+	return self.max_depth
 end
 
 local function IterateNeighbours( state, i )
@@ -39,10 +68,12 @@ end
 
 function TileMap:FindTiles( fn )
 	local tiles = {}
-	for i, row in pairs( self.grid ) do
-		for j, tile in pairs( row ) do
-			if fn( tile ) then
-				table.insert( tiles, tile )
+	for z, layer in pairs( self.layers ) do
+		for i, row in pairs( layer ) do
+			for j, tile in pairs( row ) do
+				if fn( tile ) then
+					table.insert( tiles, tile )
+				end
 			end
 		end
 	end
@@ -60,43 +91,55 @@ function TileMap:FillTiles( fn )
 end
 
 function TileMap:AssignToGrid( location )
-	local x, y = location:GetCoordinate()
+	local x, y, z = location:GetCoordinate()
+	local layer = self.layers[ z or 0 ]
+	if layer == nil then
+		layer = {}
+		self.layers[ z ] = layer
+		self.max_depth = math.max( self.max_depth, z )
+	end
 
-	local row = self.grid[ y ]
+	local row = layer[ y ]
 	if row == nil then
 		row = {}
-		self.grid[ y ] = row
+		layer[ y ] = row
 	end
 
 	if row[ x ] == nil then
 		row[ x ] = location
 	elseif is_instance( row[ x ] ) then
 		row[ x ] = { row[ x ], location }
-		error( string.format( "%d, %d: %s", x, y, location ))
+		error( string.format( "%d, %d, %d: %s (%s already here)", x, y, z, location, row[ x ][1] ))
 	else
 		table.insert( row[ x ], location )
 	end
 end
 
 function TileMap:UnassignFromGrid( location )
-	local x, y = location:GetCoordinate()
-	local t = self.row[ y ][ x ]
+	local x, y, z = location:GetCoordinate()
+	local layer = self.layers[ z or 0 ]
+	local t = layer.row[ y ][ x ]
 	if t == location then
-		self.row[ y ][ x ] = nil
+		layer.row[ y ][ x ] = nil
 	elseif t then
 		table.arrayremove( t, location )
 		if #t == 1 then
-			self.row[ y ][ x ] = t[ 1 ]
+			layer.row[ y ][ x ] = t[ 1 ]
 		elseif #t == 0 then
-			self.row[ y ][ x ] = nil
+			layer.row[ y ][ x ] = nil
 		end
 	else
 		error( location )
 	end
 end
 
-function TileMap:LookupTile( x, y )
-	local row = self.grid[ y ]
+function TileMap:LookupTile( x, y, z )
+	local layer = self.layers[ z or 0 ]
+	if layer == nil then
+		return nil
+	end
+
+	local row = layer[ y ]
 	if row then
 		local t = row[ x ]
 		if is_instance( t ) then
@@ -131,9 +174,9 @@ function TileMap:Flood( origin, fn, ... )
 			break
 		elseif continue then
 			for i, exit in ipairs( EXIT_ARRAY ) do
-				local x, y = x:GetCoordinate()
+				local x, y, z = x:GetCoordinate()
 				x, y = OffsetExit( x, y, exit )
-				local ntile = self:LookupTile( x, y )
+				local ntile = self:LookupTile( x, y, z )
 				if ntile and not table.contains( open, ntile ) and not table.contains( closed, ntile ) then
 					table.insert( open, ntile )
 					table.insert( open, depth + 1 )

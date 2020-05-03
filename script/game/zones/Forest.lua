@@ -1,29 +1,18 @@
 local Forest = class( "Zone.Forest", Zone )
 
-Forest.LOCATIONS = { Location.Thicket }
-Forest.MAP_COLOUR = { 0, 200, 0 }
+Forest.LOCATIONS =
+{
+	[ Location.Thicket ] = 2
+}
+Forest.ZONE_ADJACENCY =
+{
+	["Zone.City"] = 1,
+}
+Forest.ZONE_COLOUR = { 0, 200, 0 }
 
-function Forest:GenerateZone()
-	local world = self.world
-
-	local adj = world.adjectives:PickName()
+function Forest:OnGenerateZone()
+	local adj = self.world.adjectives:PickName()
 	self.name = loc.format( "The {1} Forest", adj )
-
-	local depth = 0
-
-	if self.origin_portal then
-		print( "Generating from ", self.origin_portal:GetLocation() )
-		self.origin = self:GeneratePortalDest( self.origin_portal, depth )
-	else
-		self.origin = Location.Thicket( self )
-		self:SpawnLocation( self.origin, depth )
-	end
-
-	local locations = { self.origin }
-	while #locations > 0 do
-		local location = table.remove( locations, 1 )
-		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
-	end
 end
 
 

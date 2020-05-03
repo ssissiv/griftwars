@@ -62,8 +62,8 @@ function World:SpawnLocation( location )
 	self:SpawnEntity( location )
 end
 
-function World:GetLocationAt( x, y )
-	return self.map:LookupTile( x, y )
+function World:GetLocationAt( x, y, z )
+	return self.map:LookupTile( x, y, z )
 end
 
 function World:AllLocations()
@@ -169,6 +169,25 @@ function World:TablePick( t )
         end
     end
 end
+
+function World:WeightedPick( options )
+    local total = 0
+    for k,v in pairs(options) do
+        total = total + v
+    end
+    local rand = self:Random()*total
+    
+    local option = next(options)
+    while option do
+        rand = rand - options[option]
+        if rand <= 0 then
+            return option
+        end
+        option = next(options, option)
+    end
+    assert(option, "weighted random is messed up")
+end
+
 
 function World:AllAgents()
 	return ipairs( self.agents )

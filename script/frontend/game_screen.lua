@@ -84,10 +84,6 @@ function GameScreen:OnPuppetChanged( puppet )
 	self:PanToCurrentInterest()
 
 	if puppet then
-		if puppet.location then
-			puppet.location:GenerateTileMap()
-		end
-		
 		puppet:ListenForAny( self, self.OnPuppetEvent)
 	end
 end

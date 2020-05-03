@@ -8,6 +8,10 @@ function Zone:init( worldgen, max_depth, origin_portal )
 	self.origin_portal = origin_portal
 end
 
+function Zone:GetName()
+	return self.name
+end
+
 function Zone:GetMaxDepth()
 	return self.max_depth
 end
@@ -19,6 +23,31 @@ function Zone:OnSpawn( world )
 		self.rooms = {}
 		print( "Zone:OnSpawn", self )
 		self:GenerateZone()
+
+		if self.OnGenerateZone then
+			self:OnGenerateZone()
+		end
+	end
+end
+
+function Zone:GenerateZone()
+	local world = self.world
+
+	local depth = 0
+
+	if self.origin_portal then
+		print( "Generating from ", self.origin_portal:GetLocation() )
+		self.origin = self:GeneratePortalDest( self.origin_portal, depth )
+	else
+		local class = self:RandomLocationClass()
+		self.origin = class( self )
+		self:SpawnLocation( self.origin, depth )
+	end
+
+	local locations = { self.origin }
+	while #locations > 0 do
+		local location = table.remove( locations, 1 )
+		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
 	end
 end
 
@@ -39,16 +68,22 @@ end
 
 function Zone:RandomLocationClass( match_tags )
 	local classes = {}
-	for i, subclass in ipairs( self.LOCATIONS ) do
-		for j, tag in ipairs( subclass.WORLDGEN_TAGS or table.empty ) do
-			if WorldGen.MatchWorldGenTag( match_tags, tag ) then
-				table.insert( classes, subclass )
+	for class, wt in pairs( self.LOCATIONS ) do
+		for j, tag in ipairs( class.WORLDGEN_TAGS or table.empty ) do
+			if match_tags == nil or WorldGen.MatchWorldGenTag( match_tags, tag ) then
+				classes[ class ] = wt
+				break
 			end
 		end
 	end
 
-	return self.worldgen:ArrayPick( classes )
+	return self.worldgen:WeightedPick( classes )
 end
+
+function Zone:RandomZoneClass()
+	return self.worldgen:WeightedPick( self.ZONE_ADJACENCY or table.empty )
+end
+
 
 -- Takes a portal, generates a destination to it.
 function Zone:GeneratePortalDest( portal, depth )	
@@ -80,9 +115,9 @@ function Zone:GeneratePortalDest( portal, depth )
 
 		local exit = portal:GetExitFromTag()
 		if exit then
-			local wx, wy = portal:GetLocation():GetCoordinate()
+			local wx, wy, wz = portal:GetLocation():GetCoordinate()
 			wx, wy = OffsetExit( wx, wy, exit )
-			new_location:SetCoordinate( wx, wy )
+			new_location:SetCoordinate( wx, wy, wz )
 		end
 
 		return new_location
@@ -94,6 +129,11 @@ end
 
 -- Takes a location and attempts to spawn new Locations for each of its disconnected portals.
 function Zone:GeneratePortals( location, new_locations, depth )
+	if not location:GetCoordinate() then
+		location:SetCoordinate( 0, 0, self.world:GetWorldMap():GetMaxDepth() + 1 )
+	end
+
+	-- print( "Portals from", location, location:GetCoordinate() )
 	for i, obj in location:Contents() do
 		local portal = obj:GetAspect( Aspect.Portal )
 		if portal and portal:GetDest() == nil and (depth <= self.max_depth or portal:HasWorldGenTag( "entry" )) then

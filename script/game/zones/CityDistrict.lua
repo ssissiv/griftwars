@@ -1,14 +1,9 @@
 local District = class( "Location.CityDistrict", Location )
 
-function District:init( zone, portal )
-	Location.init( self )
-	self.gen_portal = portal
-end
-
 function District:OnSpawn( world )
 	Location.OnSpawn( self, world )
 
-	self:SetDetails( loc.format( "District of {1}{2}", self.zone.name, world:Random(1,9999)),
+	self:SetDetails( loc.format( "District {1}", world:Random(1,9999)),
 		"These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 
 	self:SpawnPerimeterPortals( "district" )
@@ -65,3 +60,10 @@ function District2:OnSpawn( world )
 	self:SpawnDoor( "residence entry" )
 	self:SpawnDoor( "residence entry" )
 end
+
+
+---------------------------------------------------
+
+local EmptyDistrict = class( "Location.EmptyDistrict", District )
+
+EmptyDistrict.WORLDGEN_TAGS = { "district west", "district east", "district north", "district south" }

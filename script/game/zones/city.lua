@@ -1,23 +1,23 @@
 local City = class( "Zone.City", Zone )
 
-City.LOCATIONS = { Location.CityDistrict1, Location.CityDistrict2, Location.Tavern, Location.Residence, Location.Shop }
+City.LOCATIONS = {
+	[ Location.CityDistrict1 ] = 1,
+	[ Location.CityDistrict2 ] = 1,
+	[ Location.EmptyDistrict ] = 2,
+	[ Location.Tavern ] = 1,
+	[ Location.Residence ] = 1,
+	[ Location.Shop ] = 1,
+}
 
-function City:GenerateZone()
-	local world = self.world
+City.ZONE_ADJACENCY =
+{
+	["Zone.Forest"] = 1
+}
 
-	self.name = world:GetAspect( Aspect.CityNamePool ):PickName()
-	self.faction = world:CreateFaction( self.name )
+City.ZONE_COLOUR = { 70, 70, 80 }
 
-	local depth = 0
-
-	self.origin = Location.CityDistrict( self )
-	self:SpawnLocation( self.origin, depth )
-	self.origin:SetCoordinate( 0, 0 )
-
-	local locations = { self.origin }
-	while #locations > 0 do
-		local location = table.remove( locations, 1 )
-		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
-	end
+function City:OnGenerateZone()
+	self.name = self.world:GetAspect( Aspect.CityNamePool ):PickName()
+	self.faction = self.world:CreateFaction( self.name )
 end
 

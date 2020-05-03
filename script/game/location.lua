@@ -11,8 +11,10 @@ end
 
 local Location = class( "Location", Entity )
 
-function Location:init()
+function Location:init( zone, gen_portal )
 	Entity.init( self )
+	self.zone = zone
+	self.gen_portal = gen_portal
 	self.portals = {}
 	self.waypoints = {}
 end
@@ -76,7 +78,7 @@ function Location:SetCoordinate( x, y, z )
 
 	self.x = x
 	self.y = y
-	self.z = z
+	self.z = z or 0
 
 	if self.world and self.x and self.y then
 		self.world:GetWorldMap():AssignToGrid( self )
@@ -370,11 +372,17 @@ function Location:Contents()
 end
 
 function Location:GetTitle()
+	local title
 	if type(self.title) == "function" then
-		return self.title( self )
+		title = self.title( self ) or ""
 	else
-		return self.title or tostring(self._classname)
+		title = self.title or tostring(self._classname)
 	end
+
+	if self.zone then
+		title = loc.format( "{1} ({2})", title, self.zone:GetName())
+	end
+	return title
 end
 
 function Location:GetDesc()
@@ -430,7 +438,7 @@ end
 
 function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
 	local w, h = x2 - x1, y2 - y1
-	local map_colour = self.map_colour or (self.zone and self.zone.MAP_COLOUR) or constants.colours.DEFAULT_TILE
+	local map_colour = self.map_colour or (self.zone and self.zone.ZONE_COLOUR) or constants.colours.DEFAULT_TILE
 
 	love.graphics.setColor( table.unpack( map_colour ))
 	screen:Rectangle( x1 + 4, y1 + 4, w - 8, h - 8 )

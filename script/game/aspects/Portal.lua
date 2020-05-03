@@ -35,9 +35,9 @@ end
 function Portal:IsExitOccupied()
 	local exit = self:GetExitFromTag()
 	if exit then
-		local wx, wy = self:GetLocation():GetCoordinate()
+		local wx, wy, wz = self:GetLocation():GetCoordinate()
 		wx, wy = OffsetExit( wx, wy, exit )
-		if self:GetWorld():GetWorldMap():LookupTile( wx, wy ) then
+		if self:GetWorld():GetWorldMap():LookupTile( wx, wy, wz ) then
 			return true
 		end
 	end

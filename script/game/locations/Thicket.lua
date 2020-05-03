@@ -3,15 +3,10 @@ local Thicket = class( "Location.Thicket", Location )
 Thicket.WORLDGEN_TAGS = { "boundary east", "boundary west", "boundary south", "boundary north",
 	"forest east", "forest west", "forest south", "forest north", }
 
-function Thicket:init( zone, portal )
-	Location.init( self )
-	self:SetDetails( loc.format( "Thicket", zone.name), "Trees everywhere!")
-	self.gen_portal = portal
-end
-
 function Thicket:OnSpawn( world )
 	Location.OnSpawn( self, world )
 
+	self:SetDetails( "Thicket", "Trees everywhere!")
 	self:SpawnPerimeterPortals( "forest" )
 end
 
