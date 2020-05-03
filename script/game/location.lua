@@ -111,9 +111,9 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 	elseif exit_tag == "west" then
 		portal:WarpToLocation( self, 1, math.floor(h/2) )
 	elseif exit_tag == "south" then
-		portal:WarpToLocation( self, math.floor(w/2), h )
-	elseif exit_tag == "north" then
 		portal:WarpToLocation( self, math.floor(w/2), 1 )
+	elseif exit_tag == "north" then
+		portal:WarpToLocation( self, math.floor(w/2), h )
 	else
 		error( exit_tag )
 	end
