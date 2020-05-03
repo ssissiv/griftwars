@@ -115,7 +115,7 @@ function Behaviour:UpdatePriorities()
 
 	for i, verb in ipairs( self.verbs ) do
 		if verb.CalculateUtility then
-			verb:SetUtility( verb:CalculateUtility( verb:GetOwner() ))
+			verb:SetUtility( verb:CalculateUtility( self.owner ))
 		end
 	end
 

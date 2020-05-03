@@ -32,6 +32,25 @@ function City:OnWorldGenPass( pass )
 			local room = self:RandomRoom()
 			Agent.Snoop():WarpToLocation( room )
 		end
+		return true
+
+	elseif pass == 1 then
+		self:SpawnShopAssistants()
+		return true
+	end
+end
+
+function City:SpawnShopAssistants()
+	for i, room in ipairs( self.rooms ) do
+		local shop = room:GetAspect( Feature.Shop )
+		local keeper = shop and shop:GetShopOwner()
+		if keeper then
+			local assistant = keeper:GetAspect( Job.ManageShop ):TrySpawnAssistant()
+			if assistant then
+				print( "ASSIST", assistant, room )
+				assistant:WarpToLocation( self:RandomRoom() )
+			end
+		end
 	end
 end
 

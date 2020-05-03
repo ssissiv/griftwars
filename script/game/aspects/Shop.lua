@@ -25,6 +25,10 @@ function Shop:AssignShopOwner( agent )
 	end
 end
 
+function Shop:GetShopOwner()
+	return self.shop_owner
+end
+
 function Shop:SpawnShopOwner()
 	local world = self:GetWorld()	
 	local stock = {}

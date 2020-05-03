@@ -39,12 +39,6 @@ function ManageShop:OnSpawn( world )
 	if math.random() < 0.5 then
 		self.assistant_job = Job.Assistant( self.owner, self )
 		self.owner:GainAspect( Interaction.OfferJob( self.assistant_job ))
-
-		if math.random() < 0.5 then
-			local assistant = Agent.Citizen()
-			world:SpawnAgent( assistant )
-			assistant:GainAspect( self.assistant_job )
-		end
 	end
 end
 
@@ -54,6 +48,15 @@ function ManageShop:OnLocationChanged( prev_location, location )
 	end
 	if location then
 		location:ListenForAny( self, self.OnLocationEvent )
+	end
+end
+
+function ManageShop:TrySpawnAssistant()
+	if self.assistant_job and not self.assistant_job.owner then
+		-- TODO: probably temp.  Just spawn a citizen.
+		local assistant = Agent.Citizen()
+		assistant:GainAspect( self.assistant_job )
+		return assistant
 	end
 end
 

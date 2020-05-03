@@ -6,7 +6,7 @@ end
 
 function Idle:Interact( actor )
 	-- Idling.
-	Msg:Speak( actor, "Just idling!" )
+	-- Msg:Speak( actor, "Just idling!" )
 	self:YieldForTime( 5 * ONE_MINUTE )
 
 	if actor:GetCoordinate() then

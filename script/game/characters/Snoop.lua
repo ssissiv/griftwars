@@ -4,6 +4,7 @@ local FindInformation = class( "Verb.FindInformation", Verb )
 function FindInformation:init()
 	FindInformation._base.init( self )
 	self.travel = self:AddChildVerb( Verb.Travel())
+	self.idle = self:AddChildVerb( Verb.Idle() )
 end
 
 function FindInformation:RenderAgentDetails( ui, screen, viewer )
@@ -28,12 +29,10 @@ function FindInformation:Interact( actor )
 	actor.location:Flood( IsTavern )
 	if dest then
 		self.travel:DoVerb( actor, dest )
-	else
-		Msg:Speak( actor, "Guess I'll just snoop here..." )
 	end
 
-	-- Do it for a while, as long as valid.
-	self:YieldForTime( ONE_HOUR )
+	Msg:Speak( actor, "Psst. Hear anything interesting?" )
+	self.idle:DoVerb( actor )
 end
 
 

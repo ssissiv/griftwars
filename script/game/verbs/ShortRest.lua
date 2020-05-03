@@ -15,10 +15,10 @@ function ShortRest:GetDesc()
 end
 
 function ShortRest:GetShortDesc( viewer )
-	if viewer == self:GetOwner() then
+	if viewer == self.actor then
 		return "You are resting."
 	else
-		return loc.format( "{1.Id} is here resting.", self:GetOwner():LocTable( viewer ))
+		return loc.format( "{1.Id} is here resting.", self.actor:LocTable( viewer ))
 	end
 end
 

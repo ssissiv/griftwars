@@ -517,8 +517,9 @@ function Agent:AttemptVerb( verb_class, obj )
 end
 
 function Agent:DoVerbAsync( verb, ... )
-	if not verb:CanDo( self, ... ) then
-		print( "No can do!", self, verb, ... )
+	local ok, reason =verb:CanDo( self, ... )
+	if not ok then
+		print( "No can do!", self, verb, reason, ... )
 		return
 	end
 
