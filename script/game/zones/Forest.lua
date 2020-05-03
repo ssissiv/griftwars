@@ -10,9 +10,11 @@ Forest.ZONE_ADJACENCY =
 }
 Forest.ZONE_COLOUR = { 0, 200, 0 }
 
-function Forest:OnGenerateZone()
-	local adj = self.world.adjectives:PickName()
-	self.name = loc.format( "The {1} Forest", adj )
+function Forest:OnWorldGenPass( pass )
+	if self.name == nil then
+		local adj = self.world.adjectives:PickName()
+		self.name = loc.format( "The {1} Forest", adj )
+	end
 end
 
 

@@ -148,6 +148,11 @@ function WorldBase:SpawnEntity( ent )
 	ent:OnSpawn( self )
 	assert( not table.contains( self.entities, ent ))
 	table.insert( self.entities, ent )
+
+	if self.buckets[ ent._classname ] then
+		self:RegisterToBucket( ent._classname, ent )
+	end
+
 	return ent
 end
 
@@ -207,7 +212,8 @@ function WorldBase:Bucket( key )
 end
 
 function WorldBase:GetBucketByClass( class )
-	return self.buckets[ class._classname ]
+	local bucket = self.buckets[ class._classname ]
+	return bucket or self:CreateBucketByClass( class )
 end
 
 function WorldBase:GetBucket( key )

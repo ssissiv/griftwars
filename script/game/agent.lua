@@ -506,8 +506,9 @@ function Agent:IsDoing( verb )
 	return false
 end
 
-function Agent:AttemptVerb( verb_class )
-	local verbs = self:GetPotentialVerbs( "room" )
+function Agent:AttemptVerb( verb_class, obj )
+	self:RegenVerbs( "room" )
+	local verbs = self:GetPotentialVerbs( "room", obj )
 	verbs:SortByDistanceTo( self:GetCoordinate() )
 	local verb = verbs:FindVerbClass( verb_class )
 	if verb then

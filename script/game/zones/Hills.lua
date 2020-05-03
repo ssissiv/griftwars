@@ -13,7 +13,9 @@ Hills.ZONE_ADJACENCY =
 Hills.ZONE_COLOUR = { 100, 150, 0 }
 
 
-function Hills:OnGenerateZone()
-	local adj = self.world.adjectives:PickName()
-	self.name = loc.format( "The {1} Hills", adj )
+function Hills:OnWorldGenPass( pass )
+	if self.name == nil then
+		local adj = self.world.adjectives:PickName()
+		self.name = loc.format( "The {1} Hills", adj )
+	end
 end

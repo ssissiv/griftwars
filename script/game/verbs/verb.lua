@@ -352,7 +352,6 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 	end
 
 	if self.cancelled then
-		ui.SameLine( 0, 5 )
 		ui.TextColored( 1, 0, 0, 1, "Cancelled" )
 		if self.cancelled_time then
 			ui.SameLine( 0, 10 )

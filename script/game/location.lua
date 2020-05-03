@@ -157,10 +157,6 @@ function Location:AddEntity( entity )
 
 	table.insert( self.contents, entity )
 
-	if is_instance( entity, Agent ) then
-		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
-	end
-
 	-- Spawn entity or self, if needed.
 	if entity.world == nil and self.world then
 		self.world:SpawnEntity( entity )		
@@ -169,6 +165,10 @@ function Location:AddEntity( entity )
 	end
 	
 	entity:ListenForAny( self, self.OnEntityEvent )
+
+	if is_instance( entity, Agent ) then
+		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
+	end
 
 	if self.map then
 		self:PlaceEntity( entity )

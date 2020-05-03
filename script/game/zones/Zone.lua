@@ -23,10 +23,6 @@ function Zone:OnSpawn( world )
 		self.rooms = {}
 		print( "Zone:OnSpawn", self )
 		self:GenerateZone()
-
-		if self.OnGenerateZone then
-			self:OnGenerateZone()
-		end
 	end
 end
 
@@ -36,7 +32,7 @@ function Zone:GenerateZone()
 	local depth = 0
 
 	if self.origin_portal then
-		print( "Generating from ", self.origin_portal:GetLocation() )
+		-- print( "Generating from ", self.origin_portal:GetLocation() )
 		self.origin = self:GeneratePortalDest( self.origin_portal, depth )
 	else
 		local class = self:RandomLocationClass()

@@ -777,7 +777,7 @@ function GameScreen:KeyPressed( key )
 			if Input.IsShift() then
 				puppet:AttemptVerb( Verb.LeaveLocation )
 			else
-				puppet:AttemptVerb( Verb.Wait )
+				puppet:AttemptVerb( Verb.Wait, puppet )
 			end
 		end
 

@@ -94,7 +94,26 @@ function WorldGen:GenerateWorld()
 			end
 		end
 	end
-			
+	
+	----------------------------------------------------------------------------------------------------
+	-- Multi-pass zone generation phase -- let each zone do what it needs to do in any number of passes.
+
+	local zones = world:GetBucketByClass( Zone )
+	local passes = 0
+	while passes < 99 do
+		local changed = 0
+		for i, zone in ipairs( zones ) do
+			if zone.OnWorldGenPass and zone:OnWorldGenPass( passes ) then
+				changed = changed + 1
+			end
+		end
+		if changed == 0 then
+			print( "WorldGen: done after ", passes, " passes." )
+			break
+		end
+		passes = passes + 1
+	end
+
 	--------------------------------------------------------------------------------------
 	-- Place the player.
 
@@ -103,8 +122,7 @@ function WorldGen:GenerateWorld()
 
 	--------------------------------------------------------------------------------------
 
-	local zones = world:CreateBucketByClass( Zone )
-	print( table.count( zones ), " total zones." )
+	print( table.count( world:GetBucketByClass( Zone ) ), " total zones." )
 
 	return self.world
 end

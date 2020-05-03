@@ -16,8 +16,22 @@ City.ZONE_ADJACENCY =
 
 City.ZONE_COLOUR = { 70, 70, 80 }
 
-function City:OnGenerateZone()
-	self.name = self.world:GetAspect( Aspect.CityNamePool ):PickName()
-	self.faction = self.world:CreateFaction( self.name )
+function City:OnWorldGenPass( pass )
+	if self.name == nil then
+		self.name = self.world:GetAspect( Aspect.CityNamePool ):PickName()
+	end
+	if self.faction == nil then
+		self.faction = self.world:CreateFaction( self.name )
+	end
+	if pass == 0 then
+		for i = 1, 3 do
+			local room = self:RandomRoom()
+			Agent.Scavenger():WarpToLocation( room )
+		end
+		for i = 1, 3 do
+			local room = self:RandomRoom()
+			Agent.Snoop():WarpToLocation( room )
+		end
+	end
 end
 

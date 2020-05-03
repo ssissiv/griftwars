@@ -7,14 +7,6 @@ function District:OnSpawn( world )
 		"These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 
 	self:SpawnPerimeterPortals( "district" )
-
-	-- if math.random() < 0.5 then
-	-- 	local scavenger = world:SpawnAgent( Agent.Scavenger(), self )
-	-- end
-
-	-- if math.random() < 0.2 then
-	-- 	local snoop = world:SpawnAgent( Agent.Snoop(), self )
-	-- end
 end
 
 function District:SpawnDoor( tags )
