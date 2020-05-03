@@ -99,7 +99,7 @@ function Combat:AddTarget( target )
 
 	if not self.attack then
 		assert( not self.owner:HasAspect( Verb.Attack ))
-		self.attack = self.owner:GainAspect( Verb.Attack( self.owner ))
+		self.attack = self.owner:GainAspect( Verb.Attack( nil, target ))
 	end
 
 	self.owner:RegenVerbs()

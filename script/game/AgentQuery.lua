@@ -1,4 +1,10 @@
 function Agent:IsEnemy( other )
+	if is_instance( other, Agent ) then
+		if self:IsFeral() or other:IsFeral() then
+			return true
+		end
+	end
+
 	local f1 = self:GetAspect( Aspect.Faction )
 	local f2 = other:GetAspect( Aspect.Faction )
 	return f1 and f2 and f1:IsEnemy( f2 )
@@ -27,4 +33,13 @@ end
 
 function Agent:IsEmployed()
 	return self:HasAspect( Job )
+end
+
+
+function Agent:IsFeral()
+	return self.feral == true
+end
+
+function Agent:SetFeral( feral )
+	self.feral = feral
 end

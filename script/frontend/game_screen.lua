@@ -151,12 +151,15 @@ function GameScreen:RenderScreen( gui )
     end
     ui.Separator()
 
-    -- Render the things at the player's location.
-    self:RenderLocationDetails( ui, puppet:GetLocation(), puppet )
+    local location = puppet and puppet:GetLocation() or self.last_location
+    if location then
+	    -- Render the things at the player's location.
+	    self:RenderLocationDetails( ui, location )
 
-    -- self:RenderPotentialVerbs( ui, puppet, "room" )
+	    self:RenderLocationTiles( location, puppet )
 
-    self:RenderLocationTiles( puppet:GetLocation(), puppet )
+	    self.last_location = location
+	end
 
     self:RenderSenses( ui, puppet )
 	ui.SetScrollHere()
@@ -192,7 +195,7 @@ function GameScreen:RenderHoveredLocation( gui, puppet )
 		    		ui.Text( txt )
 		    	end
 	    	end
-	    else
+	    elseif tx and ty then
 	    	ui.Text( string.format( "%d, %d", tx, ty ))
 	    end
     end
@@ -297,9 +300,6 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
-	if not location.map then
-		return
-	end
 
 	local w, h = location.map:GetExtents()
 	local x, y = self.camera:WorldToScreen( 1, 0 )
@@ -307,15 +307,17 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 	love.graphics.setFont( assets.FONTS.TITLE )
 	love.graphics.print( location:GetTitle(), x, y )
 
-	if puppet:IsEnemy( location ) then
-		love.graphics.setFont( assets.FONTS.SUBTITLE )
-		self:SetColour( constants.colours.RED )
-		love.graphics.print( "ENEMY", x, y - 16 )
+	if puppet then
+		if puppet:IsEnemy( location ) then
+			love.graphics.setFont( assets.FONTS.SUBTITLE )
+			self:SetColour( constants.colours.RED )
+			love.graphics.print( "ENEMY", x, y - 16 )
 
-	elseif puppet:IsAlly( location ) then
-		love.graphics.setFont( assets.FONTS.SUBTITLE )
-		self:SetColour( constants.colours.CYAN )
-		love.graphics.print( "ALLY", x, y - 16 )
+		elseif puppet:IsAlly( location ) then
+			love.graphics.setFont( assets.FONTS.SUBTITLE )
+			self:SetColour( constants.colours.CYAN )
+			love.graphics.print( "ALLY", x, y - 16 )
+		end
 	end
 
 	-- if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
@@ -370,7 +372,7 @@ function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )
 	ui.Unindent( 20 )
 end
 
-function GameScreen:RenderLocationTiles( location, puppet )
+function GameScreen:RenderLocationTiles( location )
 	local W, H = GetGUI():GetSize()
 
 	local wx0, wy0 = self.camera:ScreenToWorld( 0, 0 )
@@ -749,31 +751,31 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
 			puppet:Walk( EXIT.WEST )
 		end
 
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
 			puppet:Walk( EXIT.EAST )
 		end
 
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
 			puppet:Walk( EXIT.SOUTH )
 		end
 
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
 			puppet:Walk( EXIT.NORTH )
 		end
 
 	elseif key == "." then
 		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) then
+		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
 			if Input.IsShift() then
 				puppet:AttemptVerb( Verb.LeaveLocation )
 			else

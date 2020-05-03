@@ -15,6 +15,11 @@ function Forest:OnWorldGenPass( pass )
 		local adj = self.world.adjectives:PickName()
 		self.name = loc.format( "The {1} Forest", adj )
 	end
+
+	if pass == 0 then
+		self:PopulateOrcs()
+		return true
+	end
 end
 
 

@@ -9,7 +9,8 @@ function Orc:init()
 	Agent.MakeOrc( self )
 
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Aspect.Combat() )
+
+	self:SetFeral( true )
 end
 
 function Orc:GetMapChar()

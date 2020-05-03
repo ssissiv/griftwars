@@ -512,12 +512,21 @@ function Agent:AttemptVerb( verb_class, obj )
 	verbs:SortByDistanceTo( self:GetCoordinate() )
 	local verb = verbs:FindVerbClass( verb_class )
 	if verb then
-		self:DoVerbAsync( verb )
+		local ok, reason = verb:CanDo( self, obj )
+		if ok then
+			self:DoVerbAsync( verb )
+			return true
+		else
+			if reason then
+				Msg:Echo( self, reason )
+			end
+			return false
+		end
 	end
 end
 
 function Agent:DoVerbAsync( verb, ... )
-	local ok, reason =verb:CanDo( self, ... )
+	local ok, reason = verb:CanDo( self, ... )
 	if not ok then
 		print( "No can do!", self, verb, reason, ... )
 		return
