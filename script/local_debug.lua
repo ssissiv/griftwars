@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( is_class( Agent ))",
-			"print( is_class( Agent() ))",
-			"print(tostr(Agent()))",
 			"DBG(world)",
 			"print(world.worldgen)",
 			"print( Agent()._class )",
@@ -33,7 +30,10 @@ return {
 			"s = \"distric t two west\"; print(tostr(s:split( \" \" )))",
 			"s = \"distric t two  west\"; print(tostr(s:split( \" \" )))",
 			"s = \"distric td two  west\"; print(tostr(s:split( \" \" )))",
-			"print(location.world)"
+			"print(location.world)",
+			"print(screen.hovered_tile)",
+			"print(screen)",
+			"print(screen.hovered_tile)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

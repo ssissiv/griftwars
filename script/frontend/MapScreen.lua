@@ -15,11 +15,11 @@ function MapScreen:init( world )
 end
 
 function MapScreen:ResetCamera()
-	local x, y, z
+	local x, y
 	do
 		local puppet = self.world:GetPuppet()
 		if puppet then
-			x, y, z = puppet:GetLocation():GetCoordinate()
+			x, y, self.layer = puppet:GetLocation():GetCoordinate()
 		end
 	end
 	if x then
@@ -160,7 +160,7 @@ end
 
 function MapScreen:ScreenToTile( mx, my )
 	local cx, cy = self:ScreenToCell( mx, my )
-	return self.world:GetLocationAt( cx, cy ), cx, cy
+	return self.world:GetLocationAt( cx, cy, self.layer ), cx, cy, self.layer
 end
 
 function MapScreen:Pan( px, py )
