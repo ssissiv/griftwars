@@ -71,7 +71,7 @@ function Verb:GetTarget()
 end
 
 function Verb:EqualVerb( verb )
-	return self.actor == verb.actor and self.obj == verb.obj
+	return verb._class == self._class and self.actor == verb.actor and self.obj == verb.obj
 end
 
 function Verb:GetOwner()
@@ -88,6 +88,9 @@ function Verb:OnLoseAspect( owner )
 end
 
 function Verb:GetWorld()
+	if self.actor then
+		return self.actor.world
+	end
 	local owner = self:GetOwner()
 	if owner then
 		return owner.world
@@ -308,7 +311,7 @@ function Verb:Resume( coro )
 	self.yield_ev = nil
 	self.yield_duration = nil
 
-	local ok, reason = self:CanInteract( self.actor )
+	local ok, reason = self:CanInteract( self.actor, self.obj )
 	if not ok then
 		self.cant_reason = reason
 		self:Cancel()
@@ -357,6 +360,10 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 			ui.SameLine( 0, 10 )
 			Calendar.RenderDatetime( ui, self.cancelled_time, self:GetWorld() )
 		end
+		if ui.IsItemHovered() then
+			ui.SetTooltip( tostring(self.cancelled_trace) )
+		end
+
 	
 	elseif self:IsDoing() then
 		if ui.Button( "Cancel" ) then

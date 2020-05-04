@@ -46,12 +46,12 @@ function Scavenge:CalculateUtility( actor )
 	end
 end
 
-function Scavenge:CollectVerbs( verbs, actor, obj )
-	if self and self:IsDoing() and obj == self.actor and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
-		assert( is_instance( actor, Agent ), tostring(actor) )
-		verbs:AddVerb( Verb.Help( actor, self ))
-	end
-end
+-- function Scavenge:CollectVerbs( verbs, actor, obj )
+-- 	if  and obj == self.actor and actor:IsFriends( self.actor ) and actor:GetLocation() == self.actor:GetLocation() then
+-- 		assert( is_instance( actor, Agent ), tostring(actor) )
+-- 		verbs:AddVerb( Verb.Help( actor, self ))
+-- 	end
+-- end
 
 function Scavenge:Interact( actor )
 	while not self.cancelled do

@@ -1,9 +1,5 @@
 local Skill = class( "Skill", Aspect )
 
--- function Skill:init()
--- 	self:RegisterHandler( AGENT_EVENT.COLLECT_VERBS, self.OnCollectVerbs )
--- end
-
 function Skill:TrainingReqs()
 	return pairs( self.training_reqs or table.empty )
 end
@@ -44,23 +40,6 @@ end
 ---------------------------------------------------------------
 
 local Fighter = class( "Skill.Fighter", Skill )
-
----------------------------------------------------------------
-
--- local Scrounge = class( "Skill.Scrounge", Skill )
-
--- function Scrounge:init()
--- 	self:AddTrainingReq( Req.Face( DIE_FACE.STEALTH, 1 ))
--- 	self:AddTrainingReq( Req.Face( DIE_FACE.POWER, 1 ))
--- end
-
--- function Scrounge:CollectVerbs( verbs, actor, obj )
--- 	-- if working...
--- 	if actor == self.owner and obj == nil then
--- 		verbs:AddVerb( Verb.Scrounge( actor ) )
--- 	end
--- end
-
 
 ---------------------------------------------------------------
 

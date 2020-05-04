@@ -266,37 +266,6 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 
     	i = i + 1
     end
-
- --    local tokens = puppet:GetAspect( Aspect.TokenHolder )
- --    if tokens then
- --    	local count, max_count = tokens:GetTokenCount()
- --    	for i = 1, max_count do
- --    		if i > 1 then
-	-- 	    	ui.SameLine( 0, 15 )
-	-- 	    end
-	--     	local token = tokens:GetTokenAt( i )
-	--     	if token then
-	--     		ui.Text( "[" )
-	--    			ui.SameLine( 0, 5 )
-	--    			if token:IsCommitted() then
-	-- 		    	ui.TextColored( 0.4, 0.4, 0.4, 1.0, tostring(token) )
-	-- 		    	if ui.IsItemHovered() then
-	-- 		    		if type(token.committed) == "table" then
-	-- 			    		ui.SetTooltip( loc.format( "{1} ({2})", tostring(token.committed), Agent.GetAgentOwner( token.committed )))
-	-- 			    	else
-	-- 			    		ui.SetTooltip( tostring(token.committed) )
-	-- 			    	end
-	-- 		    	end
-	--    			else
-	-- 		    	ui.TextColored( 0.7, 0.7, 0.2, 1.0, tostring(token) )
-	-- 		    end
-	--    			ui.SameLine( 0, 5 )
-	--     		ui.Text( "]" )
-	-- 	    else
-	-- 	    	ui.Text( "[ ]" )
-	-- 	    end
-	--     end
-	-- end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )

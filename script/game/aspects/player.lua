@@ -7,7 +7,7 @@ function Player:init()
 end
 
 function Player:CollectVerbs( verbs, actor, obj )
-	if obj == actor then
+	if self.owner == actor and obj == actor then
 		verbs:AddVerb( Verb.Wait())
 	end
 end

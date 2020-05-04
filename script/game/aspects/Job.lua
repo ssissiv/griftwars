@@ -148,8 +148,8 @@ function Job:AddTrainingReq( req )
 	table.insert( self.training_reqs, req )
 end
 
-function Job:CollectVerbs( verbs, actor )
-	if self and actor == self.owner then
+function Job:CollectVerbs( verbs, actor, obj )
+	if actor == self.owner and actor == obj then
 		verbs:AddVerb( self )
 	end
 end

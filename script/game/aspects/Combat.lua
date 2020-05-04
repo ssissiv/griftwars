@@ -13,6 +13,12 @@ function Combat:OnSpawn( world )
 	-- self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
 end
 
+function Combat:CollectVerbs( verbs, actor, target )
+	if self.owner == actor and self:IsTarget( target ) then
+		verbs:AddVerb( Attack.Punch( nil, target ) )
+	end
+end
+
 function Combat:OnLocationChanged( prev_location, location )
 	if prev_location then
 		prev_location:RemoveListener( self )

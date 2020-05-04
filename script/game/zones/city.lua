@@ -47,7 +47,6 @@ function City:SpawnShopAssistants()
 		if keeper then
 			local assistant = keeper:GetAspect( Job.ManageShop ):TrySpawnAssistant()
 			if assistant then
-				print( "ASSIST", assistant, room )
 				assistant:WarpToLocation( self:RandomRoom() )
 			end
 		end

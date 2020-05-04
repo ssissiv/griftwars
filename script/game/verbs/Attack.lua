@@ -10,43 +10,53 @@ function Attack:GetShortDesc( viewer )
 	end
 end
 
-function Attack:CollectVerbs( verbs, actor, obj )
-	if not self or actor ~= self.owner then
-		return false
-	end
-	if obj then
-		return false
-	end
-	local combat = actor:GetAspect( Aspect.Combat )
-	if not combat or not combat:HasTargets() then
-		return false
-	end
-
-	verbs:AddVerb( self )
-end
-
 function Attack:CalculateUtility( actor )
 	return UTILITY.COMBAT
 end
 
 function Attack:CanInteract( actor )
-	return actor:IsSpawned() and actor:GetAspect( Aspect.Combat ):HasTargets()
+	if not actor:IsSpawned() then
+		return false
+	elseif not actor:GetAspect( Aspect.Combat ):HasTargets() then
+		return false, "No targets"
+	end
+
+	return true
 end
 
-function Attack:Interact( actor )
-	self:YieldForTime( ONE_MINUTE )
+function Attack:InAttackRange( actor, target )
+	local x1, y1 = actor:GetCoordinate()
+	local x2, y2 = target:GetCoordinate()
+	if distance( x1, y1, x2, y2 ) <= 2 then
+		return true
+	else
+		return false
+	end
+end
+
+function Attack:Interact( actor, target )
+	target = target or self.obj
+	-- self:YieldForTime( ONE_MINUTE )
 
 	if self:IsCancelled() then
 		return
 	end
 
 	local combat = actor:GetAspect( Aspect.Combat )
-	assert( actor:IsSpawned(), actor )
-	assert( actor.location, actor )
-	local target = combat:PickTarget()
-	Msg:ActToRoom( "{1.Id} attacks {2.Id}!", actor, target )
-	Msg:Echo( actor, loc.format( "You attack {1.Id}!", target:LocTable( self.owner ) ))
-	Msg:Echo( target, loc.format( "{1.Id} attacks you!", actor:LocTable( target ) ))
 
-	target:DeltaHealth( -1 )
+	local attacks = {}
+	for i, target in combat:Targets() do
+		local verbs = actor:GetPotentialVerbs( nil, target )
+		for i, verb in verbs:Verbs() do
+			print( actor, target, verb, verb:CanDo( actor, target ))
+			if is_instance( verb, Attack.Punch ) and verb:CanDo( actor, target ) then
+				table.insert( attacks, verb )
+			end
+		end
+	end
+
+	local attack = self:GetWorld():ArrayPick( attacks )
+	if attack then
+		attack:DoVerb( actor, attack:GetTarget() )
+	end
 end

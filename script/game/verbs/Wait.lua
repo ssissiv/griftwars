@@ -6,7 +6,7 @@ function Wait:GetDesc()
 end
 
 function Wait:CanInteract( actor )
-	if actor:InCombat() then
+	if false and actor:InCombat() then
 		return false, "You're in the middle of combat!"
 	end
 	return true

@@ -60,6 +60,9 @@ function Agent:OnDespawn()
 		for i = #self.verbs, 1, -1 do
 			local verb = self.verbs[i]
 			verb:Cancel()
+			if self.verbs == nil then
+				break
+			end
 		end
 	end
 
@@ -633,7 +636,8 @@ function Agent:Kill()
 		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
 	end
 
-	print( self, self:GetAspect(  Aspect.Faction ), "died!" )
+	print( self, "died!" )
+	self.killed_trace = debug.traceback()
 
 	Msg:ActToRoom( "{1.Id} dies!", self )
 	Msg:Echo( self, "You die!" )

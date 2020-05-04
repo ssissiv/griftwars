@@ -10,7 +10,7 @@ function Interact:init( aspect )
 end
 
 function Interact:EqualVerb( verb )
-	return self.actor == verb.actor and self.interaction == verb.interaction
+	return is_instance( verb, Interact ) and self.actor == verb.actor and self.interaction == verb.interaction
 end
 
 function Interact:GetTarget()

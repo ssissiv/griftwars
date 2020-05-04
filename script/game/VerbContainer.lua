@@ -21,16 +21,33 @@ function VerbContainer:CollectVerbs( actor, obj )
 	end
 
 	local location = actor:GetLocation()
-	if location then
-		self:CollectVerbsFromEntity( location, actor, obj )
+	if obj == nil then
+		-- This means accumulate verbs for all potential targets.
+		if location then
+			for i, v in location:Contents() do
+				self:CollectVerbsFromEntity( actor, actor, v )
 
-		for i, v in location:Contents() do
-			self:CollectVerbsFromEntity( v, actor, obj )
+				if v ~= actor then
+					self:CollectVerbsFromEntity( v, actor, v )
+				end
+			end
+		else
+			self:CollectVerbsFromEntity( actor, actor, actor )
+		end
+
+	else
+		-- The actor itself or its Aspects can add verbs.
+		self:CollectVerbsFromEntity( actor, actor, obj )
+
+		-- The target itself or its Aspects can add verbs.
+		if obj then
+			self:CollectVerbsFromEntity( obj, actor, obj )
 		end
 	end
 
-	if obj then
-		self:CollectVerbsFromEntity( obj, actor, obj )
+	-- The location in which the actor resides or its Aspects can add verbs.
+	if location then
+		self:CollectVerbsFromEntity( location, actor, obj )
 	end
 
 	-- Event registrants...
