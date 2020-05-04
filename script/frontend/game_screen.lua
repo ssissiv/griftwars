@@ -99,9 +99,13 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 		end
 
 	elseif event_name == AGENT_EVENT.TILE_CHANGED then
-		local verb_window = self:FindWindow( VerbMenu )
-		if verb_window then
-			verb_window:RefreshContents( self.puppet, self.current_focus )
+		if not self.lock_focus then
+			self:SetCurrentFocus( nil )
+		else
+			local verb_window = self:FindWindow( VerbMenu )
+			if verb_window then
+				verb_window:RefreshContents( self.puppet, self.current_focus )
+			end
 		end
 		self:PanToCurrentInterest()
 	end
