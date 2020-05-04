@@ -11,6 +11,8 @@ function MapScreen:init( world )
 	self.camera:SetViewPort( GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
 
+	self.locations = {}
+
 	self:ResetCamera()
 end
 
@@ -52,11 +54,11 @@ end
 function MapScreen:RenderHeader( gui )
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
---	ui.SetNextWindowSize( love.graphics.getWidth(), 40 )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
     local puppet = self.world:GetPuppet()
+    local location = puppet and puppet:GetLocation()
 
     -- Render details about the player.
     local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
@@ -76,6 +78,39 @@ function MapScreen:RenderHeader( gui )
 
     local mx, my = love.mouse.getPosition()
     ui.Text( loc.format( "{1}, {2}", self:ScreenToCell( mx, my ) ))
+
+    ui.Text( "Levels:" )
+    ui.Indent( 20 )
+    table.clear( self.locations )
+    if location then
+    	table.insert( self.locations, location )
+    	if self.current_location == nil then
+    		self.current_location = location
+    	end
+
+    	local x, y, z = location:GetCoordinate()
+    	if self.current_location == location then
+    		ui.Text( ">>" )
+    		ui.SameLine( 0, 5 )
+    	end
+	    ui.Text( loc.format( "{1} (Layer: {2})", location:GetTitle(), z ))
+
+	    for i, portal in location:Portals() do
+	    	local dest = portal:GetDest()
+	    	if dest then
+	    		local x1, y1, z1 = dest:GetCoordinate()
+	    		if z ~= z1 then
+			    	if self.current_location == dest then
+			    		ui.Text( ">>" )
+			    		ui.SameLine( 0, 5 )
+			    	end
+		    		ui.Text( loc.format( "{1} (Layer: {2})", dest, z ))
+			    	table.insert( self.locations, dest )
+		    	end
+	    	end
+	    end
+	end
+    ui.Unindent( 20 )
 
     if self.hovered_tile then
     	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile))
@@ -97,7 +132,9 @@ function MapScreen:RenderScreen( gui )
 	wx1, wy1 = math.ceil( wx1 ), math.ceil( wy1 )
 	local x1, y1 = self.camera:WorldToScreen( wx1, wy1 )
 
-	self:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
+	if self.current_location then
+		self:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
+	end
 
 	if self.hovered_tile then
 		self:RenderHoveredLocation( gui )
@@ -125,12 +162,7 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 	local xtiles = wx1 - wx0
 	local ytiles = wy1 - wy0
 
-	local puppet = self.world:GetPuppet()
-	local x0, y0, z0
-	if puppet then
-		x0, y0, z0 = puppet:GetLocation():GetCoordinate()
-	end
-	z0 = z0 or 0
+	local x0, y0, z0 = self.current_location:GetCoordinate()
 
 	-- Render all map tiles.
 	for dx = 1, xtiles do
@@ -144,6 +176,12 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 			end
 		end
 	end
+
+	-- Render anchor location
+	local x1, y1 = self.camera:WorldToScreen( x0, y0 )
+	local x2, y2 = self.camera:WorldToScreen( x0 + 1, y0 + 1 )
+	self:SetColour( constants.colours.YELLOW )
+	self:Box( x1, y1, x2 - x1, y2 - y1 )
 
 	if self.hoverx and self.hovery then
 		local x1, y1 = self.camera:WorldToScreen( self.hoverx, self.hovery )
@@ -227,6 +265,11 @@ function MapScreen:KeyPressed( key )
 		self:Pan( 0, -pan_delta )
 	elseif key == "down" or key == "s" then
 		self:Pan( 0, pan_delta )
+	elseif key == "tab" then
+		local idx = table.arrayfind( self.locations, self.current_location)
+		idx = (idx % #self.locations) + 1
+		self.current_location = self.locations[ idx ]
+
 	elseif key == "=" then
 		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
 		local mx, my = love.mouse.getPosition()

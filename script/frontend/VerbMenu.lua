@@ -34,13 +34,14 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                 target = verb:GetTarget()
                 
                 local ent = AccessEntity( target )
-
-                ui.Text( ent:GetShortDesc( self.actor ))
-                ui.SameLine( 0, 10 )
-                if ui.SmallButton( "?" ) then
-                    self.world.nexus:Inspect( self.actor, ent )
+                if ent then
+                    ui.Text( ent:GetShortDesc( self.actor ))
+                    ui.SameLine( 0, 10 )
+                    if ui.SmallButton( "?" ) then
+                        self.world.nexus:Inspect( self.actor, ent )
+                    end
+                    ui.Separator()
                 end
-                ui.Separator()
             end
 
             local ok, details = verb:CanDo( self.actor, verb:GetTarget() )
