@@ -40,7 +40,7 @@ function VerbContainer:CollectVerbs( actor, obj )
 		self:CollectVerbsFromEntity( actor, actor, obj )
 
 		-- The target itself or its Aspects can add verbs.
-		if obj then
+		if obj and obj ~= actor then
 			self:CollectVerbsFromEntity( obj, actor, obj )
 		end
 	end

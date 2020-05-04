@@ -90,20 +90,15 @@ end
 
 function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	if event_name == AGENT_EVENT.LOCATION_CHANGED then
+		self:SetCurrentFocus( nil )
 		self:PanToCurrentInterest()
 
 	elseif event_name == AGENT_EVENT.TILE_CHANGED then
-		self:RefreshVerbs()	 -- Hack: critical game state changed!
-		self:PanToCurrentInterest()
-
-	elseif event_name == AGENT_EVENT.COLLECT_VERBS then
-		-- Verbs refreshed: if our current selected one is no lngoer valid, clear it.
-		if self.current_verb then
-			local verbs = ...
-			if verbs:FindVerb( self.current_verb ) == nil then
-				self:SetCurrentVerb( nil )
-			end
+		local verb_window = self:FindWindow( VerbMenu )
+		if verb_window then
+			verb_window:RefreshContents( self.puppet, self.current_focus )
 		end
+		self:PanToCurrentInterest()
 	end
 end
 
@@ -373,38 +368,14 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 	end
 
 	if self.puppet then
-		local verbs = self.puppet:GetPotentialVerbs( "room" )
-		if self.active_tiles == nil then
-			self.active_tiles = {}
-		else
-			table.clear( self.active_tiles )
-		end
-		local active_tile
-		for i, verb in verbs:Verbs() do
-			local tx, ty
-			if verb:GetTarget() then
-				tx, ty = AccessCoordinate( verb:GetTarget() )
-			end
-			if tx and ty then
-				local tile = location:GetTileAt( tx, ty )
-				table.insert_unique( self.active_tiles, tile )
-				if verb == self.current_verb then
-					active_tile = tile
-				end
-			end
-		end
-
-		for i, tile in ipairs( self.active_tiles ) do
-			local tx, ty = tile:GetCoordinate()
+		if self.current_focus then
+			local tx, ty = AccessCoordinate( self.current_focus )
 			local x1, y1 = self.camera:WorldToScreen( tx, ty )
 			local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
 			local w, h = x2 - x1, y2 - y1
 
-			if tile == active_tile then
-				love.graphics.setColor( 255, 255, 0, 255 )
-			else
-				love.graphics.setColor( 255, 255, 255, 255 )
-			end
+			love.graphics.setColor( 255, 255, 0, 255 )
+
 			self:Box(x1, y1, w, h )
 			self:Box(x1 + 1, y1 + 1, w - 2, h - 2 )
 		end
@@ -543,8 +514,8 @@ function GameScreen:PanTo( x, y )
 end
 
 function GameScreen:PanToCurrentInterest()
-	if self.current_verb then
-		local tx, ty = AccessCoordinate( self.current_verb:GetTarget() or self.puppet )
+	if false and self.current_focus then
+		local tx, ty = AccessCoordinate( self.current_focus )
 		if tx and ty then
 			self:PanTo( tx, ty )
 		end
@@ -567,49 +538,37 @@ function GameScreen:WarpCameraTo( x, y )
 	self.camera:WarpTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
-function GameScreen:CycleVerbs()
+function GameScreen:CycleFocus()
 	if not self.puppet then
 		return
 	end
 
-	local verbs = self.puppet:GetPotentialVerbs( "room" )
-	verbs:SortByDistanceTo( self.puppet:GetCoordinate() )
+	local location = self.puppet:GetLocation()
+	local contents = location:GetContentsByDistance( self.puppet:GetCoordinate() )
+	table.arrayremove( contents, self.puppet )
 
-	local idx = verbs:FindVerb( self.current_verb ) or 0
-	local x0, y0
-	if self.current_verb then
-		x0, y0 = AccessCoordinate( self.current_verb:GetTarget() or self.puppet )
-	end
-	for j = 1, verbs:CountVerbs() do
-		local k = (idx + j - 1) % verbs:CountVerbs() + 1
-		local next_verb = verbs:VerbAt( k )
-		if next_verb:GetTarget() then
-			local x1, y1 = AccessCoordinate( next_verb:GetTarget() or self.puppet )
-			if x1 ~= x0 or y1 ~= y0 then
-				idx = k
-				break
-			end
+	local idx = 0
+	for i, obj in ipairs( contents ) do
+		if obj:GetTile() == self.current_focus then
+			idx = i
+			break
 		end
 	end
 
-	self:SetCurrentVerb( verbs:VerbAt( idx ) )
+	idx = (idx % #contents) + 1
+	self:SetCurrentFocus( contents[ idx ]:GetTile() )
 end
 
-function GameScreen:RefreshVerbs()
-	self.puppet:RegenVerbs()
-	self:SetCurrentVerb( self.current_verb )
-end
-
-function GameScreen:SetCurrentVerb( verb )
-	self.current_verb = verb
+function GameScreen:SetCurrentFocus( focus )
+	self.current_focus = focus
 
 	local verb_window = self:FindWindow( VerbMenu )
-	if verb_window == nil and verb ~= nil then
+	if verb_window == nil and focus ~= nil then
 		-- Show window.
 		verb_window = VerbMenu( self.world )
 		self:AddWindow( verb_window )
 
-	elseif verb_window and verb == nil then
+	elseif verb_window and focus == nil then
 		-- No verb: clear window.
 		self:RemoveWindow( verb_window )
 		verb_window = nil
@@ -617,12 +576,11 @@ function GameScreen:SetCurrentVerb( verb )
 
 	if verb_window then
 		-- Refresh verb window.
-		local verbs = self.puppet:GetPotentialVerbs( "room" )
-		verb_window:RefreshContents( self.puppet, verb, verbs )
+		verb_window:RefreshContents( self.puppet, focus )
 	end
 
 	self:PanToCurrentInterest()
-	-- print( "CURRENT VERB:", self.current_verb)
+	-- print( "CURRENT FOCUS:", self.current_focus )
 end
 
 function GameScreen:GetVerbAt( mx, my )
@@ -663,8 +621,7 @@ function GameScreen:MousePressed( mx, my, btn )
 			DBG(self.hovered_tile)
 			return true
 		else
-			local verb = self:GetVerbAt( mx, my )
-			self:SetCurrentVerb( verb )
+			self:SetCurrentFocus( self.hovered_tile )
 			return true
 		end
 	end
@@ -753,7 +710,11 @@ function GameScreen:KeyPressed( key )
 		end
 
 	elseif key == "tab" then
-		self:CycleVerbs()
+		self:CycleFocus()
+
+	elseif key == "escape" or key == "backspace" then
+		self:SetCurrentFocus( nil )
+	end
 
 	-- elseif key == "=" then
 	-- 	self.zoom_level = math.min( (self.zoom_level + 1), 3 )
@@ -764,7 +725,6 @@ function GameScreen:KeyPressed( key )
 	-- 	self.zoom_level = math.max( (self.zoom_level - 1), -3 )
 	-- 	local mx, my = love.mouse.getPosition()
 	-- 	self.camera:ZoomToLevel( self.zoom_level, mx, my )
-	end
 
 	return false
 end

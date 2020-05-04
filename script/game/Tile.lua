@@ -49,6 +49,10 @@ function Tile:HasEntity( obj )
 	return self.contents and table.contains( self.contents, obj )
 end
 
+function Tile:GetContents()
+	return self.contents or table.empty
+end
+
 function Tile:Contents()
 	return ipairs( self.contents or table.empty )
 end

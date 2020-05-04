@@ -36,7 +36,7 @@ function ManageShop:OnSpawn( world )
 	self.owner:GainAspect( Interaction.BuyFromShop() )
 
 	-- Sometimes we have assistants.
-	if math.random() < 0.5 then
+	if world:Random() < 0.5 then
 		self.assistant_job = Job.Assistant( self.owner, self )
 		self.owner:GainAspect( Interaction.OfferJob( self.assistant_job ))
 	end

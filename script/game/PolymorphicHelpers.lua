@@ -16,3 +16,10 @@ function AccessCoordinate( obj )
 	end
 end
 
+function AccessEntity( obj )
+    if is_instance( obj, Entity ) then
+        return obj
+    elseif is_instance( obj, Aspect ) then
+        return obj.owner
+    end
+end

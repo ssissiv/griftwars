@@ -4,12 +4,19 @@ function VerbMenu:init( world )
     self.world = world
 end
 
-function VerbMenu:RefreshContents( actor, current_verb, verbs )
+function VerbMenu:RefreshContents( actor, focus )
     self.actor = actor
-    self.current_verb = current_verb
-	self.verbs = verbs
+    self.focus = focus
     self.shown_verbs = {}
-    self.verb_targets = {}
+
+
+    for i, obj in self.focus:Contents() do
+        self.actor:RegenVerbs()
+        local verbs = self.actor:GetPotentialVerbs( nil, obj )            
+        for j, verb in verbs:Verbs() do
+            table.insert( self.shown_verbs, verb )
+        end
+    end
 end
 
 function VerbMenu:RenderImGuiWindow( ui, screen )
@@ -18,77 +25,54 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
 	ui.SetNextWindowPos( (love.graphics.getWidth() - 400) / 2, love.graphics.getHeight() - 150 )
 
     local shown, close, c = ui.Begin( "Actions", false, flags )
-    if shown and self.verbs then
-        local tx0, ty0
-        if self.current_verb then
-            tx0, ty0 = AccessCoordinate( self.current_verb:GetTarget() )
-        end
+    if shown and self.focus then
+        local tx0, ty0 = AccessCoordinate( self.focus )
+        local target
 
-        table.clear( self.shown_verbs )
-        table.clear( self.verb_targets )
+        for i, verb in ipairs( self.shown_verbs ) do
+            if target ~= verb:GetTarget() then
+                target = verb:GetTarget()
+                
+                local ent = AccessEntity( target )
 
-    	for i, verb in self.verbs:Verbs() do
-            if verb:GetTarget() then
-                local tx, ty = AccessCoordinate( verb:GetTarget() )
-                if tx == tx0 and ty == ty0 then
-                    -- Track shown verbs for hotkey access.
-                    table.insert( self.shown_verbs, verb )
-
-                    -- Track targets for grouping.
-                    table.insert_unique( self.verb_targets, verb:GetTarget() )
+                ui.Text( ent:GetShortDesc( self.actor ))
+                ui.SameLine( 0, 10 )
+                if ui.SmallButton( "?" ) then
+                    self.world.nexus:Inspect( self.actor, ent )
                 end
+                ui.Separator()
             end
-        end
 
-        for i, target in ipairs( self.verb_targets ) do
-            local ent
-            if is_instance( target, Aspect ) then
-                ent = target.owner
+            local ok, details = verb:CanDo( self.actor, verb:GetTarget() )
+            local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc( self.actor ) )
+
+            if not ok then
+                ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+                details = details or "Can't do."
+
             else
-                ent = target
-            end
-
-            ui.Text( ent:GetShortDesc( self.actor ))
-            ui.SameLine( 0, 10 )
-            if ui.SmallButton( "?" ) then
-                self.world.nexus:Inspect( self.actor, ent )
-            end
-            ui.Separator()
-
-            for j, verb in ipairs( self.shown_verbs ) do
-                if verb:GetTarget() == target then
-                    local ok, details = verb:CanDo( self.actor, verb:GetTarget() )
-                    local txt = loc.format( "{1}] {2}", j, verb:GetRoomDesc( self.actor ) )
-
-                    if not ok then
-                        ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-                        details = details or "Can't do."
-
-                    else
-                        if verb.COLOUR then
-                            ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
-                        else
-                            ui.PushStyleColor( "Text", 1, 1, 0, 1 )
-                        end
-
-                		ui.Text( txt )
-
-                        ui.PopStyleColor()
-                    end
-
-                    if details or verb.RenderTooltip then
-                        ui.Indent( 20 )
-                        if verb.RenderTooltip then
-                            verb:RenderTooltip( ui, verb.actor )
-                        end
-                        if details then
-                            ui.TextColored( 1, 0, 0, 1, details )
-                        end
-                        ui.Unindent( 20 )
-                    end
+                if verb.COLOUR then
+                    ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
+                else
+                    ui.PushStyleColor( "Text", 1, 1, 0, 1 )
                 end
+
+        		ui.Text( txt )
+
+                ui.PopStyleColor()
             end
-    	end
+
+            if details or verb.RenderTooltip then
+                ui.Indent( 20 )
+                if verb.RenderTooltip then
+                    verb:RenderTooltip( ui, verb.actor )
+                end
+                if details then
+                    ui.TextColored( 1, 0, 0, 1, details )
+                end
+                ui.Unindent( 20 )
+            end
+        end
     end
 
     ui.End()
