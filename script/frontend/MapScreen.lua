@@ -1,6 +1,6 @@
 local MapScreen = class( "MapScreen", RenderScreen )
 
-function MapScreen:init( world )
+function MapScreen:init( world, location )
 	RenderScreen.init( self )
 	self.world = world
 
@@ -12,21 +12,22 @@ function MapScreen:init( world )
 	self.camera:ZoomToLevel( self.zoom_level )
 
 	self.locations = {}
+	self.location = location
+	self.current_location = location
 
 	self:ResetCamera()
 end
 
+function MapScreen:SetLocation( location )
+	print( self.location , location )
+	self.location = location
+	self.current_location = location
+	self:ResetCamera()
+end
+
 function MapScreen:ResetCamera()
-	local x, y
-	do
-		local puppet = self.world:GetPuppet()
-		if puppet then
-			x, y, self.layer = puppet:GetLocation():GetCoordinate()
-		end
-	end
-	if x then
-		self:WarpTo( x, y )
-	end
+	local x, y, z = self.current_location:GetCoordinate()
+	self:WarpTo( x, y )
 end
 
 function MapScreen:ElapsedTime()
@@ -57,8 +58,6 @@ function MapScreen:RenderHeader( gui )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
-    local puppet = self.world:GetPuppet()
-    local location = puppet and puppet:GetLocation()
 
     -- Render details about the player.
     local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
@@ -82,20 +81,17 @@ function MapScreen:RenderHeader( gui )
     ui.Text( "Levels:" )
     ui.Indent( 20 )
     table.clear( self.locations )
-    if location then
-    	table.insert( self.locations, location )
-    	if self.current_location == nil then
-    		self.current_location = location
-    	end
+    do
+    	table.insert( self.locations, self.location )
 
-    	local x, y, z = location:GetCoordinate()
-    	if self.current_location == location then
+    	local x, y, z = self.location:GetCoordinate()
+    	if self.current_location == self.location then
     		ui.Text( ">>" )
     		ui.SameLine( 0, 5 )
     	end
-	    ui.Text( loc.format( "{1} (Layer: {2})", location:GetTitle(), z ))
+	    ui.Text( loc.format( "{1} (Layer: {2})", self.location:GetTitle(), z ))
 
-	    for i, portal in location:Portals() do
+	    for i, portal in self.location:Portals() do
 	    	local dest = portal:GetDest()
 	    	if dest then
 	    		local x1, y1, z1 = dest:GetCoordinate()
@@ -198,7 +194,8 @@ end
 
 function MapScreen:ScreenToTile( mx, my )
 	local cx, cy = self:ScreenToCell( mx, my )
-	return self.world:GetLocationAt( cx, cy, self.layer ), cx, cy, self.layer
+	local x, y, z = self.current_location:GetCoordinate()
+	return self.world:GetLocationAt( cx, cy, z ), cx, cy, z
 end
 
 function MapScreen:Pan( px, py )

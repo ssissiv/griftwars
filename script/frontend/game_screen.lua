@@ -90,8 +90,13 @@ end
 
 function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	if event_name == AGENT_EVENT.LOCATION_CHANGED then
+		local location, prev_location = ...
 		self:SetCurrentFocus( nil )
 		self:PanToCurrentInterest()
+		local screen = GetGUI():FindScreen( MapScreen )
+		if screen then
+			screen:SetLocation( location )
+		end
 
 	elseif event_name == AGENT_EVENT.TILE_CHANGED then
 		local verb_window = self:FindWindow( VerbMenu )
@@ -672,7 +677,7 @@ function GameScreen:KeyPressed( key )
 		end
 
 	elseif key == "m" then
-		local screen = MapScreen( self.world )
+		local screen = MapScreen( self.world, self.last_location )
 		GetGUI():AddScreen( screen )
 
 	elseif key == "left" or key == "a" then
