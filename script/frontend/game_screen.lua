@@ -440,6 +440,18 @@ function GameScreen:GetDebugEnv( env )
 	env.player = self.world:GetPlayer()
 end
 
+function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
+	local tile = self:ScreenToTile( mx, my )
+	if tile then
+		ui.TextColored( 0, 255, 255, 255, tostring(tile))
+
+		if ui.MenuItem( "Teleport here", nil, nil, tile:IsPassable( self.puppet )) then
+			self.puppet:WarpToTile( tile )
+		end
+	end
+end
+
+
 function GameScreen:RenderSenses( ui, agent )
 	local now = self.world:GetDateTime()
 	local senses = agent:GetSenses()
@@ -501,9 +513,8 @@ end
 
 function GameScreen:ScreenToTile( mx, my )
 	local cx, cy = self:ScreenToCell( mx, my )
-	local puppet = self.world:GetPuppet()
-	if puppet and puppet:GetLocation() then
-		return puppet:GetLocation():GetTileAt( cx, cy ), cx, cy
+	if self.puppet and self.puppet:GetLocation() then
+		return self.puppet:GetLocation():GetTileAt( cx, cy ), cx, cy
 	end
 end
 
@@ -571,21 +582,20 @@ end
 function GameScreen:SetCurrentFocus( focus )
 	self.current_focus = focus
 
-	local verb_window = self:FindWindow( VerbMenu )
-	if verb_window == nil and focus ~= nil then
-		-- Show window.
-		verb_window = VerbMenu( self.world )
-		self:AddWindow( verb_window )
+	if self.verb_window == nil then
+		self.verb_window = VerbMenu( self.world )
+	end
+	self.verb_window:RefreshContents( self.puppet, focus )
 
-	elseif verb_window and focus == nil then
+	-- Determine whether it needs to be shown.
+	local verb_window = self:FindWindow( VerbMenu )
+	if verb_window == nil and not self.verb_window:IsEmpty() then
+		-- Show window.
+		self:AddWindow( self.verb_window )
+
+	elseif verb_window and self.verb_window:IsEmpty() then
 		-- No verb: clear window.
 		self:RemoveWindow( verb_window )
-		verb_window = nil
-	end
-
-	if verb_window then
-		-- Refresh verb window.
-		verb_window:RefreshContents( self.puppet, focus )
 	end
 
 	self:PanToCurrentInterest()
@@ -657,8 +667,7 @@ function GameScreen:KeyPressed( key )
 			self:RemoveWindow( self.inventory_window )
 			self.inventory_window = nil
 		else
-			local puppet = self.world:GetPuppet()
-			self.inventory_window = InventoryWindow( self.world, puppet, puppet )
+			self.inventory_window = InventoryWindow( self.world, self.puppet, self.puppet )
 			self:AddWindow( self.inventory_window )
 		end
 		return true
@@ -668,8 +677,7 @@ function GameScreen:KeyPressed( key )
 		if window then
 			self:RemoveWindow( window )
 		else
-			local puppet = self.world:GetPuppet()
-			self:AddWindow( AgentDetailsWindow( puppet, puppet ))
+			self:AddWindow( AgentDetailsWindow( self.puppet, self.puppet ))
 		end
 
 	elseif key == "k" then
@@ -677,7 +685,7 @@ function GameScreen:KeyPressed( key )
 		if window then
 			self:RemoveWindow( window )
 		else
-			self:AddWindow( MemoryWindow( self.world:GetPuppet() ))
+			self:AddWindow( MemoryWindow( self.puppet ))
 		end
 
 	elseif key == "m" then
@@ -685,11 +693,10 @@ function GameScreen:KeyPressed( key )
 		GetGUI():AddScreen( screen )
 
 	elseif key == "left" or key == "a" then
-		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
+		if self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not self.puppet:IsBusy() and self.puppet:IsSpawned() then
 			local verb = Verb.Walk( EXIT.WEST )
-			if verb:CanDo( puppet ) then
-				puppet:DoVerbAsync( verb )
+			if verb:CanDo( self.puppet ) then
+				self.puppet:DoVerbAsync( verb )
 			end
 		end
 

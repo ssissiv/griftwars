@@ -1,10 +1,16 @@
 local Portal = class( "Object.Portal", Object )
 
-Portal.MAP_CHAR = "^"
-
 function Portal:init( worldgen_tag )
 	self.portal = self:GainAspect( Aspect.Portal() )
 	self.portal:SetWorldGenTag( worldgen_tag )
+end
+
+function Portal:GetMapChar()
+	if self.portal:GetDest() then
+		return "^"
+	else
+		return "^", constants.colours.BLACK
+	end
 end
 
 function Portal:GetName()

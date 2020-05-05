@@ -9,14 +9,19 @@ function VerbMenu:RefreshContents( actor, focus )
     self.focus = focus
     self.shown_verbs = {}
 
-
-    for i, obj in self.focus:Contents() do
-        self.actor:RegenVerbs()
-        local verbs = self.actor:GetPotentialVerbs( nil, obj )            
-        for j, verb in verbs:Verbs() do
-            table.insert( self.shown_verbs, verb )
+    if focus then
+        for i, obj in self.focus:Contents() do
+            self.actor:RegenVerbs()
+            local verbs = self.actor:GetPotentialVerbs( nil, obj )            
+            for j, verb in verbs:Verbs() do
+                table.insert( self.shown_verbs, verb )
+            end
         end
     end
+end
+
+function VerbMenu:IsEmpty()
+    return #self.shown_verbs == 0
 end
 
 function VerbMenu:RenderImGuiWindow( ui, screen )

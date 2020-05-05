@@ -6,18 +6,19 @@ local debug_menus = require "debug/debug_menus"
 
 local DebugContextMenu = class( "DebugContextMenu", DebugPanel )
 
-function DebugContextMenu:RenderPanel( ui, wx, wz )
-    if not wx or not wz then
-        return
+function DebugContextMenu:init( dbg, mx, my )
+	DebugPanel.init( self, dbg )
+	self.mx, self.my = mx, my
+end
+
+function DebugContextMenu:RenderPanel( ui )
+    if self.mx and self.my then
+        ui.Text( string.format( "%.2f, %.2f", self.mx, self.my ))
+        ui.Separator()
     end
 
-    ui.Text( string.format( "%.2f, %.2f", wx, wz ))
-    ui.Separator()
-
-    if ui.BeginMenu( "Debug Flags" ) then
-        self:AddDebugMenu( ui, debug_menus.DEBUG_TOGGLES )
-        ui.EndMenu()
+    local top = GetGUI():GetTopScreen()
+    if top and top.RenderDebugContextPanel then
+        top:RenderDebugContextPanel( ui, self, self.mx, self.my )
     end
-
-    self:AddDebugMenu( ui, debug_menus.DEBUG_CONTEXT_MENU, { wx, wz } )
 end

@@ -361,7 +361,7 @@ function DebugManager:RenderDebugPanels()
 	end
 
 	if self.imgui.BeginPopup( "DBG_CXT" ) then
-		local ok, result = xpcall(  self.debug_contextmenu.RenderPanel, generic_error, self.debug_contextmenu, self.imgui, dbg_env.wx_mark, dbg_env.wz_mark )
+		local ok, result = xpcall(  self.debug_contextmenu.RenderPanel, generic_error, self.debug_contextmenu, self.imgui )
 		if not ok then
 			error( result )
 		end
@@ -418,8 +418,6 @@ function DebugManager:ShowContextMenu( panel )
 	local dbg_env = self:GetDebugEnv()
 	dbg_env.show_context = panel
 end
-
-
 
 function DebugManager:ToggleDebugFlags( flags )
     self.debug_flags = bit.bxor( self.debug_flags, flags )
@@ -500,7 +498,8 @@ end
 
 function DebugManager:MousePressed( x, y, button )
 	if button == Input.RIGHT_MOUSE and Input.IsControl() then
-		dbg_env.show_context = DebugContextMenu()
+		local dbg_env = self:GetDebugEnv()
+		dbg_env.show_context = DebugContextMenu( self, dbg_env.mx, dbg_env.my )
 		return true
 	end
 	return false

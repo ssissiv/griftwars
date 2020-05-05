@@ -139,7 +139,7 @@ end
  
 function love.update(dt)
     imgui.NewFrame()
-    debug.sethook( function(...) print( "INFINITE LOOP?", ... ) error( "Infinite loop detected!" ) end, "", 10000000 )
+    debug.sethook( function( hook_type ) print( "INFINITE LOOP?" ) error( "Infinite loop detected!" ) end, "", 10000000 )
     gui:Update( dt )
     debug.sethook()
 end

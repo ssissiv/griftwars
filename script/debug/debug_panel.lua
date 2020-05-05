@@ -115,20 +115,20 @@ function DebugPanel:RenderPanel( dbg )
             if node.MENU_BINDINGS then
                 for i, menu in ipairs( node.MENU_BINDINGS ) do
                     if ui.BeginMenu( menu.name or "???" ) then
-                        self:AddDebugMenu( dbg, ui, menu, node.menu_params or table.empty )
+                        self:AddDebugMenu( ui, menu, node.menu_params or table.empty )
                         ui.EndMenu()
                     end
                 end
             end
 
             if node.menu_params and ui.BeginMenu( debug_menus.TABLE_BINDINGS.name ) then
-                self:AddDebugMenu( dbg, ui, debug_menus.TABLE_BINDINGS, node.menu_params or table.empty )
+                self:AddDebugMenu( ui, debug_menus.TABLE_BINDINGS, node.menu_params or table.empty )
                 ui.EndMenu()
             end
 
             for i, bindings in ipairs( self.dbg.debug_bindings) do
                 if ui.BeginMenu( bindings.name or "???" ) then
-                    self:AddDebugMenu( dbg, ui, bindings )
+                    self:AddDebugMenu( ui, bindings )
                     ui.EndMenu()
                 end
             end
@@ -202,7 +202,7 @@ function DebugPanel:CollapsingHeader( ui, title, flags )
     return ui.CollapsingHeader( title, flags or "DefaultOpen" )
 end
 
-function DebugPanel:AddDebugMenu( dbg, ui, menu, menu_params )
+function DebugPanel:AddDebugMenu( ui, menu, menu_params )
     menu_params = menu_params or table.empty
     for i, option in ipairs( menu ) do
         if option.Visible == false or (type(option.Visible) == "function" and not option.Visible( table.unpack( menu_params ))) then
@@ -212,7 +212,7 @@ function DebugPanel:AddDebugMenu( dbg, ui, menu, menu_params )
             if type(option.Text) == "string" then
                 txt = option.Text
             elseif type(option.Text) == "function" then
-                txt = option.Text( dbg, table.unpack( menu_params ) )
+                txt = option.Text( self.dbg, table.unpack( menu_params ) )
             end
             if option.Binding then
                 txt = (txt or "") .. string.format( " (%s)", option.Binding:GetBindingString() )
@@ -221,26 +221,26 @@ function DebugPanel:AddDebugMenu( dbg, ui, menu, menu_params )
             if txt == nil then
                 ui.Separator()
             else
-                local checked = type(option.Checked) == "function" and option.Checked( dbg, table.unpack( menu_params ))
+                local checked = type(option.Checked) == "function" and option.Checked( self.dbg, table.unpack( menu_params ))
                 local enabled, tt = true
                 if type(option.Enabled) == "function" then
-                    enabled, tt = option.Enabled( dbg, table.unpack( menu_params ))
+                    enabled, tt = option.Enabled( self.dbg, table.unpack( menu_params ))
                 end
                 if option.Menu then
-                    local menu = type(option.Menu) == "function" and option.Menu( dbg, table.unpack( menu_params) ) or option.Menu
+                    local menu = type(option.Menu) == "function" and option.Menu( self.dbg, table.unpack( menu_params) ) or option.Menu
                     if ui.BeginMenu( txt, enabled ) then
-                        self:AddDebugMenu( dbg, ui, menu, menu_params )
+                        self:AddDebugMenu( ui, menu, menu_params )
                         ui.EndMenu()
                     end
 
                 elseif option.CustomMenu then
                     if ui.BeginMenu( txt, enabled ) then
-                        option:CustomMenu( dbg, ui, table.unpack( menu_params ))
+                        option:CustomMenu( self.dbg, ui, table.unpack( menu_params ))
                         ui.EndMenu()
                     end
 
                 elseif ui.MenuItem( txt, nil, checked, enabled ) then
-                    self.dbg:RunBinding( option.Do, dbg, table.unpack(menu_params) )
+                    self.dbg:RunBinding( option.Do, self.dbg, table.unpack(menu_params) )
                 end
                 if tt and ui.IsItemHovered() then
                     ui.SetTooltip( tt )
@@ -266,13 +266,13 @@ function DebugPanel:AppendTable( ui, v, name )
         ui.TextColored( 0, 1, 1, 1, name or tostring(v) )
 
         ui.Separator()
-        self:AddDebugMenu( GetDbg(), ui, debug_menus.TABLE_BINDINGS, { v } )
+        self:AddDebugMenu( ui, debug_menus.TABLE_BINDINGS, { v } )
 
         local debug_class = DebugUtil.FindRegisteredClass( v )
         if debug_class and debug_class.MENU_BINDINGS then
             for i, menu in ipairs( debug_class.MENU_BINDINGS ) do
                 ui.Separator()
-                self:AddDebugMenu( GetDbg(), ui, menu, { v } )
+                self:AddDebugMenu( ui, menu, { v } )
             end
         end
         ui.EndPopup()

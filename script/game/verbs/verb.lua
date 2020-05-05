@@ -184,7 +184,7 @@ function Verb:CanDo( actor, ... )
 end
 
 function Verb:CanInteract( actor )
-	return (actor or self.actor):IsSpawned()
+	return (actor or self.actor):IsSpawned() and (self.obj == nil or self.obj:IsSpawned())
 end
 
 function Verb:GetDesc()
