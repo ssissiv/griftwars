@@ -3,7 +3,7 @@ local Door = class( "Object.Door", Object )
 Door.image = assets.TILE_IMG.DOOR
 
 function Door:init( worldgen_tag )
-	self.portal = self:GainAspect( Aspect.Portal() )
+	self.portal = self:GainAspect( Aspect.Portal( WALK_TIME ) )
 	self.portal:SetWorldGenTag( worldgen_tag )
 end
 

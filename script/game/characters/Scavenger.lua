@@ -21,8 +21,6 @@
 
 local Scavenge = class( "Verb.Scavenge", Verb )
 
-Scavenge.ACT_RATE = 8.0
-
 function Scavenge:init()
 	Scavenge._base.init( self )
 

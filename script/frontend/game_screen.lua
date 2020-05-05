@@ -687,25 +687,37 @@ function GameScreen:KeyPressed( key )
 	elseif key == "left" or key == "a" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			puppet:Walk( EXIT.WEST )
+			local verb = Verb.Walk( EXIT.WEST )
+			if verb:CanDo( puppet ) then
+				puppet:DoVerbAsync( verb )
+			end
 		end
 
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			puppet:Walk( EXIT.EAST )
+			local verb = Verb.Walk( EXIT.EAST )
+			if verb:CanDo( puppet ) then
+				puppet:DoVerbAsync( verb )
+			end
 		end
 
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			puppet:Walk( EXIT.SOUTH )
+			local verb = Verb.Walk( EXIT.SOUTH )
+			if verb:CanDo( puppet ) then
+				puppet:DoVerbAsync( verb )
+			end
 		end
 
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			puppet:Walk( EXIT.NORTH )
+			local verb = Verb.Walk( EXIT.NORTH )
+			if verb:CanDo( puppet ) then
+				puppet:DoVerbAsync( verb )
+			end
 		end
 
 	elseif key == "." then

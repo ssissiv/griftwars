@@ -4,8 +4,12 @@
 
 local Portal = class( "Aspect.Portal", Aspect )
 
-function Portal:init( location, x, y )
-	self:Connect( location, x, y )
+function Portal:init( travel_time )
+	self.travel_time = travel_time or TRAVEL_TIME
+end
+
+function Portal:GetTravelTime()
+	return self.travel_time
 end
 
 function Portal:SetWorldGenTag( tag )

@@ -1,7 +1,5 @@
 local Attack = class( "Verb.Attack", Verb )
 
-Attack.ACT_RATE = 3/60
-
 function Attack:GetShortDesc( viewer )
 	if viewer == self:GetOwner() then
 		return "You are attacking!"

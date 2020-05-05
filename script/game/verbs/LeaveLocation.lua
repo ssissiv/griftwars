@@ -68,7 +68,8 @@ function LeaveLocation:PathToPortal( actor, portal )
 	-- Path tiles to dest.
 	local pather = TilePathFinder( actor, actor, portal.owner:GetTile() )
 	while actor:GetTile() ~= pather:GetEndRoom() do
-		self:YieldForTime( 2 * ONE_SECOND )
+		--
+		self:YieldForTime( WALK_TIME, 1.0 )
 
 		if self:IsCancelled() then
 			break
@@ -80,6 +81,10 @@ function LeaveLocation:PathToPortal( actor, portal )
 			local x2, y2 = path[2]:GetCoordinate()
 			local exit = OffsetToExit( x1, y1, x2, y2 )
 			actor:Walk( exit )
+
+		else
+			-- print( "no path!", self, actor, portal )
+			self:YieldForTime( ONE_MINUTE )
 		end
 	end
 end
@@ -121,22 +126,29 @@ function LeaveLocation:Interact( actor, target )
 	-- If we have a specific Portal, path to it.
 	if actor:GetLocation().map and portal then
 		self:PathToPortal( actor, portal )
-	end
-
-	self:YieldForTime( 5 * ONE_MINUTE, 16.0 )
-
-	if self:IsCancelled() then
-		return
-	end
 	
+		self:YieldForTime( portal:GetTravelTime() )
+
+		if self:IsCancelled() then
+			return
+		end		
+	end
+
 	-- Warp to dest Location.
 	Msg:Action( self.EXIT_STRINGS, actor, dest )
 
 	actor:DeltaStat( STAT.FATIGUE, 5 )
-	actor:WarpToLocation( dest, destx, desty )
+	local entry_tile = dest:FindPassableTile( destx, desty, actor )
+	if entry_tile then
+		actor:WarpToLocation( dest, entry_tile:GetCoordinate() )
 
-	Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
-	Msg:ActToRoom( "{1.Id} enters.", actor )
+		Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
+		Msg:ActToRoom( "{1.Id} enters.", actor )
+	else
+		Msg:Echo( actor, "The other side seems to be blocked!" )
+		print( actor, "couldn't leave to", dest )
+		DBG( dest:GetTileAt( destx, desty ))
+	end
 end
 
 ---------------------------------------------------------------

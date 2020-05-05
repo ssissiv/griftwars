@@ -596,14 +596,13 @@ function Agent:CancelInvalidVerbs()
 	end
 end
 
-function Agent:CalculateTimeSpeed()
-	local rate = 1.0
+function Agent:CalculateTimeElapsed( dt )
 	if self.verbs then
 		for i, verb in ipairs( self.verbs ) do
-			rate = math.max( verb:CalculateTimeSpeed() or rate, rate )
+			dt = verb:CalculateTimeElapsed( dt )
 		end
 	end
-	return rate
+	return dt
 end
 
 function Agent:CreateStat( stat, value, max_value )

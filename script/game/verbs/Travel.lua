@@ -49,7 +49,8 @@ end
 function Travel:PathToTile( actor, tile )
 	local pather = TilePathFinder( actor, actor, tile )
 	while actor:GetTile() ~= tile do
-		self:YieldForTime( 4 * ONE_SECOND )
+		--
+		self:YieldForTime( WALK_TIME, 1.0 )
 
 		if self:IsCancelled() then
 			break

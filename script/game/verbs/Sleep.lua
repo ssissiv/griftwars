@@ -8,8 +8,6 @@ Sleep.ACT_DESC =
 	"{1.Id} is here sleeping.",
 }
 
-Sleep.ACT_RATE = SLEEP_SPEED_RATE
-
 Sleep.FLAGS = bit32.bor( VERB_FLAGS.ATTENTION, VERB_FLAGS.MOVEMENT, VERB_FLAGS.HANDS )
 
 function Sleep:GetDesc()
@@ -50,7 +48,7 @@ function Sleep:Interact( actor )
 	actor:GetStat( STAT.HEALTH ):DeltaRegen( 0.5 )
 
    	-- self:YieldForTime( 1 )
-   	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ) )
+   	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ), SLEEP_SPEED_RATE )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 10 )
 	actor:GetStat( STAT.HEALTH ):DeltaRegen( -0.5 )

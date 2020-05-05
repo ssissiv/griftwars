@@ -6,7 +6,7 @@ require "game/input_constants"
 WALL_TO_GAME_TIME = 1/60.0 -- eg. 1 wall second == 1 game minute / 1 wall minute = 1 game hour
 
 -- Note: 'datetime' is a floating point measure of game hours passed.
-ONE_SECOND = 1/360
+ONE_SECOND = 1/3600
 ONE_MINUTE = 1/60
 HALF_HOUR = 30/60
 ONE_HOUR = 1
@@ -23,6 +23,11 @@ TILE_SIZE = 64
 
 -- Default camera zoom
 DEFAULT_ZOOM = 1 / TILE_SIZE
+
+-- Standard action durations
+WALK_TIME = ONE_SECOND * 10
+ATK_TIME = ONE_SECOND * 5
+TRAVEL_TIME = ONE_MINUTE * 10
 
 -- World speed multipliers.
 DEBUG_WORLD_SPEEDS =

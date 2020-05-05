@@ -10,8 +10,14 @@ function Verb:SetUtility( utility )
 	self.utility = clamp( utility, 0, 100 )
 end
 
-function Verb:CalculateTimeSpeed()
-	return self.ACT_RATE
+function Verb:CalculateTimeElapsed( dt )
+	if self.ACT_RATE then
+		return dt * self.ACT_RATE
+	elseif self.ACT_DURATION then
+		return self.ACT_DURATION / WALL_TO_GAME_TIME
+	else
+		return dt
+	end
 end
 
 function Verb:AddHelperVerb( helper )
@@ -285,24 +291,20 @@ function Verb:GetActingProgress()
 	end
 end
 
-
 function Verb:YieldForTime( duration, act_rate )
 	assert( duration > 0 )
 
-	local prev_rate = self.ACT_RATE
 	if act_rate then
 		self.ACT_RATE = act_rate
-		self.actor.world:RefreshTimeSpeed()
+	else
+		self.ACT_DURATION = duration
 	end
 
 	self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self, coroutine.running() )
 	self.yield_duration = duration
 	local result = coroutine.yield()
 
-	if act_rate then
-		self.ACT_RATE = prev_rate
-		self.actor.world:RefreshTimeSpeed()
-	end
+	self.ACT_RATE = nil
 	
 	return result
 end

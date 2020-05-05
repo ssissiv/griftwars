@@ -222,15 +222,18 @@ function World:SetPuppet( agent )
 end
 
 function World:RefreshTimeSpeed()
+	-- Need to PAUSE while the puppet is idle (not doing verbs)
 	if self.puppet:IsBusy() == self:IsPaused( PAUSE_TYPE.IDLE ) then
 		self:TogglePause( PAUSE_TYPE.IDLE )
 	end
-
-	self.puppet_time_speed = self.puppet:CalculateTimeSpeed()
 end
 
 function World:CalculateTimeElapsed( dt )
-	return (self.puppet_time_speed or 1.0) * WorldBase.CalculateTimeElapsed( self, dt )
+	if self.puppet then
+		dt = self.puppet:CalculateTimeElapsed( dt )
+	end
+
+	return WorldBase.CalculateTimeElapsed( self, dt )
 end
 
 function World:OnUpdateWorld( dt, world_dt )
