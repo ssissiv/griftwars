@@ -101,7 +101,11 @@ function Travel:Interact( actor, dest )
 		self.path = pather:CalculatePath()
 		if self.path then
 			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
-			self.leave:DoVerb( actor, portal )
+			local ok, reason = self.leave:DoVerb( actor, portal )
+			if not ok then
+				print( "Cant travel", actor, reason )
+				self:YieldForTime( HALF_HOUR )
+			end
 		else
 			print( "No path!", actor, dest )
 			self:YieldForTime( HALF_HOUR )
