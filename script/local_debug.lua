@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(t)",
-			"print(t[1])",
-			"print(t[1](1))",
-			"print(t[1](3))",
 			"print(getmetatable(puppet))",
 			"print(getmetatable(puppet), Agent)",
 			"print(player)",
@@ -33,7 +29,11 @@ return {
 			"print(now)",
 			"print(Calendar.FormatTime(now))",
 			"print(agent)",
-			"print(agent, agent:IsDead())"
+			"print(agent, agent:IsDead())",
+			"print(agent:GetCoordinate())",
+			"print(agent, agent:GetCoordinate())",
+			"print( player, player:GetCoordinate())",
+			"print( distance( 11, 1, 10,2 ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

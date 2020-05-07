@@ -9,6 +9,7 @@ function Grifter:init()
 	self:GainAspect( Aspect.Player() )
 
 	self:CreateStat( STAT.XP, 0, 100 )
+	self:GetStat( STAT.HEALTH ):DeltaValue( 5, 5 )
 
 	self:GetInventory():DeltaMoney( 10 )
 	self:GetInventory():AddItem( Weapon.Dirk() )

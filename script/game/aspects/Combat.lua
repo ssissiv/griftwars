@@ -20,6 +20,13 @@ function Combat:OnSpawn( world )
 	-- self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
 end
 
+function Combat:OnLoseAspect()
+	if self.owner.location then
+		self.owner.location:RemoveListener( self )
+	end
+	Combat._base.OnLoseAspect( self )
+end
+
 function Combat:CollectVerbs( verbs, actor, target )
 	if self.owner == actor and self:IsTarget( target ) then
 		verbs:AddVerb( Attack.Punch( nil, target ) )
@@ -36,6 +43,12 @@ function Combat:OnLocationChanged( prev_location, location )
 	self:EvaluateTargets()
 end
 
+function Combat:OnTargetEvent( event_name, target, ... )
+	assert( self:IsTarget( target ))
+	if event_name == AGENT_EVENT.KILLED then
+		self:EvaluateTargets()
+	end
+end
 
 function Combat:OnLocationEvent( event_name, location, ... )
 	if event_name == LOCATION_EVENT.AGENT_ADDED then
@@ -117,6 +130,7 @@ function Combat:AddTarget( target )
 
 	self.owner:RegenVerbs()
 	self.owner:CancelInvalidVerbs()
+	target:ListenForAny( self, self.OnTargetEvent )
 
 	local combat = target:GetAspect( Aspect.Combat )
 	if not combat:IsTarget( self.owner ) then
@@ -132,6 +146,8 @@ function Combat:RemoveTarget( target, idx )
 	else
 		table.arrayremove( self.targets, target )
 	end
+
+	target:RemoveListener( self )
 
 	if #self.targets == 0 and self.attack then
 		self.owner:LoseAspect( self.attack )
