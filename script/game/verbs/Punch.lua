@@ -1,6 +1,11 @@
 local Punch = class( "Attack.Punch", Verb )
 
 function Punch:CanInteract( actor, target )
+	local ok, reason = Verb.CanInteract( self, actor, target )
+	if not ok then
+		return false, reason
+	end
+	
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
 	return distance( x1, y1, x2, y2 ) <= 2, "Out of range"

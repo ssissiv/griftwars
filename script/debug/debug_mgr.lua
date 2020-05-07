@@ -76,7 +76,7 @@ function DebugManager:GetDebugEnv()
 	    dbg_env.puppet = dbg_env.world:GetPuppet()
 	    if dbg_env.puppet then
 		    dbg_env.location = dbg_env.puppet:GetLocation()
-		    dbg_env.map = dbg_env.location.map
+		    dbg_env.map = dbg_env.location and dbg_env.location.map
 		end
 	end
     dbg_env.mx, dbg_env.my = love.mouse.getPosition()

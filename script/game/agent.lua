@@ -653,13 +653,16 @@ function Agent:Kill()
 
 	Msg:ActToRoom( "{1.Id} dies!", self )
 	Msg:Echo( self, "You die!" )
-	self.world:DespawnEntity( self )
 
 	self:GainAspect( Aspect.Killed() )
+
+	self:CancelInvalidVerbs()
+
+	self:BroadcastEvent( AGENT_EVENT.KILLED )
 end
 
 function Agent:IsDead()
-	return self:HasAspect( Aspect.Killed() )
+	return self:HasAspect( Aspect.Killed )
 end
 
 function Agent:GetStatValue( stat )
@@ -825,16 +828,20 @@ end
 function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	love.graphics.setFont( assets.FONTS.MAP_TILE )
 	local ch, clr = self:GetMapChar()
+	if self:IsDead() then
+		clr = constants.colours.BLACK
+	end
 	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
 	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
 end
 
 function Agent:__tostring()
-	return string.format( "[%s%s%s]",
+	return string.format( "[%s%s%s%s]",
 		self:IsPlayer() and "@" or "",
 		self:GetName(),
-		self.location == nil and "*" or "" )
+		self.location == nil and "*" or "",
+		self:IsDead() and "!" or "" )
 end
 
 

@@ -108,6 +108,9 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 			end
 		end
 		self:PanToCurrentInterest()
+
+	elseif event_name == AGENT_EVENT.KILLED then
+		self:SetCurrentFocus( nil )
 	end
 end
 
@@ -559,7 +562,7 @@ function GameScreen:WarpCameraTo( x, y )
 end
 
 function GameScreen:CycleFocus()
-	if not self.puppet then
+	if not self.puppet or self.puppet:IsDead() then
 		return
 	end
 
@@ -639,7 +642,8 @@ function GameScreen:MousePressed( mx, my, btn )
 		if Input.IsControl() then
 			DBG(self.hovered_tile)
 			return true
-		else
+
+		elseif self.puppet and not self.puppet:IsDead() then
 			self:SetCurrentFocus( self.hovered_tile )
 			return true
 		end

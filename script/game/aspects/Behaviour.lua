@@ -2,6 +2,13 @@
 -- Manages a prioritized list of Verbs
 local Behaviour = class( "Aspect.Behaviour", Aspect )
 
+Behaviour.event_handlers =
+{
+	[ AGENT_EVENT.KILLED ] = function( self, event_name, agent, ... )
+		agent:LoseAspect( self )
+	end,
+}
+
 function Behaviour:init()
 	self.verbs = {}
 

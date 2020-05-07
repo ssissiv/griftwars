@@ -2,6 +2,13 @@ local Combat = class( "Aspect.Combat", Aspect )
 
 Combat.TABLE_KEY = "combat"
 
+Combat.event_handlers =
+{
+	[ AGENT_EVENT.KILLED ] = function( self, event_name, agent, ... )
+		agent:LoseAspect( self )
+	end,
+}
+
 function Combat:init()
 	self.targets = {}
 end

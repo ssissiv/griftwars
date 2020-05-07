@@ -46,7 +46,7 @@ function Attack:Interact( actor, target )
 	for i, target in combat:Targets() do
 		local verbs = actor:GetPotentialVerbs( nil, target )
 		for i, verb in verbs:Verbs() do
-			print( actor, target, verb, verb:CanDo( actor, target ))
+			print( actor, target, verb, target:IsSpawned(), verb:CanDo( actor, target ))
 			if is_instance( verb, Attack.Punch ) and verb:CanDo( actor, target ) then
 				table.insert( attacks, verb )
 			end

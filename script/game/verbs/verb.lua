@@ -1,5 +1,12 @@
 local Verb = class( "Verb", Aspect )
 
+Verb.event_handlers =
+{
+	[ AGENT_EVENT.KILLED ] = function( self, event_name, agent, ... )
+		agent:LoseAspect( self )
+	end,
+}
+
 function Verb:init( actor, obj )
 	assert( actor == nil )
 	self.obj = obj
@@ -183,8 +190,22 @@ function Verb:CanDo( actor, ... )
 	return true
 end
 
-function Verb:CanInteract( actor )
-	return (actor or self.actor):IsSpawned() and (self.obj == nil or self.obj:IsSpawned())
+function Verb:CanInteract( actor, target )
+	if not actor:IsSpawned() or actor:IsDead() then
+		return false, "Despawned or dead actor"
+	end
+
+	target = target or self.obj
+	if target then
+		if not target:IsSpawned() then
+			return false, "Despawned target"
+		end
+		if is_instance( target, Agent ) and target:IsDead() then
+			return false, "Dead target"
+		end
+	end
+
+	return true
 end
 
 function Verb:GetDesc()
@@ -208,11 +229,6 @@ function Verb:DoVerb( actor, ... )
 		-- print( "CANT DO", actor, self, reason )
 		return false, reason
 	end
-
-	-- if not actor:HasAspect( self ) then
-	-- 	self.transient = true
-	-- 	actor:GainAspect( self )
-	-- end
 
 	-- assert( self:GetOwner() == actor and actor )
 	actor:_AddVerb( self )
@@ -238,11 +254,6 @@ function Verb:DoVerb( actor, ... )
 
 	actor:_RemoveVerb( self )
 
-	-- if self.transient then
-	-- 	self.transient = nil
-	-- 	actor:LoseAspect( self )
-	-- end
-
 	return true
 end
 
@@ -263,14 +274,9 @@ function Verb:Cancel()
 	self.cancelled_trace = debug.traceback()
 	self.cancelled_time = self.actor.world:GetDateTime()
 
-	if self.transient then
-		self.transient = nil
-		self.actor:LoseAspect( self )
-	end
-
 	-- print ( "CANCEL", self, self.actor, debug.traceback())
 	if self.yield_ev then
-		self.actor.world:UnscheduleEvent( self.yield_ev )	
+		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.actor.world:TriggerEvent( self.yield_ev )
 	end
 
@@ -294,6 +300,12 @@ end
 function Verb:YieldForTime( duration, act_rate )
 	assert( duration > 0 )
 
+	if self.cancelled then
+		print( self, " attempted to yield while cancelled!" )
+		print( debug.traceback() )
+		return
+	end
+
 	if act_rate then
 		self.ACT_RATE = act_rate
 	else
@@ -313,20 +325,25 @@ function Verb:Resume( coro )
 	self.yield_ev = nil
 	self.yield_duration = nil
 
-	local ok, reason = self:CanInteract( self.actor, self.obj )
-	if not ok then
-		self.cant_reason = reason
-		self:Cancel()
-	else
-		local ok, result = coroutine.resume( coro )
+	if not self.cancelled then
+		local ok, reason = self:CanInteract( self.actor, self.obj )
 		if not ok then
-			error( tostring(result) .. "\n" .. debug.traceback( coro ))
-		elseif coroutine.status( coro ) == "suspended" then
-			-- Waiting.
-		else
-			-- Done!
-			-- print( "DONE", self, coroutine.status(coro))
+			self.cant_reason = reason
+			self:Cancel()
 		end
+	end
+
+	-- Even cancelled verbs get one last Resume to do any cleanup.
+	-- Internally verbs should check IsCancelled after any YieldForTime call.
+	local ok, result = coroutine.resume( coro )
+	if not ok then
+		error( tostring(result) .. "\n" .. debug.traceback( coro ))
+	elseif coroutine.status( coro ) == "suspended" then
+		-- Waiting.
+		assert( not self.cancelled )
+	else
+		-- Done!
+		-- print( "DONE", self, coroutine.status(coro))
 	end
 end
 
