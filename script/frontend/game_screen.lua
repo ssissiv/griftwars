@@ -658,9 +658,13 @@ function GameScreen:KeyPressed( key )
 	local pan_delta = Input.IsShift() and 0.5 or 0.1
 
 	if key == "space" then
-		self.is_panning = true
-		self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
-		self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
+		if self.world:IsPaused( PAUSE_TYPE.INTERRUPT ) then
+			self.world:TogglePause( PAUSE_TYPE.INTERRUPT )
+		else
+			self.is_panning = true
+			self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
+			self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
+		end
 
 	elseif key == "i" then
 		if self.inventory_window then

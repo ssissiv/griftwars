@@ -26,9 +26,12 @@ function WorldBase:IsGameOver()
 	return false
 end
 
-function WorldBase:OnWorldEvent( event_name, ... )
+function WorldBase:OnWorldEvent( event_name, world, ... )
 	if event_name == WORLD_EVENT.LOG then
 		print( "WORLD_EVENT.LOG:", ... )
+	elseif event_name == WORLD_EVENT.INTERRUPT then
+		local reason = ...
+		Msg:Echo( self.puppet, loc.format( "{1}: {2}", Calendar.FormatTime( self.datetime ), reason ))
 	end
 end
 
@@ -64,6 +67,13 @@ function WorldBase:SchedulePeriodicFunction( delta, fn, ... )
 	return ev
 end
 
+function WorldBase:ScheduleInterrupt( delta, reason )
+	local ev = self:ScheduleEvent( delta, WORLD_EVENT.INTERRUPT, reason )
+	ev.interrupt = true
+	return ev
+end
+
+
 function WorldBase:RescheduleEvent( ev, delta )
 	assert( delta >= 0 or error( string.format( "Rescheduling in the past: %s with delta %d", tostr(ev), delta )))
 	ev.cancel = nil
@@ -89,13 +99,16 @@ function WorldBase:GetEventTimeLeft( ev )
 	return math.max( 0, ev.when - self.datetime )
 end
 
-function WorldBase:CheckScheduledEvents()
+function WorldBase:AdvanceTime( dt )
 	-- Broadcast any scheduled events.
 	local ev = self.scheduled_events[ 1 ]
 
-	while ev and ev.when <= self.datetime do
+	while ev and ev.when <= self.datetime + dt do
 		table.remove( self.scheduled_events, 1 ) -- TODO: this is terrible, rewrite as a linked list
 
+		dt = dt - (ev.when - self.datetime)
+		self.datetime = ev.when
+		
 		if not ev.cancel then
 			self:TriggerEvent( ev )
 		end
@@ -107,8 +120,16 @@ function WorldBase:CheckScheduledEvents()
 			end
 		end
 
+		if ev.interrupt then
+			dt = 0
+			self:TogglePause( PAUSE_TYPE.INTERRUPT )
+			break
+		end
+
 		ev = self.scheduled_events[1]
 	end
+
+	self.datetime = self.datetime + dt
 end
 
 
@@ -137,11 +158,6 @@ end
 
 function WorldBase:GetDateTime()
 	return self.datetime
-end
-
-function WorldBase:AdvanceTime( dt )
-	self.datetime = self.datetime + dt
-	self:CheckScheduledEvents()
 end
 
 function WorldBase:SpawnEntity( ent )

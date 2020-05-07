@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(world.worldgen)",
-			"print( Agent()._class )",
 			"print( rawget( Agent(), \"_class\" ))",
 			"t:bar()",
 			"print(t)",
@@ -33,7 +31,9 @@ return {
 			"print(screen.hovered_tile)",
 			"print(screen)",
 			"print(screen.hovered_tile)",
-			"sdf"
+			"sdf",
+			"print(now)",
+			"print(Calendar.FormatTime(now))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
