@@ -145,6 +145,12 @@ function ui:FindScreen( class )
 	end
 end
 
+function ui:ClearScreens()
+	while #self.screens > 0 do
+		self:RemoveScreen( self.screens[ #self.screens ] )
+	end
+end
+
 ----------------------------------------------
 
 function ui:Log( fmt, ... )

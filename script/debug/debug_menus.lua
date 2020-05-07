@@ -52,6 +52,9 @@ local SHARED_BINDINGS =
         Binding = InputBinding{key="r", CTRL = true},
         Text = "Reload Game",
         Do = function( dbg )
+            GetGUI():ClearScreens()
+            local game = GameScreen()
+            GetGUI():AddScreen( game )
         end
     },
     {
@@ -84,7 +87,7 @@ local SHARED_BINDINGS =
             local dbg_env = dbg:GetDebugEnv()
             dbg_env.game.world:TogglePause( PAUSE_TYPE.DEBUG )
         end
-    }
+    },
 }
 
 -----------------------------------------------------------------------
