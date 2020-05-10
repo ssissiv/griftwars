@@ -145,6 +145,13 @@ function World:RequireAgent( ctor, pred )
 
 end
 
+function World:RollDice( num, size, bonus )
+	for i = 1, num do
+		bonus = (bonus or 0) + self:Random( 1, size )
+	end
+	return bonus
+end
+
 function World:Random( a, b )
 	if a == nil and b == nil then
 		return self.rng:random()

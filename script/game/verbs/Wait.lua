@@ -5,12 +5,13 @@ function Wait:GetDesc()
 end
 
 function Wait:CanInteract( actor )
-	if actor:InCombat() then
-		return false, "You're in the middle of combat!"
-	end
 	return Verb.CanInteract( self, actor )
 end
 
 function Wait:Interact( actor )	
-	self:YieldForTime( HALF_HOUR )
+	if actor:InCombat() then
+		self:YieldForTime( ATTACK_TIME )
+	else
+		self:YieldForTime( HALF_HOUR )
+	end
 end

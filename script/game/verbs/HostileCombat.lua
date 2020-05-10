@@ -1,11 +1,11 @@
-local Attack = class( "Verb.Attack", Verb )
+local HostileCombat = class( "Verb.HostileCombat", Verb )
 
-function Attack:init( target )
-	Verb.init( self, nil, target )
+function HostileCombat:init()
+	Verb.init( self )
 	self.travel = self:AddChildVerb( Verb.Travel() )
 end
 
-function Attack:GetShortDesc( viewer )
+function HostileCombat:GetShortDesc( viewer )
 	if viewer == self:GetOwner() then
 		return "You are attacking!"
 	else
@@ -13,11 +13,11 @@ function Attack:GetShortDesc( viewer )
 	end
 end
 
-function Attack:CalculateUtility( actor )
+function HostileCombat:CalculateUtility( actor )
 	return UTILITY.COMBAT
 end
 
-function Attack:CanInteract( actor )
+function HostileCombat:CanInteract( actor )
 	if not actor:IsSpawned() then
 		return false
 	elseif not actor:GetAspect( Aspect.Combat ):HasTargets() then
@@ -27,7 +27,7 @@ function Attack:CanInteract( actor )
 	return true
 end
 
-function Attack:PickAttack( actor, target )
+function HostileCombat:PickAttack( actor )
 	local combat = actor:GetAspect( Aspect.Combat )
 	local attacks = {}
 	for i, target in combat:Targets() do
@@ -39,25 +39,34 @@ function Attack:PickAttack( actor, target )
 		end
 	end
 
+	print( actor, tostr(attacks))
 	return self:GetWorld():ArrayPick( attacks )
 end
 
-function Attack:Interact( actor, target )
-	target = target or self.obj
+function HostileCombat:GetCurrentAttack()
+	return self.current_attack
+end
+
+function HostileCombat:Interact( actor )
 	-- self:YieldForTime( ONE_MINUTE )
 
 	if self:IsCancelled() then
 		return
 	end
 
-	local attack = self:PickAttack( actor, target )
+	local attack = self:PickAttack( actor )
 	if attack then
+		local target = attack:GetTarget()
+		actor:GetAspect( Aspect.Combat ):SetCurrentAttack( attack )
 		assert( attack.InAttackRange, tostr(attack))
 		if not attack:InAttackRange( actor, target ) then
 			local ok, reason = self.travel:DoVerb( actor, target )
 			print( "atk", target, ok, reason )
 		else
 			attack:DoVerb( actor, attack:GetTarget() )
+		end
+		if actor:GetAspect( Aspect.Combat ) then
+			actor:GetAspect( Aspect.Combat ):SetCurrentAttack( nil )
 		end
 	end
 end

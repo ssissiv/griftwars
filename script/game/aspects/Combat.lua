@@ -43,6 +43,14 @@ function Combat:OnLocationChanged( prev_location, location )
 	self:EvaluateTargets()
 end
 
+function Combat:GetCurrentAttack()
+	return self.current_attack
+end
+
+function Combat:SetCurrentAttack( current_attack )
+	self.current_attack = current_attack
+end
+
 function Combat:OnTargetEvent( event_name, target, ... )
 	assert( self:IsTarget( target ))
 	if event_name == AGENT_EVENT.KILLED then
@@ -124,8 +132,8 @@ function Combat:AddTarget( target )
 	end
 
 	if not self.attack then
-		assert( not self.owner:HasAspect( Verb.Attack ))
-		self.attack = self.owner:GainAspect( Verb.Attack( target ))
+		assert( not self.owner:HasAspect( Verb.HostileCombat ))
+		self.attack = self.owner:GainAspect( Verb.HostileCombat( target ))
 	end
 
 	self.owner:RegenVerbs()

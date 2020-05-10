@@ -153,10 +153,10 @@ function Verb:GetRoomDesc( viewer )
 	local dc = self:GetDC()
 	local desc = self:GetDesc( viewer )
 
-	if dc == 0 then
-		return desc
+	if self.GetDuration then
+		return loc.format( "{1} ({2})", desc, Calendar.FormatDuration( self:GetDuration() ))
 	else
-		return loc.format( "{1} (DC: {2})", desc, dc )
+		return desc
 	end
 end
 
@@ -291,9 +291,14 @@ function Verb:CanCancel()
 	return true
 end
 
+function Verb:GetActingTime()
+	return self.yield_ev, self.yield_duration
+end
+
 function Verb:GetActingProgress()
 	if self.yield_ev and self.yield_duration then
-		return 1.0 - (self.yield_ev.when - self.actor.world:GetDateTime()) / self.yield_duration
+		local time_left = self.yield_ev.when - self.actor.world:GetDateTime()
+		return 1.0 - time_left / self.yield_duration, time_left
 	end
 end
 

@@ -80,6 +80,11 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 
 	local combat = self.agent:GetAspect( Aspect.Combat )
 	if combat and ui.CollapsingHeader( "Combat" ) then
+		if combat.current_attack then
+			ui.Text( "Current attack: " )
+			ui.SameLine( 0, 10 )
+			panel:AppendTable( ui, combat.current_attack )
+		end
 		ui.Text( "Targets:" )
 		for i, target in combat:Targets() do
 			ui.SameLine( 0, 10 )

@@ -2,10 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(getmetatable(puppet))",
-			"print(getmetatable(puppet), Agent)",
-			"print(player)",
-			"print(player.location)",
 			"print(location.zone_depth)",
 			"s = \"district east\"; print( s:gsub( MATCH_TAGS[ 'east' ], \"\" ))",
 			"s = \"district east\"; print( \"::\", s:gsub( MATCH_TAGS[ 'east' ], \"\" ))",
@@ -33,7 +29,11 @@ return {
 			"print(agent:GetCoordinate())",
 			"print(agent, agent:GetCoordinate())",
 			"print( player, player:GetCoordinate())",
-			"print( distance( 11, 1, 10,2 ))"
+			"print( distance( 11, 1, 10,2 ))",
+			"print(t:GetAspect( Aspect.Combat ):GetCurrentAttack() )",
+			"print(world.datetime",
+			"print(world.datetime)",
+			"print(now)"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

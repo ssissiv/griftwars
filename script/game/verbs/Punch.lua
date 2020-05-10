@@ -6,6 +6,10 @@ function Punch:InAttackRange( actor, target )
 	return distance( x1, y1, x2, y2 ) <= 2, "Out of range"
 end
 
+function Punch:GetDesc( viewer )
+	return "Punch - 1d4"
+end	
+
 function Punch:CanInteract( actor, target )
 	local ok, reason = Verb.CanInteract( self, actor, target )
 	if not ok then
@@ -19,14 +23,19 @@ function Punch:CanInteract( actor, target )
 	return true	
 end
 
+function Punch:GetDuration()
+	return ATTACK_TIME
+end
+
 function Punch:Interact( actor, target )
 	target = target or self.obj
 
-	Msg:ActToRoom( "{1.Id} attacks {2.Id}!", actor, target )
-	Msg:Echo( actor, loc.format( "You attack {1.Id}!", target:LocTable( actor ) ))
-	Msg:Echo( target, loc.format( "{1.Id} attacks you!", actor:LocTable( target ) ))
+	local damage = actor.world:RollDice( 1, 4 )
+	Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
+	Msg:Echo( actor, loc.format( "You attack {1.Id}! ({2} damage)", target:LocTable( actor ), damage ))
+	Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
 
-	target:DeltaHealth( -1 )
+	target:DeltaHealth( -damage )
 
-	self:YieldForTime( ONE_MINUTE )
+	self:YieldForTime( self:GetDuration() )
 end

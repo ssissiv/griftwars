@@ -34,10 +34,13 @@ end
 function Calendar.FormatDuration( dt )
 	local hours = math.floor( dt )
 	local minutes = math.floor( (dt - hours) * 60 )
+	local seconds = (dt - hours - (minutes / 60)) * 3600
 	if hours > 0 then
 		return loc.format( "{1} hours, {2} mins", hours, minutes )
-	else
+	elseif minutes > 0 then
 		return loc.format( "{1} minutes", minutes )
+	else
+		return loc.format( "{1%.1f} seconds", seconds )
 	end
 end
 
@@ -92,7 +95,7 @@ function Calendar.RenderDatetime( ui, datetime, world )
 		else
 			tt = loc.format( "in {1}", Calendar.FormatDuration( datetime - now ))
 		end
-		ui.SetTooltip( tt )
+		ui.SetTooltip( loc.format( "{1} ({2})", now, tt ))
 	end
 end
 

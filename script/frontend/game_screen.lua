@@ -161,7 +161,17 @@ function GameScreen:RenderScreen( gui )
     local combat = puppet:GetAspect( Aspect.Combat )
     if combat then
     	for i, target in combat:Targets() do
-    		
+    		local hp, max_hp = target:GetHealth()
+    		ui.TextColored( 255, 0, 0, 255, loc.format( "{1.Id} - {2}/{3}",
+    			target:LocTable( self.puppet ), hp, max_hp ))
+    		local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
+    		if attack then
+    			ui.SameLine( 200 )
+    			local t, time_left = attack:GetActingProgress()
+    			if t then
+	    			ui.Text( loc.format( "{1} ({2})", attack:GetDesc(), Calendar.FormatDuration( time_left )) )
+	    		end
+    		end
     	end
     end
     ui.Separator()
