@@ -49,5 +49,8 @@ function ManageFatigue:Interact( actor )
 	else
 		self.rest:DoVerb( actor )
 	end
-	self:YieldForTime( ONE_MINUTE )
+
+	if not self:IsCancelled() then
+		self:YieldForTime( ONE_MINUTE )
+	end
 end

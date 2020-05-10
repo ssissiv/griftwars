@@ -224,7 +224,7 @@ function Verb:DidWithinTime( actor, dt )
 end
 
 function Verb:DoVerb( actor, ... )
-	local ok, reason = self:CanInteract( actor, ... )
+	local ok, reason = self:CanDo( actor, ... )
 	if not ok then
 		-- print( "CANT DO", actor, self, reason )
 		return false, reason

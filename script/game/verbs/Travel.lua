@@ -40,9 +40,9 @@ function Travel:CanInteract( actor )
 	if not actor:IsSpawned() then
 		return false
 	end
-	if actor:InCombat() then
-		return false, "In combat"
-	end
+	-- if actor:InCombat() then
+	-- 	return false, "In combat"
+	-- end
 	return true
 end
 
@@ -112,10 +112,17 @@ function Travel:Interact( actor, dest )
 		end
 	end
 
-	if is_instance( dest, Waypoint ) then
-		local x, y = dest:GetCoordinate()
-		local tile = actor.location:GetTileAt( x, y )
-		self:PathToTile( actor, tile )
+	-- uh... 
+	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
+		local x, y = AccessCoordinate( dest )
+		if x and y then
+			local tile = actor.location:GetTileAt( x, y )
+			if tile == nil then
+				DBG( dest )
+			else
+				self:PathToTile( actor, tile )
+			end
+		end
 	end
 end
 

@@ -170,7 +170,7 @@ function Location:AddEntity( entity )
 		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
 
 		if not entity:IsPuppet() and table.contains( self.contents, self.world:GetPuppet() ) then
-			self.world:ScheduleInterrupt( 0, loc.format( "{1.Id} appears ({2})", entity:LocTable(), rawstring(entity)) )
+			-- self.world:ScheduleInterrupt( 0, loc.format( "{1.Id} appears ({2})", entity:LocTable(), rawstring(entity)) )
 		end
 	end
 

@@ -27,7 +27,7 @@ DEFAULT_ZOOM = 1 / TILE_SIZE
 -- Standard action durations
 WALK_TIME = ONE_SECOND * 10
 ATK_TIME = ONE_SECOND * 5
-TRAVEL_TIME = ONE_MINUTE * 10
+TRAVEL_TIME = WALK_TIME -- ONE_MINUTE * 10
 
 -- World speed multipliers.
 DEBUG_WORLD_SPEEDS =

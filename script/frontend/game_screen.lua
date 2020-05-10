@@ -156,6 +156,14 @@ function GameScreen:RenderScreen( gui )
     		end
     	end
     end
+
+    -- Render Combat targets
+    local combat = puppet:GetAspect( Aspect.Combat )
+    if combat then
+    	for i, target in combat:Targets() do
+    		
+    	end
+    end
     ui.Separator()
 
     local location = puppet and puppet:GetLocation() or self.last_location

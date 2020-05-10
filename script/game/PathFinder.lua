@@ -92,6 +92,7 @@ function TilePathFinder:init( actor, source, target )
 	assert( is_instance( self.map, Aspect.TileMap ), tostring(actor.location))
 	self.actor = actor
 	self.source = source
+	assert( is_instance( target, Agent ) or is_instance( target, Tile ), tostr(target))
 	self.target = target
 end
 
@@ -117,18 +118,26 @@ function TilePathFinder:CalculatePath()
 		if room == end_room then
 			-- Found it! Generate path by walking back to start.
 			path = {}
+
+			-- Only add the destination if it is passable, so you can path up to impassable goals.
+			if self.actor == nil or room:IsPassable( self.actor ) then
+				table.insert( path, room )
+				room = from_to[ room ]
+			end
+
 			local i = 0
-			while room and i < 20 do
+			while room do
 				table.insert( path, room )
 				i = i + 1
 				room = from_to[ room ]
+				assert( i < 50 )
 			end
 			table.reverse( path )
 			break
 		end
 
 		for i, dest in self.map:Neighbours( room ) do
-			if from_to[ dest ] == nil and dest ~= start_room and (self.actor == nil or dest:IsPassable( self.actor )) then
+			if from_to[ dest ] == nil and dest ~= start_room and (self.actor == nil or dest == end_room or dest:IsPassable( self.actor )) then
 				assert( dest ~= start_room )
 				from_to[ dest ] = room
 				table.insert( queue, dest )
@@ -163,7 +172,7 @@ function TilePathFinder:GetEndRoom()
 	if is_instance( self.target, Agent ) then
 		return self.target:GetTile()
 	else
-		assert( is_instance( self.target, Tile ))
+		assert( is_instance( self.target, Tile ), tostring(self.target))
 		return self.target
 	end
 end

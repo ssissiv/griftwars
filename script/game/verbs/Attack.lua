@@ -1,5 +1,10 @@
 local Attack = class( "Verb.Attack", Verb )
 
+function Attack:init( target )
+	Verb.init( self, nil, target )
+	self.travel = self:AddChildVerb( Verb.Travel() )
+end
+
 function Attack:GetShortDesc( viewer )
 	if viewer == self:GetOwner() then
 		return "You are attacking!"
@@ -22,14 +27,19 @@ function Attack:CanInteract( actor )
 	return true
 end
 
-function Attack:InAttackRange( actor, target )
-	local x1, y1 = actor:GetCoordinate()
-	local x2, y2 = target:GetCoordinate()
-	if distance( x1, y1, x2, y2 ) <= 2 then
-		return true
-	else
-		return false
+function Attack:PickAttack( actor, target )
+	local combat = actor:GetAspect( Aspect.Combat )
+	local attacks = {}
+	for i, target in combat:Targets() do
+		local verbs = actor:GetPotentialVerbs( nil, target )
+		for i, verb in verbs:Verbs() do
+			if verb.InAttackRange then -- and verb:CanDo( actor, target ) then
+				table.insert( attacks, verb )
+			end
+		end
 	end
+
+	return self:GetWorld():ArrayPick( attacks )
 end
 
 function Attack:Interact( actor, target )
@@ -40,21 +50,14 @@ function Attack:Interact( actor, target )
 		return
 	end
 
-	local combat = actor:GetAspect( Aspect.Combat )
-
-	local attacks = {}
-	for i, target in combat:Targets() do
-		local verbs = actor:GetPotentialVerbs( nil, target )
-		for i, verb in verbs:Verbs() do
-			print( actor, target, verb, target:IsSpawned(), verb:CanDo( actor, target ))
-			if is_instance( verb, Attack.Punch ) and verb:CanDo( actor, target ) then
-				table.insert( attacks, verb )
-			end
-		end
-	end
-
-	local attack = self:GetWorld():ArrayPick( attacks )
+	local attack = self:PickAttack( actor, target )
 	if attack then
-		attack:DoVerb( actor, attack:GetTarget() )
+		assert( attack.InAttackRange, tostr(attack))
+		if not attack:InAttackRange( actor, target ) then
+			local ok, reason = self.travel:DoVerb( actor, target )
+			print( "atk", target, ok, reason )
+		else
+			attack:DoVerb( actor, attack:GetTarget() )
+		end
 	end
 end
