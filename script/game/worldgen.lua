@@ -75,12 +75,12 @@ function WorldGen:GenerateWorld()
 	Msg:SetWorld( world )
 
 
-	local city = Zone.City( self, 3, 4, 8 )
+	local city = Zone.City( self, 3, 0 )
 	world:SpawnEntity( city )
 
 	local zones = { city }
 	local zone_count = 0
-	while #zones > 0 and zone_count < 3 do
+	while #zones > 0 and zone_count < 6 do
 		local zone = table.remove( zones, 1 )
 		for i, exit in ipairs( EXIT_ARRAY ) do
 			local exit_tag = EXIT_TAG[ exit ]
@@ -88,8 +88,9 @@ function WorldGen:GenerateWorld()
 			local class_name = zone:RandomZoneClass()
 			local zone_class = CLASSES[ class_name ]
 			if portal and zone_class then
-				local new_zone = zone_class( self, 3, 6, 12, portal )
+				local new_zone = zone_class( self, 3, zone:GetZoneDepth() + 1, portal )
 				world:SpawnEntity( new_zone )
+				table.insert( zones, new_zone )
 				zone_count = zone_count + 1
 			end
 		end

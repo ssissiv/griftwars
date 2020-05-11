@@ -5,6 +5,10 @@ function Portal:init( worldgen_tag )
 	self.portal:SetWorldGenTag( worldgen_tag )
 end
 
+function Portal:GetShortDesc( viewer )
+	return nil
+end
+
 function Portal:GetMapChar()
 	if self.portal:GetDest() then
 		return "^"

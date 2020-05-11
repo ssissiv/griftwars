@@ -1,15 +1,22 @@
 local Zone = class( "Zone", Entity )
 
-function Zone:init( worldgen, max_depth, origin_portal )
-	assert( max_depth )
-	assert( origin_portal == nil or is_instance( origin_portal, Aspect.Portal ))
+function Zone:init( worldgen, max_depth, zone_depth, origin_portal )
 	self.worldgen = worldgen
+	assert( max_depth )
 	self.max_depth = max_depth or 1
+	assert( zone_depth )
+	self.zone_depth = zone_depth
+	assert( origin_portal == nil or is_instance( origin_portal, Aspect.Portal ))
 	self.origin_portal = origin_portal
 end
 
 function Zone:GetName()
 	return self.name
+end
+
+function Zone:GetZoneDepth()
+	-- How many zones away from the origin zone.
+	return self.zone_depth
 end
 
 function Zone:GetMaxDepth()
@@ -34,6 +41,7 @@ function Zone:GenerateZone()
 	if self.origin_portal then
 		-- print( "Generating from ", self.origin_portal:GetLocation() )
 		self.origin = self:GeneratePortalDest( self.origin_portal, depth )
+		assert( self.origin, "Could not match an origin" )
 	else
 		local class = self:RandomLocationClass()
 		self.origin = class( self )
@@ -43,7 +51,7 @@ function Zone:GenerateZone()
 	local locations = { self.origin }
 	while #locations > 0 do
 		local location = table.remove( locations, 1 )
-		self:GeneratePortals( location, locations, location:GetZoneDepth() + 1 )
+		self:GeneratePortals( location, locations, location:GetLocationDepth() + 1 )
 	end
 end
 
@@ -71,6 +79,11 @@ function Zone:RandomLocationClass( match_tags )
 				break
 			end
 		end
+	end
+
+	if next(classes) == nil then
+		print( "NO OPTIONS:", tostr(match_tags))
+		print( self, tostr(self.LOCATIONS, 2))
 	end
 
 	return self.worldgen:WeightedPick( classes )
@@ -166,6 +179,7 @@ function Zone:RandomUnusedPortal( tag )
 end
 
 function Zone:RandomRoom()
+	assert( #self.rooms > 0 )
 	return self.worldgen:ArrayPick( self.rooms )
 end
 

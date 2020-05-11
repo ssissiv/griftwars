@@ -30,7 +30,10 @@ end
 
 local District1 = class( "Location.CityDistrict1", District )
 
-District1.WORLDGEN_TAGS = { "district west", "district east", "district north", "district south", "shop entry", "tavern entry" }
+District1.WORLDGEN_TAGS = {
+ "boundary east", "boundary west", "boundary south", "boundary north",
+ "district west", "district east", "district north", "district south", "shop entry", "tavern entry"
+}
 
 function District1:OnSpawn( world )
 	District.OnSpawn( self, world )
@@ -44,7 +47,9 @@ end
 
 local District2 = class( "Location.CityDistrict2", District )
 
-District2.WORLDGEN_TAGS = { "district west", "district east", "district north", "district south", "residence entry" }
+District2.WORLDGEN_TAGS = {
+ "boundary east", "boundary west", "boundary south", "boundary north",
+ "district west", "district east", "district north", "district south", "residence entry" }
 
 function District2:OnSpawn( world )
 	District.OnSpawn( self, world )
@@ -58,4 +63,7 @@ end
 
 local EmptyDistrict = class( "Location.EmptyDistrict", District )
 
-EmptyDistrict.WORLDGEN_TAGS = { "district west", "district east", "district north", "district south" }
+EmptyDistrict.WORLDGEN_TAGS = {
+ "boundary east", "boundary west", "boundary south", "boundary north",
+ "district west", "district east", "district north", "district south" }
+

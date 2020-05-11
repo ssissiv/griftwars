@@ -11,6 +11,9 @@ end
 function Aspect:GetWorld()
 	local owner = self.owner
 	while owner do
+		if is_instance( owner, World ) then
+			return owner
+		end
 		if owner.world then
 			return owner.world
 		end

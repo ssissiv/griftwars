@@ -6,11 +6,23 @@ function NamePool:init( filename )
 	self.filename = filename
 end
 
+function NamePool:GetID()
+	return string.format( "%s(%s)", self._classname, self.filename )
+end
+
 function NamePool:PickName()
 	if #self.names == 1 then
 		print( "NO MORE NAMES", self.filename )
 	end
-	return table.remove( self.names, math.random( #self.names ))
+	return self:GetWorld():ArrayPick( self.names )
+end
+
+function NamePool:ConsumeName()
+	if #self.names == 1 then
+		print( "NO MORE NAMES", self.filename )
+	end
+	local idx = self:GetWorld():Random( #self.names )
+	return table.remove( self.names, idx )
 end
 
 function NamePool:AddName( name )

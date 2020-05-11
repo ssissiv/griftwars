@@ -1,8 +1,9 @@
 local MapScreen = class( "MapScreen", RenderScreen )
 
-function MapScreen:init( world, location )
+function MapScreen:init( world, viewer, location )
 	RenderScreen.init( self )
 	self.world = world
+	self.viewer = viewer
 
 	self.elapsed_time = 0
 
@@ -19,7 +20,6 @@ function MapScreen:init( world, location )
 end
 
 function MapScreen:SetLocation( location )
-	print( self.location , location )
 	self.location = location
 	self.current_location = location
 	self:ResetCamera()
@@ -147,7 +147,11 @@ function MapScreen:RenderHoveredLocation( gui )
     	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
     	ui.Separator()
     	for i, obj in self.hovered_tile:Contents() do
-    		ui.Text( tostring(obj) )
+    		assert( self.viewer )
+    		local txt = obj:GetShortDesc( self.viewer )
+    		if txt then
+	    		ui.Text( txt )
+	    	end
     	end
     end
 

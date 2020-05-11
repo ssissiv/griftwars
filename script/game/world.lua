@@ -22,9 +22,9 @@ function World:init()
 	self.history:SaveToFile( "log.txt" )
 	self.map = self:GainAspect( Aspect.TileMap() )
 
-	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ) )
-	self.adjectives = Aspect.NamePool( "data/adjectives.txt" )
-	self.nouns = Aspect.NamePool( "data/nouns.txt" )
+	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ))
+	self.adjectives = self:GainAspect( Aspect.NamePool( "data/adjectives.txt" ))
+	self.nouns = self:GainAspect( Aspect.NamePool( "data/nouns.txt" ))
 	self.city_names = self:GainAspect( Aspect.CityNamePool( "data/cities.txt" ))
 end
 
@@ -192,7 +192,7 @@ function World:WeightedPick( options )
         end
         option = next(options, option)
     end
-    assert(option, "weighted random is messed up")
+    -- assert(option, "weighted random is messed up")
 end
 
 

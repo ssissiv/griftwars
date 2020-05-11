@@ -29,8 +29,9 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
 
     ui.Text( "Zone:" )
     ui.SameLine( 0, 5 )
-    local zone, zone_depth = self.location:GetZone(), self.location:GetZoneDepth()
-    panel:AppendTable( ui, self.location:GetZone(), loc.format( "{1} (depth: {2})", zone, zone_depth ))
+    local zone, location_depth = self.location:GetZone(), self.location:GetLocationDepth()
+    panel:AppendTable( ui, self.location:GetZone() )
+    ui.Text( loc.format( "Depth: {1}-{2}", self.location:GetZone():GetZoneDepth(), location_depth ))
     local wx, wy, wz = self.location:GetCoordinate()
     if wx and wy then
         ui.Text( loc.format( "<{1}, {2}> Layer {3}", wx, wy, wz ))

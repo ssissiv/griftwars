@@ -56,15 +56,15 @@ end
 function Location:AssignZone( zone, depth )
 	assert( is_instance( zone, Zone ))
 	self.zone = zone
-	self.zone_depth = depth
+	self.location_depth = depth
 end
 
 function Location:GetZone()
 	return self.zone
 end
 
-function Location:GetZoneDepth()
-	return self.zone_depth
+function Location:GetLocationDepth()
+	return self.location_depth
 end
 
 function Location:GetCoordinate()
@@ -136,7 +136,7 @@ function Location:SpawnPerimeterPortals( tag )
 			self:SpawnPerimeterPortal( t1, exit_tag )
 
 		elseif i <= n then
-			if self.zone_depth >= self.zone:GetMaxDepth() then
+			if self.location_depth >= self.zone:GetMaxDepth() then
 				self:SpawnPerimeterPortal( "boundary", exit_tag )
 			else
 				self:SpawnPerimeterPortal( tag, exit_tag )

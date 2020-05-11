@@ -715,7 +715,7 @@ function GameScreen:KeyPressed( key )
 		end
 
 	elseif key == "m" then
-		local screen = MapScreen( self.world, self.last_location )
+		local screen = MapScreen( self.world, self.puppet, self.last_location )
 		GetGUI():AddScreen( screen )
 
 	elseif key == "left" or key == "a" then
