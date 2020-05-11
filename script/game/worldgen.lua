@@ -75,7 +75,7 @@ function WorldGen:GenerateWorld()
 	Msg:SetWorld( world )
 
 
-	local city = Zone.City( self, 3 )
+	local city = Zone.City( self, 3, 4, 8 )
 	world:SpawnEntity( city )
 
 	local zones = { city }
@@ -88,7 +88,7 @@ function WorldGen:GenerateWorld()
 			local class_name = zone:RandomZoneClass()
 			local zone_class = CLASSES[ class_name ]
 			if portal and zone_class then
-				local new_zone = zone_class( self, 3, portal )
+				local new_zone = zone_class( self, 3, 6, 12, portal )
 				world:SpawnEntity( new_zone )
 				zone_count = zone_count + 1
 			end

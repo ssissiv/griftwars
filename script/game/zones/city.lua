@@ -11,7 +11,8 @@ City.LOCATIONS = {
 
 City.ZONE_ADJACENCY =
 {
-	["Zone.Forest"] = 1
+	["Zone.Forest"] = 1,
+	["Zone.Hills"] = 1,
 }
 
 City.ZONE_COLOUR = { 70, 70, 80 }

@@ -47,9 +47,17 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
         end
 
         if ui.TreeNodeEx( "Zones" ) then
+            local current_zone = puppet and puppet:GetLocation() and puppet:GetLocation():GetZone()
+            if current_zone then
+                ui.Text( "**" )
+                ui.SameLine( 0, 0 )
+                panel:AppendTable( ui, current_zone )
+            end
             for i, zone in ipairs( self.game.world:GetBucketByClass( Zone )) do
-                if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
-                    panel:AppendTable( ui, zone )
+                if zone ~= current_zone then
+                    if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
+                        panel:AppendTable( ui, zone )
+                    end
                 end
             end
             ui.TreePop()

@@ -7,6 +7,8 @@ Forest.LOCATIONS =
 Forest.ZONE_ADJACENCY =
 {
 	["Zone.City"] = 1,
+	["Zone.Hills"] = 2,
+	["Zone.Fields"] = 2,
 }
 Forest.ZONE_COLOUR = { 0, 200, 0 }
 

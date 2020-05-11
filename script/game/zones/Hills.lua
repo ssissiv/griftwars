@@ -8,6 +8,7 @@ Hills.LOCATIONS =
 Hills.ZONE_ADJACENCY =
 {
 	["Zone.Forest"] = 2,
+	["Zone.Fields"] = 2,
 	["Zone.City"] = 1,
 }
 Hills.ZONE_COLOUR = { 100, 150, 0 }
