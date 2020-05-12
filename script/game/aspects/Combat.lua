@@ -83,7 +83,6 @@ function Combat:HasTargets()
 end
 
 function Combat:EvaluateTarget( target )
-	print( self, self.owner, target )
 	if target == self.owner then
 		return false, "self"
 	end

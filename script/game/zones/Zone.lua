@@ -35,7 +35,6 @@ end
 function Zone:AddConnection( zone )
 	assert( is_instance( zone, Zone ))
 	assert( not table.contains( self.connections, zone ))
-	print( "ADD", self, zone )
 	table.insert( self.connections, zone )
 end
 

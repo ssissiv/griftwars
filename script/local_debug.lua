@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"s = \"district east\"; print( \"::\", s:gsub( MATCH_TAGS.west, \"\" ))",
-			"s = \"foo  bar\"; print(tostr(s:split( \" \" )))",
-			"s = \"foo    bar\"; print(tostr(s:split( \" \" )))",
 			"s = \"district\"; print(tostr(s:split( \" \" )))",
 			"s = \"district west\"; print(tostr(s:split( \" \" )))",
 			"s = \"distric  t west\"; print(tostr(s:split( \" \" )))",
@@ -33,7 +30,10 @@ return {
 			"print(t, agent, t:IsPassable( agent ))",
 			"print(agent)",
 			"print(t, agent, t:IsPassable( agent ))",
-			"print(screen.current_focus)"
+			"print(screen.current_focus)",
+			"print( os.time())",
+			"print( os.date())",
+			"DBG(debug.getinfo(2))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"
