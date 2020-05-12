@@ -37,5 +37,5 @@ function Punch:Interact( actor, target )
 
 	target:DeltaHealth( -damage )
 
-	self:YieldForTime( self:GetDuration() )
+	self:YieldForTime( self:GetDuration(), 0.1 )
 end

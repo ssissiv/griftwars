@@ -96,8 +96,12 @@ function Agent:HasFlag( flag )
 	return self.flags[ flag ] == true
 end
 
-function Agent:GetName()
-	return self.name or self.species or "No Name"
+function Agent:GetName( viewer )
+	if viewer then
+		return loc.table( "{1.Id}", self:LocTable( viewer ))
+	else
+		return self.name or self.species or "No Name"
+	end
 end
 
 function Agent:GetTitle()

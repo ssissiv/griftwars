@@ -40,7 +40,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                 
                 local ent = AccessEntity( target )
                 if ent then
-                    ui.Text( ent:GetShortDesc( self.actor ))
+                    ui.Text( tostring(ent:GetName()))
                     ui.SameLine( 0, 10 )
                     if ui.SmallButton( "?" ) then
                         self.world.nexus:Inspect( self.actor, ent )

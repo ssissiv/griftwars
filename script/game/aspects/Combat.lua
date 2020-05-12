@@ -16,14 +16,13 @@ end
 function Combat:OnSpawn( world )
 	Aspect.OnSpawn( self, world )
 	self:EvaluateTargets()
-	-- self.owner:ListenForEvent( AGENT_EVENT.LOCATION_CHANGED, self, self.OnLocationChanged )
-	-- self:OnLocationChanged( nil, self.owner, nil, self.owner:GetLocation() )
 end
 
 function Combat:OnLoseAspect()
 	if self.owner.location then
 		self.owner.location:RemoveListener( self )
 	end
+	self:ClearTargets()
 	Combat._base.OnLoseAspect( self )
 end
 
@@ -84,6 +83,7 @@ function Combat:HasTargets()
 end
 
 function Combat:EvaluateTarget( target )
+	print( self, self.owner, target )
 	if target == self.owner then
 		return false, "self"
 	end
@@ -117,7 +117,7 @@ function Combat:EvaluateTargets()
 
 	for i, target in ipairs( self.targets ) do
 		if not self:EvaluateTarget( target ) then
-			self:RemoveTarget( nil, i )
+			self:RemoveTarget( target )
 		end
 	end
 end
@@ -146,14 +146,15 @@ function Combat:AddTarget( target )
 	end
 end
 
-function Combat:RemoveTarget( target, idx )
-	if idx then
-		assert( target == nil )
-		target = self.targets[ idx ]
-		table.remove( self.targets, idx )
-	else
-		table.arrayremove( self.targets, target )
+function Combat:ClearTargets()
+	while #self.targets > 0 do
+		self:RemoveTarget( self.targets[ #self.targets ] )
 	end
+end
+
+function Combat:RemoveTarget( target )
+	assert( table.contains( self.targets, target ))
+	table.arrayremove( self.targets, target )
 
 	target:RemoveListener( self )
 
