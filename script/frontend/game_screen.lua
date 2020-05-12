@@ -173,6 +173,7 @@ function GameScreen:RenderScreen( gui )
 	    		end
     		end
     	end
+    	ui.Separator()
     end
     ui.Separator()
 

@@ -74,10 +74,8 @@ function Object:WarpToAgent( agent )
 	self:WarpToLocation( agent:GetLocation() )
 end
 
-
 function Object:AssignOwner( owner )
-	assert( self.owner == nil or owner == nil )
-	assert( is_instance( owner, Inventory )) -- likely to be relaxed
+	assert( is_instance( owner, Aspect.Inventory )) -- likely to be relaxed
 	self.owner = owner
 end
 

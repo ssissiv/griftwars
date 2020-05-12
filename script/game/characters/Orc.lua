@@ -20,5 +20,7 @@ end
 function Orc:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	self:SetDetails( nil, "A pretty feral beast.", GENDER.MALE )
+
+	self.inventory:AddItem( Object.Jerky() )
 end
 

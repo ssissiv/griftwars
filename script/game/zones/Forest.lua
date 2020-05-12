@@ -26,17 +26,7 @@ end
 
 
 function Forest:PopulateOrcs()
-	local n = self.worldgen:Random( 3 )
-	if n == 1 then
-		-- Some Orcs
-		n = math.ceil( #self.rooms / 5 )
-	elseif n == 2 then
-		-- LOTS of Orcs!
-		n = math.ceil( #self.rooms / 3 )
-	else
-		-- No orcs!
-		n = 0
-	end
+	local n = self.worldgen:Random( #self.rooms )
 	for i = 1, n do
 		local orc = Agent.Orc()
 		orc:WarpToLocation( self:RandomRoom() )

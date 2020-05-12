@@ -41,11 +41,17 @@ function Location:OnSpawn( world )
 end
 
 function Location:OnDespawn()
-	Entity.OnDespawn( self )
+	if self.contents then
+		for i, obj in ipairs( self.contents ) do 
+			self.world:DespawnEntity( obj )
+		end
+	end
 
 	if self.x and self.y then
 		self.world:GetAspect( Aspect.TileMap ):UnassignFromGrid( self )
 	end
+
+	Entity.OnDespawn( self )
 end
 
 

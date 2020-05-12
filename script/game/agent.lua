@@ -13,7 +13,7 @@ function Agent:init()
 	self.stats = {}
 	self.sense_log = {} -- array of strings
 	self.potential_verbs = {}
-	self.inventory = Inventory( self )
+	self.inventory = self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.Memory() )
 
 	self.viz = AgentViz()
@@ -98,7 +98,7 @@ end
 
 function Agent:GetName( viewer )
 	if viewer then
-		return loc.table( "{1.Id}", self:LocTable( viewer ))
+		return loc.format( "{1.Id}", self:LocTable( viewer ))
 	else
 		return self.name or self.species or "No Name"
 	end
@@ -838,6 +838,12 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
 	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
+
+	local combat = self:GetAspect( Aspect.Combat )
+	if self.world and combat and combat:IsTarget( self.world:GetPuppet() ) then
+		screen:SetColour( constants.colours.RED )
+		love.graphics.print( "!", (x1+x2)*0.5, (y1), 0, scale, 0.6 * scale )
+	end
 end
 
 function Agent:__tostring()
