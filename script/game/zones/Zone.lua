@@ -8,6 +8,15 @@ function Zone:init( worldgen, max_depth, zone_depth, origin_portal )
 	self.zone_depth = zone_depth
 	assert( origin_portal == nil or is_instance( origin_portal, Aspect.Portal ))
 	self.origin_portal = origin_portal
+
+	-- Connecting zones.
+	self.connections = {}
+
+	if origin_portal then
+		local origin_zone = origin_portal:GetLocation():GetZone()
+		self:AddConnection( origin_zone )
+		origin_zone:AddConnection( self )
+	end
 end
 
 function Zone:GetName()
@@ -21,6 +30,13 @@ end
 
 function Zone:GetMaxDepth()
 	return self.max_depth
+end
+
+function Zone:AddConnection( zone )
+	assert( is_instance( zone, Zone ))
+	assert( not table.contains( self.connections, zone ))
+	print( "ADD", self, zone )
+	table.insert( self.connections, zone )
 end
 
 function Zone:OnSpawn( world )
@@ -189,6 +205,15 @@ end
 
 function Zone:RoomAt( i )
 	return self.rooms[ i ]
+end
+
+function Zone:RenderDebugPanel( ui, panel )
+	ui.Text( "Connections:" )
+	ui.Indent( 20 )
+	for i, zone in ipairs( self.connections ) do
+		panel:AppendTable( ui, zone )
+	end
+	ui.Unindent( 20 )
 end
 
 function Zone:__tostring()
