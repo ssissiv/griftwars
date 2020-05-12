@@ -71,12 +71,17 @@ end
 
 
 function EventSystem:RemoveListenerFromList(listener, t)
-    for i = 1, #t, 3 do
-        if t[i] == listener then
+    local i = table.arrayfind( t, listener )
+    if i then
+        if i % 3 == 0 then
+            -- Reversed list.
+            table.remove( t, i )
+            table.remove( t, i - 1 )
+            table.remove( t, i - 2 )
+        else
             table.remove( t, i )
             table.remove( t, i )
             table.remove( t, i )
-            break
         end
     end
     assert( table.arrayfind( t, listener ) == nil )
