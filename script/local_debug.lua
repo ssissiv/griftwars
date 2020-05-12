@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print(location.zone_depth)",
-			"s = \"district east\"; print( s:gsub( MATCH_TAGS[ 'east' ], \"\" ))",
-			"s = \"district east\"; print( \"::\", s:gsub( MATCH_TAGS[ 'east' ], \"\" ))",
 			"s = \"district east\"; print( \"::\", s:gsub( \"east\", \"\" ))",
 			"s = \"district east\"; print( \"::\", s:gsub( MATCH_TAGS.west, \"\" ))",
 			"s = \"foo  bar\"; print(tostr(s:split( \" \" )))",
@@ -33,7 +30,10 @@ return {
 			"print(t:GetAspect( Aspect.Combat ):GetCurrentAttack() )",
 			"print(world.datetime",
 			"print(world.datetime)",
-			"print(now)"
+			"print(now)",
+			"print(t, agent, t:IsPassable( agent ))",
+			"print(agent)",
+			"print(t, agent, t:IsPassable( agent ))"
 		}
 	},
 	DEBUG_FILE = "debug.lua"

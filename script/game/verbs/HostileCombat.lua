@@ -39,7 +39,6 @@ function HostileCombat:PickAttack( actor )
 		end
 	end
 
-	print( actor, tostr(attacks))
 	return self:GetWorld():ArrayPick( attacks )
 end
 

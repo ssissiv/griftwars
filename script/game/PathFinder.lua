@@ -102,12 +102,13 @@ end
 function TilePathFinder:CalculatePath()
 	local start_room = self:GetStartRoom()
 	local end_room = self:GetEndRoom()
-	if start_room == end_room then
-		return
-	end
-	local queue = { start_room }
 	assert( start_room )
 	assert( end_room )
+	if self:AtGoal() then
+		return
+	end
+
+	local queue = { start_room }
 	local from_to = {} -- map of room -> next room back to start
 	local path
 	local sanity = 0
@@ -120,10 +121,10 @@ function TilePathFinder:CalculatePath()
 			path = {}
 
 			-- Only add the destination if it is passable, so you can path up to impassable goals.
-			if self.actor == nil or room:IsPassable( self.actor ) then
+			if self.actor and not self.path_adjacent then
 				table.insert( path, room )
-				room = from_to[ room ]
 			end
+			room = from_to[ room ]
 
 			local i = 0
 			while room do
@@ -156,6 +157,19 @@ function TilePathFinder:GetPath()
 	end
 
 	return self.path
+end
+
+function TilePathFinder:AtGoal()
+	local start_room = self:GetStartRoom()
+	local end_room = self:GetEndRoom()
+	local end_impass = self.target:GetAspect( Aspect.Impass )
+
+	self.path_adjacent = end_impass and not end_impass:IsPassable( self.source )
+	if self.path_adjacent then
+		return self.source:IsAdjacent( end_room )
+	else
+		return start_room == end_room
+	end
 end
 
 function TilePathFinder:GetStartRoom()

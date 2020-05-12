@@ -338,6 +338,8 @@ function Verb:Resume( coro )
 		end
 	end
 
+	self.time_resumed = self:GetWorld():GetDateTime()
+
 	-- Even cancelled verbs get one last Resume to do any cleanup.
 	-- Internally verbs should check IsCancelled after any YieldForTime call.
 	local ok, result = coroutine.resume( coro )
@@ -360,6 +362,15 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 		ui.Text( "Started:" )
 		ui.SameLine( 0, 10 )
 		Calendar.RenderDatetime( ui, self.time_started, self:GetWorld() )
+	end
+	if self.time_resumed then
+		ui.Text( "Resumed:" )
+		ui.SameLine( 0, 10 )
+		Calendar.RenderDatetime( ui, self.time_resumed, self:GetWorld() )
+	end
+	if self.yield_ev then
+		local time_left = self.yield_ev.when - self:GetWorld():GetDateTime()
+		ui.Text( loc.format( "Resume in: {1} ({2})", time_left, Calendar.FormatDuration( time_left )))
 	end
 
 	local helpers = self:GetHelpers()

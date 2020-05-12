@@ -46,9 +46,9 @@ function Travel:CanInteract( actor )
 	return true
 end
 
-function Travel:PathToTile( actor, tile )
-	local pather = TilePathFinder( actor, actor, tile )
-	while actor:GetTile() ~= tile do
+function Travel:PathToTarget( actor, dest )
+	local pather = TilePathFinder( actor, actor, dest )
+	while not pather:AtGoal() do
 		--
 		self:YieldForTime( WALK_TIME, 1.0 )
 
@@ -57,6 +57,7 @@ function Travel:PathToTile( actor, tile )
 		end
 
 		local path = pather:CalculatePath()
+		self.path = path
 		if path then
 			local x1, y1 = path[1]:GetCoordinate()
 			local x2, y2 = path[2]:GetCoordinate()
@@ -67,7 +68,7 @@ function Travel:PathToTile( actor, tile )
 		end
 	end
 
-	return actor:GetTile() == tile
+	return actor:GetTile() == pather:GetEndRoom()
 end
 
 function Travel:PathToDest( actor, location )
@@ -75,8 +76,7 @@ function Travel:PathToDest( actor, location )
 	for i, portal in actor.location:Portals() do
 		if portal:GetDest() == location and portal.owner:GetTile() then
 			-- Path tiles to dest.
-			local tile = portal.owner:GetTile()
-			if self:PathToTile( actor, tile ) then
+			if self:PathToTarget( actor, portal ) then
 				actor:WarpToLocation( portal:GetDest() )
 				break
 
@@ -116,12 +116,7 @@ function Travel:Interact( actor, dest )
 	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
 		local x, y = AccessCoordinate( dest )
 		if x and y then
-			local tile = actor.location:GetTileAt( x, y )
-			if tile == nil then
-				DBG( dest )
-			else
-				self:PathToTile( actor, tile )
-			end
+			self:PathToTarget( actor, dest )
 		end
 	end
 end
