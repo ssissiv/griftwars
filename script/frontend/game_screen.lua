@@ -72,6 +72,9 @@ function GameScreen:OnWorldEvent( event_name, world, ... )
 	if event_name == WORLD_EVENT.PUPPET_CHANGED then
 		local puppet = ...
 		self:OnPuppetChanged( puppet )
+
+	elseif event_name == WORLD_EVENT.PAUSED then
+		self:SetCurrentFocus( self.current_focus )
 	end
 end
 
@@ -99,14 +102,14 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 		end
 
 	elseif event_name == AGENT_EVENT.TILE_CHANGED then
-		if not self.lock_focus then
-			self:SetCurrentFocus( nil )
-		else
+		-- if not self.lock_focus then
+		-- 	self:SetCurrentFocus( nil )
+		-- else
 			local verb_window = self:FindWindow( VerbMenu )
 			if verb_window then
 				verb_window:RefreshContents( self.puppet, self.current_focus )
 			end
-		end
+		-- end
 		self:PanToCurrentInterest()
 
 	elseif event_name == AGENT_EVENT.KILLED then
@@ -166,10 +169,12 @@ function GameScreen:RenderScreen( gui )
     			target:LocTable( self.puppet ), hp, max_hp ))
     		local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
     		if attack then
-    			ui.SameLine( 200 )
-    			local t, time_left = attack:GetActingProgress()
+    			local t = attack:GetActingProgress()
     			if t then
-	    			ui.Text( loc.format( "{1} ({2})", attack:GetDesc(), Calendar.FormatDuration( time_left )) )
+	    			ui.SameLine( 0, 50 )
+	    			local time_left, total_time = attack:GetActingTime()
+	    			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
+	    				t, Calendar.FormatDuration( total_time )) )
 	    		end
     		end
     	end

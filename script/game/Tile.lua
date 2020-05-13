@@ -5,6 +5,10 @@ function Tile:init( x, y )
 	self.x, self.y = x, y
 end
 
+function Tile:GetName()
+	return self.name or self._classname
+end
+
 function Tile:GetCoordinate()
 	return self.x, self.y
 end
@@ -106,18 +110,23 @@ local Void = class( "Tile.Void", Tile )
 
 local Grass = class( "Tile.Grass", Tile )
 Grass.image = assets.TILE_IMG.GRASS
+Grass.name = "Grass"
 
 local Tree = class( "Tile.Tree", Tile )
 Tree.image = assets.TILE_IMG.TREE
+Tree.name = "Tree"
 
 local StoneFloor = class( "Tile.StoneFloor", Tile )
 StoneFloor.image = assets.TILE_IMG.STONE_FLOOR
+StoneFloor.name = "Stone Floor"
 
 local WoodenFloor = class( "Tile.WoodenFloor", Tile )
 WoodenFloor.image = assets.TILE_IMG.WOODEN_FLOOR
+WoodenFloor.name = "Wooden Floor"
 
 local StoneWall = class( "Tile.StoneWall", Tile )
 StoneWall.image = assets.TILE_IMG.STONE_WALL
+StoneWall.name = "Stone Wall"
 
 function StoneWall:init( x, y )
 	StoneWall._base.init( self, x, y )

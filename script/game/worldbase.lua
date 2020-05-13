@@ -142,6 +142,8 @@ function WorldBase:TogglePause( pause_type )
 	else
 		table.insert( self.pause, pause_type )
 	end
+	
+	self:BroadcastEvent( WORLD_EVENT.PAUSED, pause_type )
 end
 
 function WorldBase:IsPaused( pause_type )

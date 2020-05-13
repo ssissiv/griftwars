@@ -4,6 +4,7 @@ WORLD_EVENT = MakeEnum{
 	"INTERRUPT", -- Interrupt for AdvanceTime.
 	"VERB_FINISH",
 	"PUPPET_CHANGED",
+	"PAUSED", -- Pause status changed
 }
 
 ENTITY_EVENT = MakeEnum{

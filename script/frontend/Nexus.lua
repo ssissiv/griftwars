@@ -64,7 +64,7 @@ function WorldNexus:Inspect( viewer, ent )
 		self.screen:AddWindow( window )
 	elseif is_instance( ent, Aspect ) then
 		self:Inspect( viewer, ent.owner )
-	else
+	elseif is_instance( ent, Object ) then
 		local window = ObjectDetailsWindow( viewer, ent )
 		self.screen:AddWindow( window )
 	end

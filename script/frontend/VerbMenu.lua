@@ -21,7 +21,7 @@ function VerbMenu:RefreshContents( actor, focus )
 end
 
 function VerbMenu:IsEmpty()
-    return #self.shown_verbs == 0
+    return self.focus == nil --#self.shown_verbs == 0
 end
 
 function VerbMenu:RenderImGuiWindow( ui, screen )
@@ -31,9 +31,20 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
 
     local shown, close, c = ui.Begin( "Actions", false, flags )
     if shown and self.focus then
-        local tx0, ty0 = AccessCoordinate( self.focus )
-        local target
+        if #self.shown_verbs == 0 then
+            local ent = AccessEntity( self.focus )
+            if ent then
+                assert( ent.GetName, tostring(ent))
+                ui.Text( tostring(ent:GetName()))
+                ui.SameLine( 0, 10 )
+                if ui.SmallButton( "?" ) then
+                    self.world.nexus:Inspect( self.actor, ent )
+                end
+                ui.Separator()
+            end
+        end
 
+        local target
         for i, verb in ipairs( self.shown_verbs ) do
             if target ~= verb:GetTarget() then
                 target = verb:GetTarget()
