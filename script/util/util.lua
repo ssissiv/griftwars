@@ -237,11 +237,12 @@ end
 
 -- Choose a random number in a gaussian distribution.
 -- Based on the polar form of the Box-Muller transformation.
-function math.randomGauss( mean, stddev, min_clamp, max_clamp )
+function math.randomGauss( mean, stddev, min_clamp, max_clamp, rnd )
 	local x1, x2, w
+    rnd = rnd or math.random
 	repeat
-		x1 = 2 * math.random() - 1
-		x2 = 2 * math.random() - 1
+		x1 = 2 * rnd() - 1
+		x2 = 2 * rnd() - 1
 		w = x1 * x1 + x2 * x2
 	until w < 1.0
 

@@ -2,14 +2,10 @@ local ShopLocation = class( "Location.Shop", Location )
 
 ShopLocation.WORLDGEN_TAGS = { "shop exit" }
 
-function ShopLocation:init()
-	Location.init( self )
-
-	self.shop = self:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
-end
-
 function ShopLocation:OnSpawn( world )
 	Location.OnSpawn( self, world )
+
+	self.shop = self:GainAspect( Feature.Shop( world:TablePick( SHOP_TYPE )))
 
 	local adj = world.adjectives:PickName()
 	local noun = world.nouns:PickName()

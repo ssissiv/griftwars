@@ -2,14 +2,14 @@ local Hills = class( "Zone.Hills", Zone )
 
 Hills.LOCATIONS =
 {
-	[ Location.OpenHills ] = 1,
+	Location.OpenHills, 1,
 }
 
 Hills.ZONE_ADJACENCY =
 {
-	["Zone.Forest"] = 2,
-	["Zone.Fields"] = 2,
-	["Zone.City"] = 1,
+	"Zone.Forest", 2,
+	"Zone.Fields", 2,
+	"Zone.City", 1,
 }
 Hills.ZONE_COLOUR = { 100, 150, 0 }
 

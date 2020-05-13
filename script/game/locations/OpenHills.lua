@@ -15,7 +15,7 @@ function OpenHills:GenerateTileMap()
 	if self.map == nil then
 		self.map = self:GainAspect( Aspect.TileMap( 12, 12 ))
 		self.map:FillTiles( function( x, y )
-			if math.random() < 0.05 then
+			if self.world:Random() < 0.05 then
 				return Tile.Tree( x, y )
 			else
 				return Tile.Grass( x, y )

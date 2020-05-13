@@ -162,6 +162,10 @@ function World:Random( a, b )
 	end
 end
 
+function World:RandomGauss( mean, stddev, min_clamp, max_clamp )
+	return math.randomGauss( mean, stddev, min_clamp, max_clamp, function() return self:Random() end )
+end
+
 function World:ArrayPick( t )
 	return t[ self:Random( #t ) ]
 end
@@ -179,18 +183,17 @@ end
 
 function World:WeightedPick( options )
     local total = 0
-    for k,v in pairs(options) do
-        total = total + v
+    for i = 2, #options, 2 do
+        total = total + options[i]
     end
     local rand = self:Random()*total
     
-    local option = next(options)
-    while option do
-        rand = rand - options[option]
+    for i = 1, #options, 2 do
+    	local option, wt = options[i], options[i+1]
+        rand = rand - wt
         if rand <= 0 then
             return option
         end
-        option = next(options, option)
     end
     -- assert(option, "weighted random is messed up")
 end

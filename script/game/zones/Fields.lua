@@ -2,14 +2,14 @@ local Fields = class( "Zone.Fields", Zone )
 
 Fields.LOCATIONS =
 {
-	[ Location.OpenFields ] = 1,
+	Location.OpenFields, 1,
 }
 
 Fields.ZONE_ADJACENCY =
 {
-	["Zone.Forest"] = 2,
-	["Zone.Hills"] = 1,
-	["Zone.City"] = 1,
+	"Zone.Forest", 2,
+	"Zone.Hills", 1,
+	"Zone.City", 1,
 }
 Fields.ZONE_COLOUR = { 150, 210, 30 }
 

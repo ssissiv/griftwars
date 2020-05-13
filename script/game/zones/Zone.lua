@@ -87,10 +87,12 @@ end
 
 function Zone:RandomLocationClass( match_tags )
 	local classes = {}
-	for class, wt in pairs( self.LOCATIONS ) do
+	for i = 1, #self.LOCATIONS, 2 do
+		local class, wt = self.LOCATIONS[i], self.LOCATIONS[i+1]
 		for j, tag in ipairs( class.WORLDGEN_TAGS or table.empty ) do
 			if match_tags == nil or WorldGen.MatchWorldGenTag( match_tags, tag ) then
-				classes[ class ] = wt
+				table.insert( classes, class )
+				table.insert( classes, wt )
 				break
 			end
 		end
@@ -112,6 +114,7 @@ end
 -- Takes a portal, generates a destination to it.
 function Zone:GeneratePortalDest( portal, depth )	
 	local class = self:RandomLocationClass( portal:GetWorldGenTag() )
+	print( self, class._classname )
 	if class then
 		-- print( "Match:", location, portal:GetWorldGenTag(), class._classname )
 		local location = portal:GetLocation()

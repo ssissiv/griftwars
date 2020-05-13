@@ -123,7 +123,3 @@ function VerbContainer:SortByDistanceTo( x, y )
 
 	table.sort( self.verbs, fn )
 end
-
-function VerbContainer:PickRandom()
-	return table.arraypick( self.verbs )
-end

@@ -6,7 +6,6 @@ TavernLocation.WORLDGEN_TAGS = { "tavern exit" }
 
 function TavernLocation:init()
 	Location.init( self )
-	local shop = self:GainAspect( Feature.Shop( table.pick( SHOP_TYPE )))
 	local tavern = self:GainAspect( Feature.Tavern())
 end
 

@@ -37,7 +37,7 @@ function Agent:OnSpawn( world )
 	end
 	
 	if self.gender == nil then
-		self.gender = math.random() < 0.5 and GENDER.MALE or GENDER.FEMALE
+		self.gender = world:Random() < 0.5 and GENDER.MALE or GENDER.FEMALE
 	end
 	
 	if self.OnAgentEvent then
