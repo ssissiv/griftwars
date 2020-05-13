@@ -137,6 +137,7 @@ function TilePathFinder:CalculatePath()
 			break
 		end
 
+		local j = #queue
 		for i, dest in self.map:Neighbours( room ) do
 			if from_to[ dest ] == nil and dest ~= start_room and (self.actor == nil or dest == end_room or dest:IsPassable( self.actor )) then
 				assert( dest ~= start_room )
@@ -144,6 +145,9 @@ function TilePathFinder:CalculatePath()
 				table.insert( queue, dest )
 			end
 		end
+		-- Shuffle neighbours to mix up the path a bit.
+		table.shuffle( queue, j + 1, #queue )
+
 		sanity = sanity + 1
 		assert( sanity < 1000 )
 	end

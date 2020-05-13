@@ -44,3 +44,5 @@ luac.out
 *.sublime-workspace
 
 quicksave.sav
+
+script/local_debug.lua

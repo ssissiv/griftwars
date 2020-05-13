@@ -292,13 +292,14 @@ function Verb:CanCancel()
 end
 
 function Verb:GetActingTime()
-	return self.yield_ev, self.yield_duration
+	local time_left = self.yield_ev.when - self.actor.world:GetDateTime()
+	return time_left, self.yield_duration
 end
 
 function Verb:GetActingProgress()
 	if self.yield_ev and self.yield_duration then
 		local time_left = self.yield_ev.when - self.actor.world:GetDateTime()
-		return 1.0 - time_left / self.yield_duration, time_left
+		return time_left / self.yield_duration
 	end
 end
 

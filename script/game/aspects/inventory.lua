@@ -21,6 +21,10 @@ function Inventory:OnDespawn()
 	Aspect.OnDespawn( self )
 end
 
+function Inventory:IsEmpty()
+	return #self.items == 0
+end
+
 function Inventory:GetMoney()
 	return self.money:GetValue()
 end
@@ -87,7 +91,7 @@ end
 
 function Inventory:CollectVerbs( verbs, actor, obj )
 	if obj == self.owner then
-		if is_instance( self.owner, Agent ) and self.owner:IsDead() then
+		if is_instance( self.owner, Agent ) and self.owner:IsDead() and not self:IsEmpty() then
 			verbs:AddVerb( Verb.LootInventory( self ) )
 		end
 	end
