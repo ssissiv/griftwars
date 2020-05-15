@@ -92,7 +92,6 @@ function TilePathFinder:init( actor, source, target )
 	assert( is_instance( self.map, Aspect.TileMap ), tostring(actor.location))
 	self.actor = actor
 	self.source = source
-	assert( is_instance( target, Agent ) or is_instance( target, Tile ), tostr(target))
 	self.target = target
 end
 
@@ -166,7 +165,7 @@ end
 function TilePathFinder:AtGoal()
 	local start_room = self:GetStartRoom()
 	local end_room = self:GetEndRoom()
-	local end_impass = self.target:GetAspect( Aspect.Impass )
+	local end_impass = self.target.GetAspect and self.target:GetAspect( Aspect.Impass )
 
 	self.path_adjacent = end_impass and not end_impass:IsPassable( self.source )
 	if self.path_adjacent then
@@ -187,11 +186,11 @@ end
 
 
 function TilePathFinder:GetEndRoom()
-	if is_instance( self.target, Agent ) then
-		return self.target:GetTile()
-	else
-		assert( is_instance( self.target, Tile ), tostring(self.target))
+	if is_instance( self.target, Tile ) then
 		return self.target
+	else
+		local x, y = AccessCoordinate( self.target )
+		return self.map:LookupTile( x, y )
 	end
 end
 
