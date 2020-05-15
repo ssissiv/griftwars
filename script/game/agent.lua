@@ -422,6 +422,11 @@ function Agent:IsAdjacent( obj )
 	return x and y and IsAdjacentCoordinate( x, y, self.x, self.y )
 end
 
+function Agent:CanReach( obj )
+	local x, y = AccessCoordinate( obj )
+	return x and y and (IsAdjacentCoordinate( x, y, self.x, self.y ) or (self.x == x and self.y == y))
+end
+
 function Agent:GetTile()
 	if self.location then
 		return self.location:GetTileAt( self.x, self.y )

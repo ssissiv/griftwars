@@ -10,9 +10,9 @@ function ScroungeTarget:SetQuality( quality )
 end
 
 function ScroungeTarget:CollectVerbs( verbs, actor, obj )
-	local scrounge = actor:GetAspect( Verb.Scrounge )
+	local scrounge = true --actor:GetAspect( Verb.Scrounge )
 	if scrounge and obj == self.owner then
-		verbs:AddVerb( scrounge )
+		verbs:AddVerb( Verb.Scrounge( nil, self.owner ) )
 	end
 end
 
@@ -77,12 +77,17 @@ function Scrounge:CanInteract( actor, target )
 	end
 
 	if target == nil then
-		if not self:FindTarget( actor ) then
-			return false, "No targets"
-		end
+		target = self:FindTarget( actor )
+	end
+
+	if target == nil then
+		return false, "No targets"
 
 	elseif not target:GetAspect( Aspect.ScroungeTarget ) then
 		return false, "Can't scrounge " ..tostring(target)
+
+	elseif not actor:CanReach( target ) then
+		return false, "Can't reach"
 	end
 	
 	return self._base.CanInteract( self, actor )

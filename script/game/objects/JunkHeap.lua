@@ -1,5 +1,7 @@
 local JunkHeap = class( "Object.JunkHeap", Object )
 
+JunkHeap.MAP_CHAR = "%"
+
 function JunkHeap:init()
 	Object.init( self )
 
