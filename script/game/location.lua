@@ -130,7 +130,7 @@ end
 -- portal that matches it for future connectivity.
 function Location:SpawnPerimeterPortals( tag )
 	local w, h = self.map:GetExtents()
-	local exits = table.shuffle{ EXIT.EAST, EXIT.WEST, EXIT.NORTH, EXIT.SOUTH }
+	local exits = self.world:Shuffle{ EXIT.EAST, EXIT.WEST, EXIT.NORTH, EXIT.SOUTH }
 	local n = self.world:Random( 1, 4 )
 	for i = 1, 4 do
 		local exit = exits[i]

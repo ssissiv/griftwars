@@ -141,15 +141,16 @@ function table.maxn( t )
     return n
 end
 
-function table.shuffle(array, start_index, end_index)
+function table.shuffle(array, start_index, end_index, rnd)
     
     start_index = start_index or 1
     end_index = end_index or #array
+    rnd = rnd or math.random
 
     local arrayCount = end_index - start_index + 1
     
     for i = end_index, start_index+1, -1 do
-        local j = math.random(start_index, i)
+        local j = rnd(start_index, i)
         array[i], array[j] = array[j], array[i]
     end
     return array

@@ -170,17 +170,6 @@ function World:ArrayPick( t )
 	return t[ self:Random( #t ) ]
 end
 
-function World:TablePick( t )
-    local num = table.count( t )
-    local i = self:Random( num )
-    for k, v in pairs(t) do
-        i = i - 1
-        if i <= 0 then
-            return k, v
-        end
-    end
-end
-
 function World:WeightedPick( options )
     local total = 0
     for i = 2, #options, 2 do
@@ -198,6 +187,9 @@ function World:WeightedPick( options )
     -- assert(option, "weighted random is messed up")
 end
 
+function World:Shuffle( t, start_index, end_index )
+	return table.shuffle( t, start_index, end_index, function(...) return self:Random(...) end )
+end
 
 function World:AllAgents()
 	return ipairs( self.agents )

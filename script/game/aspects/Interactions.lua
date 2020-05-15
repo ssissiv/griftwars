@@ -1,6 +1,6 @@
 
 function Agent:GainTrustedInteractions( t )
-	table.shuffle( t )
+	self.world:Shuffle( t )
 	for i, v in ipairs( t ) do
 		assert( is_instance( v, Aspect.Interaction ))
 

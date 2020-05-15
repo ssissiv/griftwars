@@ -5,7 +5,7 @@ ShopLocation.WORLDGEN_TAGS = { "shop exit" }
 function ShopLocation:OnSpawn( world )
 	Location.OnSpawn( self, world )
 
-	self.shop = self:GainAspect( Feature.Shop( world:TablePick( SHOP_TYPE )))
+	self.shop = self:GainAspect( Feature.Shop( world:ArrayPick( SHOP_TYPE_ARRAY )))
 
 	local adj = world.adjectives:PickName()
 	local noun = world.nouns:PickName()

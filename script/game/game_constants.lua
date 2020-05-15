@@ -160,7 +160,7 @@ REXIT = {
 	EAST = EXIT.WEST,
 }
 
-EXIT_ARRAY = { EXIT.NORTH, EXIT.EAST, EXIT.SOUTH, EXIT.WEST }
+EXIT_ARRAY = MakeArrayFromEnum( EXIT )
 
 EXIT_TAG =
 {
@@ -175,6 +175,8 @@ SHOP_TYPE = MakeEnum{
 	"FOOD",
 	"EQUIPMENT",
 }
+SHOP_TYPE_ARRAY = MakeArrayFromEnum( SHOP_TYPE )
+
 
 -- Verb priorities, which determine behaviour.
 UTILITY =

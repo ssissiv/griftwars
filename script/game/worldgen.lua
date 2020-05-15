@@ -41,10 +41,6 @@ function WorldGen:ArrayPick( t )
 	return self.world:ArrayPick( t )
 end
 
-function WorldGen:TablePick( t )
-	return self.world:TablePick( t )
-end
-
 function WorldGen:WeightedPick( t )
 	return self.world:WeightedPick( t )
 end
