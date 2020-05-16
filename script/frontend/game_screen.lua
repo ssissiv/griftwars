@@ -591,7 +591,7 @@ function GameScreen:CycleFocus()
 	end
 
 	local location = self.puppet:GetLocation()
-	local contents = location:GetContentsByDistance( self.puppet:GetCoordinate() )
+	local contents = self.puppet:GetVisibleObjectsByDistance()
 	table.arrayremove( contents, self.puppet )
 
 	local idx = 0

@@ -9,6 +9,10 @@ function Portal:GetShortDesc( viewer )
 	return nil
 end
 
+function Portal:GetDest()
+	return self.portal:GetDest()
+end
+
 function Portal:GetMapChar()
 	if self.portal:GetDest() then
 		return "^"

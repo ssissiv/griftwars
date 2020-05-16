@@ -11,6 +11,12 @@ function Walk:Interact( actor )
 	local tile = location:GetTileAt( x, y )
 	if tile and tile:IsPassable( actor ) then
 		actor:WarpToTile( tile )
-		self:YieldForTime( WALK_TIME )
+
+		if actor:IsRunning() then
+			actor:DeltaStat( STAT.FATIGUE, 2 )
+			self:YieldForTime( RUN_TIME, 1.0 )
+		else
+			self:YieldForTime( WALK_TIME, 1.0 )
+		end
 	end
 end

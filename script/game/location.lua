@@ -377,17 +377,6 @@ function Location:FindPassableTile( x, y, obj )
 	return found_tile
 end
 
-function Location:GetContentsByDistance( x, y )
-	local function SortByDistance( obj1, obj2 )
-		local x1, y1 = obj1:GetCoordinate()
-		local x2, y2 = obj2:GetCoordinate()
-		return distance( x, y, x1, y1 ) < distance( x, y, x2, y2 )
-	end
-	local contents = table.shallowcopy( self.contents )
-	table.sort( contents, SortByDistance )
-	return contents
-end
-
 function Location:Contents()
 	return ipairs( self.contents or table.empty )
 end

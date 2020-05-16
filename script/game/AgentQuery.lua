@@ -16,6 +16,22 @@ function Agent:IsAlly( other )
 	return f1 and f2 and f1:IsAlly( f2 )
 end
 
+function Agent:CanSee( obj )
+	if obj.location ~= self.location then
+		return false
+	end
+
+	if is_instance( obj, Object.Portal ) and obj:GetDest() == nil then
+		return false
+	end
+
+	if not obj:GetCoordinate() or not self:GetCoordinate() then
+		return false
+	end
+
+	return true
+end
+
 function Agent:CanLearnSkill( skill )
 	assert( is_class( skill ))
 	local owned_skill = self:GetAspect( skill )
@@ -42,4 +58,31 @@ end
 
 function Agent:SetFeral( feral )
 	self.feral = feral
+end
+
+function Agent:IsRunning()
+	return self:InCombat()
+end
+
+function Agent:GetVisibleObjectsByDistance()
+	if self.location == nil then
+		return
+	end
+
+	local x, y = self:GetCoordinate()
+
+	local function SortByDistance( obj1, obj2 )
+		local x1, y1 = obj1:GetCoordinate()
+		local x2, y2 = obj2:GetCoordinate()
+		return distance( x, y, x1, y1 ) < distance( x, y, x2, y2 )
+	end
+	local contents = {}
+	for i, obj in self.location:Contents() do
+		if self:CanSee( obj ) then
+			table.insert( contents, obj )
+		end
+	end
+
+	table.sort( contents, SortByDistance )
+	return contents
 end

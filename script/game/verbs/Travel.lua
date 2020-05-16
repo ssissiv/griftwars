@@ -50,7 +50,12 @@ function Travel:PathToTarget( actor, dest )
 	local pather = TilePathFinder( actor, actor, dest )
 	while not pather:AtGoal() do
 		--
-		self:YieldForTime( WALK_TIME, 1.0 )
+		if actor:IsRunning() then
+			actor:DeltaStat( STAT.FATIGUE, 2 )
+			self:YieldForTime( RUN_TIME, 1.0 )
+		else
+			self:YieldForTime( WALK_TIME, 1.0 )
+		end
 
 		if self:IsCancelled() then
 			break
