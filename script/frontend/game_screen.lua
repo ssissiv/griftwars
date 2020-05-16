@@ -656,7 +656,8 @@ function GameScreen:MouseMoved( mx, my )
 end
 
 function GameScreen:MousePressed( mx, my, btn )
-	for i, window in ipairs( self.windows ) do
+	for i = #self.windows, 1, -1 do
+		local window = self.windows[i]
 		if window.MousePressed and window:MousePressed( mx, my, btn ) then
 			return true
 		end
@@ -677,7 +678,8 @@ function GameScreen:MousePressed( mx, my, btn )
 end
 
 function GameScreen:KeyPressed( key )
-	for i, window in ipairs( self.windows ) do
+	for i = #self.windows, 1, -1 do
+		local window = self.windows[i]
 		if window.KeyPressed and window:KeyPressed( key, self ) then
 			return true
 		end
@@ -699,7 +701,7 @@ function GameScreen:KeyPressed( key )
 			self:RemoveWindow( self.inventory_window )
 			self.inventory_window = nil
 		else
-			self.inventory_window = InventoryWindow( self.world, self.puppet, self.puppet )
+			self.inventory_window = InventoryWindow( self.world, self.puppet, self.puppet:GetInventory() )
 			self:AddWindow( self.inventory_window )
 		end
 		return true
@@ -790,6 +792,13 @@ function GameScreen:KeyPressed( key )
 end
 
 function GameScreen:KeyReleased( key )
+	for i = #self.windows, 1, -1 do
+		local window = self.windows[i]
+		if window.KeyReleased and window:KeyReleased( key, self ) then
+			return true
+		end
+	end
+
 	if key == "space" then
 		self.is_panning = false
 		return true

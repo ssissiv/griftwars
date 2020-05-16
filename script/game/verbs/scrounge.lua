@@ -1,12 +1,7 @@
 local ScroungeTarget = class( "Aspect.ScroungeTarget", Aspect )
 
-function ScroungeTarget:init( quality )
-	assert( quality )
-	self.quality = quality
-end
-
-function ScroungeTarget:SetQuality( quality )
-	self.quality = quality
+function ScroungeTarget:SetLootTable( t )
+	self.loot_table = t
 end
 
 function ScroungeTarget:CollectVerbs( verbs, actor, obj )
@@ -17,16 +12,19 @@ function ScroungeTarget:CollectVerbs( verbs, actor, obj )
 end
 
 function ScroungeTarget:GenerateLoot( inventory )
-	if self.quality >= QUALITY.POOR then
-		if math.random() < 0.3 * self.quality then
-			inventory:DeltaMoney( math.random( 1 * self.quality, 3 * self.quality ))
+	if self.loot_table then
+		local fn = self.owner:GetAspect( Aspect.Rng ):WeightedPick( self.loot_table )
+		local items = { fn() }
+		for i, obj in ipairs( items ) do
+			inventory:AddItem( obj )
 		end
 	end
+	self.scrounge_count = (self.scrounge_count or 0) + 1
 end
 
 
 function ScroungeTarget:RenderDetailsUI( ui, screen )
-	-- ui.Text( loc.format( "Can scrounge: {1}", QUALITY_STRINGS[ self.quality ] ))
+	ui.Text( loc.format( "This {1} has been rummaged in {2} times.", self.owner, self.scrounge_count or 0))
 end
 
 -------------------------------------------------------------------------
@@ -120,11 +118,14 @@ function Scrounge:Interact( actor, target )
 
 		local finder = self:GetRandomActor()
 		local inv = target:GetAspect( Aspect.Inventory )
-		target:GetAspect( Aspect.ScroungeTarget ):GenerateLoot( inv )
 
-		if not inv:IsEmpty() and self:CheckDC() then
-			self.loot = self.loot or Verb.LootInventory( target:GetAspect( Aspect.Inventory ))
-			self.loot:DoVerb( actor )
+		-- Check to generate
+		if self:CheckDC() then
+			target:GetAspect( Aspect.ScroungeTarget ):GenerateLoot( inv )
+		end
+
+		if not inv:IsEmpty() then
+			actor.world.nexus:LootInventory( actor, inv )
 			Msg:ActToRoom( "{1.Id} scrounges about and finds something.", finder )
 		else
 			Msg:Echo( finder, "You don't find anything useful." )

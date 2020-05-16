@@ -21,9 +21,6 @@ function LootInventory:Interact( actor, inventory )
 	if inventory:IsEmpty() then
 		Msg:Echo( actor, "Nothing found!" )
 	else
-		for i, item in inventory:Items() do
-			Msg:Echo( actor, "You loot {1} from {2}.", item:GetName( actor ), inventory.owner:GetName( actor ))
-		end
-		inventory:TransferAll( actor:GetInventory() )
+		actor.world.nexus:LootInventory( actor, inventory )
 	end
 end

@@ -2,27 +2,29 @@ local JunkHeap = class( "Object.JunkHeap", Object )
 
 JunkHeap.MAP_CHAR = "%"
 
-function JunkHeap:init()
-	Object.init( self )
-
-	if math.random() < 0.5 then
-		self:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ))
-	elseif math.random() < 0.5 then
-		self:GainAspect( Aspect.ScroungeTarget( QUALITY.AVERAGE ))
-	else
-		self:GainAspect( Aspect.ScroungeTarget( QUALITY.GOOD ))
-	end
-	self:GainAspect( Aspect.Inventory() )
-end
-
 function JunkHeap:OnSpawn( world )
 	JunkHeap._base.OnSpawn( self, world )
+
+	self.rng = self:GainAspect( Aspect.Rng())
+	self:GainAspect( Aspect.Inventory() )
+	self:GainAspect( Aspect.ScroungeTarget( QUALITY.POOR ))
+	self:GainAspect( Aspect.Impass() )
+
+	self:RefreshJunk()
+
 	world:SchedulePeriodicFunction( ONE_HOUR, self.RefreshJunk, self )
 end
 
 function JunkHeap:RefreshJunk()
-	local quality = table.arraypick{ QUALITY.POOR, QUALITY.AVERAGE, QUALITY.GOOD }
-	self:GetAspect( Aspect.ScroungeTarget ):SetQuality( quality )
+	self:GetAspect( Aspect.Inventory ):ClearItems()
+	
+	if self.rng:Random() < 0.5 then
+		self:GetAspect( Aspect.ScroungeTarget ):SetLootTable( LOOT_JUNK_T1 )
+	elseif self.rng:Random() < 0.5 then
+		self:GetAspect( Aspect.ScroungeTarget ):SetLootTable( LOOT_JUNK_T2 )
+	else
+		self:GetAspect( Aspect.ScroungeTarget ):SetLootTable( LOOT_JUNK_T3 )
+	end
 end
 
 

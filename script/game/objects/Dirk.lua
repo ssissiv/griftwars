@@ -5,6 +5,7 @@ function Dirk:init()
 	self.value = 12
 
 	self:GainAspect( Aspect.Wearable( EQ_SLOT.HAND ))
+	self:GainAspect( Aspect.Carryable() )
 end
 
 function Dirk:GetName()

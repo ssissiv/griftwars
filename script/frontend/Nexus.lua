@@ -38,20 +38,16 @@ function WorldNexus:Sleep( agent )
 	return stat_xp
 end
 
-function WorldNexus:LootMoney( agent, money )
-	if not agent:IsPuppet() then
-		agent:GetInventory():DeltaMoney( money )
-	else
-		local window = LootWindow( agent )
-		window:AddMoney( money )
-		self.screen:AddWindow( window )
+function WorldNexus:LootInventory( agent, inventory )
+	local window = InventoryWindow( agent.world, agent, inventory )
+	window:SetTitle( "Loot!" )
+	self.screen:AddWindow( window )
 
-		self.world:TogglePause( PAUSE_TYPE.NEXUS )
+	self.world:TogglePause( PAUSE_TYPE.NEXUS )
 
-		window:DoLoot()
+	window:DoLoot()
 
-		self.world:TogglePause( PAUSE_TYPE.NEXUS )
-	end
+	self.world:TogglePause( PAUSE_TYPE.NEXUS )
 end
 
 function WorldNexus:Inspect( viewer, ent )

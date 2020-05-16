@@ -26,6 +26,7 @@ function World:init()
 	self.adjectives = self:GainAspect( Aspect.NamePool( "data/adjectives.txt" ))
 	self.nouns = self:GainAspect( Aspect.NamePool( "data/nouns.txt" ))
 	self.city_names = self:GainAspect( Aspect.CityNamePool( "data/cities.txt" ))
+	self.rng = self:GainAspect( Aspect.Rng( 12345, 54321 ) )
 end
 
 function World:Log( fmt, ... )
@@ -146,49 +147,27 @@ function World:RequireAgent( ctor, pred )
 end
 
 function World:RollDice( num, size, bonus )
-	for i = 1, num do
-		bonus = (bonus or 0) + self:Random( 1, size )
-	end
-	return bonus
+	return self.rng:RollDice( num, size, bonus )
 end
 
 function World:Random( a, b )
-	if a == nil and b == nil then
-		return self.rng:random()
-	elseif b == nil then
-		return self.rng:random( a )
-	else
-		return self.rng:random( a, b )
-	end
+	return self.rng:Random( a, b )
 end
 
 function World:RandomGauss( mean, stddev, min_clamp, max_clamp )
-	return math.randomGauss( mean, stddev, min_clamp, max_clamp, function() return self:Random() end )
+	return self.rng:RandomGauss( mean, stddev, min_clamp, max_clamp )
 end
 
 function World:ArrayPick( t )
-	return t[ self:Random( #t ) ]
+	return self.rng:ArrayPick( t )
 end
 
 function World:WeightedPick( options )
-    local total = 0
-    for i = 2, #options, 2 do
-        total = total + options[i]
-    end
-    local rand = self:Random()*total
-    
-    for i = 1, #options, 2 do
-    	local option, wt = options[i], options[i+1]
-        rand = rand - wt
-        if rand <= 0 then
-            return option
-        end
-    end
-    -- assert(option, "weighted random is messed up")
+	return self.rng:WeightedPick( options )
 end
 
 function World:Shuffle( t, start_index, end_index )
-	return table.shuffle( t, start_index, end_index, function(...) return self:Random(...) end )
+	return self.rng:Shuffle( t, start_index, end_index )
 end
 
 function World:AllAgents()

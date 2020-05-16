@@ -12,12 +12,17 @@ function Inventory:OnSpawn( world )
 end
 
 function Inventory:OnDespawn()
-	for i, obj in ipairs( self.items ) do
-		world:DespawnEntity( obj )
-	end
-	table.clear( self.items )
-
+	self:ClearItems()
 	Aspect.OnDespawn( self )
+end
+
+function Inventory:ClearItems()
+	if self:IsSpawned() then
+		for i, obj in ipairs( self.items ) do
+			self:GetWorld():DespawnEntity( obj )
+		end
+	end
+	table.clear( self.items )	
 end
 
 function Inventory:IsEmpty()
@@ -33,15 +38,12 @@ function Inventory:DeltaMoney( delta )
 		self.money:DeltaValue( delta )
 
 		if self.money:GetValue() == 0 then
-			table.arrayremove( self.items, self.money )
-			self.money = nil
+			self:RemoveItem( self.money )
 		end
 
 	elseif delta > 0 then
-		self.money = Object.Creds()
-		self.money:DeltaValue( delta )
-
-		table.insert( self.items, self.money )
+		self.money = Object.Creds( delta )
+		self:AddItem( self.money )
 	end
 end
 
@@ -65,11 +67,15 @@ function Inventory:AddItem( item )
 end
 
 function Inventory:RemoveItem( item )
-	assert( item ~= self.money )
+	item:AssignOwner( nil )
 	table.arrayremove( self.items, item )
 
 	if self:IsSpawned() then
 		self.world:DespawnEntity( item )
+	end
+
+	if item == self.money then
+		self.money = nil
 	end
 end
 
@@ -97,14 +103,6 @@ end
 
 function Inventory:Items()
 	return ipairs( self.items )
-end
-
-function Inventory:CollectVerbs( verbs, actor, obj )
-	if obj == self.owner then
-		if is_instance( self.owner, Agent ) and self.owner:IsDead() and not self:IsEmpty() then
-			verbs:AddVerb( Verb.LootInventory( self ) )
-		end
-	end
 end
 
 function Inventory:RenderDebugPanel( ui, panel, dbg )

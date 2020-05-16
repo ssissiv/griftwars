@@ -5,6 +5,8 @@ function WorldBase:init()
 	self.debug_world_speed = 1.0
 	self.next_id = 100
 
+	self.world = self -- World is implicitly spawned.
+	
 	self:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
 

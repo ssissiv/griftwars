@@ -114,7 +114,6 @@ end
 -- Takes a portal, generates a destination to it.
 function Zone:GeneratePortalDest( portal, depth )	
 	local class = self:RandomLocationClass( portal:GetWorldGenTag() )
-	print( self, class._classname )
 	if class then
 		-- print( "Match:", location, portal:GetWorldGenTag(), class._classname )
 		local location = portal:GetLocation()
