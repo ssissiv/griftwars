@@ -32,6 +32,10 @@ function InventoryWindow:Close( screen )
     end
 end
 
+function InventoryWindow:LootAll()
+    -- FIXME: need to loot all the objects.
+    self.viewer:DoVerbAsync( Verb.LootAll( self.inventory ), self.inventory )
+end
 
 function InventoryWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
@@ -61,6 +65,10 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
             if done or ui.Button( "Close" ) then
                 self:Close( screen )
             end
+            ui.SameLine( 0, 10 )
+            if ui.Button( "Loot All" ) then
+                self:LootAll()
+            end
         end
     end
 
@@ -73,8 +81,12 @@ function InventoryWindow:SelectObject( obj )
 end
 
 function InventoryWindow:KeyPressed( key, screen )
-    if key == "return" or key == "escape" then
+    if key == "escape" then
         self:Close( screen )
+        return true
+
+    elseif key == "return" then
+        self:LootAll()
         return true
 
     elseif key == "/" and Input.IsShift() then

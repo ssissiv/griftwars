@@ -5,6 +5,10 @@ function LootInventory:init( inventory )
 	self.inventory = inventory
 end
 
+function LootInventory:GetRoomDesc( actor )
+	return loc.format( "Loot the {1}", tostring(self.inventory.owner))
+end
+
 function LootInventory:CanInteract( actor, inventory )
 	inventory = inventory or self.obj
 

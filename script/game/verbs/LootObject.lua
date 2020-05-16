@@ -8,6 +8,9 @@ function LootObject:CanInteract( actor, obj )
 	if obj.owner == actor:GetInventory() then
 		return false, "Already owned"
 	end
+	if not obj:GetAspect( Aspect.Carryable ) then
+		return false
+	end
 	return true
 end
 
@@ -17,5 +20,27 @@ function LootObject:Interact( actor, obj )
 	else
 		Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))
 		obj.owner:TransferItem( obj, actor:GetInventory() )
+	end
+end
+
+-------------------------------------------------------------
+
+local LootAll = class( "Verb.LootAll", Verb )
+
+function LootAll:init( inventory )
+	Verb.init( self, nil, inventory )
+	self.inventory = inventory
+end
+
+function LootAll:GetRoomDesc( actor )
+	return "Loot all"
+end
+
+function LootAll:Interact( actor, inventory )
+	inventory = inventory or self.inventory
+
+	self.loot = self.loot or Verb.LootObject()
+	for i, obj in inventory:Items() do
+		self.loot:DoVerb( actor, obj )
 	end
 end
