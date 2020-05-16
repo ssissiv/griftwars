@@ -16,8 +16,17 @@ function ScroungeTarget:CollectVerbs( verbs, actor, obj )
 	end
 end
 
+function ScroungeTarget:GenerateLoot( inventory )
+	if self.quality >= QUALITY.POOR then
+		if math.random() < 0.3 * self.quality then
+			inventory:DeltaMoney( math.random( 1 * self.quality, 3 * self.quality ))
+		end
+	end
+end
+
+
 function ScroungeTarget:RenderDetailsUI( ui, screen )
-	ui.Text( loc.format( "Can scrounge: {1}", QUALITY_STRINGS[ self.quality ] ))
+	-- ui.Text( loc.format( "Can scrounge: {1}", QUALITY_STRINGS[ self.quality ] ))
 end
 
 -------------------------------------------------------------------------
@@ -101,20 +110,22 @@ function Scrounge:Interact( actor, target )
 	Msg:ActToRoom( "{1.Id} begins rummaging around in {2.Id}.", actor, target )
 	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
 
-	while true do
+	-- while true do
 		self:YieldForTime( 30 * ONE_MINUTE, 8.0 )
 		actor:DeltaStat( STAT.FATIGUE, 5 )
 
 		if self:IsCancelled() then
-			break
+			return
 		end
 
 		local finder = self:GetRandomActor()
-		if self:CheckDC() then
-			local coins = math.random( 1, 3 )
-			Msg:Echo( finder, "You find {1#money}!", coins )
-			Msg:ActToRoom( "{1.Id} finds {3#money}!", finder, nil, coins )
-			finder.world.nexus:LootMoney( finder, coins )
+		local inv = target:GetAspect( Aspect.Inventory )
+		target:GetAspect( Aspect.ScroungeTarget ):GenerateLoot( inv )
+
+		if not inv:IsEmpty() and self:CheckDC() then
+			self.loot = self.loot or Verb.LootInventory( target:GetAspect( Aspect.Inventory ))
+			self.loot:DoVerb( actor )
+			Msg:ActToRoom( "{1.Id} scrounges about and finds something.", finder )
 		else
 			Msg:Echo( finder, "You don't find anything useful." )
 			Msg:ActToRoom( "{1.Id} mutters something unhappily.", finder )
@@ -124,8 +135,8 @@ function Scrounge:Interact( actor, target )
 
 		finder:BroadcastEvent( AGENT_EVENT.SCROUNGE, actor )
 		
-		if math.random() < 0.5 then
-			break
-		end
-	end
+	-- 	if math.random() < 0.5 then
+	-- 		break
+	-- 	end
+	-- end
 end

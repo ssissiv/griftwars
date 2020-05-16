@@ -1,7 +1,6 @@
 local Inventory = class( "Aspect.Inventory", Aspect )
 
 function Inventory:init()
-	self.money = Object.Creds()
 	self.items = {}
 end
 
@@ -26,15 +25,23 @@ function Inventory:IsEmpty()
 end
 
 function Inventory:GetMoney()
-	return self.money:GetValue()
+	return self.money and self.money:GetValue() or 0
 end
 
 function Inventory:DeltaMoney( delta )
-	self.money:DeltaValue( delta )
-	if self.money:GetValue() == 0 then
-		table.arrayremove( self.items, self.money )
-	else
-		table.insert_unique( self.items, self.money )
+	if self.money then
+		self.money:DeltaValue( delta )
+
+		if self.money:GetValue() == 0 then
+			table.arrayremove( self.items, self.money )
+			self.money = nil
+		end
+
+	elseif delta > 0 then
+		self.money = Object.Creds()
+		self.money:DeltaValue( delta )
+
+		table.insert( self.items, self.money )
 	end
 end
 
@@ -69,6 +76,9 @@ end
 function Inventory:TransferItem( item, inventory )
 	table.arrayremove( self.items, item )
 	inventory:AddItem( item )
+	if item == self.money then
+		self.money = nil
+	end
 end
 
 function Inventory:TransferAll( inventory )

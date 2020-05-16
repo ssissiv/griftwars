@@ -97,8 +97,11 @@ end
 
 function VerbMenu:KeyPressed( key, screen )
     if key == "/" and Input.IsShift() then
-        for i, target in ipairs( self.verb_targets ) do
-            self.world.nexus:Inspect( self.actor, target )
+        for i, verb in ipairs( self.shown_verbs ) do
+            local ent = AccessEntity( verb:GetTarget() )
+            if ent then
+                self.world.nexus:Inspect( self.actor, ent )
+            end
             return true
         end
 

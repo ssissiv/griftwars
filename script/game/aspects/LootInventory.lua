@@ -8,7 +8,7 @@ end
 function LootInventory:CanInteract( actor, inventory )
 	inventory = inventory or self.obj
 
-	if not actor:IsAdjacent( inventory ) then
+	if not actor:CanReach( inventory ) then
 		return false, "Not adjacent"
 	end
 

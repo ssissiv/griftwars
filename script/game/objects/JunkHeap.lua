@@ -12,6 +12,7 @@ function JunkHeap:init()
 	else
 		self:GainAspect( Aspect.ScroungeTarget( QUALITY.GOOD ))
 	end
+	self:GainAspect( Aspect.Inventory() )
 end
 
 function JunkHeap:OnSpawn( world )

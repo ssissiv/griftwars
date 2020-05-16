@@ -57,7 +57,9 @@ function District2:OnSpawn( world )
 	self:SpawnDoor( "residence entry" )
 	self:SpawnDoor( "residence entry" )
 
-	Object.JunkHeap():WarpToLocation( self )
+	for i = 1, world:Random( 6 ) do
+		Object.JunkHeap():WarpToLocation( self )
+	end
 end
 
 
