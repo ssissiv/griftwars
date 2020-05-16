@@ -130,7 +130,7 @@ function GameScreen:RenderScreen( gui )
     ui.Dummy( love.graphics.getWidth(), 0 )
 
     -- Render details about the player.
-    local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
+    local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60 or (puppet and puppet:InCombat())
     local timestr = Calendar.FormatTime( self.world:GetDateTime(), use_seconds )
     ui.Text( timestr )
     if self.world:IsPaused() then
