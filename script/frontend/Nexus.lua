@@ -39,6 +39,10 @@ function WorldNexus:Sleep( agent )
 end
 
 function WorldNexus:LootInventory( agent, inventory )
+	if agent ~= self.world:GetPuppet() then
+		return
+	end
+	
 	local window = InventoryWindow( agent.world, agent, inventory )
 	window:SetTitle( "Loot!" )
 	self.screen:AddWindow( window )

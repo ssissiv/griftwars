@@ -204,13 +204,19 @@ end
 
 function World:RefreshTimeSpeed()
 	-- Need to PAUSE while the puppet is idle (not doing verbs)
-	if self.puppet:IsBusy() == self:IsPaused( PAUSE_TYPE.IDLE ) then
-		self:TogglePause( PAUSE_TYPE.IDLE )
+	if not self.puppet:IsBusy() and self.puppet == self.player then
+		if not self:IsPaused( PAUSE_TYPE.IDLE ) then
+			self:TogglePause( PAUSE_TYPE.IDLE )
+		end
+	else
+		if self:IsPaused( PAUSE_TYPE.IDLE ) then
+			self:TogglePause( PAUSE_TYPE.IDLE )
+		end
 	end
 end
 
 function World:CalculateTimeElapsed( dt )
-	if self.puppet then
+	if self.puppet and self.puppet == self.player then
 		dt = self.puppet:CalculateTimeElapsed( dt )
 	end
 

@@ -71,8 +71,12 @@ end
 -- Returns 1.0 if datetime represents a time of day identical to target_time, and 0 if it represents
 -- the farther away it can be (12 hours difference).
 function Calendar.GetNormalizedTimeOfDay( datetime, target_time )
-	local n, modulus = math.modf(math.abs(Calendar.GetTimeOfDay( datetime ) - target_time) / HALF_DAY + 1.0 )
-	return modulus
+	local diff = math.abs( Calendar.GetTimeOfDay( datetime ) - (target_time % ONE_DAY) )
+	if diff > HALF_DAY then
+		return 1.0 - ((ONE_DAY - diff) / HALF_DAY)
+	else
+		return 1.0 - (diff / HALF_DAY)
+	end
 end
 
 function Calendar.IsNight( datetime )

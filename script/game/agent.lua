@@ -126,6 +126,10 @@ function Agent:IsPuppet()
 	return self.world:GetPuppet() == self
 end
 
+function Agent:GetSpeciesProps()
+	return SPECIES_PROPS[ self.species ]
+end
+
 function Agent:GetShortDesc( viewer )
 	local desc
 	if self.verbs then

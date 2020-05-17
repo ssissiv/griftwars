@@ -14,11 +14,21 @@ function ManageFatigue:CalculateUtility( actor )
 	elseif self.rest:IsDoing() then
 		utility = UTILITY.FUN
 	else
-		local night_t = Calendar.GetNormalizedTimeOfDay( actor.world:GetDateTime(), 20 * ONE_HOUR )
-		if night_t > 0.8 then
-			utility = UTILITY.HABIT
+		local night_t = Calendar.GetNormalizedTimeOfDay( actor.world:GetDateTime(), 1 * ONE_HOUR )
+		if actor:GetSpeciesProps().nocturnal then
+			if night_t > 0.7 then
+				utility = UTILITY.HABIT
+				return utility
+			else
+				utility = UTILITY.FUN
+			end
 		else
-			utility = UTILITY.FUN
+			if night_t > 0.8 then
+				utility = UTILITY.HABIT
+				return utility
+			else
+				utility = UTILITY.FUN
+			end
 		end
 
 		local t = actor:GetStat( STAT.FATIGUE ):GetPercent()

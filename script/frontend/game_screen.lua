@@ -705,9 +705,10 @@ function GameScreen:KeyPressed( key )
 		if self.world:IsPaused( PAUSE_TYPE.INTERRUPT ) then
 			self.world:TogglePause( PAUSE_TYPE.INTERRUPT )
 		else
-			self.is_panning = true
-			self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
-			self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
+			self.world:TogglePause( PAUSE_TYPE.DEBUG )
+			-- self.is_panning = true
+			-- self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
+			-- self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
 		end
 
 	elseif key == "i" then
