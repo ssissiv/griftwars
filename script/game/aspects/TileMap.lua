@@ -115,6 +115,16 @@ function TileMap:AssignToGrid( location )
 	end
 end
 
+function TileMap:ReassignToGrid( tile )
+	local x, y, z = tile:GetCoordinate()
+	local prev_tile = self:LookupTile( x, y, z )
+	if prev_tile then
+		self:UnassignFromGrid( prev_tile )
+	end
+	self:AssignToGrid( tile )
+end
+
+
 function TileMap:UnassignFromGrid( location )
 	local x, y, z = location:GetCoordinate()
 	local layer = self.layers[ z or 0 ]

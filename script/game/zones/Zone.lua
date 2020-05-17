@@ -136,7 +136,7 @@ function Zone:GeneratePortalDest( portal, depth )
 			for i, portal in new_location:Portals() do
 				print( i, portal, portal:GetWorldGenTag() )
 			end
-			error( "couldn't connect portal" )
+			error( "couldn't connect portal"..tostring(portal) )
 		end
 
 		local exit = portal:GetExitFromTag()

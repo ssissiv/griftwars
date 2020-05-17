@@ -76,7 +76,7 @@ function WorldGen:GenerateWorld()
 
 	local zones = { city }
 	local zone_count = 0
-	while #zones > 0 and zone_count < 6 do
+	while #zones > 0 and zone_count < 12 do
 		local zone = table.remove( zones, 1 )
 		for i, exit in ipairs( EXIT_ARRAY ) do
 			local exit_tag = EXIT_TAG[ exit ]

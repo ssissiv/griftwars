@@ -137,13 +137,13 @@ function love.load(arg)
 
     gui = UI()
 
-    local game = GameScreen()
-    gui:AddScreen( game )
-
     debug_mgr:LoadDebugInspectors()
     debug_mgr:ExecuteDebugFile( "script/debug/consolecommands.lua" )
 
     debug_mgr:TryExecuteDebugFile( "script/startup.lua" )
+
+    local game = GameScreen()
+    gui:AddScreen( game )
 end
  
 function love.update(dt)

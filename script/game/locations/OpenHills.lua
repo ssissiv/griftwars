@@ -8,8 +8,11 @@ function OpenHills:OnSpawn( world )
 
 	self:SetDetails( "Open Hills", "Rolling hills. Travel is inconsistent.")
 	self:SpawnPerimeterPortals( "hills" )
-end
 
+	if world:Random() < 0.1 then
+		Portal.CaveEntrance( "cave entry" ):WarpToLocation( self )
+	end
+end
 
 function OpenHills:GenerateTileMap()
 	if self.map == nil then

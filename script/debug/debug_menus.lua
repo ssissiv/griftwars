@@ -131,6 +131,15 @@ local GAME_BINDINGS =
             local env = dbg:GetDebugEnv()
             env.game:LoadWorld( "quicksave.sav" )
         end,
+    },
+
+    {
+        Binding = InputBinding{ key = "g", CTRL = true },
+        Text = "God Mode",
+        Do = function( dbg )
+            local puppet = dbg:GetDebugEnv().puppet
+            puppet:GetStat( STAT.HEALTH ):DeltaValue( 999, 999 )
+        end,
     }
 
 }

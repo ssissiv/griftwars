@@ -116,6 +116,11 @@ local Tree = class( "Tile.Tree", Tile )
 Tree.image = assets.TILE_IMG.TREE
 Tree.name = "Tree"
 
+local DirtFloor = class( "Tile.DirtFloor", Tile )
+DirtFloor.image = assets.TILE_IMG.DIRT_FLOOR
+DirtFloor.name = "Dirt Floor"
+
+
 local StoneFloor = class( "Tile.StoneFloor", Tile )
 StoneFloor.image = assets.TILE_IMG.STONE_FLOOR
 StoneFloor.name = "Stone Floor"

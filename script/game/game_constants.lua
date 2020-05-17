@@ -91,7 +91,7 @@ AFFINITY = MakeEnum
 	"ENEMY", -- Enemy!
 }
 
-SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC" }
+SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC", "MAMMAL" }
 
 SPECIES_ARRAY = MakeArrayFromEnum( SPECIES )
 table.arrayremove( SPECIES_ARRAY, SPECIES.NONE )
@@ -109,7 +109,12 @@ SPECIES_PROPS =
 	ORC =
 	{
 	},
+	MAMMAL =
+	{},
 }
+for i, species in ipairs( SPECIES_ARRAY ) do
+	assert( SPECIES_PROPS[ species ] ~= nil, tostring(species))
+end
 
 EQ_SLOT = MakeEnum
 {

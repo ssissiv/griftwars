@@ -14,6 +14,14 @@ function Agent:MakeOrc()
 	self:GainAspect( Aspect.Impass() )
 end
 
+function Agent:MakeAnimal()
+	self.species = SPECIES.MAMMAL
+
+	self:MakeGendered()
+	self:MakeBiological()
+	self:GainAspect( Aspect.Impass() )
+end
+
 function Agent:MakeGendered()
 	if math.random() < 0.5 then
 		self.gender = GENDER.MALE

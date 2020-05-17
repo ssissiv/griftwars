@@ -29,6 +29,8 @@ end
 function Agent:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
+	self.rng = self:GainAspect( Aspect.Rng())
+
 	if self.species == SPECIES.NONE then
 		self.species = world:ArrayPick( SPECIES_ARRAY )
 	end
@@ -38,7 +40,7 @@ function Agent:OnSpawn( world )
 	end
 	
 	if self.gender == nil then
-		self.gender = world:Random() < 0.5 and GENDER.MALE or GENDER.FEMALE
+		self.gender = GENDER.NEUTRAL
 	end
 	
 	if self.OnAgentEvent then

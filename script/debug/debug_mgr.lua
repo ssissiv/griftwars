@@ -69,7 +69,9 @@ end
 function DebugManager:GetDebugEnv()
 	dbg_env.dbg = self
     dbg_env.game = self.game
-    dbg_env.world = self.game.world
+    if self.game then
+	    dbg_env.world = self.game.world
+	end
     if dbg_env.world then
 	    dbg_env.now = dbg_env.world:GetDateTime()
 	    dbg_env.player = dbg_env.world:GetPlayer()

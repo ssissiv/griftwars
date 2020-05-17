@@ -143,10 +143,9 @@ function GameScreen:RenderScreen( gui )
     	ui.Text( string.format( "(x%.2f)", dt / WALL_TO_GAME_TIME))
     end
 
-    self:RenderAgentDetails( ui, puppet )
-
     -- Render what the player is doing...
     for i, verb in puppet:Verbs() do
+		ui.SameLine( 0, 10 )
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
     	ui.SameLine( 0, 10 )
     	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc(), verb:GetActingProgress() or 1.0 ))
@@ -160,9 +159,11 @@ function GameScreen:RenderScreen( gui )
     	end
     end
 
+    self:RenderAgentDetails( ui, puppet )
+
     -- Render Combat targets
     local combat = puppet:GetAspect( Aspect.Combat )
-    if combat then
+    if combat and puppet:InCombat() then
     	ui.Separator()
     	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
     	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
