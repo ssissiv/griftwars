@@ -245,13 +245,15 @@ function WorldBase:CalculateTimeElapsed( dt )
 end
 
 function WorldBase:UpdateWorld( dt )
-	if not self:IsPaused() then
-		local world_dt = self:CalculateTimeElapsed( dt )
-		self:AdvanceTime( world_dt )
+	if self:IsPaused() then
+		dt = 0
+	end
 
-		if self.OnUpdateWorld then
-			self:OnUpdateWorld( dt, world_dt )
-		end
+	local world_dt = self:CalculateTimeElapsed( dt )
+	self:AdvanceTime( world_dt )
+
+	if self.OnUpdateWorld then
+		self:OnUpdateWorld( dt, world_dt )
 	end
 end
 

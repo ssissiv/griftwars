@@ -165,6 +165,13 @@ function GameScreen:RenderScreen( gui )
     local combat = puppet:GetAspect( Aspect.Combat )
     if combat and puppet:InCombat() then
     	ui.Separator()
+
+    	-- Allies.
+		local hp, max_hp = puppet:GetHealth()
+		ui.TextColored( 0, 255, 0, 255, loc.format( "{1.Id} - {2}/{3}",
+			puppet:LocTable( self.puppet ), hp, max_hp ))
+
+		ui.SameLine( 0, 50 )
     	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
     	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
     	local show_tt = ui.IsItemHovered()
@@ -188,6 +195,10 @@ function GameScreen:RenderScreen( gui )
 	    			local time_left, total_time = attack:GetActingTime()
 	    			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
 	    				t, Calendar.FormatDuration( total_time )) )
+	    			ui.SameLine( 0, 50 )
+
+			    	local damage, details = target:CalculateAttackDamage()
+	    			ui.Text( loc.format( "{1} damage", damage ))
 	    		end
     		end
     	end
