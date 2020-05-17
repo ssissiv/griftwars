@@ -12,7 +12,14 @@ function Cave:init()
 	self:GainAspect( Feature.Home() )
 
 	Portal.CaveEntrance( "cave exit"):WarpToLocation( self )
-	Object.Chest():WarpToLocation( self )
+end
+
+function Cave:OnSpawn( world )
+	Location.OnSpawn( self, world )
+	
+	local chest = Object.Chest()
+	chest:WarpToLocation( self )
+	chest:GenerateLoot( LOOT_JUNK_T3 )
 end
 
 function Cave:GenerateTileMap()
