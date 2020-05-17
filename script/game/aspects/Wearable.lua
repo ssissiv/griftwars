@@ -15,10 +15,31 @@ end
 
 function Wearable:Equip()
 	self.equipped = true
+
+	local carrier = self.owner:GetCarrier().owner
+
+	local inv = carrier:GetAspect( Aspect.Inventory )
+	inv:AllocateSlot( self.eq_slot, self.owner )
+
+	if self.owner.equipment_handlers then
+		for event_name, fn in pairs( self.owner.equipment_handlers ) do
+			carrier:ListenForEvent( event_name, self.owner, fn)
+		end
+	end
 end
 
 function Wearable:Unequip()
-	self.equipped = false
+	if self.equipped then
+		self.equipped = false
+
+		local carrier = self.owner:GetCarrier().owner
+		local inv = carrier:GetAspect( Aspect.Inventory )
+		inv:DeallocateSlot( self.eq_slot, self.owner )
+
+		if self.owner.equipment_handlers then
+			carrier:RemoveListener( self.owner )
+		end
+	end
 end
 
 function Wearable:CollectVerbs( verbs, actor, obj )

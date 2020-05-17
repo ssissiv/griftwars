@@ -74,14 +74,18 @@ function Object:WarpToAgent( agent )
 	self:WarpToLocation( agent:GetLocation() )
 end
 
-function Object:AssignOwner( owner )
-	assert( is_instance( owner, Aspect.Inventory )) -- likely to be relaxed
-	self.owner = owner
+function Object:AssignCarrier( carrier )
+	assert( is_instance( carrier, Aspect.Inventory )) -- likely to be relaxed
+	self.carrier = carrier
+end
+
+function Object:GetCarrier()
+	return self.carrier
 end
 
 function Object:Clone()
 	local clone = setmetatable( table.shallowcopy( self ), self._class )
-	clone.owner = nil -- Not transferrable.
+	clone.carrier = nil -- Not transferrable.
 	return clone
 end
 
@@ -110,8 +114,8 @@ end
 function Object:GetLocation()
 	if self.location then
 		return self.location
-	elseif self.owner then
-		return self.owner:GetLocation()
+	elseif self.carrier then
+		return self.carrier:GetLocation()
 	end
 end
 

@@ -16,6 +16,10 @@ function Agent:IsAlly( other )
 	return f1 and f2 and f1:IsAlly( f2 )
 end
 
+function Agent:CalculateAttackDamage()
+	return self.acc:CalculateValue( CALC_EVENT.ATTACK_DAMAGE, 1 )
+end
+
 function Agent:CanSee( obj )
 	if obj.location ~= self.location then
 		return false

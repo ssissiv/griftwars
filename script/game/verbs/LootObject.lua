@@ -5,7 +5,7 @@ function LootObject:GetRoomDesc( actor )
 end
 
 function LootObject:CanInteract( actor, obj )
-	if obj.owner == actor:GetInventory() then
+	if obj:GetCarrier() == actor:GetInventory() then
 		return false, "Already owned"
 	end
 	if not obj:GetAspect( Aspect.Carryable ) then
@@ -15,11 +15,11 @@ function LootObject:CanInteract( actor, obj )
 end
 
 function LootObject:Interact( actor, obj )
-	if obj.owner == nil then
+	if obj:GetCarrier() == nil then
 		actor:GetInventory():AddItem( obj )
 	else
 		Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))
-		obj.owner:TransferItem( obj, actor:GetInventory() )
+		obj:GetCarrier():TransferItem( obj, actor:GetInventory() )
 	end
 end
 

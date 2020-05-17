@@ -59,7 +59,7 @@ function Inventory:AddItem( item )
 	-- TODO: do item merging
 
 	table.insert( self.items, item )
-	item:AssignOwner( self )
+	item:AssignCarrier( self )
 
 	if self:IsSpawned() and not item:IsSpawned() then
 		self:GetWorld():SpawnEntity( item )
@@ -67,7 +67,9 @@ function Inventory:AddItem( item )
 end
 
 function Inventory:RemoveItem( item )
-	item:AssignOwner( nil )
+	assert( self.slots == nil or not table.find( self.slots, item ), "Object not deallocated from slot" )
+
+	item:AssignCarrier( nil )
 	table.arrayremove( self.items, item )
 
 	if self:IsSpawned() then
@@ -80,17 +82,43 @@ function Inventory:RemoveItem( item )
 end
 
 function Inventory:TransferItem( item, inventory )
+	-- Don't use RemoveItem -- we are reassigning, not despawning.
+	assert( self.slots == nil or not table.find( self.slots, item ), "Object not deallocated from slot" )
 	table.arrayremove( self.items, item )
-	inventory:AddItem( item )
+
 	if item == self.money then
 		self.money = nil
 	end
+
+	inventory:AddItem( item )
 end
 
 function Inventory:TransferAll( inventory )
 	while #self.items > 0 do
 		self:TransferItem( self.items[ #self.items ], inventory )
 	end
+end
+
+function Inventory:AccessSlot( slot )
+	return self.slots and self.slots[ slot ]
+end
+
+function Inventory:AllocateSlot( slot, obj )
+	assert( IsEnum( slot, EQ_SLOT ))
+	assert( table.contains( self.items, obj ))
+	if self.slots == nil then
+		self.slots = {}
+	end
+
+	assert( self.slots[ slot ] == nil )
+	self.slots[ slot ] = obj
+end
+
+function Inventory:DeallocateSlot( slot, obj )
+	assert( IsEnum( slot, EQ_SLOT ))
+	assert( table.contains( self.items, obj ))
+	assert( self.slots[ slot ] == obj )
+	self.slots[ slot ] = nil
 end
 
 function Inventory:GetRandomItem()
@@ -108,5 +136,12 @@ end
 function Inventory:RenderDebugPanel( ui, panel, dbg )
 	for i, item in ipairs( self.items ) do
 		panel:AppendTable( ui, item )
+		if self.slots then
+			local slot = table.find( self.slots, item )
+			if slot then
+				ui.SameLine( 0, 10 )
+				ui.TextColored( 0, 200, 200, 255, tostring(slot))
+			end
+		end
 	end
 end

@@ -21,6 +21,10 @@ AGENT_EVENT = MakeEnum{
 	"KILLED",
 }
 
+CALC_EVENT = MakeEnum{
+	"ATTACK_DAMAGE",
+}
+
 LOCATION_EVENT = MakeEnum{
 	"AGENT_ADDED",
 	"AGENT_REMOVED",

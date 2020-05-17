@@ -15,6 +15,7 @@ function Agent:init()
 	self.potential_verbs = {}
 	self.inventory = self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.Memory() )
+	self.acc = self:GainAspect( Aspect.ScalarCalculator() )
 
 	self.viz = AgentViz()
 	self.mental_state = MSTATE.ALERT

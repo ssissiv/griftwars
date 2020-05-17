@@ -7,7 +7,7 @@ function Punch:InAttackRange( actor, target )
 end
 
 function Punch:GetDesc( viewer )
-	return "Punch - 1d4"
+	return "Punch"
 end	
 
 function Punch:CanInteract( actor, target )
@@ -30,7 +30,7 @@ end
 function Punch:Interact( actor, target )
 	target = target or self.obj
 
-	local damage = actor.world:RollDice( 1, 4 )
+	local damage = actor:CalculateAttackDamage()
 	Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
 	Msg:Echo( actor, loc.format( "You attack {1.Id}! ({2} damage)", target:LocTable( actor ), damage ))
 	Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))

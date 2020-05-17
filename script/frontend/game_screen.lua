@@ -163,6 +163,11 @@ function GameScreen:RenderScreen( gui )
     -- Render Combat targets
     local combat = puppet:GetAspect( Aspect.Combat )
     if combat then
+    	ui.Separator()
+    	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
+    	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
+    	ui.SameLine( 0 )
+    	ui.TextColored( 0, 255, 255, 255, tostring(puppet:CalculateAttackDamage()))
     	for i, target in combat:Targets() do
     		local hp, max_hp = target:GetHealth()
     		ui.TextColored( 255, 0, 0, 255, loc.format( "{1.Id} - {2}/{3}",
@@ -178,7 +183,6 @@ function GameScreen:RenderScreen( gui )
 	    		end
     		end
     	end
-    	ui.Separator()
     end
     ui.Separator()
 
