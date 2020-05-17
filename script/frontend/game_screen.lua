@@ -673,7 +673,16 @@ function GameScreen:MousePressed( mx, my, btn )
 			return true
 
 		elseif self.puppet and not self.puppet:IsDead() then
-			self:SetCurrentFocus( self.hovered_tile )
+			if self.current_focus == self.hovered_tile then
+				if self.hovered_tile:IsPassable( self.puppet ) then
+					local verb = Verb.Travel( Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() ))
+					if verb:CanDo( self.puppet ) then
+						self.puppet:DoVerbAsync( verb )
+					end
+				end
+			else
+				self:SetCurrentFocus( self.hovered_tile )
+			end
 			return true
 		end
 	end

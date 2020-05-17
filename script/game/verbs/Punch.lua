@@ -11,6 +11,8 @@ function Punch:GetDesc( viewer )
 end	
 
 function Punch:CanInteract( actor, target )
+	target = target or self.obj
+
 	local ok, reason = Verb.CanInteract( self, actor, target )
 	if not ok then
 		return false, reason

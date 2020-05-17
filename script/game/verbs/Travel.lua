@@ -17,8 +17,8 @@ Travel.ENTER_STRINGS =
 	"{1.Id} enters."
 }
 
-function Travel:init()
-	Verb.init( self )
+function Travel:init( dest )
+	Verb.init( self, nil, dest )
 	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
 end
 
@@ -93,10 +93,10 @@ function Travel:PathToDest( actor, location )
 end
 
 function Travel:Interact( actor, dest )
-	if dest then
-		self.obj = dest
-	end
-	local pather = PathFinder( actor, self.obj )
+	dest = dest or self.obj
+	assert( dest )
+
+	local pather = PathFinder( actor, dest )
 	while actor:GetLocation() ~= pather:GetEndRoom() do
 
 		if self:IsCancelled() then

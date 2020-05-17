@@ -347,8 +347,8 @@ function Verb:Resume( coro )
 	if not ok then
 		error( tostring(result) .. "\n" .. debug.traceback( coro ))
 	elseif coroutine.status( coro ) == "suspended" then
-		-- Waiting.
-		assert( not self.cancelled )
+		-- Waiting.  Note that even if we are cancelled, the coro is still valid if we are part of a parent verb.
+		assert( not self.cancelled or self.parent ~= nil )
 	else
 		-- Done!
 		-- print( "DONE", self, coroutine.status(coro))

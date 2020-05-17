@@ -60,7 +60,6 @@ function HostileCombat:Interact( actor )
 		assert( attack.InAttackRange, tostr(attack))
 		if not attack:InAttackRange( actor, target ) then
 			local ok, reason = self.travel:DoVerb( actor, target )
-			print( "atk", target, ok, reason )
 		else
 			attack:DoVerb( actor, attack:GetTarget() )
 		end
