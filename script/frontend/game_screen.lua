@@ -167,8 +167,15 @@ function GameScreen:RenderScreen( gui )
     	ui.Separator()
     	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
     	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
+    	local show_tt = ui.IsItemHovered()
     	ui.SameLine( 0 )
-    	ui.TextColored( 0, 255, 255, 255, tostring(puppet:CalculateAttackDamage()))
+    	local damage, details = puppet:CalculateAttackDamage()
+    	ui.TextColored( 0, 255, 255, 255, tostring(damage))
+    	show_tt = show_tt or ui.IsItemHovered()
+    	if show_tt and details then
+    		ui.SetTooltip( details )
+    	end
+
     	for i, target in combat:Targets() do
     		local hp, max_hp = target:GetHealth()
     		ui.TextColored( 255, 0, 0, 255, loc.format( "{1.Id} - {2}/{3}",

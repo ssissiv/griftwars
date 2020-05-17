@@ -65,7 +65,7 @@ function Entity:OnDespawn()
 end
 
 function Entity:GainAspect( aspect )
-	assert( is_instance( aspect, Aspect ), tostring(aspect) )
+	assert( is_instance( aspect, Aspect ), "Not an aspect: "..tostring(aspect) )
 	
 	if self.aspects == nil then
 		self.aspects = {}

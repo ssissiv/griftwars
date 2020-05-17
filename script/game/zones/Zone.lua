@@ -43,7 +43,6 @@ function Zone:OnSpawn( world )
 
 	if self.rooms == nil then
 		self.rooms = {}
-		print( "Zone:OnSpawn", self )
 		self:GenerateZone()
 	end
 end

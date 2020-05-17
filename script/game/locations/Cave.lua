@@ -12,6 +12,7 @@ function Cave:init()
 	self:GainAspect( Feature.Home() )
 
 	Portal.CaveEntrance( "cave exit"):WarpToLocation( self )
+	Object.Chest():WarpToLocation( self )
 end
 
 function Cave:GenerateTileMap()

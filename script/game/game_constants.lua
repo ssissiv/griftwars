@@ -206,17 +206,10 @@ STAT = MakeEnum
 	-- Core stats
 	"FATIGUE",
 	"HEALTH",
-	
-	-- Trainable stats.
-	"STATURE",
-	"MIND",
+
+	"STRENGTH",
 	"CHARISMA",
 
-	-- Dynamic stats
-	"CRUELTY",
-	"GRIT",
-	"CRAFT",
-	
 	"XP",
 
 	-- Transient stats

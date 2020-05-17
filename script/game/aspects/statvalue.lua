@@ -1,6 +1,7 @@
 local StatValue = class( "Aspect.StatValue", Aspect )
 
 function StatValue:init( stat, value, max_value )
+	assert( value )
 	self.stat = stat
 	self.value = value
 	self.max_value = max_value
