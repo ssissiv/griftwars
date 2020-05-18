@@ -82,7 +82,7 @@ end
 
 function Portal:CollectVerbs( verbs, actor, obj )
 	if self.waypoint and obj == self.owner then
-		verbs:AddVerb( Verb.LeaveLocation( self ))
+		verbs:AddVerb( Verb.LeaveLocation( self, self.owner:GetAspect( Aspect.Requirements ) ))
 	end
 end
 

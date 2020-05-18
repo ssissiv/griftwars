@@ -57,3 +57,8 @@ function AbandonedWell:init()
 end
 
 
+function AbandonedWell:OnSpawn( world )
+	Portal.OnSpawn( self, world )
+	self.reqs = self:GainAspect( Aspect.Requirements() )
+	self.reqs:AddReq( Req.Stat( STAT.CLIMBING, 10 ))
+end

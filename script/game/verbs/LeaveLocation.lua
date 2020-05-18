@@ -18,8 +18,9 @@ LeaveLocation.EXIT_STRINGS =
 	"{1.Id} leaves to {2.title}.",
 }
 
-function LeaveLocation:init( dest )
+function LeaveLocation:init( dest, reqs )
 	Verb.init( self, nil, dest )
+	self.reqs = reqs
 end
 
 function LeaveLocation:GetShortDesc( viewer )
@@ -61,6 +62,14 @@ function LeaveLocation:CanInteract( actor )
 			return false, "Moving"
 		end
 	end
+
+	if self.reqs then
+		local ok, details = self.reqs:IsSatisfied( actor )
+		if not ok then
+			return false, details
+		end
+	end
+	
 	return self._base.CanInteract( self, actor )
 end
 

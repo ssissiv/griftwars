@@ -42,3 +42,24 @@ function TrustReq:IsSatisfied( viewer )
 	return true
 end
 
+
+
+----------------------------------------------------
+
+local StatReq = class( "Req.Stat", Req )
+
+function StatReq:init( stat, value )
+	assert( IsEnum( stat, STAT ))
+	self.stat = stat
+	self.value = value
+end
+
+function StatReq:IsSatisfied( viewer )
+	local value = viewer:GetStatValue( self.stat )
+	if value < self.value then
+		return false, loc.format( "Not enough {1} ({2}/{3})", self.stat, value, self.value )
+	end
+
+	return true
+end
+

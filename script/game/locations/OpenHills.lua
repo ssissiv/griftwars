@@ -14,7 +14,7 @@ function OpenHills:OnSpawn( world )
 	local feature = world:Random()
 	if feature < 0.1 then
 		Portal.CaveEntrance( "cave entry" ):WarpToLocation( self )
-	elseif feature < 0.15 then
+	elseif feature < 0.55 then
 		Portal.AbandonedWell():WarpToLocation( self )
 	end
 end

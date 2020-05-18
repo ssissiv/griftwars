@@ -648,6 +648,8 @@ function Agent:GetStatValue( stat )
 	if self.stats[ stat ] then
 		return self.stats[ stat ]:GetValue()
 	end
+
+	return 0
 end
 
 function Agent:GetStat( stat )

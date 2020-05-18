@@ -211,11 +211,13 @@ STAT = MakeEnum
 	-- Core stats
 	"FATIGUE",
 	"HEALTH",
+	"XP",
 
 	"STRENGTH",
 	"CHARISMA",
 
-	"XP",
+	-- Skill values
+	"CLIMBING",
 
 	-- Transient stats
 	"PATIENCE",
