@@ -13,6 +13,10 @@ function Orc:init()
 	self:SetFeral( true )
 end
 
+function Orc:GetShortDesc()
+	return "wild orc"
+end
+
 function Orc:GetMapChar()
 	return "o", constants.colours.GREEN
 end

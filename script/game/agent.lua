@@ -826,7 +826,7 @@ end
 function Agent:__tostring()
 	return string.format( "[%s%s%s%s]",
 		self:IsPlayer() and "@" or "",
-		self:GetName(),
+		self:GetName() or self:GetShortDesc(),
 		self.location == nil and "*" or "",
 		self:IsDead() and "!" or "" )
 end
