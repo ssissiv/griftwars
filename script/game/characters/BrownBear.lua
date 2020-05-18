@@ -1,5 +1,6 @@
 
 local BrownBear = class( "Agent.BrownBear", Agent )
+BrownBear.short_desc = "brown bear"
 
 function BrownBear:init()
 	Agent.init( self )

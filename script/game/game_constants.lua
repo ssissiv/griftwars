@@ -100,17 +100,22 @@ SPECIES_PROPS =
 {
 	NONE =
 	{
+		name = "NO-SPECIES",
 	},
 	HUMAN = 
 	{
+		name = "human",
 		sentient = true,
 		name_pool = true,
 	},
 	ORC =
 	{
+		name = "orc",
 	},
 	MAMMAL =
-	{},
+	{
+		name = "mammal",
+	},
 }
 for i, species in ipairs( SPECIES_ARRAY ) do
 	assert( SPECIES_PROPS[ species ] ~= nil, tostring(species))

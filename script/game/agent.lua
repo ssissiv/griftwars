@@ -95,14 +95,7 @@ function Agent:HasFlag( flag )
 end
 
 function Agent:GetName( viewer )
-	if viewer then
-		return loc.format( "{1.Id}", self:LocTable( viewer ))
-	else
-		return self.name or self.species or "No Name"
-	end
-end
-
-function Agent:GetTitle()
+	return self.name
 end
 
 function Agent:GetDesc()
@@ -125,37 +118,12 @@ function Agent:GetSpeciesProps()
 	return SPECIES_PROPS[ self.species ]
 end
 
-function Agent:GetShortDesc( viewer )
-	local desc
-	if self.verbs then
-		for i, verb in ipairs( self.verbs ) do
-			if not verb:IsCancelled() then
-				desc = verb:GetShortDesc( viewer )
-				if desc ~= nil then
-					break
-				end
-			end
-		end
+function Agent:GetShortDesc()
+	if self.short_desc then
+		return self.short_desc
+	else
+		return loc.format( "{1} {2}", SPECIES_PROPS[ self.species ].name, self._classname )
 	end
-
-	if desc == nil then
-		if self.mental_state ~= MSTATE.ALERT then
-			desc = loc.format( "{1.Id} is here. [{2}]", self:LocTable( viewer ), self.mental_state )
-		else
-			desc = loc.format( "{1.Id} is here.", self:LocTable( viewer ) )
-		end
-	end
-
-	if self.focus == self.world:GetPuppet() then
-		desc = desc .. loc.format( " {1.HeShe} is looking at you.", self:LocTable( viewer ) )
-	end
-
-	local title = self:GetTitle()
-	if title then
-		desc = desc .. loc.format( "({1})", title )
-	end
-
-	return desc
 end
 
 function Agent:GetLeader()
@@ -254,20 +222,20 @@ function Agent:GenerateLocTable( viewer )
 		t.HeShe = "It"
 	end
 
+	t.name = self.name
+
 	if self.name then
 		if viewer == nil then
 			t.id = loc.format( "[[{1}]]", self.name )
 		elseif viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
 			t.id = loc.format( "[{1}]", self.name )
 		else
-			t.id = loc.format( "[{1} {2}]", self.species, self._classname )
+			t.id = loc.format( "[{1}]", self:GetShortDesc( viewer ) )
 		end
 	else
-		t.id = loc.format( "[{1}]", self.species )
+		t.id = loc.format( "[{1}]", self:GetShortDesc( viewer ) )
 	end
 	t.Id = t.id
-
-	t.name = self:GetName()
 
 	return t
 end

@@ -5,7 +5,7 @@ function Tile:init( x, y )
 	self.x, self.y = x, y
 end
 
-function Tile:GetName()
+function Tile:GetShortDesc()
 	return self.name or self._classname
 end
 

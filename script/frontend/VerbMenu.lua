@@ -34,8 +34,8 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
         if #self.shown_verbs == 0 then
             local ent = AccessEntity( self.focus )
             if ent then
-                assert( ent.GetName, tostring(ent))
-                ui.Text( tostring(ent:GetName()))
+                assert( ent.GetShortDesc, tostring(ent))
+                ui.Text( tostring(ent:GetShortDesc( self.actor )))
                 ui.SameLine( 0, 10 )
                 if ui.SmallButton( "?" ) then
                     self.world.nexus:Inspect( self.actor, ent )
@@ -51,7 +51,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                 
                 local ent = AccessEntity( target )
                 if ent then
-                    ui.Text( tostring(ent:GetName()))
+                    ui.Text( tostring(ent:GetShortDesc( self.actor )))
                     ui.SameLine( 0, 10 )
                     if ui.SmallButton( "?" ) then
                         self.world.nexus:Inspect( self.actor, ent )

@@ -1,4 +1,5 @@
 local Portal = class( "Object.Portal", Object )
+Portal.name = "Portal"
 
 function Portal:init( worldgen_tag )
 	assert( worldgen_tag )
