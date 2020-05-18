@@ -9,7 +9,9 @@ function BottomOfWell:init( ... )
 	Location.init( self, ... )
 	self:SetDetails( "Bottom of the Well", "The dried out bottom of an abandoned cave." )
 
-	-- Portal.CaveEntrance( "cave exit"):WarpToLocation( self )
+	local out = Object.Portal( "bottom_of_well exit" )
+	out:GainAspect( Aspect.Requirements() ):AddReq( Req.Stat( STAT.CLIMBING, 10 ))
+	out:WarpToLocation( self )
 end
 
 function BottomOfWell:OnSpawn( world )

@@ -16,6 +16,10 @@ end
 
 function LootObject:Interact( actor, obj )
 	if obj:GetCarrier() == nil then
+		local tile = obj:GetTile()
+		if tile then
+			tile:RemoveEntity( obj )
+		end
 		actor:GetInventory():AddItem( obj )
 	else
 		Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))

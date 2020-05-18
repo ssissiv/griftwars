@@ -498,6 +498,19 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 		if ui.MenuItem( "Teleport here", nil, nil, tile:IsPassable( self.puppet )) then
 			self.puppet:WarpToTile( tile )
 		end
+
+		if ui.BeginMenu( "Spawn Carryable..." ) then
+			local changed, filter_str = ui.InputText( "Filter", self.debug_filter or "", 128 )
+			if changed then
+				self.debug_filter = filter_str
+			end
+			recurse_subclasses( Object, function( class )
+				if ui.MenuItem( class._classname ) then
+					class():WarpToLocation( self.puppet:GetLocation(), tile:GetCoordinate() )
+				end
+			end )
+			ui.EndMenu()
+		end
 	end
 end
 

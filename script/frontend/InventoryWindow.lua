@@ -48,13 +48,13 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
             local txt = GetObjectDesc( obj )
 
     		if ui.Selectable( txt, self.selected_obj == obj ) then
-                self:SelectObject( obj )
+                if obj == self.selected_obj then
+                    self.world.nexus:Inspect( self.viewer, obj )
+                else
+                    self:SelectObject( obj )
+                end
             end
             if self.selected_obj == obj then
-                ui.SameLine( 0, 10 )
-                if ui.SmallButton( "?" ) then
-                    self.world:GetNexus():Inspect( self.viewer, obj )
-                end
                 screen:RenderPotentialVerbs( ui, self.viewer, "object", obj )
                 self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj )
             end

@@ -60,12 +60,14 @@ function WorldNexus:Inspect( viewer, ent )
 	end
 
 	if is_instance( ent, Agent ) then
-		local window = AgentDetailsWindow( viewer, ent )
+		local window = self.screen:FindWindow( AgentDetailsWindow ) or AgentDetailsWindow( viewer, ent )
+		window:Refresh( ent )
 		self.screen:AddWindow( window )
 	elseif is_instance( ent, Aspect ) then
 		self:Inspect( viewer, ent.owner )
 	elseif is_instance( ent, Object ) then
-		local window = ObjectDetailsWindow( viewer, ent )
+		local window = self.screen:FindWindow( ObjectDetailsWindow ) or ObjectDetailsWindow( viewer, ent )
+		window:Refresh( ent )
 		self.screen:AddWindow( window )
 	end
 end

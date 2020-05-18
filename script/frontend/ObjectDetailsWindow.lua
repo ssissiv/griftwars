@@ -6,6 +6,10 @@ function ObjectDetailsWindow:init( viewer, obj )
 	self.obj = obj
 end
 
+function ObjectDetailsWindow:Refresh( obj )
+    self.obj = obj
+end
+
 function ObjectDetailsWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 	local txt = self.obj:GetName()

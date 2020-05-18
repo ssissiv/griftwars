@@ -6,6 +6,10 @@ function AgentDetailsWindow:init( viewer, agent )
 	self.agent = agent
 end
 
+function AgentDetailsWindow:Refresh( agent )
+    self.agent = agent
+end
+
 function AgentDetailsWindow:RenderAllRelationships( ui, screen )
 	ui.Bullet()
 	local count = self.agent:CountAffinities( AFFINITY.FRIEND )
