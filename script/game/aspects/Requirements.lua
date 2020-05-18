@@ -8,6 +8,14 @@ function Requirements:AddReq( req )
 	table.insert( self.reqs, req )
 end
 
+function Requirements:HasReq( fn )
+	for i, req in ipairs( self.reqs ) do
+		if fn( req ) then
+			return req
+		end
+	end
+end
+
 function Requirements:IsSatisfied( actor )
 	local reasons
 	for i, req in ipairs( self.reqs ) do

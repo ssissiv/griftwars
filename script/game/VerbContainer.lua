@@ -59,7 +59,7 @@ function VerbContainer:CollectVerbsFromEntity( entity, actor, obj )
 		entity:CollectVerbs( self, actor, obj )
 	end
 
-	-- Verbs get a say.
+	-- Aspects get a say.
 	for i, aspect in entity:Aspects() do
 		if aspect.CollectVerbs then
 			aspect:CollectVerbs( self, actor, obj)

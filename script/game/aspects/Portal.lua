@@ -16,6 +16,34 @@ function Portal:IsOneWay()
 	return false
 end
 
+function Portal:ActivatePortal( verb )
+	verb:YieldForTime( self.travel_time )
+
+	if verb:IsCancelled() then
+		return
+	end		
+
+	-- Warp to dest Location.
+	local dest, destx, desty = self:GetDest()
+	local actor = verb.actor
+	
+	Msg:ActToRoom( "{1.Id} leaves to {2.title}.", actor, dest )
+
+	verb.actor:DeltaStat( STAT.FATIGUE, 5 )
+
+	local entry_tile = dest:FindPassableTile( destx, desty, actor )
+	if entry_tile then
+		actor:WarpToLocation( dest, entry_tile:GetCoordinate() )
+
+		Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
+		Msg:ActToRoom( "{1.Id} enters.", actor )
+	else
+		Msg:Echo( actor, "The other side seems to be blocked!" )
+		print( actor, "couldn't leave to", dest )
+		DBG( dest:GetTileAt( destx, desty ))
+	end
+end
+
 function Portal:SetWorldGenTag( tag )
 	self.worldgen_tag = tag
 end

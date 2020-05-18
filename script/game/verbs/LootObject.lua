@@ -7,9 +7,13 @@ end
 function LootObject:CanInteract( actor, obj )
 	if obj:GetCarrier() == actor:GetInventory() then
 		return false, "Already owned"
+	elseif obj:GetCarrier() == nil then
+		if not actor:CanReach( obj ) then
+			return false, "Can't reach"
+		end
 	end
 	if not obj:GetAspect( Aspect.Carryable ) then
-		return false
+		return false -- Not even carryable
 	end
 	return true
 end

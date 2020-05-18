@@ -11,13 +11,6 @@ LeaveLocation.ACT_DESC =
 	"{1.Id} is heading towards {2.title}.",
 }
 
-LeaveLocation.EXIT_STRINGS =
-{
-	nil, --"You leave {2.title}.",
-	nil,
-	"{1.Id} leaves to {2.title}.",
-}
-
 function LeaveLocation:init( dest, reqs )
 	Verb.init( self, nil, dest )
 	self.reqs = reqs
@@ -125,43 +118,20 @@ function LeaveLocation:Interact( actor, target )
 		dest, destx, desty = target:GetDest()
 		portal = target
 
-	elseif is_instance( target, Location ) then
-		dest = target
-
 	else
 		error(tostring(target))
 	end
 
-	-- If we have a specific Portal, path to it.
-	if actor:GetLocation().map and portal then
+	-- Path to the portal object.
+	if actor:GetLocation().map then
 		self:PathToPortal( actor, portal )
+	end
 	
-		if self:IsCancelled() then
-			return
-		end		
+	if self:IsCancelled() then
+		return
+	end		
 
-		self:YieldForTime( portal:GetTravelTime() )
-
-		if self:IsCancelled() then
-			return
-		end		
-	end
-
-	-- Warp to dest Location.
-	Msg:Action( self.EXIT_STRINGS, actor, dest )
-
-	actor:DeltaStat( STAT.FATIGUE, 5 )
-	local entry_tile = dest:FindPassableTile( destx, desty, actor )
-	if entry_tile then
-		actor:WarpToLocation( dest, entry_tile:GetCoordinate() )
-
-		Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
-		Msg:ActToRoom( "{1.Id} enters.", actor )
-	else
-		Msg:Echo( actor, "The other side seems to be blocked!" )
-		print( actor, "couldn't leave to", dest )
-		DBG( dest:GetTileAt( destx, desty ))
-	end
+	portal:ActivatePortal( self )
 end
 
 ---------------------------------------------------------------

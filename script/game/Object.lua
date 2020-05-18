@@ -76,8 +76,19 @@ function Object:WarpToAgent( agent )
 end
 
 function Object:AssignCarrier( carrier )
-	assert( is_instance( carrier, Aspect.Inventory )) -- likely to be relaxed
+	assert( carrier == nil or is_instance( carrier, Aspect.Inventory )) -- likely to be relaxed
+
+	if self.carrier_handlers and self.carrier and is_instance( self.carrier.owner, Agent ) then
+		self.carrier.owner:RemoveListener( self )
+	end
+
 	self.carrier = carrier
+
+	if self.carrier_handlers and carrier and is_instance( carrier.owner, Agent ) then
+		for ev, fn in pairs( self.carrier_handlers ) do
+			carrier.owner:ListenForEvent( ev, self, fn )
+		end
+	end
 end
 
 function Object:GetCarrier()

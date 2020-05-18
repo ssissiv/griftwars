@@ -133,6 +133,16 @@ function Inventory:Items()
 	return ipairs( self.items )
 end
 
+function Inventory:CollectVerbs( verbs, actor, target )
+	if self.items then
+		for i, obj in ipairs( self.items ) do
+			if obj ~= target then
+				verbs:CollectVerbsFromEntity( obj, actor, target )
+			end
+		end
+	end
+end
+
 function Inventory:RenderDebugPanel( ui, panel, dbg )
 	for i, item in ipairs( self.items ) do
 		panel:AppendTable( ui, item )

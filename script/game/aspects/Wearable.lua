@@ -43,7 +43,7 @@ function Wearable:Unequip()
 end
 
 function Wearable:CollectVerbs( verbs, actor, obj )
-	if obj == self.owner then
+	if obj == self.owner and obj:GetCarrier() == actor:GetInventory() then
 		verbs:AddVerb( Verb.EquipObject( nil, self.owner ))
 	end
 end
