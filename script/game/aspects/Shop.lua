@@ -38,6 +38,9 @@ function Shop:SpawnShopOwner()
 
 	elseif shop_type == SHOP_TYPE.EQUIPMENT then
 		table.insert( stock, Weapon.Dirk() )
+
+	else
+		table.insert( stock, Object.ShoddyRope() )
 	end
 
 	local shopkeep = Agent.Shopkeeper()

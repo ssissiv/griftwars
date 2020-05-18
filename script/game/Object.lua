@@ -36,7 +36,8 @@ function Object:LocTable( viewer )
 end
 
 function Object:GetShortDesc( viewer )
-	return loc.format( "{1} is here.", tostring(self))
+	return tostring(self)
+	-- return loc.format( "{1} is here.", tostring(self))
 end
 
 local function WarpToLocation( self, location, x, y )

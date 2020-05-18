@@ -136,6 +136,10 @@ function LeaveLocation:Interact( actor, target )
 	if actor:GetLocation().map and portal then
 		self:PathToPortal( actor, portal )
 	
+		if self:IsCancelled() then
+			return
+		end		
+
 		self:YieldForTime( portal:GetTravelTime() )
 
 		if self:IsCancelled() then

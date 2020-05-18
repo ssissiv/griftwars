@@ -139,6 +139,7 @@ local GAME_BINDINGS =
         Do = function( dbg )
             local puppet = dbg:GetDebugEnv().puppet
             puppet:GetStat( STAT.HEALTH ):DeltaValue( 999, 999 )
+            puppet:GetInventory():DeltaMoney( 1000 )
         end,
     }
 

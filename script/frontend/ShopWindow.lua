@@ -21,7 +21,8 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 			local cost = shopkeep:GetBuyCost( obj, self.buyer )
 			if cost < money then
 				if ui.Selectable( tostring(obj), nil, "SpanAllColumns") then
-					coroutine.resume( self.coro, obj )
+					screen:RemoveWindow( self )
+					self:Resume( obj )
 				end
 			else
 				ui.TextColored( 0.5, 0.5, 0.5, 1, tostring(obj) )
@@ -50,8 +51,10 @@ function ShopWindow:ChooseBuyItem( world )
 	world:TogglePause( PAUSE_TYPE.NEXUS )
 
 	self.coro = coroutine.running()
-	coroutine.yield()
+	local obj = coroutine.yield()
 
 	world:TogglePause( PAUSE_TYPE.NEXUS )
+
+	return obj
 end
 

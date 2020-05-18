@@ -55,7 +55,7 @@ function StatReq:init( stat, value )
 end
 
 function StatReq:IsSatisfied( viewer )
-	local value = viewer:GetStatValue( self.stat )
+	local value = viewer:CalculateStat( self.stat )
 	if value < self.value then
 		return false, loc.format( "Not enough {1} ({2}/{3})", self.stat, value, self.value )
 	end

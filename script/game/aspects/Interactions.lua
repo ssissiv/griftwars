@@ -426,9 +426,13 @@ end
 
 function BuyFromShop:Interact( actor )
 	assert( actor )
-	local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )
-	if item then
-		self.owner:GetAspect( Job.ManageShop ):SellToBuyer( item, actor )
+	while true do
+		local item = actor.world.nexus:ChooseBuyItem( self.owner, actor )
+		if item then
+			self.owner:GetAspect( Job.ManageShop ):SellToBuyer( item, actor )
+		else
+			break
+		end
 	end
 end
 

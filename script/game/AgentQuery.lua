@@ -20,6 +20,10 @@ function Agent:CalculateAttackDamage()
 	return self.acc:CalculateValue( CALC_EVENT.ATTACK_DAMAGE, 1 )
 end
 
+function Agent:CalculateStat( stat )
+	return self.acc:CalculateValue( CALC_EVENT.STAT, self:GetStatValue( stat ), stat )
+end
+
 function Agent:CanSee( obj )
 	if obj.location ~= self.location then
 		return false

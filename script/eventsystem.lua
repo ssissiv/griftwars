@@ -7,7 +7,7 @@ function EventSystem:init()
 end
 
 function EventSystem:ListenForEvent(event, listener, fn, priority)
-    assert(event)
+    assert(type(event) == "string" )
     assert(type(fn or listener.OnGlobalEvent) == "function", "Listener missing handler function")
     if self.listeners_by_event == nil then
         self.listeners_by_event = {}
