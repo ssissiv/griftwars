@@ -130,12 +130,20 @@ function Zone:GeneratePortalDest( portal, depth )
 		end
 
 		if not portal:GetDest() then
-			print( string.format( "Could not connect portal %s -> %s, %s", location ,new_location, portal:GetWorldGenTag() ))
-			print( new_location.gen_portal, new_location.gen_portal:GetWorldGenTag() )
-			for i, portal in new_location:Portals() do
-				print( i, portal, portal:GetWorldGenTag() )
+			if portal.one_way then
+				local w, h = new_location.map:GetExtents()
+				local x, y = self.world:Random( w ), self.world:Random( h )
+				local tile = new_location:FindPassableTile( x, y )
+				portal:Connect( new_location, tile:GetCoordinate() )
+			else
+				print( string.format( "Could not connect portal %s (%s -> %s) %s",
+					portal.owner, location ,new_location,portal:GetWorldGenTag() ))
+
+				for i, portal in new_location:Portals() do
+					print( i, portal, portal:GetWorldGenTag() )
+				end
+				error( "couldn't connect portal"..tostring(portal) )
 			end
-			error( "couldn't connect portal"..tostring(portal) )
 		end
 
 		local exit = portal:GetExitFromTag()

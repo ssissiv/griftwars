@@ -42,3 +42,18 @@ local CaveEntrance = class( "Portal.CaveEntrance", Portal )
 
 CaveEntrance.image = assets.TILE_IMG.CAVE_ENTRANCE
 CaveEntrance.name = "Cave Entrance"
+
+
+-------------------------------------------------------------
+
+local AbandonedWell = class( "Portal.AbandonedWell", Portal )
+
+AbandonedWell.image = assets.TILE_IMG.ABANDONED_WELL
+AbandonedWell.name = "Abandoned well"
+
+function AbandonedWell:init()
+	Portal.init( self, "bottom_of_well entry" )
+	self.portal.one_way = true	
+end
+
+

@@ -23,7 +23,7 @@ end
 
 function Tile:IsPassable( obj )
 	local impass = self:GetAspect( Aspect.Impass )
-	if impass and not impass:IsPassable( obj ) then
+	if impass and ( obj == nil or not impass:IsPassable( obj ) ) then
 		return false
 	end
 	if self.contents then

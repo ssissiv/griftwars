@@ -39,6 +39,7 @@ local assets =
 		BED = "bed.png",
 		CAVE_ENTRANCE = "cave_entrance.png",
 		CHEST = "chest.png",
+		ABANDONED_WELL = "abandoned_well.png",
 
 	},
 

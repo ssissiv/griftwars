@@ -12,6 +12,10 @@ function Portal:GetTravelTime()
 	return self.travel_time
 end
 
+function Portal:IsOneWay()
+	return false
+end
+
 function Portal:SetWorldGenTag( tag )
 	self.worldgen_tag = tag
 end

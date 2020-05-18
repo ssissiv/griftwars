@@ -4,6 +4,7 @@ Hills.LOCATIONS =
 {
 	Location.OpenHills, 1,
 	Location.Cave, 1,
+	Location.BottomOfWell, 1,
 }
 
 Hills.ZONE_ADJACENCY =

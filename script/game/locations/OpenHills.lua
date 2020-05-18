@@ -9,8 +9,13 @@ function OpenHills:OnSpawn( world )
 	self:SetDetails( "Open Hills", "Rolling hills. Travel is inconsistent.")
 	self:SpawnPerimeterPortals( "hills" )
 
-	if world:Random() < 0.1 then
+	-- These could be different Locations, but there is some overhead in managing multiple
+	-- Locations atm so this is more convenient.
+	local feature = world:Random()
+	if feature < 0.1 then
 		Portal.CaveEntrance( "cave entry" ):WarpToLocation( self )
+	elseif feature < 0.15 then
+		Portal.AbandonedWell():WarpToLocation( self )
 	end
 end
 

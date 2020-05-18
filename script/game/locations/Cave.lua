@@ -5,8 +5,8 @@ local Cave = class( "Location.Cave", Location )
 
 Cave.WORLDGEN_TAGS = { "cave exit" }
 
-function Cave:init()
-	Location.init( self )
+function Cave:init( ...)
+	Location.init( self, ... )
 	self:SetDetails( "Cave", "A dark cave." )
 
 	self:GainAspect( Feature.Home() )
