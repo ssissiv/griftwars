@@ -5,6 +5,16 @@ function Agent:IsEnemy( other )
 		end
 	end
 
+	local function HasAttacked( engram )
+		if is_instance( engram, Engram.HasAttacked ) then
+			return engram.agent == other
+		end
+	end
+	-- they attacked us!
+	if self:GetMemory():HasEngram( HasAttacked ) then
+		return true
+	end
+
 	local f1 = self:GetAspect( Aspect.Faction )
 	local f2 = other:GetAspect( Aspect.Faction )
 	return f1 and f2 and f1:IsEnemy( f2 )

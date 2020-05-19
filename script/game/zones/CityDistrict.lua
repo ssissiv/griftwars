@@ -9,10 +9,12 @@ function District:OnSpawn( world )
 	self:SpawnPerimeterPortals( "district" )
 
 	local w, h = self.map:GetExtents()
+	local boundary = false
 
 	local portal = self:GetBoundaryPortal( EXIT.WEST )
 	if portal then
 		local x, y = portal.owner:GetCoordinate()
+		boundary = true
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
 			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
@@ -21,6 +23,7 @@ function District:OnSpawn( world )
 	local portal = self:GetBoundaryPortal( EXIT.EAST )
 	if portal then
 		local x, y = portal.owner:GetCoordinate()
+		boundary = true
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
 			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
@@ -29,6 +32,7 @@ function District:OnSpawn( world )
 	local portal = self:GetBoundaryPortal( EXIT.SOUTH )
 	if portal then
 		local x, y = portal.owner:GetCoordinate()
+		boundary = true
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
 			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
@@ -37,6 +41,7 @@ function District:OnSpawn( world )
 	local portal = self:GetBoundaryPortal( EXIT.NORTH )
 	if portal then
 		local x, y = portal.owner:GetCoordinate()
+		boundary = true
 		self.map:CreateCursor( 1, 1 )
 			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
 			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )

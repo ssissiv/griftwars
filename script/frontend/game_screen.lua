@@ -199,6 +199,10 @@ function GameScreen:RenderScreen( gui )
 
 			    	local damage, details = target:CalculateAttackDamage()
 	    			ui.Text( loc.format( "{1} damage", damage ))
+
+					if ui.IsItemHovered() then
+			    		ui.SetTooltip( details )
+    				end
 	    		end
     		end
     	end

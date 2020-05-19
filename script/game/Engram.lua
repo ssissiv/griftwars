@@ -2,6 +2,10 @@ local Engram = class( "Engram" )
 
 Engram.duration = ONE_DAY
 
+function Engram:MergeEngram( other )
+	return false
+end
+
 function Engram:GetAge( owner )
 	return owner.world:GetDateTime() - self.when
 end
@@ -40,6 +44,31 @@ function MakeKnown:RenderImGuiWindow( ui, screen, owner )
 	if CheckBits( self.pr_flags, PRIVACY.INTENT ) then
 		ui.Text( loc.format( "You learned {1.Id}'s plans and intents.", self.obj:LocTable( owner )))
 	end
+end
+
+
+-----------------------------------------------------------------------------
+-- The agent has attacked you.
+
+local HasAttacked = class( "Engram.HasAttacked", Engram )
+
+function HasAttacked:init( agent )
+	assert( is_instance( agent, Agent ))
+	self.agent = agent
+end
+
+function HasAttacked:MergeEngram( other )
+	if is_instance( other, HasAttacked ) then
+		self.when = other.when
+		return true
+	end
+
+	return false
+end
+
+
+function HasAttacked:RenderImGuiWindow( ui, screen, owner )
+	ui.Text( "{1.Id} attacked you.", self.agent:LocTable( owner ))
 end
 
 

@@ -287,7 +287,7 @@ end
 
 function Location:GetBoundaryPortal( exit )
 	for i, portal in ipairs( self.portals ) do
-		if portal:HasWorldGenTag( "boundary" ) and portal:HasWorldGenTag( EXIT_TAG[ exit ] ) then
+		if portal:HasWorldGenTag( "boundary" ) and (exit == nil or portal:HasWorldGenTag( EXIT_TAG[ exit ] )) then
 			return portal
 		end
 	end

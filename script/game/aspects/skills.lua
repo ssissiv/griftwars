@@ -41,6 +41,13 @@ end
 
 local Fighter = class( "Skill.Fighter", Skill )
 
+Fighter.event_handlers =
+{
+ 	[ CALC_EVENT.ATTACK_DAMAGE ] = function( self, agent, event_name, acc )
+    	acc:AddValue( 1, self )
+    end,
+}
+
 ---------------------------------------------------------------
 
 local RumourMonger = class( "Skill.RumourMonger", Skill )

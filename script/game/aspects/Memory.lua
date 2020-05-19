@@ -39,6 +39,13 @@ end
 
 function Memory:AddEngram( engram )
 	engram:StampTime( self.owner )
+
+	for i, v in ipairs( self.engrams ) do
+		if v:MergeEngram( engram ) then
+			return
+		end
+	end
+
 	table.insert( self.engrams, engram )
 end
 

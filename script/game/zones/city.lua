@@ -33,12 +33,28 @@ function City:OnWorldGenPass( pass )
 			local room = self:RandomRoom()
 			Agent.Snoop():WarpToLocation( room )
 		end
+
+		-- City guards.
+		for i, room in ipairs( self.rooms ) do
+			if room:GetBoundaryPortal() then
+				for i = 1, 4 do
+					local guard = Agent.CityGuard()
+					guard:GainAspect( Aspect.Faction( self.faction ))
+					guard:WarpToLocation( room )
+				end
+			end
+		end
+
 		return true
 
 	elseif pass == 1 then
 		self:SpawnShopAssistants()
 		return true
 	end
+end
+
+function City:GetFaction()
+	return self.faction
 end
 
 function City:SpawnShopAssistants()
