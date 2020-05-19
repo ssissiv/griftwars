@@ -7,6 +7,40 @@ function District:OnSpawn( world )
 		"These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 
 	self:SpawnPerimeterPortals( "district" )
+
+	local w, h = self.map:GetExtents()
+
+	local portal = self:GetBoundaryPortal( EXIT.WEST )
+	if portal then
+		local x, y = portal.owner:GetCoordinate()
+		self.map:CreateCursor()
+			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
+			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
+	end
+
+	local portal = self:GetBoundaryPortal( EXIT.EAST )
+	if portal then
+		local x, y = portal.owner:GetCoordinate()
+		self.map:CreateCursor()
+			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
+			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
+	end
+
+	local portal = self:GetBoundaryPortal( EXIT.SOUTH )
+	if portal then
+		local x, y = portal.owner:GetCoordinate()
+		self.map:CreateCursor()
+			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
+			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
+	end
+
+	local portal = self:GetBoundaryPortal( EXIT.NORTH )
+	if portal then
+		local x, y = portal.owner:GetCoordinate()
+		self.map:CreateCursor( 1, 1 )
+			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
+			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
+	end
 end
 
 function District:SpawnDoor( tags )
@@ -19,7 +53,7 @@ end
 
 function District:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( self.world:Random( 6, 12 ), self.world:Random( 6, 12 ) ))
+		self.map = self:GainAspect( Aspect.TileMap( self.world:Random( 10, 12 ), self.world:Random( 6, 12 ) ))
 		self.map:FillTiles( function( x, y )
 			return Tile.StoneFloor( x, y )
 		end )

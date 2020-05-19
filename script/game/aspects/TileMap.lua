@@ -44,6 +44,12 @@ function TileMap:GenerateTileMap()
 	end )
 end
 
+function TileMap:CreateCursor( x, y )
+	local cursor = TileMapCursor( self )
+	cursor:SetCoord( x, y )
+	return cursor
+end
+
 function TileMap:GetMaxDepth()
 	return self.max_depth
 end
@@ -128,15 +134,15 @@ end
 function TileMap:UnassignFromGrid( location )
 	local x, y, z = location:GetCoordinate()
 	local layer = self.layers[ z or 0 ]
-	local t = layer.row[ y ][ x ]
+	local t = layer[ y ][ x ]
 	if t == location then
-		layer.row[ y ][ x ] = nil
+		layer[ y ][ x ] = nil
 	elseif t then
 		table.arrayremove( t, location )
 		if #t == 1 then
-			layer.row[ y ][ x ] = t[ 1 ]
+			layer[ y ][ x ] = t[ 1 ]
 		elseif #t == 0 then
-			layer.row[ y ][ x ] = nil
+			layer[ y ][ x ] = nil
 		end
 	else
 		error( location )

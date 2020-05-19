@@ -69,6 +69,7 @@ require "game/worldgen"
 require "game/Req"
 require "game/VerbContainer"
 require "game/zones/Zone"
+require "game/map/TileMapCursor"
 require "game/PolymorphicHelpers"
 
 require "game/relationships/Relationship"

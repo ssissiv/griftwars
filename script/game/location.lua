@@ -285,6 +285,14 @@ function Location:FindPortalTo( dest )
 	end
 end
 
+function Location:GetBoundaryPortal( exit )
+	for i, portal in ipairs( self.portals ) do
+		if portal:HasWorldGenTag( "boundary" ) and portal:HasWorldGenTag( EXIT_TAG[ exit ] ) then
+			return portal
+		end
+	end
+end
+
 -- Breadth-first traversal applying fn().
 -- fn( location, depth ) returns two booleans:
 --		continue: if false, do not flood from this location
