@@ -3,7 +3,7 @@
 
 local CityGuard = class( "Agent.CityGuard", Agent )
 
-CityGuard.MAP_CHAR = "c"
+CityGuard.MAP_CHAR = "g"
 CityGuard.short_desc = "city guard"
 
 function CityGuard:init()

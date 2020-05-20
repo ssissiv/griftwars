@@ -285,6 +285,10 @@ function Verb:Cancel()
 			child:Cancel()
 		end
 	end
+
+	if self.OnCancel then
+		self:OnCancel()
+	end
 end
 
 function Verb:CanCancel()

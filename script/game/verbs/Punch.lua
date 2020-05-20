@@ -3,12 +3,19 @@ local Punch = class( "Attack.Punch", Verb )
 function Punch:InAttackRange( actor, target )
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
-	return distance( x1, y1, x2, y2 ) <= 2, "Out of range"
+	return distance( x1, y1, x2, y2 ) <= 1.5, "Out of range"
 end
 
 function Punch:GetDesc( viewer )
 	return "Punch"
 end	
+
+function Punch:OnCancel()
+	Msg:Echo( self.actor, "You mutter as your attack is foiled." )
+	if self.obj then
+		Msg:Echo( self.obj, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.obj ))
+	end
+end
 
 function Punch:CanInteract( actor, target )
 	target = target or self.obj

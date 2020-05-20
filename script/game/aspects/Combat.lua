@@ -27,7 +27,7 @@ function Combat:OnLoseAspect()
 end
 
 function Combat:CollectVerbs( verbs, actor, target )
-	if self.owner == actor then --and self:IsTarget( target ) then
+	if self.owner == actor and is_instance( target, Agent ) and not target:IsDead() then --and self:IsTarget( target ) then
 		verbs:AddVerb( Attack.Punch( nil, target ) )
 	end
 end
@@ -74,13 +74,13 @@ function Combat:OnLocationEvent( event_name, location, ... )
 
 	elseif event_name == AGENT_EVENT.ATTACKED then
 		local victim, attacker, attack = ...
-		if self.owner:CanSee( victim ) then
-			self:OnNoticedKill( victim, attacker, attack )
+		if not self:IsTarget( attacker ) and self.owner:CanSee( victim ) then
+			self:OnNoticedAttack( victim, attacker, attack )
 		end
 	end
 end
 
-function Combat:OnNoticedKill( victim, attacker, attack )
+function Combat:OnNoticedAttack( victim, attacker, attack )
 	if self.owner:IsAlly( victim ) and math.random() < 0.5 then
 		Msg:Speak( self.owner, "Banzaii!", victim:LocTable())
 

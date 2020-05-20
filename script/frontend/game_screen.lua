@@ -168,7 +168,7 @@ function GameScreen:RenderScreen( gui )
 
     	-- Allies.
 		local hp, max_hp = puppet:GetHealth()
-		ui.TextColored( 0, 255, 0, 255, loc.format( "{1.Id} - {2}/{3}",
+		ui.TextColored( 0, 1, 0, 1, loc.format( "{1.Id} - {2}/{3}",
 			puppet:LocTable( self.puppet ), hp, max_hp ))
 
 		ui.SameLine( 0, 50 )
@@ -177,7 +177,7 @@ function GameScreen:RenderScreen( gui )
     	local show_tt = ui.IsItemHovered()
     	ui.SameLine( 0 )
     	local damage, details = puppet:CalculateAttackDamage()
-    	ui.TextColored( 0, 255, 255, 255, tostring(damage))
+    	ui.TextColored( 0, 1, 1, 1, tostring(damage))
     	show_tt = show_tt or ui.IsItemHovered()
     	if show_tt and details then
     		ui.SetTooltip( details )
@@ -185,8 +185,12 @@ function GameScreen:RenderScreen( gui )
 
     	for i, target in combat:Targets() do
     		local hp, max_hp = target:GetHealth()
-    		ui.TextColored( 255, 0, 0, 255, loc.format( "{1.Id} - {2}/{3}",
-    			target:LocTable( self.puppet ), hp, max_hp ))
+    		local txt = loc.format( "{1.Id} - {2}/{3}", target:LocTable( self.puppet ), hp, max_hp )
+    		if self.current_focus == target:GetTile() then
+    			ui.TextColored( 1.0, 0, 0, 1.0, ">>" ..txt )
+    		else
+    			ui.TextColored( 0.5, 0, 0, 1.0, txt )
+    		end
     		local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
     		if attack then
     			local t = attack:GetActingProgress()
@@ -245,7 +249,7 @@ function GameScreen:RenderHoveredLocation( gui, puppet )
     if ui.Begin( "LOCATION", true, flags ) then
     	local hovered_tile, tx, ty = self:ScreenToTile( mx, my )
     	if hovered_tile then
-	    	ui.TextColored( 0, 255, 255, 255, tostring(hovered_tile ))
+	    	ui.TextColored( 0, 1, 1, 1, tostring(hovered_tile ))
 	    	ui.Separator()
 	    	for i, obj in hovered_tile:Contents() do
 	    		local txt = obj:GetShortDesc( puppet )
@@ -497,7 +501,7 @@ end
 function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 	local tile = self:ScreenToTile( mx, my )
 	if tile then
-		ui.TextColored( 0, 255, 255, 255, tostring(tile))
+		ui.TextColored( 0, 1, 1, 1, tostring(tile))
 
 		if ui.MenuItem( "Teleport here", nil, nil, tile:IsPassable( self.puppet )) then
 			self.puppet:WarpToTile( tile )
