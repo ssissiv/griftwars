@@ -10,9 +10,9 @@ function World:init()
 	self.relationships = {}
 	self.factions = {}
 
-	-- self.rng = love.math.newRandomGenerator( 3418323524, 20529293 )
-	self.rng = love.math.newRandomGenerator( 5235235, 120912 )
-	print( "WorldGen seeds:", self.rng:getSeed() )
+	self.rng = self:GainAspect( Aspect.Rng( 12345, 54321 ) )
+
+	print( "WorldGen seeds:", self.rng:GetSeed() )
 
 	self.limbo = Location()
 	self.limbo:SetDetails( "Limbo", "Implementation room." )
@@ -26,7 +26,6 @@ function World:init()
 	self.adjectives = self:GainAspect( Aspect.NamePool( "data/adjectives.txt" ))
 	self.nouns = self:GainAspect( Aspect.NamePool( "data/nouns.txt" ))
 	self.city_names = self:GainAspect( Aspect.CityNamePool( "data/cities.txt" ))
-	self.rng = self:GainAspect( Aspect.Rng( 12345, 54321 ) )
 end
 
 function World:Log( fmt, ... )

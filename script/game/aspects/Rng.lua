@@ -59,6 +59,11 @@ function Rng:WeightedPick( options )
     -- assert(option, "weighted random is messed up")
 end
 
-function World:Shuffle( t, start_index, end_index )
+function Rng:Shuffle( t, start_index, end_index )
 	return table.shuffle( t, start_index, end_index, function(...) return self:Random(...) end )
 end
+
+function Rng:GetSeed()
+	return self.rng:getSeed()
+end
+

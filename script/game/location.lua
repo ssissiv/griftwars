@@ -22,6 +22,8 @@ end
 function Location:OnSpawn( world )
 	Entity.OnSpawn( self, world )
 
+	self.rng = self:GainAspect( Aspect.Rng() )
+
 	self:GenerateTileMap()
 
 	if self.contents then
@@ -131,7 +133,7 @@ end
 function Location:SpawnPerimeterPortals( tag )
 	local w, h = self.map:GetExtents()
 	local exits = self.world:Shuffle{ EXIT.EAST, EXIT.WEST, EXIT.NORTH, EXIT.SOUTH }
-	local n = self.world:Random( 1, 4 )
+	local n = self.rng:Random( 1, 4 )
 	for i = 1, 4 do
 		local exit = exits[i]
 		local exit_tag = EXIT_TAG[ exit ]
@@ -430,7 +432,7 @@ function Location:PlaceEntity( obj )
 	if not x then
 		-- print( "Place", obj, self, x, y )
 		local w, h = self.map:GetExtents()
-		x, y = self.world:Random( w ), self.world:Random( h )
+		x, y = self.rng:Random( w ), self.rng:Random( h )
 	end
 	local tile = self:FindPassableTile( x, y, obj )
 	if not tile then
