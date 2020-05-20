@@ -27,7 +27,7 @@ function Combat:OnLoseAspect()
 end
 
 function Combat:CollectVerbs( verbs, actor, target )
-	if self.owner == actor and self:IsTarget( target ) then
+	if self.owner == actor then --and self:IsTarget( target ) then
 		verbs:AddVerb( Attack.Punch( nil, target ) )
 	end
 end
@@ -106,8 +106,8 @@ function Combat:EvaluateTarget( target )
 end
 
 function Combat:EvaluateTargets()
-	if self.location then
-		for i, obj in self.location:Contents() do
+	if self.owner.location then
+		for i, obj in self.owner.location:Contents() do
 			if not self:IsTarget( obj ) and self:EvaluateTarget( obj ) then
 				self:AddTarget( obj )
 			end
