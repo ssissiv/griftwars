@@ -4,7 +4,7 @@ local Behaviour = class( "Aspect.Behaviour", Aspect )
 
 Behaviour.event_handlers =
 {
-	[ AGENT_EVENT.KILLED ] = function( self, event_name, agent, ... )
+	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
 		agent:LoseAspect( self )
 	end,
 }

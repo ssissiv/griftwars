@@ -112,7 +112,7 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 		-- end
 		self:PanToCurrentInterest()
 
-	elseif event_name == AGENT_EVENT.KILLED then
+	elseif event_name == AGENT_EVENT.DIED then
 		self:SetCurrentFocus( nil )
 	end
 end

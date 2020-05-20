@@ -4,7 +4,7 @@ Combat.TABLE_KEY = "combat"
 
 Combat.event_handlers =
 {
-	[ AGENT_EVENT.KILLED ] = function( self, event_name, agent, ... )
+	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
 		agent:LoseAspect( self )
 	end,
 }
@@ -52,7 +52,7 @@ end
 
 function Combat:OnTargetEvent( event_name, target, ... )
 	assert( self:IsTarget( target ))
-	if event_name == AGENT_EVENT.KILLED then
+	if event_name == AGENT_EVENT.DIED then
 		self:EvaluateTargets()
 	end
 end
@@ -70,6 +70,23 @@ function Combat:OnLocationEvent( event_name, location, ... )
 		local agent = ...
 		if self:IsTarget( agent ) then
 			self:RemoveTarget( agent )
+		end
+
+	elseif event_name == AGENT_EVENT.ATTACKED then
+		local victim, attacker, attack = ...
+		if self.owner:CanSee( victim ) then
+			self:OnNoticedKill( victim, attacker, attack )
+		end
+	end
+end
+
+function Combat:OnNoticedKill( victim, attacker, attack )
+	if self.owner:IsAlly( victim ) and math.random() < 0.5 then
+		Msg:Speak( self.owner, "Banzaii!", victim:LocTable())
+
+		if self.owner:CanSee( attacker ) then
+			self.owner:GetMemory():AddEngram( Engram.HasAttacked( attacker ))
+			self:AddTarget( attacker )
 		end
 	end
 end
@@ -142,7 +159,7 @@ function Combat:AddTarget( target )
 	local combat = target:GetAspect( Aspect.Combat )
 	if not combat:IsTarget( self.owner ) then
 		combat:AddTarget( self.owner )
-	end
+	end	
 end
 
 function Combat:ClearTargets()

@@ -39,8 +39,13 @@ function Punch:Interact( actor, target )
 
 	target:DeltaHealth( -damage )
 
+	if target:IsDead() then
+		target:BroadcastEvent( AGENT_EVENT.KILLED, actor, self )
+
 	-- Interrupt target if they're not engaged.
-	if not target:IsDead() then
+	elseif not target:IsDead() then
+		target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self )
+
 		target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
 		target:GetAspect( Aspect.Combat ):EvaluateTargets()
 	end

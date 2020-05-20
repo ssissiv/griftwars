@@ -637,7 +637,7 @@ function Agent:Kill()
 
 	self:CancelInvalidVerbs()
 
-	self:BroadcastEvent( AGENT_EVENT.KILLED )
+	self:BroadcastEvent( AGENT_EVENT.DIED )
 end
 
 function Agent:IsDead()

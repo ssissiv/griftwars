@@ -244,6 +244,9 @@ function Location:OnEntityEvent( event_name, entity, ... )
 			obj:OnLocationEntityEvent( event_name, entity, ... )
 		end
 	end
+
+	-- Forward this event to anyone listening to this location.
+	self:BroadcastEvent( event_name, entity, ... )
 end
 
 local function VisitInternal( visited, location, fn, ... )

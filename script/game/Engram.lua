@@ -48,7 +48,7 @@ end
 
 
 -----------------------------------------------------------------------------
--- The agent has attacked you.
+-- The agent has attacked you or an ally.
 
 local HasAttacked = class( "Engram.HasAttacked", Engram )
 
@@ -68,7 +68,7 @@ end
 
 
 function HasAttacked:RenderImGuiWindow( ui, screen, owner )
-	ui.Text( "{1.Id} attacked you.", self.agent:LocTable( owner ))
+	ui.Text( "{1.Id} attacked you or an ally.", self.agent:LocTable( owner ))
 end
 
 
