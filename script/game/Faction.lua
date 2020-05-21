@@ -3,7 +3,8 @@ local Faction = class( "Faction", Entity )
 function Faction:init( name )
 	self.name = name
 	self.tags = {}
-	self.roles = {}
+	self.roles = {} -- Sorted array of FACTION_ROLE
+	self.members = {} -- Map of FACTION_ROLE -> { agent_list }
 end
 
 function Faction:GetFactionName()
@@ -11,15 +12,24 @@ function Faction:GetFactionName()
 end
 
 function Faction:AddFactionMember( agent, role )
-	if self.roles[ role ] == nil then
-		self.roles[ role ] = {}
+	table.insert_unique( self.roles, role )
+	if self.members[ role ] == nil then
+		self.members[ role ] = {}
 	end
-	table.insert( self.roles[ role ], agent )
+	table.insert( self.members[ role ], agent )
 	agent:GainAspect( Aspect.FactionMember( self, role ))
 end
 
 function Faction:GetAgentsByRole( role )
-	return self.roles[ role ] or table.empty
+	return self.members[ role ] or table.empty
+end
+
+function Faction:GetSuperiorsByRole( role )
+	local idx = table.find( self.roles, role )
+	if idx and idx > 1 then
+		local role = self.roles[ idx - 1 ]
+		return self.members[ role ]
+	end
 end
 
 function Faction:HasTag( faction, tag )
@@ -44,7 +54,7 @@ function Faction:AffirmFaction( faction )
 end
 
 function Faction:VerifyAgentLocations()
-	for role, agents in pairs( self.roles ) do
+	for role, agents in pairs( self.members ) do
 		for i, agent in ipairs( agents ) do
 			if agent:GetLocation() == nil then
 				print( "IN LIMBO:", self.name, role, i, agent )

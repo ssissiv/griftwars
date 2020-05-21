@@ -18,6 +18,10 @@ function FactionMember:GetRole()
 	return self.role
 end
 
+function FactionMember:GetSuperiors()
+	return self.faction:GetSuperiorsByRole( self.role )
+end
+
 function FactionMember:IsEnemy( other )
 	assert( is_instance( other, FactionMember ))
 	return self.faction:HasTag( other.faction, FACTION_TAG.ENEMY )

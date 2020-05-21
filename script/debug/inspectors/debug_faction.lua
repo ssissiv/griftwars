@@ -23,7 +23,7 @@ function DebugFaction:RenderPanel( ui, panel, dbg )
 
 	ui.Spacing()
 	ui.Text( "Members:" )
-	for role, agents in pairs( self.faction.roles ) do
+	for role, agents in pairs( self.faction.members ) do
 		for i, agent in ipairs( agents ) do
 			ui.Text( string.format( "%d) %s", i, role ))
 			ui.SameLine( 100 )

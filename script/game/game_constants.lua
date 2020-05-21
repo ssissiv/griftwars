@@ -314,6 +314,12 @@ FACTION_ROLE = MakeEnum{
 	"GUARD",
 }
 
+FACTION_TIERS =
+{
+	[ FACTION_ROLE.CAPTAIN ] = 2,
+	[ FACTION_ROLE.GUARD ] = 1,
+}
+
 IMPASS = MakeEnum{ "WALL", "DOOR", "BODY" }
 
 INFO = MakeEnum
