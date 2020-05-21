@@ -13,6 +13,7 @@
 local Captain = class( "Agent.Captain", Agent )
 
 Captain.MAP_CHAR = "C"
+Captain.short_desc = "captain"
 
 function Captain:init()
 	Agent.init( self )
@@ -21,6 +22,7 @@ function Captain:init()
 	
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize())
+	self:GainAspect( Skill.Fighter():SetSkillRank( 3 ))
 	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 
@@ -30,8 +32,8 @@ function Captain:init()
 	end
 end
 
-function Captain:GetTitle()
-	return "Captain"
+function Captain:GetLongDesc()
+	return loc.format( "Captain of {1}", self:GetAspect( Aspect.FactionMember ):GetName() )
 end
 
 function Captain:OnSpawn( world )
@@ -56,8 +58,8 @@ function Captain:Recruit( job )
 		local recruit = self.world:RequireAgent(
 			function()
 				local fighter = Agent.Fighter()
-				if self:HasAspect( Aspect.Faction ) then
-					self:GetAspect( Aspect.Faction ):AssignFaction( fighter )
+				if self:HasAspect( Aspect.FactionMember ) then
+					self:GetAspect( Aspect.FactionMember ):AssignFaction( fighter )
 				end
 				return self.world:SpawnAgent( fighter, self.location )
 			end )

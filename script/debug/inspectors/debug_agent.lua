@@ -10,7 +10,7 @@ end
 function DebugAgent:RenderPanel( ui, panel, dbg )
 	ui.Text( tostring(self.agent) )
 	
-	local faction = self.agent:GetAspect( Aspect.Faction )
+	local faction = self.agent:GetAspect( Aspect.FactionMember )
 	if faction then
 		ui.Text( "Faction:" )
 		ui.SameLine( 0, 5 )

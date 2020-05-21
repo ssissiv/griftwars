@@ -39,7 +39,7 @@ function Patrol:DoJob()
 end
 
 function Patrol:GetName()
-	local faction = self.employer:GetAspect( Aspect.Faction )
+	local faction = self.employer:GetAspect( Aspect.FactionMember )
 	if faction then
 		return loc.format( "{1} Patrol", faction:GetName() )
 	else

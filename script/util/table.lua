@@ -131,6 +131,16 @@ function table.count( t )
     return count
 end
 
+function table.count_if( t, fn )
+    local count = 0
+    for k,v in pairs(t) do
+        if fn(v) then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 function table.maxn( t )
     local n = 0
     for i, v in pairs( t ) do

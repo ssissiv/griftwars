@@ -177,6 +177,10 @@ function WorldBase:SpawnEntity( ent )
 end
 
 function WorldBase:DespawnEntity( ent )
+	if self.buckets[ ent._classname ] then
+		self:UnregisterFromBucket( ent._classname, ent )
+	end
+	
 	ent:OnDespawn( self )
 	table.arrayremove( self.entities, ent )
 end

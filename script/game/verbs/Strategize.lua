@@ -46,6 +46,10 @@ function Strategize:FindStrategicPoint( actor )
 	end
 end
 
+function Strategize:CanInteract( actor )
+	return false, "Disabled"
+end
+
 function Strategize:Interact( actor )
 	while true do
 		self:YieldForTime( ONE_MINUTE )
@@ -56,7 +60,7 @@ function Strategize:Interact( actor )
 		if self.target then
 			if actor:IsEnemy( self.target ) then
 				Msg:Speak( actor, "We must assault {1}!", self.target )
-				Msg:Speak( actor, "{1} must be stopped.", self.target:GetAspect( Aspect.Faction ):GetName() )
+				Msg:Speak( actor, "{1} must be stopped.", self.target:GetAspect( Aspect.FactionMember ):GetName() )
 			elseif self.target == actor.location then
 				Msg:Speak( actor, "We will occupy this location." )
 			else

@@ -309,6 +309,11 @@ TOKEN_TO_FACE =
 
 FACTION_TAG = MakeEnum{ "ENEMY", "ALLY" }
 
+FACTION_ROLE = MakeEnum{
+	"CAPTAIN",
+	"GUARD",
+}
+
 IMPASS = MakeEnum{ "WALL", "DOOR", "BODY" }
 
 INFO = MakeEnum

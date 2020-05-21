@@ -62,6 +62,7 @@ require "game/AgentViz"
 require "game/agent"
 require "game/archetypes"
 require "game/AgentQuery"
+require "game/Faction"
 require "game/worldbase"
 require "game/world"
 require "game/PathFinder"
@@ -132,6 +133,7 @@ function love.load(arg)
     LoadAllScripts( "game/objects" )
     LoadAllScripts( "game/locations" )
     LoadAllScripts( "game/zones" )
+    LoadAllScripts( "game/factions" )
     LoadAllScripts( "game/tilemaps" )
 
     require "game/Tile"

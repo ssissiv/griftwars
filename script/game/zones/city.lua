@@ -22,7 +22,9 @@ function City:OnWorldGenPass( pass )
 		self.name = self.world:GetAspect( Aspect.CityNamePool ):PickName()
 	end
 	if self.faction == nil then
-		self.faction = self.world:CreateFaction( self.name )
+		local guards = table.count_if( self.rooms, function( room ) return room:GetBoundaryPortal() end )
+		self.faction = Faction.CityMilitary( loc.format( "The {1} Military", self.name ), guards * 3 )
+		self.world:SpawnEntity( self.faction )
 	end
 	if pass == 0 then
 		for i = 1, 3 do
@@ -37,13 +39,19 @@ function City:OnWorldGenPass( pass )
 		-- City guards.
 		for i, room in ipairs( self.rooms ) do
 			if room:GetBoundaryPortal() then
-				for i = 1, 4 do
-					local guard = Agent.CityGuard()
-					guard:GainAspect( Aspect.Faction( self.faction ))
-					guard:WarpToLocation( room )
+				self.faction:GetAgentsByRole( FACTION_ROLE.CAPTAIN )[1]:WarpToLocation( room )
+				for i = 1, 3 do
+					for j, guard in ipairs( self.faction:GetAgentsByRole( FACTION_ROLE.GUARD )) do
+						if not guard:GetLocation() then
+							guard:WarpToLocation( room )
+							break
+						end
+					end
 				end
 			end
 		end
+
+		self.faction:VerifyAgentLocations()
 
 		return true
 

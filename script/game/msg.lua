@@ -10,6 +10,9 @@ end
 
 function Msg:Act( msgs, actor, target, ... )
 	local location = actor:GetLocation()
+	if not location then
+		return
+	end
 	for i, obj in location:Contents() do
 		if obj.Sense then
 			if obj == actor and msgs[1] then
@@ -36,6 +39,9 @@ Msg.Action = Msg.Act
 function Msg:ActToRoom( msg, actor, target, ... )
 	-- This message goes to everybody else
 	local location = actor:GetLocation()
+	if not location then
+		return
+	end
 	for i, obj in location:Contents() do
 		if obj.Sense and obj ~= actor and obj ~= target then
 			local txt = loc.format( msg, self:LocTable( actor ), target and self:LocTable( target ), ... )
@@ -47,6 +53,9 @@ end
 function Msg:Speak( actor, msg, ... )
 	assert( is_instance( actor, Agent ))
 	local location = actor:GetLocation()
+	if not location then
+		return
+	end
 	for i, obj in location:Contents() do
 		if obj.Sense then
 			if obj == actor then
@@ -69,6 +78,9 @@ function Msg:SpeakTo( actor, target, msg, ... )
 	assert( is_instance( target, Agent ))
 
 	local location = actor:GetLocation()
+	if not location then
+		return
+	end
 	for i, obj in location:Contents() do
 		if obj.Sense then
 			if obj == actor then

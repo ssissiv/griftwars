@@ -14,9 +14,9 @@ function World:init()
 
 	print( "WorldGen seeds:", self.rng:GetSeed() )
 
-	self.limbo = Location()
-	self.limbo:SetDetails( "Limbo", "Implementation room." )
-	self:SpawnLocation( self.limbo )
+	-- self.limbo = Location()
+	-- self.limbo:SetDetails( "Limbo", "Implementation room." )
+	-- self:SpawnLocation( self.limbo )
 
 	self.history = self:GainAspect( Aspect.History() )
 	self.history:SaveToFile( "log.txt" )
@@ -35,19 +35,6 @@ end
 function World:Start()
 	self:Log( "World started!" )
 	self:BroadcastEvent( WORLD_EVENT.START, self )
-end
-
-function World:CreateFaction( name )
-	local faction = FactionData( name )
-	for i, f in ipairs( self.factions ) do
-		if self:Random() < 0.8 then
-			f:AddTag( faction, FACTION_TAG.ENEMY )
-			faction:AddTag( f, FACTION_TAG.ENEMY )
-		end
-	end
-
-	table.insert( self.factions, faction )
-	return faction
 end
 
 function World:GetWorldMap()
@@ -99,8 +86,8 @@ function World:SpawnEntity( ent, location )
 	end
 
 	if is_instance( ent, Agent ) then
-		if not ent.location and not location then
-			ent:WarpToLocation( ent:GetHome() or self.limbo )
+		if not ent.location and ent:GetHome() then
+			ent:WarpToLocation( ent:GetHome() )
 		end
 
 		table.insert( self.agents, ent )

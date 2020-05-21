@@ -126,6 +126,11 @@ function Agent:GetShortDesc()
 	end
 end
 
+function Agent:GetLongDesc()
+	-- override, usually dynamic.
+	return self:GetShortDesc()
+end
+
 function Agent:GetLeader()
 	return self.leader
 end

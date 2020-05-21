@@ -11,6 +11,15 @@ function Skill:AddTrainingReq( req )
 	table.insert( self.training_reqs, req )
 end
 
+function Skill:GetSkillRank()
+	return self.rank or 1
+end
+
+function Skill:SetSkillRank( rank )
+	self.rank = rank
+	return self
+end
+
 function Skill:CanLearn( actor )
 	if self == nil then
 		return true
@@ -44,7 +53,7 @@ local Fighter = class( "Skill.Fighter", Skill )
 Fighter.event_handlers =
 {
  	[ CALC_EVENT.ATTACK_DAMAGE ] = function( self, agent, event_name, acc )
-    	acc:AddValue( 1, self )
+    	acc:AddValue( self:GetSkillRank(), self )
     end,
 }
 

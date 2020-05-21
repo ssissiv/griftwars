@@ -7,7 +7,7 @@ function DebugLocation:init( location )
 end
 
 function DebugLocation:RenderPanel( ui, panel, dbg )
-    local faction = self.location:GetAspect( Aspect.Faction )
+    local faction = self.location:GetAspect( Aspect.FactionMember )
     if faction then
         ui.Text( "Faction:" )
         ui.SameLine( 0, 10 )

@@ -15,14 +15,14 @@ function Agent:IsEnemy( other )
 		return true
 	end
 
-	local f1 = self:GetAspect( Aspect.Faction )
-	local f2 = other:GetAspect( Aspect.Faction )
+	local f1 = self:GetAspect( Aspect.FactionMember )
+	local f2 = other:GetAspect( Aspect.FactionMember )
 	return f1 and f2 and f1:IsEnemy( f2 )
 end
 
 function Agent:IsAlly( other )
-	local f1 = self:GetAspect( Aspect.Faction )
-	local f2 = other:GetAspect( Aspect.Faction )
+	local f1 = self:GetAspect( Aspect.FactionMember )
+	local f2 = other:GetAspect( Aspect.FactionMember )
 	return f1 and f2 and f1:IsAlly( f2 )
 end
 

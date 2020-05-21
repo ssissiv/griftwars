@@ -76,7 +76,7 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
-		ui.Text( "Description: " .. self.agent:GetShortDesc( self.viewer ))
+		ui.Text( "Description: " .. self.agent:GetLongDesc( self.viewer ))
 		ui.Text( "Gender:" )
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 0, 1, 1, 1, tostring(self.agent.gender) )

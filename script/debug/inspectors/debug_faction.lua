@@ -1,5 +1,5 @@
 local DebugFaction = class( "DebugFaction", DebugTable )
-DebugFaction.REGISTERED_CLASS = FactionData
+DebugFaction.REGISTERED_CLASS = Faction
 
 function DebugFaction:init( faction )
 	DebugTable.init( self, faction )
@@ -20,4 +20,15 @@ function DebugFaction:RenderPanel( ui, panel, dbg )
 		ui.NextColumn()
 	end
 	ui.Columns( 1 )
+
+	ui.Spacing()
+	ui.Text( "Members:" )
+	for role, agents in pairs( self.faction.roles ) do
+		for i, agent in ipairs( agents ) do
+			ui.Text( string.format( "%d) %s", i, role ))
+			ui.SameLine( 100 )
+			panel:AppendTable( ui, agent )
+		end
+	end
+
 end

@@ -190,3 +190,21 @@ function Combat:Targets()
 	return ipairs( self.targets )
 end
 
+function Combat:RenderAgentDetails( ui, screen, viewer )
+	local damage, details = self.owner:CalculateAttackDamage()
+	local wpn = self.owner:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
+
+	ui.Text( "Attack Power:" )
+	ui.SameLine( 0, 5 )
+	ui.TextColored( 0, 1, 1, 1, tostring(damage) )
+	if ui.IsItemHovered() and details then
+		ui.SetTooltip( details )
+	end
+	ui.SameLine( 0, 10 )
+	ui.Text( loc.format( "({1})", wpn and wpn:GetName( viewer ) or "Unarmed" ))
+
+	ui.Text( "AC:" )
+	ui.SameLine( 0, 10 )
+	ui.TextColored( 0, 1, 1, 1, "0" )
+end
+
