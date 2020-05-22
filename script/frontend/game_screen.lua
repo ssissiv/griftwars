@@ -519,6 +519,12 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 			end )
 			ui.EndMenu()
 		end
+
+		ui.Separator()
+
+		if ui.MenuItem( "Cursor here" ) then
+			DBSET( "curs", self.puppet:GetLocation().map:CreateCursor( tile:GetCoordinate() ))
+		end
 	end
 end
 

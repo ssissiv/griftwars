@@ -22,6 +22,16 @@ function TileMapCursor:Move( dx, dy )
 	return self
 end
 
+-- Paints a single tile at x, y.
+-- Does not move cursor.
+function TileMapCursor:Point( x, y )
+	if self.tile_class then
+		local tile = self.tile_class()
+		tile:SetCoordinate( x, y )
+		self.map:ReassignToGrid( tile )
+	end
+end
+
 function TileMapCursor:LineTo( x, y )
 	while self.x ~= x or self.y ~= y do
 		if self.x < x then
@@ -37,9 +47,7 @@ function TileMapCursor:LineTo( x, y )
 		end
 
 		if self.tile_class then
-			local tile = self.tile_class()
-			tile:SetCoordinate( self.x, self.y )
-			self.map:ReassignToGrid( tile )
+			self:Point( self.x, self.y )
 		end
 	end
 	return self
@@ -51,13 +59,21 @@ function TileMapCursor:LinePattern( dx, dy, pattern )
 		local ch = pattern:sub( i, i )
 
 		if self.tile_class and ch ~= " " then
-			local tile = self.tile_class()
-			tile:SetCoordinate( self.x, self.y )
-			self.map:ReassignToGrid( tile )
+			self:Point( self.x, self.y )
 		end
 
 		self.x = self.x + dx
 		self.y = self.y + dy
+	end
+end
+
+-- Cursor is at the bottom-left (min x, min y) of the box.
+-- Does not move cursor.
+function TileMapCursor:Box( w, h )
+	for y = self.y, self.y + h - math.unit( h ) do
+		for x = self.x, self.x + w - math.unit( w ) do
+			self:Point( x, y )
+		end
 	end
 end
 

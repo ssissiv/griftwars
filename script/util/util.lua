@@ -235,6 +235,16 @@ function weightedpick(options)
     assert(option, "weighted random is messed up")
 end
 
+function math.unit( x )
+    if x < 0 then
+        return -1
+    elseif x > 0 then
+        return 1
+    else
+        return 0
+    end
+end
+
 -- Choose a random number in a gaussian distribution.
 -- Based on the polar form of the Box-Muller transformation.
 function math.randomGauss( mean, stddev, min_clamp, max_clamp, rnd )
