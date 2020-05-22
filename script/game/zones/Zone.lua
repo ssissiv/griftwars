@@ -163,9 +163,14 @@ end
 -- Takes a location and attempts to spawn new Locations for each of its disconnected portals.
 function Zone:GeneratePortals( location, new_locations, depth )
 	if not location:GetCoordinate() then
+		-- If this is an origin location, it won't have any coordinate yet.
 		location:SetCoordinate( 0, 0, self.world:GetWorldMap():GetMaxDepth() + 1 )
 	end
 
+	if location.OnGeneratePortals then
+		location:OnGeneratePortals( depth )
+	end
+	
 	-- print( "Portals from", location, location:GetCoordinate() )
 	for i, obj in location:Contents() do
 		local portal = obj:GetAspect( Aspect.Portal )
@@ -207,6 +212,14 @@ function Zone:RandomRoom()
 	return self.worldgen:ArrayPick( self.rooms )
 end
 
+function Zone:RandomRoomOfClass( class )
+	assert( #self.rooms > 0 )
+	assert( class )
+	local t = table.arrayadd_if( {}, self.rooms, function( room ) return is_instance( room, class ) end )
+	assert( #t > 0 )
+	return self.worldgen:ArrayPick( t )
+end
+
 function Zone:GetRooms()
 	return self.rooms
 end
@@ -214,6 +227,15 @@ end
 function Zone:RoomAt( i )
 	return self.rooms[ i ]
 end
+
+function Zone:FindRoomByClass( class )
+	for i, room in ipairs( self.rooms ) do
+		if is_instance( room, class ) then
+			return room
+		end
+	end
+end
+
 
 function Zone:RenderDebugPanel( ui, panel )
 	ui.Text( "Connections:" )

@@ -179,6 +179,15 @@ function table.arrayadd(dst, src)
     end
 end
 
+function table.arrayadd_if(dst, src, fn)
+    for i,v in ipairs(src) do
+        if fn(v) then
+            table.insert(dst, v)
+        end
+    end
+    return dst
+end
+
 function table.insert_unique( t, val )
     for k, v in pairs(t) do
         if v == val then

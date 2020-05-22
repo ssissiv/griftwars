@@ -1,13 +1,25 @@
 local MilitaryHQ = class( "Location.MilitaryHQ", Location )
 
-function MilitaryHQ:OnSpawn( world )
-	local function GetName( room )
-		return loc.format( "War Chambers of {1}", room:GetAspect( Aspect.FactionMember ):GetName() )
-	end
+MilitaryHQ.WORLDGEN_TAGS = { "hq exit" }
 
-	self:SetDetails( GetName, "An open room crammed with old tech and metal debris.")
+function MilitaryHQ:OnSpawn( world )
+	Location.OnSpawn( self, world )
+	self:SetDetails( "War HQ", "An open room crammed with old tech and metal debris.")
 	self:GainAspect( Feature.StrategicPoint() )
-	self:GainAspect( Aspect.FactionMember( self.faction ))
-	self:GainAspect( Aspect.BuildingTileMap( 16, 16 ))
+	-- self:GainAspect( Aspect.FactionMember( self.faction ))
+
+	Object.Door( "hq exit"):WarpToLocation( self )
 end
 
+function MilitaryHQ:GenerateTileMap()
+	if self.map == nil then
+		self.map = self:GainAspect( Aspect.TileMap( 8, 8 ))
+		self.map:FillTiles( function( x, y )
+			if x == 1 or x == 8 or y == 1 or y == 8 then
+				return Tile.StoneWall( x, y )
+			else
+				return Tile.StoneFloor( x, y )
+			end
+		end )
+	end
+end

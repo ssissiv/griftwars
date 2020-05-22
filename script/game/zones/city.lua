@@ -7,6 +7,7 @@ City.LOCATIONS = {
 	Location.Tavern, 1,
 	Location.Residence, 1,
 	Location.Shop, 1,
+	Location.MilitaryHQ, 1,
 }
 
 City.ZONE_ADJACENCY =
@@ -38,18 +39,20 @@ function City:OnWorldGenPass( pass )
 
 	elseif pass == 1 then
 		for i = 1, 3 do
-			local room = self:RandomRoom()
+			local room = self:RandomRoomOfClass( Location.CityDistrict )
 			Agent.Scavenger():WarpToLocation( room )
 		end
 		for i = 1, 3 do
-			local room = self:RandomRoom()
+			local room = self:RandomRoomOfClass( Location.CityDistrict )
 			Agent.Snoop():WarpToLocation( room )
 		end
 
-		-- City guards.
+		-- Localize faction members.
 		for i, room in ipairs( self.rooms ) do
-			if room:GetBoundaryPortal() then
+			if is_instance( room, Location.MilitaryHQ ) then
 				self.faction:GetAgentsByRole( FACTION_ROLE.CAPTAIN )[1]:WarpToLocation( room )
+
+			elseif room:GetBoundaryPortal() then
 				for i = 1, 3 do
 					for j, guard in ipairs( self.faction:GetAgentsByRole( FACTION_ROLE.GUARD )) do
 						if not guard:GetLocation() then

@@ -9,6 +9,12 @@ function District:OnSpawn( world )
 	self:SpawnPerimeterPortals( "district" )
 end
 
+function District:OnGeneratePortals()
+	if not self.zone:FindRoomByClass( Location.MilitaryHQ ) then
+		self:SpawnDoor( "hq entry" )
+	end
+end
+
 function District:SpawnCityWalls()
 	local w, h = self.map:GetExtents()
 
