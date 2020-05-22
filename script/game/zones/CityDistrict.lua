@@ -7,41 +7,38 @@ function District:OnSpawn( world )
 		"These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
 
 	self:SpawnPerimeterPortals( "district" )
+end
 
+function District:SpawnCityWalls()
 	local w, h = self.map:GetExtents()
-	local boundary = false
 
 	local portal = self:GetBoundaryPortal( EXIT.WEST )
-	if portal then
+	if portal and portal:GetDest() then
 		local x, y = portal.owner:GetCoordinate()
-		boundary = true
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
 			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.EAST )
-	if portal then
+	if portal and portal:GetDest() then
 		local x, y = portal.owner:GetCoordinate()
-		boundary = true
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
 			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.SOUTH )
-	if portal then
+	if portal and portal:GetDest() then
 		local x, y = portal.owner:GetCoordinate()
-		boundary = true
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
 			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.NORTH )
-	if portal then
+	if portal and portal:GetDest() then
 		local x, y = portal.owner:GetCoordinate()
-		boundary = true
 		self.map:CreateCursor( 1, 1 )
 			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
 			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )

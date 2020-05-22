@@ -26,7 +26,17 @@ function City:OnWorldGenPass( pass )
 		self.faction = Faction.CityMilitary( loc.format( "The {1} Military", self.name ), guards * 3 )
 		self.world:SpawnEntity( self.faction )
 	end
+
 	if pass == 0 then
+		-- Spawn city walls at boundary locations
+		for i, room in ipairs( self.rooms ) do
+			if room.SpawnCityWalls then
+				room:SpawnCityWalls()
+			end
+		end
+		return true
+
+	elseif pass == 1 then
 		for i = 1, 3 do
 			local room = self:RandomRoom()
 			Agent.Scavenger():WarpToLocation( room )

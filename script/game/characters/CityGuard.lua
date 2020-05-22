@@ -14,3 +14,7 @@ function CityGuard:init()
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighter() )
 end
+
+function CityGuard:GetLongDesc()
+	return loc.format( "City Guard of {1}", self:GetAspect( Aspect.FactionMember ):GetName() )
+end

@@ -110,7 +110,7 @@ function Zone:RandomZoneClass()
 end
 
 
--- Takes a portal, generates a destination to it.
+-- Takes a portal, generates a new location leading from it.
 function Zone:GeneratePortalDest( portal, depth )	
 	local class = self:RandomLocationClass( portal:GetWorldGenTag() )
 	if class then
