@@ -34,6 +34,10 @@ function Agent:CalculateStat( stat )
 	return self.acc:CalculateValue( CALC_EVENT.STAT, self:GetStatValue( stat ), stat )
 end
 
+function Agent:CalculateDC( value, verb )
+	return self.acc:CalculateValue( CALC_EVENT.DC, value, verb )
+end
+
 function Agent:CanSee( obj )
 	if obj.location ~= self.location then
 		return false

@@ -76,6 +76,16 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
 
         		ui.Text( txt )
 
+                local dc, details = verb:CalculateDC( self.actor, verb:GetTarget() )
+                if dc ~= nil then
+                    ui.Indent( 20 )
+                    ui.Text( loc.format( "DC: {1}", tostring(dc) ))
+                    if ui.IsItemHovered() and details then
+                        ui.SetTooltip( tostring(details) )
+                    end
+                    ui.Unindent( 20 )
+                end
+
                 ui.PopStyleColor()
             end
 

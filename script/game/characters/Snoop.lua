@@ -40,6 +40,9 @@ end
 
 local Snoop = class( "Agent.Snoop", Agent )
 
+Snoop.MAP_CHAR = "s"
+Snoop.short_desc = "snoop"
+
 function Snoop:init()
 	Agent.init( self )
 
@@ -48,11 +51,6 @@ function Snoop:init()
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.FindInformation( self ))
 end
-
-function Snoop:GetTitle()
-	return "Snoop"
-end
-
 
 function Snoop:OnSpawn( world )
 	Agent.OnSpawn( self, world )

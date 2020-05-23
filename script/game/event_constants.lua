@@ -27,6 +27,7 @@ AGENT_EVENT = MakeEnum{
 CALC_EVENT = MakeEnum{
 	"ATTACK_DAMAGE",
 	"STAT",
+	"DC",
 }
 
 LOCATION_EVENT = MakeEnum{

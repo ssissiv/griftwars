@@ -150,7 +150,6 @@ function Verb.RecurseSubclasses( class, fn )
 end
 
 function Verb:GetRoomDesc( viewer )
-	local dc = self:GetDC()
 	local desc = self:GetDesc( viewer )
 
 	if self.GetDuration then
@@ -160,15 +159,30 @@ function Verb:GetRoomDesc( viewer )
 	end
 end
 
-function Verb:GetDC()
-	if self.dc == nil and self.CalculateDC then
-		self.dc = self:CalculateDC( Modifiers() )
+function Verb:CalculateDC( actor, target )
+	local dc, details = self.DC
+	if dc == nil then
+		return
 	end
-	return self.dc or 0
+	if target and target.CalculateDC then
+		dc, details = target:CalculateDC( dc, actor, target )
+	end
+	
+	local details2
+	dc, details2 = actor:CalculateDC( dc, self )
+	if details2 and details then
+		details = details .. "\n" .. details2
+	end
+
+	return dc, details
 end
 
-function Verb:CheckDC()
-	return math.random( 1, 20 ) >= self:GetDC()
+function Verb:CheckDC( actor, target )
+	local dc = self:CalculateDC( actor, target )
+	if dc ~= nil then
+		local roll = math.random( 0, 20 )
+		return roll >= dc, roll
+	end
 end
 
 function Verb:CanDo( actor, ... )

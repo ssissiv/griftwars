@@ -83,6 +83,18 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
             end
             ui.TreePop()
         end
+
+        if ui.TreeNodeEx( "Objects", "DefaultOpen" ) then
+            local objs = self.game.world:GetBucketByClass( Object )
+            for i, ent in ipairs( objs ) do
+                if is_instance( ent, Object ) then
+                    if self.filter_str == nil or string.find( tostring(ent), self.filter_str ) or string.find( ent._classname, self.filter_str ) then
+                        panel:AppendTable( ui, ent )
+                    end
+                end
+            end
+            ui.TreePop()
+        end
     end
 
 

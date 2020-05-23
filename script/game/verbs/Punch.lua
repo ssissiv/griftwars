@@ -1,5 +1,7 @@
 local Punch = class( "Attack.Punch", Verb )
 
+Punch.DC = 5
+
 function Punch:InAttackRange( actor, target )
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
@@ -39,22 +41,28 @@ end
 function Punch:Interact( actor, target )
 	target = target or self.obj
 
-	local damage = actor:CalculateAttackDamage()
-	Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
-	Msg:Echo( actor, loc.format( "You attack {1.Id}! ({2} damage)", target:LocTable( actor ), damage ))
-	Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
+	-- Notify target they were attacked!
+	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self )
+	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
+	target:GetAspect( Aspect.Combat ):EvaluateTargets()
 
-	target:DeltaHealth( -damage )
+	-- Check success.
+	local ok, roll = self:CheckDC( actor, target )
+	if ok then
+		local damage = actor:CalculateAttackDamage()
+		Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
+		Msg:Echo( actor, loc.format( "You attack {1.Id}! ({2} damage)", target:LocTable( actor ), damage ))
+		Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
 
-	if target:IsDead() then
-		target:BroadcastEvent( AGENT_EVENT.KILLED, actor, self )
+		target:DeltaHealth( -damage )
 
-	-- Interrupt target if they're not engaged.
-	elseif not target:IsDead() then
-		target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self )
+		if target:IsDead() then
+			target:BroadcastEvent( AGENT_EVENT.KILLED, actor, self )
+		end
 
-		target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
-		target:GetAspect( Aspect.Combat ):EvaluateTargets()
+	else
+		Msg:Echo( actor, loc.format( "You miss {1.Id}. (Roll: {2})", target:LocTable( actor ), roll ))
+		Msg:Echo( target, loc.format( "{1.Id} misses you with {1.hisher} {2}.", actor:LocTable( target ), self ))
 	end
 
 	self:YieldForTime( self:GetDuration() )

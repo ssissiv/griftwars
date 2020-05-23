@@ -1,5 +1,14 @@
 local ScroungeTarget = class( "Aspect.ScroungeTarget", Aspect )
 
+ScroungeTarget.event_handlers =
+{
+	[ CALC_EVENT.DC ] = function( self, verb, event_name, acc )
+		if self.scrounge_count then
+			acc:AddValue( self.scrounge_count * 2, "Already searched through" )
+		end
+	end,
+}
+
 function ScroungeTarget:SetLootTable( t )
 	self.loot_table = t
 end
@@ -41,10 +50,7 @@ Scrounge.ACT_DESC =
 }
 
 Scrounge.FLAGS = VERB_FLAGS.HANDS
-
-function Scrounge:CalculateDC( mods )
-	return 10
-end
+Scrounge.DC = 10
 
 function Scrounge:GetDesc()
 	return "Scrounge"
@@ -120,15 +126,17 @@ function Scrounge:Interact( actor, target )
 		local inv = target:GetAspect( Aspect.Inventory )
 
 		-- Check to generate
-		if self:CheckDC() then
+		local ok, roll = self:CheckDC( actor, target )
+		if ok then
 			target:GetAspect( Aspect.ScroungeTarget ):GenerateLoot( inv )
 		end
 
 		if not inv:IsEmpty() then
+			Msg:Echo( finder, "You scrounge and find something... (Rolled {1})", roll )
 			actor.world.nexus:LootInventory( actor, inv )
 			Msg:ActToRoom( "{1.Id} scrounges about and finds something.", finder )
 		else
-			Msg:Echo( finder, "You don't find anything useful." )
+			Msg:Echo( finder, "You don't find anything useful. (Rolled {1})", roll )
 			Msg:ActToRoom( "{1.Id} mutters something unhappily.", finder )
 		end
 

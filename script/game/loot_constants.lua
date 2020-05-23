@@ -2,6 +2,7 @@ local rng = math.random
 
 LOOT_JUNK_T1 =
 {
+	name = "JUNK_T1",
 	function()
 		return Object.Creds( rng( 1, 3 ))
 	end, 1,
@@ -14,6 +15,7 @@ LOOT_JUNK_T1 =
 
 LOOT_JUNK_T2 =
 {
+	name = "JUNK_T2",
 	function()
 		return Object.Creds( rng( 1, 3 ))
 	end, 1,
@@ -29,6 +31,7 @@ LOOT_JUNK_T2 =
 
 LOOT_JUNK_T3 =
 {
+	name = "JUNK_T3",
 	function()
 		return Object.Creds( rng( 2, 4 ))
 	end, 1,
