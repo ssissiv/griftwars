@@ -182,6 +182,13 @@ function Verb:CanDo( actor, ... )
 		end
 	end
 
+	if self.FLAGS then
+		local busy, verb = actor:IsBusy( self.FLAGS )
+		if busy then
+			return false, "Busy: "..tostring(verb)
+		end
+	end
+
 	local ok, reason = self:CanInteract( actor, ... )
 	if not ok then
 		return false, reason

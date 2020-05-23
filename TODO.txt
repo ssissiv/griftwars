@@ -1,6 +1,9 @@
 TODO
 ====
 
+No-Travel zones for agents
+Homes?
+
 Make CharacterStreams RNG, Location Stream RNG, for the various levels of procgen so for example
 a mustache doesn't change the entire western hemisphere.
 

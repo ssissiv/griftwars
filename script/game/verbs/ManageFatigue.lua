@@ -43,8 +43,8 @@ function ManageFatigue:CalculateUtility( actor )
 end
 
 function ManageFatigue:Interact( actor )
-	Msg:Speak( actor, "I'm sleepy..." )
 	if Calendar.IsNight( actor.world:GetDateTime() ) then
+		Msg:Speak( actor, "I'm sleepy..." )
 		local home = actor:GetHome()
 		if home then
 			Msg:Speak( actor, "I'm going home." )
@@ -57,6 +57,7 @@ function ManageFatigue:Interact( actor )
 
 		self.sleep:DoVerb( actor )
 	else
+		Msg:Speak( actor, "Maybe I'll rest for a bit." )
 		self.rest:DoVerb( actor )
 	end
 

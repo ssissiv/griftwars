@@ -86,6 +86,10 @@ function Agent:GetMapChar()
 	return self.MAP_CHAR
 end
 
+function Agent:IsSleeping()
+	return self.mental_state == MSTATE.SLEEPING
+end
+
 function Agent:IsAlert()
 	return self.mental_state == MSTATE.ALERT
 end
@@ -816,6 +820,8 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	local ch, clr = self:GetMapChar()
 	if self:IsDead() then
 		clr = constants.colours.BLACK
+	elseif self:IsSleeping() then
+		clr = constants.colours.DK_GRAY
 	end
 	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
@@ -825,6 +831,13 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	if self.world and combat and combat:IsTarget( self.world:GetPuppet() ) then
 		screen:SetColour( constants.colours.RED )
 		love.graphics.print( "!", (x1+x2)*0.5, (y1), 0, scale, 0.6 * scale )
+	end
+	if self:IsSleeping() then
+		local img = assets.IMG.ZZZ
+		screen:SetColour( constants.colours.WHITE )
+		local w, h = (x2 - x1)*0.8, (y2 - y1)*0.8
+		local sx, sy = w / img:getWidth(), h / img:getHeight()
+		screen:Image( img, x1+(x2-x1)*0.5, y1-(y2-y1)*0.5, sx, sy )
 	end
 end
 

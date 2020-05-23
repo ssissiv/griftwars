@@ -26,6 +26,11 @@ local assets =
 		FOREST = "forest.png",
 	},
 
+	IMG =
+	{
+		ZZZ = "sleeping.png",
+	},
+
 	TILE_IMG =
 	{
 		GRASS = "grassland.png",
@@ -54,6 +59,10 @@ local assets =
 
 		for k, filename in pairs( self.LOCATION_BGS ) do
 			self.LOCATION_BGS[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		end
+
+		for k, filename in pairs( self.IMG ) do
+			self.IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
 		end
 
 		for k, filename in pairs( self.TILE_IMG ) do

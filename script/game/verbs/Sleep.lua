@@ -27,14 +27,11 @@ function Sleep:CanInteract( actor )
 			return false, "Not Alert"
 		end
 	end
-	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
-		return false, "Busy"
-	end
 
-	local home = actor:GetLocation():GetAspect( Feature.Home )
-	if not home or not home:IsResident( actor ) then
-		return false, "This is not your home"
-	end
+	-- local home = actor:GetLocation():GetAspect( Feature.Home )
+	-- if not home or not home:IsResident( actor ) then
+	-- 	return false, "This is not your home"
+	-- end
 
 	return true
 end
@@ -44,10 +41,10 @@ function Sleep:Interact( actor )
 	Msg:Echo( actor, "You go to sleep." )
 	
 	actor:SetMentalState( MSTATE.SLEEPING )
+
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -10 )
 	actor:GetStat( STAT.HEALTH ):DeltaRegen( 0.5 )
 
-   	-- self:YieldForTime( 1 )
    	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ), SLEEP_SPEED_RATE )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 10 )

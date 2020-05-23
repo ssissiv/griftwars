@@ -434,6 +434,23 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 		end
 	end
 
+	-- Render map tile content
+	for dx = 1, xtiles do
+		for dy = ytiles, 1, -1 do
+			local tx, ty = wx0 + dx - 1, wy0 + dy - 1
+			local tile = location:GetTileAt( tx, ty )
+			if tile then
+				local x1, y1 = self.camera:WorldToScreen( tx, ty )
+				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
+				for i, obj in tile:Contents() do
+					if obj.RenderMapTile then
+						obj:RenderMapTile( self, tile, x1, y1, x2, y2 )
+					end
+				end
+			end
+		end
+	end
+
 	if self.puppet then
 		if self.current_focus then
 			local tx, ty = AccessCoordinate( self.current_focus )

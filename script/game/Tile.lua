@@ -74,14 +74,6 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 		love.graphics.setColor( 255, 255, 255, 255 )
 	end
 
-	if self.contents then
-		for i, obj in ipairs( self.contents ) do
-			if obj.RenderMapTile then
-				obj:RenderMapTile( screen, self, x1, y1, x2, y2 )
-			end
-		end
-	end
-
 	for i, aspect in self:Aspects() do
 		if aspect.RenderMapTile then
 			aspect:RenderMapTile( screen, self, x1, y1, x2, y2 )
