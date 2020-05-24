@@ -503,7 +503,7 @@ end
 
 function Agent:IsDoing( verb )
 	for i, v in ipairs( self.verbs or table.empty ) do
-		if v == verb then
+		if v == verb or (is_class( verb ) and is_instance( v, verb )) then
 			return true
 		end
 	end

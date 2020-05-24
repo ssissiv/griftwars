@@ -254,6 +254,12 @@ function Verb:DoVerb( actor, ... )
 	-- assert( self:GetOwner() == actor and actor )
 	actor:_AddVerb( self )
 
+	if self.event_handlers then
+		for event_name, fn in pairs( self.event_handlers ) do
+			actor:ListenForEvent( event_name, self, fn )
+		end
+	end
+
 	self.cancelled = nil
 	self.actor = actor
 	self.coro = coroutine.running()
@@ -273,6 +279,7 @@ function Verb:DoVerb( actor, ... )
 	self.coro = nil
 	self.time_finished = actor.world:GetDateTime()
 
+	actor:RemoveListener( self )
 	actor:_RemoveVerb( self )
 
 	return true

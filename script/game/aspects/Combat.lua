@@ -191,12 +191,12 @@ function Combat:Targets()
 end
 
 function Combat:RenderAgentDetails( ui, screen, viewer )
-	local damage, details = self.owner:CalculateAttackDamage()
+	local atk, details = self.owner:CalculateAttackPower()
 	local wpn = self.owner:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
 
 	ui.Text( "Attack Power:" )
 	ui.SameLine( 0, 5 )
-	ui.TextColored( 0, 1, 1, 1, tostring(damage) )
+	ui.TextColored( 0, 1, 1, 1, tostring(atk) )
 	if ui.IsItemHovered() and details then
 		ui.SetTooltip( details )
 	end

@@ -12,3 +12,10 @@ function HealthValue:DeltaValue( value, max_value )
 		self.owner:Kill()
 	end
 end
+
+function HealthValue:RenderAgentDetails( ui, screen, viewer )
+	ui.Text( "Health:" )
+	ui.SameLine( 0, 5 )
+	local txt = loc.format( "{1}/{2}", self.value, self.max_value )
+	ui.TextColored( 0, 1, 0, 1, txt )
+end

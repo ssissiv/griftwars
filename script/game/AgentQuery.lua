@@ -26,8 +26,8 @@ function Agent:IsAlly( other )
 	return f1 and f2 and f1:IsAlly( f2 )
 end
 
-function Agent:CalculateAttackDamage()
-	return self.acc:CalculateValue( CALC_EVENT.ATTACK_DAMAGE, 1 )
+function Agent:CalculateAttackPower( target )
+	return self.acc:CalculateValue( CALC_EVENT.ATTACK_POWER, 0, target )
 end
 
 function Agent:CalculateStat( stat )

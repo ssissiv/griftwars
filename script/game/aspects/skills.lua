@@ -52,7 +52,7 @@ local Fighter = class( "Skill.Fighter", Skill )
 
 Fighter.event_handlers =
 {
- 	[ CALC_EVENT.ATTACK_DAMAGE ] = function( self, agent, event_name, acc )
+ 	[ CALC_EVENT.ATTACK_POWER ] = function( self, agent, event_name, acc )
     	acc:AddValue( self:GetSkillRank(), self )
     end,
 }

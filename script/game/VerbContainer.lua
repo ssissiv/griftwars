@@ -73,6 +73,7 @@ end
 
 function VerbContainer:AddVerb( v )
 	table.insert( self.verbs, v )
+	v.actor = self.actor
 end
 
 function VerbContainer:VerbAt( idx )

@@ -9,10 +9,19 @@ function Punch:InAttackRange( actor, target )
 end
 
 function Punch:GetDesc( viewer )
-	return "Punch"
+	if self.obj then
+		return loc.format( "Punch for {1} damage", self:CalculateDamage( self.obj ))
+	else
+		return "Punch"
+	end
 end	
 
 function Punch:OnCancel()
+	if self.obj and self.obj:IsDead() then
+		return
+	end
+
+	-- TODO: should only be certain reasons really, like out of range.
 	Msg:Echo( self.actor, "You mutter as your attack is foiled." )
 	if self.obj then
 		Msg:Echo( self.obj, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.obj ))
@@ -38,8 +47,22 @@ function Punch:GetDuration()
 	return ATTACK_TIME
 end
 
+function Punch:CalculateDamage( target )
+	local damage = self.actor:CalculateAttackPower()
+
+	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
+	damage = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )
+	
+	local acc = target:GetAspect( Aspect.ScalarCalculator )
+	damage = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )
+
+	return damage
+end
+
 function Punch:Interact( actor, target )
 	target = target or self.obj
+
+	local damage = self:CalculateDamage( target )
 
 	-- Notify target they were attacked!
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self )
@@ -49,7 +72,6 @@ function Punch:Interact( actor, target )
 	-- Check success.
 	local ok, roll = self:CheckDC( actor, target )
 	if ok then
-		local damage = actor:CalculateAttackDamage()
 		Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
 		Msg:Echo( actor, loc.format( "You attack {1.Id}! ({2} damage)", target:LocTable( actor ), damage ))
 		Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))

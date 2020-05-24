@@ -239,6 +239,7 @@ function Location:HasEntity( ent )
 end
 
 function Location:OnEntityEvent( event_name, entity, ... )
+	-- DEPRECATED?
 	for i, obj in ipairs( self.contents ) do
 		if entity ~= obj and obj.OnLocationEntityEvent then
 			obj:OnLocationEntityEvent( event_name, entity, ... )

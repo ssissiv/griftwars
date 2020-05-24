@@ -69,6 +69,7 @@ end
 local Scavenger = class( "Agent.Scavenger", Agent )
 
 Scavenger.MAP_CHAR = "s"
+Scavenger.short_desc = "scavenger"
 
 function Scavenger:init()
 	Agent.init( self )

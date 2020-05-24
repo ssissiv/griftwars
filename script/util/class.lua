@@ -209,6 +209,7 @@ end
 
 
 is_instance = function(inst, class)
+    assert( is_class( class ))
     if type(inst) == "table" then
         if inst._class and inst._class ~= inst then
             if (class == nil or inst._class == class) then

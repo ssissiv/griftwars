@@ -3,7 +3,7 @@ local ScroungeTarget = class( "Aspect.ScroungeTarget", Aspect )
 ScroungeTarget.event_handlers =
 {
 	[ CALC_EVENT.DC ] = function( self, verb, event_name, acc )
-		if self.scrounge_count then
+		if is_instance( verb, Verb.Scrounge ) and self.scrounge_count then
 			acc:AddValue( self.scrounge_count * 2, "Already searched through" )
 		end
 	end,
@@ -142,6 +142,7 @@ function Scrounge:Interact( actor, target )
 
 		actor:GainXP( 1 )
 
+		
 		finder:BroadcastEvent( AGENT_EVENT.SCROUNGE, actor )
 		
 	-- 	if math.random() < 0.5 then

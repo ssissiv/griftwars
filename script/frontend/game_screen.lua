@@ -176,7 +176,7 @@ function GameScreen:RenderScreen( gui )
     	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
     	local show_tt = ui.IsItemHovered()
     	ui.SameLine( 0 )
-    	local damage, details = puppet:CalculateAttackDamage()
+    	local damage, details = puppet:CalculateAttackPower()
     	ui.TextColored( 0, 1, 1, 1, tostring(damage))
     	show_tt = show_tt or ui.IsItemHovered()
     	if show_tt and details then
@@ -201,7 +201,7 @@ function GameScreen:RenderScreen( gui )
 	    				t, Calendar.FormatDuration( total_time )) )
 	    			ui.SameLine( 0, 50 )
 
-			    	local damage, details = target:CalculateAttackDamage()
+			    	local damage, details = attack:CalculateDamage( attack:GetTarget() )
 	    			ui.Text( loc.format( "{1} damage", damage ))
 
 					if ui.IsItemHovered() then

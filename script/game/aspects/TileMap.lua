@@ -157,12 +157,7 @@ function TileMap:LookupTile( x, y, z )
 
 	local row = layer[ y ]
 	if row then
-		local t = row[ x ]
-		if is_instance( t ) then
-			return t
-		elseif t then
-			return t[1]
-		end
+		return row[ x ]
 	end
 end
 

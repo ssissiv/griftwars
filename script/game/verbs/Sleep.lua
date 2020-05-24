@@ -10,6 +10,15 @@ Sleep.ACT_DESC =
 
 Sleep.FLAGS = bit32.bor( VERB_FLAGS.ATTENTION, VERB_FLAGS.MOVEMENT, VERB_FLAGS.HANDS )
 
+Sleep.event_handlers =
+{
+	[ CALC_EVENT.DAMAGE ] = function( self, verb, event_name, acc, target )
+		if target == self.actor then
+			acc:AddValue( acc.value, "Sleeping" )
+		end
+	end,
+}
+
 function Sleep:GetDesc()
 	return "Sleep"
 end
@@ -26,6 +35,10 @@ function Sleep:CanInteract( actor )
 		if not actor:IsAlert() then
 			return false, "Not Alert"
 		end
+	end
+
+	if actor:InCombat() then
+		return false, "In combat!"
 	end
 
 	-- local home = actor:GetLocation():GetAspect( Feature.Home )
