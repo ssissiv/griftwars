@@ -23,7 +23,7 @@ end
 
 function Aspect:OnGainAspect( owner )
 	assert( owner )
-	assert( self.owner == nil )
+	assert( self.owner == nil, "Aspect already has owner: " .. self._classname )
 	self.owner = owner
 
 	if self.TABLE_KEY then

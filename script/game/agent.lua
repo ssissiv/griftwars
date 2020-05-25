@@ -643,6 +643,7 @@ function Agent:Kill()
 	Msg:Echo( self, "You die!" )
 
 	self:GainAspect( Aspect.Killed() )
+	self:LoseAspect( self:GetAspect( Aspect.Impass ))
 
 	self:CancelInvalidVerbs()
 

@@ -24,6 +24,26 @@ function VerbMenu:IsEmpty()
     return self.focus == nil --#self.shown_verbs == 0
 end
 
+function VerbMenu:RenderSelectedEntity( ui, screen, ent )
+    assert( ent.GetShortDesc, tostring(ent))
+    ui.Text( tostring(ent:GetShortDesc( self.actor )))
+
+    local behaviour = ent:GetAspect( Aspect.Behaviour )
+    if behaviour then
+        local verb = behaviour:GetHighestPriorityVerb()
+        if verb then
+            ui.SameLine( 0, 10 )
+            ui.Text( " - " .. verb:GetDesc( self.actor ))
+        end
+    end
+
+    ui.SameLine( 0, 10 )
+    if ui.SmallButton( "?" ) then
+        self.world.nexus:Inspect( self.actor, ent )
+    end
+    ui.Separator()
+end
+
 function VerbMenu:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 	ui.SetNextWindowSize( 400, 150 )
@@ -34,13 +54,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
         if #self.shown_verbs == 0 then
             local ent = AccessEntity( self.focus )
             if ent then
-                assert( ent.GetShortDesc, tostring(ent))
-                ui.Text( tostring(ent:GetShortDesc( self.actor )))
-                ui.SameLine( 0, 10 )
-                if ui.SmallButton( "?" ) then
-                    self.world.nexus:Inspect( self.actor, ent )
-                end
-                ui.Separator()
+                self:RenderSelectedEntity( ui, screen, ent )
             end
         end
 
@@ -51,12 +65,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                 
                 local ent = AccessEntity( target )
                 if ent then
-                    ui.Text( tostring(ent:GetShortDesc( self.actor )))
-                    ui.SameLine( 0, 10 )
-                    if ui.SmallButton( "?" ) then
-                        self.world.nexus:Inspect( self.actor, ent )
-                    end
-                    ui.Separator()
+                    self:RenderSelectedEntity( ui, screen, ent )
                 end
             end
 

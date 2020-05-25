@@ -86,6 +86,10 @@ function Behaviour.SortVerbs( a, b )
 	return a.utility > b.utility
 end
 
+function Behaviour:GetHighestPriorityVerb()
+	return self.verbs[1]
+end
+
 function Behaviour:OnTickBehaviour()
 	
 	self:UpdatePriorities()

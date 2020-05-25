@@ -33,6 +33,8 @@ function City:OnWorldGenPass( pass )
 		for i, room in ipairs( self.rooms ) do
 			if room.SpawnCityWalls then
 				room:SpawnCityWalls()
+
+				self.faction:AddPatrolLocation( room, 3 )
 			end
 		end
 		return true
