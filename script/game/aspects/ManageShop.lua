@@ -102,8 +102,7 @@ function ManageShop:GetBuyCost( item, buyer )
 end
 
 function ManageShop:BuyFromSeller( item, seller )
-	seller:GetInventory():RemoveItem( item )
-	self.owner:GetInventory():AddItem( item )
+	seller:GetInventory():TransferItem( item, self.owner:GetInventory() )
 	Msg:Echo( self.owner, "You bought a {1} from {2}.", item:GetName(), seller )
 	Msg:Echo( seller, "You sell a {1} to {2}.", item, self.owner )
 end

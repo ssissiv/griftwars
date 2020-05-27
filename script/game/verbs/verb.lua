@@ -179,10 +179,8 @@ end
 
 function Verb:CheckDC( actor, target )
 	local dc = self:CalculateDC( actor, target )
-	if dc ~= nil then
-		local roll = math.random( 0, 20 )
-		return roll >= dc, roll
-	end
+	local roll = math.random( 0, 20 )
+	return roll >= dc, roll
 end
 
 function Verb:CanDo( actor, ... )

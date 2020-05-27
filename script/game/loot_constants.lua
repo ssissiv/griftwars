@@ -43,3 +43,12 @@ LOOT_JUNK_T3 =
 	end, 1,
 	nil_function, 2,
 }
+
+LOOT_BERRIES =
+{
+	name = "LOOT_BERRIES",
+	function()
+		return Object.Berries()
+	end, 1,
+	nil_function, 1,
+}

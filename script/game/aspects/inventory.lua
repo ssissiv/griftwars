@@ -72,10 +72,6 @@ function Inventory:RemoveItem( item )
 	item:AssignCarrier( nil )
 	table.arrayremove( self.items, item )
 
-	if self:IsSpawned() then
-		self.world:DespawnEntity( item )
-	end
-
 	if item == self.money then
 		self.money = nil
 	end

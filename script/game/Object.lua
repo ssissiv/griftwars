@@ -6,12 +6,25 @@ function Object:init()
 	self.value = 0
 end
 
+function Object:OnDespawn()
+	Entity.OnDespawn( self )
+
+	assert( not self:IsSpawned() )
+	if self.carrier then
+		self.carrier:RemoveItem( self )
+	end
+
+	if self.location then
+		self.location:RemoveEntity( self )
+	end
+end
+
 function Object:GetName()
 	return "object"
 end
 
 function Object:GetMapChar()
-	return self.MAP_CHAR
+	return self.MAP_CHAR, self.MAP_COLOUR
 end
 
 function Object:GenerateLocTable( viewer )

@@ -9,7 +9,6 @@ function JunkHeap:OnSpawn( world )
 	self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.ScroungeTarget())
 	self:GainAspect( Aspect.Impass() )
-	self:GainAspect( Aspect.ScalarCalculator() )
 
 	self:RefreshJunk()
 
