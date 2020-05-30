@@ -53,6 +53,24 @@ function dbg_test( filename )
 	require( filename ) 
 end
 
+
+-----------------------------------------------------------------------------
+
+function p_xp( delta )
+	local c = coroutine.create( function()
+		puppet:GainXP( delta )
+
+		local stat_xp = puppet.world.nexus:Sleep( puppet )
+		if stat_xp then
+			for stat, xp in pairs( stat_xp ) do
+				puppet:AssignXP( xp, stat )
+			end
+		end
+	end )
+
+	coroutine.resume( c )
+end
+
 -----------------------------------------------------------------------------
 
 -- Shows all functions in the dbg_env.

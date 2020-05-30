@@ -51,11 +51,19 @@ function StatValue:DeltaValue( delta, max_delta )
 		self.max_value = self.max_value + max_delta
 	end
 
+	local new_value
 	if self.max_value then
-		self.value = math.max( 0, math.min( self.max_value, self.value + delta ))
+		new_value = math.max( 0, math.min( self.max_value, self.value + delta ))
 	else
-		self.value = math.max( 0, self.value + delta )
+		new_value = math.max( 0, self.value + delta )
 	end
+
+	if new_value ~= self.value then
+		self.value = new_value
+		if IsEnum( self.stat, CORE_STAT ) then
+			Msg:Echo( self.owner, "Your {1} is now {2}!", self.stat, self.value )
+		end
+	end	
 end
 
 function StatValue:GetValue()
@@ -103,11 +111,11 @@ function StatValue:GainXP( xp )
 	local delta = math.floor( self.growth )
 	if delta ~= 0 then
 		self.growth = self.growth - delta
-		self:DeltaValue( delta, delta )
+		self:DeltaValue( delta )
 	end
 end
 
-function StatValue:RenderDebugPanel( ui, panel, dbg )
+function StatValue:RenderAgentDetails( ui, panel )
 	local value, max_value = self:GetValue()
 	local stat = self.stat
 	if max_value then
@@ -115,6 +123,11 @@ function StatValue:RenderDebugPanel( ui, panel, dbg )
 	else
 		ui.Text( loc.format( "{1}: {2}", stat, value ))
 	end
+end
+
+
+function StatValue:RenderDebugPanel( ui, panel, dbg )
+	self:RenderAgentDetails( ui, panel )
 
 	if ui.IsItemHovered() then
 		local threshold, name = self:GetThreshold()

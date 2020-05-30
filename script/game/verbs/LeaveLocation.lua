@@ -85,7 +85,7 @@ function LeaveLocation:PathToPortal( actor, portal )
 			actor:Walk( exit )
 
 		else
-			print( "no path!", self, actor, portal )
+			-- print( "no path!", self, actor, portal )
 			self:YieldForTime( ONE_MINUTE )
 		end
 	end

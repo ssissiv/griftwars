@@ -9,7 +9,7 @@ function BrownBear:init()
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GetStat( STAT.HEALTH ):DeltaValue( 50, 50 )
-	self:GetStat( STAT.STRENGTH ):DeltaValue( 4 )
+	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 4 )
 
 	self:SetFeral( true )
 end

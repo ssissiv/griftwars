@@ -208,15 +208,18 @@ UTILITY =
 
 ----------------------------------------------------------------------------------------------
 -- Stat constants
+
+CORE_STAT = MakeEnum
+{
+	"CHARISMA", "STRENGTH"
+}
+
 STAT = MakeEnum
 {	
 	-- Core stats
 	"FATIGUE",
 	"HEALTH",
 	"XP",
-
-	"STRENGTH",
-	"CHARISMA",
 
 	-- Skill values
 	"CLIMBING",

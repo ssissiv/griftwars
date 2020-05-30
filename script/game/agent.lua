@@ -363,7 +363,7 @@ function Agent:IsFriends( other )
 end
 
 function Agent:GetMaxFriends()
-	return self:GetStatValue( STAT.CHARISMA ) or 0
+	return self:GetStatValue( CORE_STAT.CHARISMA ) or 0
 end
 
 function Agent:CountAffinities( affinity )
@@ -690,11 +690,11 @@ function Agent:CanSee( obj )
 end
 
 function Agent:Sense( txt )
-	table.insert( self.sense_log, { desc = txt, sensor_type = SENSOR.VISION, when = self.world:GetDateTime() } )
+	table.insert( self.sense_log, { desc = txt, sensor_type = SENSOR.VISION, when = self.world and self.world:GetDateTime() or 0 } )
 end
 
 function Agent:Echo( txt )
-	table.insert( self.sense_log, { desc = txt, sensor_type = SENSOR.ECHO, when = self.world:GetDateTime() } )
+	table.insert( self.sense_log, { desc = txt, sensor_type = SENSOR.ECHO, when = self.world and self.world:GetDateTime() or 0 } )
 end
 
 function Agent:Senses()

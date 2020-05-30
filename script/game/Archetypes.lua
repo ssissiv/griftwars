@@ -36,7 +36,7 @@ function Agent:MakeBiological()
 	fatigue:SetThresholds( FATIGUE_THRESHOLDS )
 	fatigue:DeltaRegen( 100 / (2 * ONE_DAY) )
 
-	self:CreateStat( STAT.CHARISMA, 1, 1 )
+	self:GainAspect( Aspect.Charisma( 1 ))
 	self:GainAspect( Aspect.Strength( 1 ))
 
 	self:GainAspect( Verb.ManageFatigue( self ))

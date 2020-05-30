@@ -31,7 +31,7 @@ end
 
 function Befriend:Interact( actor, target )
 
-	local trust = math.random( 0, actor:GetStatValue( STAT.CHARISMA ))
+	local trust = math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA ))
 
 	if trust > 0 then
 		Msg:Echo( actor, "You befriend {1.Id}.", target:LocTable( actor ))
