@@ -48,8 +48,11 @@ function Affinity:SetAffinity( affinity )
 end
 
 function Affinity:CheckPrivacy( owner, target, flag )
+	-- Are we checking for the people we're defined for?
 	if (owner == self.first and target == self.second) or (owner == self.second and target == self.first) then
-		return CheckBits( PRIVACY_ALL, flag )
+		if self.affinity == AFFINITY.KNOWN then
+			return CheckBits( PRIVACY_ALL, flag )
+		end
 	end
 	return false
 end

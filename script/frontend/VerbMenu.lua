@@ -41,6 +41,16 @@ function VerbMenu:RenderSelectedEntity( ui, screen, ent )
     if ui.SmallButton( "?" ) then
         self.world.nexus:Inspect( self.actor, ent )
     end
+
+    -- If has trust, show it.
+    if is_instance( ent, Agent ) then
+        local aff = ent:GetAffinities()[ self.actor ]
+        if aff and aff:GetTrust() > 0 then
+            ui.Text( loc.format( "Affinity: {1}", aff:GetAffinity() ))
+            ui.SameLine( 0, 20 )
+            ui.Text( loc.format( "Trust: {1}", aff:GetTrust() ))
+        end
+    end
     ui.Separator()
 end
 

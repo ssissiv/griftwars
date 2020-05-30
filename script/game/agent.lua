@@ -783,6 +783,10 @@ function Agent:OnReceivedFocus( other )
 	self:RegenVerbs()
 end
 
+function Agent:GetAffinities( other )
+	return self.affinities or table.empty
+end
+
 function Agent:GetAffinity( other )
 	local affinity = self.affinities and self.affinities[ other ]
 	if affinity then
@@ -805,6 +809,14 @@ function Agent:DeltaTrust( trust )
 	end
 end
 
+function Agent:GetTrust( other )
+	local affinity = self.affinities and self.affinities[ other ]
+	if affinity == nil then
+		return 0
+	else
+		return affinity:GetTrust()
+	end
+end
 
 function Agent:GainXP( xp )
 	if self.stats[ STAT.XP ] then

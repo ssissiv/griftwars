@@ -9,11 +9,13 @@ function Grifter:init()
 	self:SetDetails( "Han", nil, GENDER.MALE )
 	self:GainAspect( Aspect.Player() )
 
-	self:CreateStat( STAT.XP, 0, 100 )
+	self:CreateStat( STAT.XP, 0 )
 	self:GetStat( STAT.HEALTH ):DeltaValue( 10, 10 )
 
 	self:GetInventory():DeltaMoney( 2 )
 	self:GetInventory():AddItem( Weapon.Dirk() )
+
+	self:GainAspect( Verb.Befriend() )
 end
 
 function Grifter:GetMapChar()
