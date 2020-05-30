@@ -3,6 +3,7 @@ local Job = class( "Job", Verb )
 function Job:init( employer )
 	assert( is_instance( employer, Agent ))
 	self.employer = employer
+	self.idle = Verb.Idle()
 
 	if self.OnInit then
 		self:OnInit()
@@ -190,7 +191,7 @@ function Job:Interact()
 			end
 
 		else
-			self:YieldForTime( HALF_HOUR )			
+			self.idle:DoVerb( actor )
 		end
 	end
 

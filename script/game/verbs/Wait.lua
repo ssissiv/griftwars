@@ -12,6 +12,6 @@ function Wait:Interact( actor )
 	if actor:InCombat() then
 		self:YieldForTime( ATTACK_TIME )
 	else
-		self:YieldForTime( HALF_HOUR )
+		self:YieldForTime( HALF_HOUR, "wall", 1.0 )
 	end
 end

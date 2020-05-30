@@ -791,6 +791,8 @@ function Agent:GetAffinity( other )
 	local affinity = self.affinities and self.affinities[ other ]
 	if affinity then
 		return affinity:GetAffinity()
+	else
+		return AFFINITY.STRANGER
 	end
 end
 
@@ -844,6 +846,8 @@ function Agent.GetAgentOwner( obj )
 end
 
 function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
+	local viewer = self.world:GetPuppet()
+	
 	love.graphics.setFont( assets.FONTS.MAP_TILE )
 	local ch, clr = self:GetMapChar()
 	if self:IsDead() then
@@ -855,11 +859,19 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
 	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
 
+	-- Show as a target in combat
 	local combat = self:GetAspect( Aspect.Combat )
-	if self.world and combat and combat:IsTarget( self.world:GetPuppet() ) then
+	if self.world and combat and combat:IsTarget( viewer ) then
 		screen:SetColour( constants.colours.RED )
 		love.graphics.print( "!", (x1+x2)*0.5, (y1), 0, scale, 0.6 * scale )
 	end
+
+	-- Show as someone familiar.
+	if viewer:GetAffinity( self ) ~= AFFINITY.STRANGER or self:GetTrust( viewer ) > 0 then
+		screen:SetColour( constants.colours.YELLOW )
+		love.graphics.print( "*", x1, (y1), 0, scale, 0.6 * scale )		
+	end
+
 	if self:IsSleeping() then
 		local img = assets.IMG.ZZZ
 		screen:SetColour( constants.colours.WHITE )

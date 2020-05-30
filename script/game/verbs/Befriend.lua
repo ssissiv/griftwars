@@ -36,6 +36,7 @@ function Befriend:Interact( actor, target )
 	if trust > 0 then
 		Msg:Echo( actor, "You befriend {1.Id}.", target:LocTable( actor ))
 		target:DeltaTrust( trust )
+		actor:GainXP( trust )
 	end
 end
 
