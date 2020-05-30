@@ -1,5 +1,5 @@
 local Grifter = class( "Agent.Grifter", Agent )
-Grifter.short_desc = "grifter"
+Grifter.unfamiliar_desc = "grifter"
 
 function Grifter:init()
 	Agent.init( self )

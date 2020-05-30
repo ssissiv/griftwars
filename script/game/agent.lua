@@ -122,12 +122,8 @@ function Agent:GetSpeciesProps()
 	return SPECIES_PROPS[ self.species ]
 end
 
-function Agent:GetShortDesc()
-	if self.short_desc then
-		return self.short_desc
-	else
-		return loc.format( "{1} {2}", SPECIES_PROPS[ self.species ].name, self._classname )
-	end
+function Agent:GetShortDesc( viewer )
+	return self:LocTable( viewer ).desc
 end
 
 function Agent:GetLongDesc()
@@ -233,18 +229,33 @@ function Agent:GenerateLocTable( viewer )
 
 	t.name = self.name
 
-	if self.name then
-		if viewer == nil then
-			t.id = loc.format( "[[{1}]]", self.name )
-		elseif viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
-			t.id = loc.format( "[{1}]", self.name )
-		else
-			t.id = loc.format( "[{1}]", self:GetShortDesc( viewer ) )
-		end
+	-- Unfamiliar description: when the target is unknown
+	local unfamiliar_desc
+	if self.unfamiliar_desc then
+		unfamiliar_desc = loc.format( "{1}", self.unfamiliar_desc )
 	else
-		t.id = loc.format( "[{1}]", self:GetShortDesc( viewer ) )
+		unfamiliar_desc = loc.format( "{1} {2}", SPECIES_PROPS[ self.species ].name, self._classname )
 	end
-	t.Id = t.id
+
+	if self.name == nil then
+		-- Things with no name are simply their unfamiliar description.
+		t.desc = unfamiliar_desc
+
+	else
+		-- Identified description: The unfamiliar description identified as the target if it is known
+		if viewer == nil then
+			t.desc = loc.format( "[{1}, {2}]", self.name, unfamiliar_desc )
+		elseif viewer == nil or viewer == self or viewer:CheckPrivacy( self, PRIVACY.ID ) then
+			t.desc = loc.format( "[{1}, {2}]", self.name, unfamiliar_desc )
+		else
+			t.desc = loc.format( "[{1}]", unfamiliar_desc )
+		end
+	end
+
+	t.Desc = loc.cap( t.desc )
+
+	t.id = t.desc
+	t.Id = t.Desc
 
 	return t
 end
@@ -847,9 +858,9 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 end
 
 function Agent:__tostring()
-	return string.format( "[%s%s%s%s]",
+	return string.format( "%s%s%s%s",
 		self:IsPlayer() and "@" or "",
-		self:GetName() or self:GetShortDesc(),
+		self:GetShortDesc(),
 		self.location == nil and "*" or "",
 		self:IsDead() and "!" or "" )
 end

@@ -41,7 +41,7 @@ end
 local Snoop = class( "Agent.Snoop", Agent )
 
 Snoop.MAP_CHAR = "s"
-Snoop.short_desc = "snoop"
+Snoop.unfamiliar_desc = "snoop"
 
 function Snoop:init()
 	Agent.init( self )

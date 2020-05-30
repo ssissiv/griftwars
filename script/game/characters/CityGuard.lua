@@ -4,7 +4,7 @@
 local CityGuard = class( "Agent.CityGuard", Agent )
 
 CityGuard.MAP_CHAR = "g"
-CityGuard.short_desc = "city guard"
+CityGuard.unfamiliar_desc = "city guard"
 
 function CityGuard:init()
 	Agent.init( self )

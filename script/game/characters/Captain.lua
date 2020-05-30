@@ -13,7 +13,7 @@
 local Captain = class( "Agent.Captain", Agent )
 
 Captain.MAP_CHAR = "C"
-Captain.short_desc = "captain"
+Captain.unfamiliar_desc = "captain"
 
 function Captain:init()
 	Agent.init( self )
