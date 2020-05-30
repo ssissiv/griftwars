@@ -310,24 +310,22 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 
     ui.SameLine( 0, 25 )
 
-    local i = 1
-    for stat, aspect in puppet:Stats() do
-    	ui.SameLine( 0, 15 )
-    	local value, max_value = aspect:GetValue()
-    	if max_value then
-	    	ui.Text( loc.format( "{1}: {2}/{3}", stat, value, max_value ))
-	    else
-	    	ui.Text( loc.format( "{1}: {2}", stat, value ))
-	    end
-	
-		local growth = aspect:GetGrowth()
-		if growth > 0 then
-			ui.SameLine( 0, 5 )
-			ui.TextColored( 0, 0.5, 0, 1, loc.format( "({1#percent})", growth ))
-		end
+    local xp = puppet:GetStatValue( STAT.XP )
+    ui.Text( loc.format( "XP: {1}", xp ))
+    ui.SameLine( 0, 15 )
+    ui.TextColored( 1, 0, 0, 1, loc.format( "HP: {1}/{2}", puppet:GetHealth() ))
 
-    	i = i + 1
-    end
+	-- local growth = aspect:GetGrowth()
+	-- if growth > 0 then
+	-- 	ui.SameLine( 0, 5 )
+	-- 	ui.TextColored( 0, 0.5, 0, 1, loc.format( "({1#percent})", growth ))
+	-- end
+
+	local fatigue, threshold_name = puppet:GetStat( STAT.FATIGUE ):GetThreshold()
+	if fatigue >= FATIGUE.TIRED then
+	    ui.SameLine( 0, 15 )
+		ui.TextColored( 1, 1, 0, 1, tostring(threshold_name))
+	end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )

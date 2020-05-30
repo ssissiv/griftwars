@@ -58,7 +58,7 @@ function Sleep:Interact( actor )
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -10 )
 	actor:GetStat( STAT.HEALTH ):DeltaRegen( 0.5 )
 
-   	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ), SLEEP_SPEED_RATE )
+   	self:YieldForTime( Calendar.GetTimeUntilHour( actor.world:GetDateTime(), 6 ), "wall", 3.0 )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 10 )
 	actor:GetStat( STAT.HEALTH ):DeltaRegen( -0.5 )

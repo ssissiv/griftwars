@@ -32,7 +32,10 @@ end
 
 function Agent:MakeBiological()
 	self:GainAspect( Aspect.HealthValue( 6, 6 ))
-	self:CreateStat( STAT.FATIGUE, 0, 100 ):DeltaRegen( 100 / (2 * ONE_DAY) )
+	local fatigue = self:CreateStat( STAT.FATIGUE, 0, 100 )
+	fatigue:SetThresholds( FATIGUE_THRESHOLDS )
+	fatigue:DeltaRegen( 100 / (2 * ONE_DAY) )
+
 	self:CreateStat( STAT.CHARISMA, 1, 1 )
 	self:GainAspect( Aspect.Strength( 1 ))
 

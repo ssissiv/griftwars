@@ -71,7 +71,7 @@ function LeaveLocation:PathToPortal( actor, portal )
 	local pather = TilePathFinder( actor, actor, portal.owner:GetTile() )
 	while actor:GetTile() ~= pather:GetEndRoom() do
 		--
-		self:YieldForTime( WALK_TIME, 1.0 )
+		self:YieldForTime( WALK_TIME, "rate", 1.0 )
 
 		if self:IsCancelled() then
 			break

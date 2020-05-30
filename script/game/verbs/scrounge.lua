@@ -115,7 +115,7 @@ function Scrounge:Interact( actor, target )
 	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
 
 	-- while true do
-		self:YieldForTime( 30 * ONE_MINUTE, 8.0 )
+		self:YieldForTime( 30 * ONE_MINUTE, "rate", 8.0 )
 		actor:DeltaStat( STAT.FATIGUE, 5 )
 
 		if self:IsCancelled() then

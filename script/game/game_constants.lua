@@ -206,6 +206,8 @@ UTILITY =
 	FUN = 25,
 }
 
+----------------------------------------------------------------------------------------------
+-- Stat constants
 STAT = MakeEnum
 {	
 	-- Core stats
@@ -222,6 +224,21 @@ STAT = MakeEnum
 	-- Transient stats
 	"PATIENCE",
 }
+
+EFATIGUE, FATIGUE = MakeEnum{ "FRESH", "TIRED", "EXHAUSTED" }
+FATIGUE_STRINGS =
+{
+	[FATIGUE.FRESH] = "Fresh",
+	[FATIGUE.TIRED] = "Tired",
+	[FATIGUE.EXHAUSTED] = "Exhausted",
+}
+FATIGUE_THRESHOLDS =
+{
+	{ value = 0, id = FATIGUE.FRESH, name = FATIGUE_STRINGS[ FATIGUE.FRESH ] },
+	{ value = 75, id = FATIGUE.TIRED, name = FATIGUE_STRINGS[ FATIGUE.TIRED ] },
+	{ value = 90, id = FATIGUE.EXHAUSTED, name = FATIGUE_STRINGS[ FATIGUE.EXHAUSTED ] },
+}
+
 
 -- Challenge ratings
 CR0 = 0

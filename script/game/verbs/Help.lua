@@ -44,7 +44,7 @@ function Help:Interact( actor )
 	while true do
 		self.travel:DoVerb( actor )
 
-		self:YieldForTime( 1 * ONE_MINUTE, 1.0 )
+		self:YieldForTime( 1 * ONE_MINUTE, "rate", 2.0 )
 
 		if self:IsCancelled() then
 			Msg:Echo( actor, "You stop helping." )

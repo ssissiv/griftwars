@@ -31,6 +31,21 @@ function StatValue:OnLoseAspect( owner )
 	owner.stats[ self.stat ] = nil
 end
 
+function StatValue:SetThresholds( thresholds )
+	self.thresholds = thresholds
+end
+
+function StatValue:GetThreshold()
+	if self.thresholds then
+		for i = #self.thresholds, 1, -1 do
+			local t = self.thresholds[i]
+			if self.value >= t.value then
+				return t.id, t.name
+			end
+		end
+	end
+end
+
 function StatValue:DeltaValue( delta, max_delta )
 	if max_delta then
 		self.max_value = self.max_value + max_delta
@@ -101,6 +116,13 @@ function StatValue:RenderDebugPanel( ui, panel, dbg )
 		ui.Text( loc.format( "{1}: {2}", stat, value ))
 	end
 
+	if ui.IsItemHovered() then
+		local threshold, name = self:GetThreshold()
+		if threshold then
+			ui.SetTooltip( loc.format( "Threshold: {1}", name or threshold))
+		end
+	end
+
 	if self.regen_delta then
 		ui.SameLine( 0, 10 )
 		ui.TextColored( 0, 1, 0, 1, string.format( "%+.2f", self.regen_delta ))
@@ -114,6 +136,11 @@ function StatValue:RenderDebugPanel( ui, panel, dbg )
 	ui.SameLine( 0, 5 )
 	if ui.Button( "-" ) then
 		self.owner:DeltaStat( stat, Input.IsShift() and -10 or -1 )
+	end
+
+	ui.SameLine( 0, 15 )
+	if ui.Button( "?" ) then
+		DBG(self)
 	end
 end
 
