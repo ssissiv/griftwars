@@ -2,20 +2,19 @@ local VerbMenu = class( "VerbMenu", NexusWindow )
 
 function VerbMenu:init( world )
     self.world = world
+    self.shown_verbs = {}
 end
 
 function VerbMenu:RefreshContents( actor, focus )
     self.actor = actor
     self.focus = focus
-    self.shown_verbs = {}
+    table.clear( self.shown_verbs )
 
     if focus then
-        for i, obj in self.focus:Contents() do
-            self.actor:RegenVerbs()
-            local verbs = self.actor:GetPotentialVerbs( nil, obj )            
-            for j, verb in verbs:Verbs() do
-                table.insert( self.shown_verbs, verb )
-            end
+        self.actor:RegenVerbs()
+        local verbs = self.actor:GetPotentialVerbs( nil, focus )            
+        for j, verb in verbs:Verbs() do
+            table.insert( self.shown_verbs, verb )
         end
     end
 end

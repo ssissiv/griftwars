@@ -74,6 +74,7 @@ function GameScreen:OnWorldEvent( event_name, world, ... )
 		self:OnPuppetChanged( puppet )
 
 	elseif event_name == WORLD_EVENT.PAUSED then
+		-- Refresh focus validity, and verbs
 		self:SetCurrentFocus( self.current_focus )
 	end
 end
@@ -659,19 +660,30 @@ function GameScreen:CycleFocus()
 	local contents = self.puppet:GetVisibleObjectsByDistance()
 	table.arrayremove( contents, self.puppet )
 
-	local idx = 0
-	for i, obj in ipairs( contents ) do
-		if obj:GetTile() == self.current_focus then
-			idx = i
-			break
+	local idx = table.arrayfind( contents, self.current_focus ) or 0
+	idx = (idx % #contents) + 1
+
+	self:SetCurrentFocus( contents[ idx ] )
+end
+
+function GameScreen:CanFocus( obj )
+	if self.puppet then
+		local location = obj:GetLocation()
+		if location ~= self.puppet:GetLocation() then
+			return false
+		end
+		if not self.puppet:CanSee( obj ) then
+			return false
 		end
 	end
-
-	idx = (idx % #contents) + 1
-	self:SetCurrentFocus( contents[ idx ]:GetTile() )
+	return true
 end
 
 function GameScreen:SetCurrentFocus( focus )
+	if focus and not self:CanFocus( focus ) then
+		focus = nil
+	end
+
 	self.current_focus = focus
 
 	if self.verb_window == nil then
@@ -742,7 +754,12 @@ function GameScreen:MousePressed( mx, my, btn )
 					end
 				end
 			else
-				self:SetCurrentFocus( self.hovered_tile )
+				for i, obj in self.hovered_tile:Contents() do
+					if self.puppet:CanSee( obj ) then
+						self:SetCurrentFocus( obj )
+						break
+					end
+				end
 			end
 			return true
 		end

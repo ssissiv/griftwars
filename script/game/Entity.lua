@@ -36,6 +36,10 @@ function Entity:IsSpawned()
 	return self.world ~= nil
 end
 
+function Entity:Despawn()
+	self.world:DespawnEntity( self )
+end
+
 function Entity:OnSpawn( world )
 	assert( self.world == nil or error( tostr(self) ))
 
