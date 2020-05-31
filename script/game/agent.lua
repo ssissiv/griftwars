@@ -811,6 +811,7 @@ function Agent:DeltaTrust( trust )
 	end
 end
 
+-- How much trust do I have with 'other'?
 function Agent:GetTrust( other )
 	local affinity = self.affinities and self.affinities[ other ]
 	if affinity == nil then

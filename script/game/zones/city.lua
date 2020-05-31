@@ -22,10 +22,9 @@ function City:OnWorldGenPass( pass )
 	if self.name == nil then
 		self.name = self.world:GetAspect( Aspect.CityNamePool ):PickName()
 	end
+
 	if self.faction == nil then
-		local guards = table.count_if( self.rooms, function( room ) return room:GetBoundaryPortal() end )
-		self.faction = Faction.CityMilitary( loc.format( "The {1} Military", self.name ), guards * 3 )
-		self.world:SpawnEntity( self.faction )
+		self:GenerateCityFaction()
 	end
 
 	if pass == 0 then
@@ -78,6 +77,16 @@ end
 
 function City:GetFaction()
 	return self.faction
+end
+
+function City:GenerateCityFaction()
+	local guards = table.count_if( self.rooms, function( room ) return room:GetBoundaryPortal() end )
+	self.faction = Faction.CityMilitary( loc.format( "The {1} Military", self.name ), guards * 3 )
+	self.world:SpawnEntity( self.faction )
+
+	for i, room in ipairs( self.rooms ) do
+		room:GainAspect( Aspect.FactionMember( self.faction ))
+	end
 end
 
 function City:SpawnShopAssistants()

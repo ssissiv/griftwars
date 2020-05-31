@@ -38,9 +38,9 @@ end
 
 function Befriend:Interact( actor, target )
 
-	self:AttachActor( target )
+	-- self:AttachActor( target )
 
-	self:YieldForTime( HALF_HOUR, "rate", 4.0 )
+	self:YieldForTime( HALF_HOUR, "wall", 1.0 )
 
 	if self:IsCancelled() then
 		Msg:Echo( actor, "So much for making friends." )

@@ -257,9 +257,7 @@ end
 function DebugPanel:AppendTable( ui, v, name )
     -- Add a Button that allows pushing a new debug node for the table.
     if v == table.empty then
-        ui.PushStyleColor( ui.Style_Button, 0, 0, 0, 1 )
-    else
-        ui.PushStyleColor( ui.Style_Button, 0, 1, 1, 1 )
+        ui.PushStyleColor( "Button", 0, 0, 0, 1 )
     end
     ui.PushID( self.frame_uid )
     if ui.Button( tostring(name or v), 0, 14 ) and v then
@@ -282,7 +280,9 @@ function DebugPanel:AppendTable( ui, v, name )
         ui.EndPopup()
     end
     ui.PopID()
-    ui.PopStyleColor()
+    if v == table.empty then
+        ui.PopStyleColor()
+    end
     self.frame_uid = self.frame_uid + 1
 end
 

@@ -89,13 +89,17 @@ function Scavenger:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	self:SetDetails( nil, "Here's a guy.", GENDER.MALE )
 
-	local interactions =
+	-- local interactions =
+	-- {
+	-- 	Interaction.IntroduceAgent( Agent.Shopkeeper ),
+	-- 	Interaction.RevealObject( Object.JunkHeap, 3 ),
+	-- 	Interaction.GiftObject( Object.Jerky() ),
+	-- }
+	-- self:GainTrustedInteractions( interactions )
+	Aspect.Favour.GainFavours( self,
 	{
-		Interaction.IntroduceAgent( Agent.Shopkeeper ),
-		Interaction.RevealObject( Object.JunkHeap, 3 ),
-		Interaction.GiftObject( Object.Jerky() ),
-	}
-	self:GainTrustedInteractions( interactions )
+		{ Favour.GainXP( 100 ), 20 },
+	})
 end
 
 function Scavenger:OnLocationEntityEvent( event_name, entity, ... )

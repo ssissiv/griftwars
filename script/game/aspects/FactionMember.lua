@@ -5,7 +5,7 @@ FactionMember.TABLE_KEY = "faction"
 
 function FactionMember:init( faction, role )
 	assert( is_instance( faction, Faction ))
-	assert( IsEnum( role, FACTION_ROLE ))
+	assert( role == nil or IsEnum( role, FACTION_ROLE ))
 	self.faction = faction
 	self.role = role
 end
@@ -19,7 +19,9 @@ function FactionMember:GetRole()
 end
 
 function FactionMember:GetSuperiors()
-	return self.faction:GetSuperiorsByRole( self.role )
+	if self.role then
+		return self.faction:GetSuperiorsByRole( self.role )
+	end
 end
 
 function FactionMember:IsEnemy( other )

@@ -4,7 +4,7 @@ function Agent:GainTrustedInteractions( t )
 	for i, v in ipairs( t ) do
 		assert( is_instance( v, Aspect.Interaction ))
 
-		v:ReqTrust( i * math.floor( 100 / #t ))
+		v:ReqTrust( self, i * math.floor( 100 / #t ))
 		self:GainAspect( v )
 	end
 end

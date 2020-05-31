@@ -4,6 +4,10 @@ function Req:__tostring()
 	return self._classname
 end
 
+function Req:GetDesc( viewer )
+	return self._classname
+end
+
 ----------------------------------------------------
 
 local FaceReq = class( "Req.Face", Req )
@@ -28,21 +32,24 @@ end
 
 local TrustReq = class( "Req.Trust", Req )
 
-function TrustReq:init( trust )
+function TrustReq:init( agent, trust )
 	assert( trust > 0 )
+	self.agent = agent
 	self.trust = trust
 end
 
+function TrustReq:GetDesc( viewer )
+	return loc.format( "Requires {1} Trust (have {2})", self.trust, self.agent:GetTrust( viewer ))
+end
+
 function TrustReq:IsSatisfied( viewer )
-	local aff = viewer:GetAspect( Relationship.Affinity )
-	if aff == nil or aff:GetTrust() < self.trust then
-		return false, loc.format( "Not enough trust ({1}/{2})", aff and aff:GetTrust() or 0, self.trust )
+	local trust = self.agent:GetTrust( viewer )
+	if trust < self.trust then
+		return false, loc.format( "Not enough trust ({1}/{2})", trust, self.trust )
 	end
 
 	return true
 end
-
-
 
 ----------------------------------------------------
 
@@ -53,6 +60,11 @@ function StatReq:init( stat, value )
 	self.stat = stat
 	self.value = value
 end
+
+function StatReq:GetDesc( viewer )
+	return loc.format( "Requires {1} {2} (have {3})", self.value, self.stat, viewer:GetStatValue( self.stat ))
+end
+
 
 function StatReq:IsSatisfied( viewer )
 	local value = viewer:CalculateStat( self.stat )

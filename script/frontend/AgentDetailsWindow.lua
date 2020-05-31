@@ -22,6 +22,15 @@ function AgentDetailsWindow:RenderAllRelationships( ui, screen )
 	self:RenderRelationships( ui, screen, AFFINITY.KNOWN )
 end
 
+function AgentDetailsWindow:RenderFavours( ui, screen )
+	for i, favour in self.agent:Aspects() do
+		if is_instance( favour, Aspect.Favour ) then
+			ui.Bullet()
+			favour:RenderAgentDetails( ui, screen, self.viewer )
+		end
+	end
+end
+
 function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
 
 	local affinity_count = self.agent:CountAffinities( affinity )
@@ -40,7 +49,7 @@ function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
 
 					if affinity == AFFINITY.FRIEND then
 						ui.SameLine( 0, 5 )
-						ui.PushStyleColor( ui.Style_Button, 1, 0, 0, 1 )
+						ui.PushStyleColor( "Button", 1, 0, 0, 1 )
 						if ui.SmallButton( "X" ) then
 							self.agent:Unfriend( other )
 						end
@@ -77,16 +86,40 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
 		ui.Text( "Description: " .. self.agent:GetLongDesc( self.viewer ))
+		ui.SameLine( 0, 10 )
+		if ui.SmallButton( "?" ) then
+			DBG( self.agent )
+		end
+
 		ui.Text( "Gender:" )
 		ui.SameLine( 0, 5 )
 		ui.TextColored( 0, 1, 1, 1, tostring(self.agent.gender) )
 
+		if self.agent ~= self.viewer then
+			local affinity, trust = self.agent:GetAffinity( self.viewer ), self.agent:GetTrust( self.viewer )
+			ui.Text( "Relationship:" )
+			ui.SameLine( 0, 5 )
+			ui.TextColored( 1, 1, 0, 1, tostring(affinity))
+			ui.SameLine( 0, 20 )
+			ui.Text( loc.format( "Trust: {1}", trust ))
+		end
+
+		-- ASPECTS
+		ui.Separator()
 		for id, aspect in self.agent:Aspects() do
-			if aspect.RenderAgentDetails then
+			if aspect.RenderAgentDetails and not is_instance( aspect, Aspect.Favour ) then
 				aspect:RenderAgentDetails( ui, screen, self.viewer )
 			end
 		end
 		
+		-- FAVOURS
+		if self.agent:HasAspect( Aspect.Favour ) then
+			ui.Text( "Favours:" )
+			ui.Indent( 20 )
+			self:RenderFavours( ui, screen )
+			ui.Unindent ( 20 )
+		end
+
 		ui.NewLine()
 
 		if self.agent == self.viewer then
