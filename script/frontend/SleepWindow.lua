@@ -23,8 +23,8 @@ function SleepWindow:RenderImGuiWindow( ui, screen )
 		    	local xp_rate = aspect:GetGrowthRate()
 		    	if xp_rate then
 		    		local current_points = self.stat_xp[ stat ] or 0
-		    		local growth = xp_rate * current_points + aspect:GetGrowth()
-		    		local txt = loc.format( "{1} ({2#percent})", tostring(stat), growth )
+					local new_value, new_growth, percent = aspect:CalculateValueWithXP( current_points )
+		    		local txt = loc.format( "{1} ({2#percent})", tostring(stat), percent )
 		    		local changed, points = ui.SliderInt( txt, current_points, 0, current_points + (self.xp - self.xp_used) )
 		    		if changed then
 			    		self.xp_used = self.xp_used + (points - current_points)
@@ -33,7 +33,7 @@ function SleepWindow:RenderImGuiWindow( ui, screen )
 			    	ui.SameLine( 0, 10 )
 			    	ui.Text( loc.format( "{1} =>", aspect:GetValue() ))
 			    	ui.SameLine( 0, 10 )
-			    	ui.TextColored( 0, 1, 0, 1, tostring( aspect:GetValue() + math.floor( growth )))
+			    	ui.TextColored( 0, 1, 0, 1, tostring( new_value ))
 		    	end
 		    end
 

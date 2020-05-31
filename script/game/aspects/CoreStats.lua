@@ -11,7 +11,7 @@ Strength.event_handlers =
 
 function Strength:init( value )
 	Strength._base.init( self, CORE_STAT.STRENGTH, value )
-	self:SetGrowthRate( 0.1 )
+	self:SetGrowthRate( 1.0 )
 end
 
 ---------------------------------------------------------------------------
@@ -24,5 +24,5 @@ Charisma.event_handlers =
 
 function Charisma:init( value )
 	Charisma._base.init( self, CORE_STAT.CHARISMA, value )
-	self:SetGrowthRate( 0.1 )
+	self:SetGrowthRate( 1.0 )
 end

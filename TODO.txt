@@ -1,6 +1,16 @@
 TODO
 ====
 
+   ^
+   |
+ mult
+	stat--->
+
+new_stat = stat + mult * xp
+
+delta = mult(stat) * xp
+
+
 No-Travel zones for agents
 Homes?
 

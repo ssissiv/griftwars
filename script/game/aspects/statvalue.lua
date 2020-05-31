@@ -106,12 +106,24 @@ function StatValue:GetGrowth()
 	return self.growth or 0
 end
 
+function StatValue:CalculateValueWithXP( xp )
+	local growth = self.growth_rate * xp + (self.growth or 0)
+	local delta = 0
+	local xp_next = 100 * 2 ^ (self.value - 1)
+	while growth > xp_next do
+		growth = growth - xp_next
+		delta = delta + 1
+		xp_next = 100 * 2 ^ (self.value - 1 + delta)
+	end
+	local percent = delta + growth / xp_next
+	return self.value + delta, growth, percent
+end
+
 function StatValue:GainXP( xp )
-	self.growth = (self.growth or 0) + (self.growth_rate * xp)
-	local delta = math.floor( self.growth )
-	if delta ~= 0 then
-		self.growth = self.growth - delta
-		self:DeltaValue( delta )
+	local value, new_growth = self:CalculateValueWithXP( xp )
+	if value ~= self.value then
+		self.growth = new_growth
+		self:DeltaValue( value - self.value )
 	end
 end
 
