@@ -55,12 +55,16 @@ function DebugPanel:RenderPanel( dbg )
 
         if node and node.OnActivate then
             node:OnActivate( self )
-        end
+        end 
     end
 
     local title = string.format( "%s (%d/%d)##%uid-d", node:GetName(), self.idx, #self.nodes, self.uid )
-    ui.SetNextWindowSize( node.PANEL_WIDTH or DEFAULT_WIDTH, node.PANEL_HEIGHT or DEFAULT_HEIGHT, "Once" )
-    local show = ui.Begin( title, true, PANEL_FLAGS )
+    local flags = node.PANEL_FLAGS or PANEL_FLAGS
+    if not table.contains( flags, "AlwaysAutoResize" ) or node.PANEL_WIDTH or node.PANEL_HEIGHT then
+        ui.SetNextWindowSize( node.PANEL_WIDTH or DEFAULT_WIDTH, node.PANEL_HEIGHT or DEFAULT_HEIGHT, "Once" )
+    end
+
+    local show = ui.Begin( title, true, flags )
     if show then
         if ui.BeginMenuBar() then
             if node.can_reload and node._file then

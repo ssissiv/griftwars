@@ -148,6 +148,8 @@ end
 
 local DebugCustom = class( "DebugCustom", DebugNode )
 
+DebugCustom.PANEL_FLAGS = { "AlwaysAutoResize" }
+
 function DebugCustom:init( fn )
     self.fn = fn
 end

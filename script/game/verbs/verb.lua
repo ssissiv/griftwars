@@ -408,7 +408,25 @@ function Verb:Resume( coro )
 	-- Internally verbs should check IsCancelled after any YieldForTime call.
 	local ok, result = coroutine.resume( coro )
 	if not ok then
-		error( tostring(result) .. "\n" .. debug.traceback( coro ))
+		self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
+		DBG( function( node, ui, panel )
+			if self.coro_dbg == nil then
+				self.coro_dbg = DebugCoroutine( coro )
+			end
+
+			panel:AppendTable( ui, self )
+			ui.SameLine( 0, 10 )
+			panel:AppendTable( ui, self.actor )
+			ui.Separator()
+
+			self.coro_dbg:RenderPanel( ui, panel )
+
+			ui.NewLine()
+			if ui.Button( "Resume" ) then
+				self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
+			end
+		end )
+
 	elseif coroutine.status( coro ) == "suspended" then
 		-- Waiting.  Note that even if we are cancelled, the coro is still valid if we are part of a parent verb.
 		assert( not self.cancelled or self.parent ~= nil )

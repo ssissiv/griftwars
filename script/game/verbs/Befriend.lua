@@ -12,6 +12,9 @@ function Befriend:CalculateUtility()
 end
 
 function Befriend:CanInteract( actor, target )
+	if not target:IsAlert() then
+		return false, "Not alert"
+	end
 	local affinity = target:GetAffinity( actor )
 	if affinity == AFFINITY.FRIEND then
 		return false
@@ -36,10 +39,11 @@ end
 function Befriend:Interact( actor, target )
 
 	self:AttachActor( target )
-	DBG( self )
+
 	self:YieldForTime( HALF_HOUR, "rate", 4.0 )
 
 	if self:IsCancelled() then
+		Msg:Echo( actor, "So much for making friends." )
 		return
 	end
 
