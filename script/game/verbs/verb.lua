@@ -11,6 +11,7 @@ function Verb:init( actor, obj )
 	assert( actor == nil )
 	self.obj = obj
 	self.utility = 0
+	self.actors = {}
 end
 
 function Verb:SetUtility( utility )
@@ -249,15 +250,12 @@ function Verb:DidWithinTime( actor, dt )
 	return false
 end
 
-function Verb:DoVerb( actor, ... )
-	local ok, reason = self:CanDo( actor, ... )
-	if not ok then
-		-- print( "CANT DO", actor, self, reason )
-		return false, reason
-	end
-
-	-- assert( self:GetOwner() == actor and actor )
+-- Involves this acting agent in the verb.
+function Verb:AttachActor( actor )
 	actor:_AddVerb( self )
+
+	assert( self.actors, self._classname )
+	table.insert( self.actors, actor )
 
 	if self.event_handlers then
 		for event_name, fn in pairs( self.event_handlers ) do
@@ -265,8 +263,20 @@ function Verb:DoVerb( actor, ... )
 		end
 	end
 
-	self.cancelled = nil
+	return true
+end
+
+
+function Verb:DoVerb( actor, ... )
+	local ok, reason = self:CanDo( actor, ... )
+	if not ok then
+		return false, reason
+	end
+
+	self:AttachActor( actor )
+
 	self.actor = actor
+	self.cancelled = nil
 	self.coro = coroutine.running()
 	assert( self.coro )
 	self.time_started = actor.world:GetDateTime()
@@ -284,8 +294,11 @@ function Verb:DoVerb( actor, ... )
 	self.coro = nil
 	self.time_finished = actor.world:GetDateTime()
 
-	actor:RemoveListener( self )
-	actor:_RemoveVerb( self )
+	for i, actor in ipairs( self.actors ) do
+		actor:RemoveListener( self )
+		actor:_RemoveVerb( self )
+	end
+	table.clear( self.actors )
 
 	return true
 end

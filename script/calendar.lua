@@ -5,6 +5,28 @@ function Calendar.FormatTime( datetime, show_seconds )
 		return "nil"
 	end
 	
+	local hours = math.floor( datetime % 24 )
+	local fminutes = (datetime - math.floor( datetime )) * 60
+	local minutes = math.floor( fminutes )
+	local hour = hours % 12
+	if hour == 0 then
+		hour = 12
+	end
+	local am_pm = hours < 12 and "am" or "pm"
+	if show_seconds then
+		local minutes, seconds = math.modf( fminutes )
+		seconds = math.floor( seconds * 60 )
+		return loc.format( "({2}:{3%02d} {4}, {5} seconds)", nil, hour, minutes, am_pm, seconds )
+	else
+		return loc.format( "({2}:{3%02d} {4})", nil, hour, minutes, am_pm )
+	end
+end
+
+function Calendar.FormatDateTime( datetime, show_seconds )
+	if datetime == nil then
+		return "nil"
+	end
+	
 	local days =  math.floor( datetime / 24 )
 	local hours = math.floor( datetime % 24 )
 	local fminutes = (datetime - math.floor( datetime )) * 60
@@ -89,7 +111,7 @@ function Calendar.IsDay( datetime )
 end
 
 function Calendar.RenderDatetime( ui, datetime, world )
-	local txt = Calendar.FormatTime( datetime )
+	local txt = Calendar.FormatDateTime( datetime )
 	ui.Text( txt )
 	if ui.IsItemHovered() and world then
 		local now = world:GetDateTime()

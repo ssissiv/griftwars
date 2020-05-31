@@ -33,7 +33,7 @@ function WorldBase:OnWorldEvent( event_name, world, ... )
 		print( "WORLD_EVENT.LOG:", ... )
 	elseif event_name == WORLD_EVENT.INTERRUPT then
 		local reason = ...
-		Msg:Echo( self.puppet, loc.format( "{1}: {2}", Calendar.FormatTime( self.datetime ), reason ))
+		Msg:Echo( self.puppet, loc.format( "{1}: {2}", Calendar.FormatDateTime( self.datetime ), reason ))
 	end
 end
 

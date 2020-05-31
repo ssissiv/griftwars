@@ -1,6 +1,7 @@
 local Walk = class( "Verb.Walk", Verb )
 
 function Walk:init( exit )
+	Verb.init( self )
 	self.exit = exit
 end
 

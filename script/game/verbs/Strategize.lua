@@ -1,7 +1,7 @@
 
 AppendEnum( AGENT_EVENT, "STRATEGIZE" )
 
-local Strategize = class( "Verb.Strategize", Verb )
+local Strategize = class( "Verb.Strategize", Verb.Plan )
 
 function Strategize:init( actor )
 	Strategize._base.init( self, actor )

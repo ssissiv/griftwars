@@ -19,7 +19,7 @@
 --]]
 ---------------------------------------------------------------------
 
-local Scavenge = class( "Verb.Scavenge", Verb )
+local Scavenge = class( "Verb.Scavenge", Verb.Plan )
 
 function Scavenge:init()
 	Scavenge._base.init( self )

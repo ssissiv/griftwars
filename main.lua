@@ -80,6 +80,7 @@ require "game/relationships/Subordinate"
 
 require "game/aspects/aspect"
 require "game/verbs/verb"
+require "game/verbs/Plan"
 
 -----------------------------------------------------------
 

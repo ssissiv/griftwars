@@ -61,7 +61,7 @@ function MapScreen:RenderHeader( gui )
 
     -- Render details about the player.
     local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60
-    local timestr = Calendar.FormatTime( self.world:GetDateTime(), use_seconds )
+    local timestr = Calendar.FormatDateTime( self.world:GetDateTime(), use_seconds )
     ui.Text( timestr )
     if self.world:IsPaused() then
     	ui.SameLine( 0, 10 )

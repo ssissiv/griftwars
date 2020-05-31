@@ -1,5 +1,5 @@
 
-local FindInformation = class( "Verb.FindInformation", Verb )
+local FindInformation = class( "Verb.FindInformation", Verb.Plan )
 
 function FindInformation:init()
 	FindInformation._base.init( self )

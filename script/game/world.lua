@@ -29,7 +29,7 @@ function World:init()
 end
 
 function World:Log( fmt, ... )
-	self.history:Log( loc.format( "{1}: {2}", Calendar.FormatTime( self.datetime ), fmt ), ... )
+	self.history:Log( loc.format( "{1}: {2}", Calendar.FormatDateTime( self.datetime ), fmt ), ... )
 end
 
 function World:Start()

@@ -1,4 +1,4 @@
-local ManageFatigue = class( "Verb.ManageFatigue", Verb )
+local ManageFatigue = class( "Verb.ManageFatigue", Verb.Plan )
 
 function ManageFatigue:init()
 	ManageFatigue._base.init( self )

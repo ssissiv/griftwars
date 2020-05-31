@@ -132,7 +132,7 @@ function GameScreen:RenderScreen( gui )
 
     -- Render details about the player.
     local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60 or (puppet and puppet:InCombat())
-    local timestr = Calendar.FormatTime( self.world:GetDateTime(), use_seconds )
+    local timestr = Calendar.FormatDateTime( self.world:GetDateTime(), use_seconds )
     ui.Text( timestr )
     if self.world:IsPaused() then
     	ui.SameLine( 0, 10 )
@@ -595,7 +595,14 @@ function GameScreen:RenderSenses( ui, agent )
 	for i = #self.sense_log, 1, -5 do
 		local r, g, b, a = self.sense_log[i-4], self.sense_log[i-3], self.sense_log[i-2], self.sense_log[i-1]
 		local desc = self.sense_log[i]
+		if self.show_msg_timestamps then
+			desc = loc.format( "[{1}] {2}", Calendar.FormatTime( self.world:GetDateTime() ), desc )
+		end
 		ui.TextColored( r, g, b, a, desc )
+	end
+
+	if #self.sense_log > 0 and ui.Button( "*" ) then
+		self.show_msg_timestamps = not self.show_msg_timestamps
 	end
 end
 

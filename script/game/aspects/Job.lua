@@ -1,6 +1,7 @@
-local Job = class( "Job", Verb )
+local Job = class( "Job", Verb.Plan )
 
 function Job:init( employer )
+	Verb.init( self )
 	assert( is_instance( employer, Agent ))
 	self.employer = employer
 	self.idle = Verb.Idle()
