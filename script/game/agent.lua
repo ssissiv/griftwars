@@ -853,8 +853,6 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	local ch, clr = self:GetMapChar()
 	if self:IsDead() then
 		clr = constants.colours.BLACK
-	elseif self:IsSleeping() then
-		clr = constants.colours.DK_GRAY
 	end
 	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()

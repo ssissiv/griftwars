@@ -1,6 +1,8 @@
 TODO
 ====
 
+Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?
+
 No-Travel zones for agents
 Homes?
 

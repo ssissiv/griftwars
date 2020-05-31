@@ -658,13 +658,23 @@ function GameScreen:WarpCameraTo( x, y )
 	self.camera:WarpTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
-function GameScreen:CycleFocus()
+function GameScreen:CycleFocus( tile )
 	if not self.puppet or self.puppet:IsDead() then
 		return
 	end
 
 	local location = self.puppet:GetLocation()
-	local contents = self.puppet:GetVisibleObjectsByDistance()
+	local contents
+	if tile then
+		contents = {}
+		for i, obj in tile:Contents() do
+			if self.puppet:CanSee( obj ) then
+				table.insert( contents, obj )
+			end
+		end
+	else
+		contents = self.puppet:GetVisibleObjectsByDistance()
+	end
 	table.arrayremove( contents, self.puppet )
 
 	local idx = table.arrayfind( contents, self.current_focus ) or 0
@@ -761,12 +771,7 @@ function GameScreen:MousePressed( mx, my, btn )
 					end
 				end
 			else
-				for i, obj in self.hovered_tile:Contents() do
-					if self.puppet:CanSee( obj ) then
-						self:SetCurrentFocus( obj )
-						break
-					end
-				end
+				self:CycleFocus( self.hovered_tile )
 			end
 			return true
 		end
