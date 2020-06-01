@@ -221,11 +221,14 @@ STAT = MakeEnum
 	"HEALTH",
 	"XP",
 
-	-- Skill values
-	"CLIMBING",
-
 	-- Transient stats
 	"PATIENCE",
+}
+
+SKILL = MakeEnum
+{
+	"CLIMBING",
+	"FIGHTING",
 }
 
 EFATIGUE, FATIGUE = MakeEnum{ "FRESH", "TIRED", "EXHAUSTED" }

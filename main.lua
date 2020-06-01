@@ -130,6 +130,7 @@ function love.load(arg)
     assets:LoadAll()
 
     LoadAllScripts( "game/aspects" )
+    LoadAllScripts( "game/aspects/skills" )
     LoadAllScripts( "game/verbs" )
     LoadAllScripts( "game/characters" )
     LoadAllScripts( "game/objects" )

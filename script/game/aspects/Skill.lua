@@ -1,4 +1,13 @@
-local Skill = class( "Skill", Aspect )
+local Skill = class( "Aspect.Skill", Aspect.StatValue )
+
+function Skill:SetSkillRank( rank )
+	self:SetValue( rank )
+	return self
+end
+
+function Skill:GetSkillRank()
+	return self:GetValue()
+end
 
 function Skill:TrainingReqs()
 	return pairs( self.training_reqs or table.empty )
@@ -9,15 +18,6 @@ function Skill:AddTrainingReq( req )
 		self.training_reqs = {}
 	end
 	table.insert( self.training_reqs, req )
-end
-
-function Skill:GetSkillRank()
-	return self.rank or 1
-end
-
-function Skill:SetSkillRank( rank )
-	self.rank = rank
-	return self
 end
 
 function Skill:CanLearn( actor )
@@ -42,20 +42,13 @@ function Skill:Clone()
 	return clone
 end
 
+function Skill:RenderAgentDetails( ui, screen, viewer )
+	ui.Text( loc.format( "{1} (Rank {2}) -- XP: {3}", self:GetName(), self:GetValue(), self:GetGrowth() ))
+end
+
 function Skill:GetName()
 	return self.name or self._classname
 end
-
----------------------------------------------------------------
-
-local Fighter = class( "Skill.Fighter", Skill )
-
-Fighter.event_handlers =
-{
- 	[ CALC_EVENT.ATTACK_POWER ] = function( self, agent, event_name, acc )
-    	acc:AddValue( self:GetSkillRank(), self )
-    end,
-}
 
 ---------------------------------------------------------------
 

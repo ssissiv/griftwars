@@ -48,14 +48,26 @@ end
 
 function StatValue:DeltaValue( delta, max_delta )
 	if max_delta then
-		self.max_value = self.max_value + max_delta
+		self:SetValue( self.value + delta, self.max_value + max_delta )
+	else
+		self:SetValue( self.value + delta )
+	end
+end
+
+function StatValue:GetValue()
+	return self.value, self.max_value
+end
+
+function StatValue:SetValue( value, max_value )
+	if max_value then
+		self.max_value = max_value
 	end
 
 	local new_value
 	if self.max_value then
-		new_value = math.max( 0, math.min( self.max_value, self.value + delta ))
+		new_value = math.max( 0, math.min( self.max_value, value ))
 	else
-		new_value = math.max( 0, self.value + delta )
+		new_value = math.max( 0, value )
 	end
 
 	if new_value ~= self.value then
@@ -64,10 +76,6 @@ function StatValue:DeltaValue( delta, max_delta )
 			Msg:Echo( self.owner, "Your {1} is now {2}!", self.stat, self.value )
 		end
 	end	
-end
-
-function StatValue:GetValue()
-	return self.value, self.max_value
 end
 
 function StatValue:GetPercent()
@@ -107,7 +115,7 @@ function StatValue:GetGrowth()
 end
 
 function StatValue:CalculateValueWithXP( xp )
-	local growth = self.growth_rate * xp + (self.growth or 0)
+	local growth = math.floor( self.growth_rate * xp + (self.growth or 0))
 	local delta = 0
 	local xp_next = 100 * 2 ^ (self.value - 1)
 	while growth > xp_next do
@@ -121,13 +129,13 @@ end
 
 function StatValue:GainXP( xp )
 	local value, new_growth = self:CalculateValueWithXP( xp )
+	self.growth = new_growth
 	if value ~= self.value then
-		self.growth = new_growth
 		self:DeltaValue( value - self.value )
 	end
 end
 
-function StatValue:RenderAgentDetails( ui, panel )
+function StatValue:RenderAgentDetails( ui, screen )
 	local value, max_value = self:GetValue()
 	local stat = self.stat
 	if max_value then

@@ -22,12 +22,17 @@ function AgentDetailsWindow:RenderAllRelationships( ui, screen )
 	self:RenderRelationships( ui, screen, AFFINITY.KNOWN )
 end
 
-function AgentDetailsWindow:RenderFavours( ui, screen )
-	for i, favour in self.agent:Aspects() do
-		if is_instance( favour, Aspect.Favour ) then
-			ui.Bullet()
-			favour:RenderAgentDetails( ui, screen, self.viewer )
+function AgentDetailsWindow:RenderAspects( txt, ui, screen, class )
+	if self.agent:HasAspect( class ) then
+		ui.Text( txt )
+		ui.Indent( 20 )
+		for i, aspect in self.agent:Aspects() do
+			if is_instance( aspect, class ) then
+				ui.Bullet()
+				aspect:RenderAgentDetails( ui, screen, self.viewer )
+			end
 		end
+		ui.Unindent ( 20 )
 	end
 end
 
@@ -107,18 +112,13 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		-- ASPECTS
 		ui.Separator()
 		for id, aspect in self.agent:Aspects() do
-			if aspect.RenderAgentDetails and not is_instance( aspect, Aspect.Favour ) then
+			if aspect.RenderAgentDetails and not is_instance( aspect, Aspect.Favour ) and not is_instance( aspect, Aspect.Skill ) then
 				aspect:RenderAgentDetails( ui, screen, self.viewer )
 			end
 		end
 		
-		-- FAVOURS
-		if self.agent:HasAspect( Aspect.Favour ) then
-			ui.Text( "Favours:" )
-			ui.Indent( 20 )
-			self:RenderFavours( ui, screen )
-			ui.Unindent ( 20 )
-		end
+		self:RenderAspects( "Favours:", ui, screen, Aspect.Favour )
+		self:RenderAspects( "Skills:", ui, screen, Aspect.Skill )
 
 		ui.NewLine()
 

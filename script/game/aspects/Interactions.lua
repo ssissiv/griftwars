@@ -381,7 +381,7 @@ end
 function Chat:Interact( actor )
 	local t = ObtainWorkTable()
 	for i, aspect in self.owner:Aspects() do
-		if is_instance( aspect, Skill ) then
+		if is_instance( aspect, Aspect.Skill ) then
 			table.insert( t, aspect )
 		end
 	end

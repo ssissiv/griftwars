@@ -10,7 +10,7 @@ function BottomOfWell:init( ... )
 	self:SetDetails( "Bottom of the Well", "The dried out bottom of an abandoned cave." )
 
 	local out = Object.Portal( "bottom_of_well exit" )
-	out:GainAspect( Aspect.Requirements() ):AddReq( Req.Stat( STAT.CLIMBING, 10 ))
+	out:GainAspect( Aspect.Requirements() ):AddReq( Req.Stat( SKILL.CLIMBING, 10 ))
 	out:WarpToLocation( self )
 end
 

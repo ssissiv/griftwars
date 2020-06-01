@@ -56,7 +56,6 @@ end
 local StatReq = class( "Req.Stat", Req )
 
 function StatReq:init( stat, value )
-	assert( IsEnum( stat, STAT ))
 	self.stat = stat
 	self.value = value
 end

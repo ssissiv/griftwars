@@ -3,7 +3,7 @@ local ShoddyRope = class( "Object.ShoddyRope", Object )
 ShoddyRope.carrier_handlers =
 {
 	[ CALC_EVENT.STAT ] = function( self, agent, event_name, acc, stat )
-		if stat == STAT.CLIMBING then
+		if stat == SKILL.CLIMBING then
 			acc:AddValue( 10, self )
 		end
 	end,
