@@ -5,7 +5,7 @@ function CloseObject:init( target )
 end
 
 function CloseObject:CanInteract( actor, target )
-	if not actor:IsAdjacent( target ) then
+	if not actor:CanReach( target ) then
 		return false, "Not adjacent"
 	end
 	return true
