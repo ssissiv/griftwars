@@ -163,11 +163,17 @@ function Job:CanInteract( actor )
 	return true
 end
 
+function Job:Idle( actor, duration )
+	if self.idle == nil then
+		self.idle = Verb.Idle()
+	end
+	self.idle:DoVerb( actor )
+end
 
 function Job:Interact()
 	local actor = self:GetOwner()
 	-- Track job location and stay around there.
-	while self:IsTimeForShift( self:GetWorld():GetDateTime() ) do
+	while self:IsTimeForShift( self:GetWorld():GetDateTime() ) and not self:IsCancelled() do
 		if self.travel == nil then
 			self.travel = Verb.Travel()
 		end
@@ -183,7 +189,7 @@ function Job:Interact()
 			if self.DoJob then
 				self:DoJob()
 			else
-				self:YieldForTime( self:GetShiftDuration() )
+				self:Idle( actor, self:GetShiftDuration() )
 			end
 
 			if not self:IsCancelled() then
@@ -192,7 +198,7 @@ function Job:Interact()
 			end
 
 		else
-			self.idle:DoVerb( actor )
+			self:Idle( actor )
 		end
 	end
 

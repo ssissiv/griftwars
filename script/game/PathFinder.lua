@@ -86,13 +86,28 @@ end
 
 local TilePathFinder = class( "TilePathFinder" )
 
-function TilePathFinder:init( actor, source, target )
+function TilePathFinder:init( actor, source, target, approach_dist )
 	assert( actor.location, tostring(actor) )
 	self.map = actor.location.map
 	assert( is_instance( self.map, Aspect.TileMap ), tostring(actor.location))
 	self.actor = actor
 	self.source = source
 	self.target = target
+	self.approach_dist = approach_dist
+end
+
+function TilePathFinder:GetApproachDist()
+	if self.approach_dist then
+		return self.approach_dist
+	end
+
+	local end_impass = self.target.GetAspect and self.target:GetAspect( Aspect.Impass )
+	if end_impass and not end_impass:IsPassable( self.source ) then
+		-- If the end point is not passable, we approach within 1 tile.
+		return 1
+	end
+
+	return 0
 end
 
 -- Generate a path from start_room -> end_room.
@@ -103,6 +118,7 @@ function TilePathFinder:CalculatePath()
 	local end_room = self:GetEndRoom()
 	assert( start_room )
 	assert( end_room )
+	
 	if self:AtGoal() then
 		return
 	end
@@ -120,17 +136,19 @@ function TilePathFinder:CalculatePath()
 			path = {}
 
 			-- Only add the destination if it is passable, so you can path up to impassable goals.
-			if self.actor and not self.path_adjacent then
-				table.insert( path, room )
-			end
-			room = from_to[ room ]
+			-- if self.actor and not self.path_adjacent then
+			-- 	table.insert( path, room )
+			-- end
+			-- room = from_to[ room ]
 
-			local i = 0
+			local len = 0
 			while room do
-				table.insert( path, room )
-				i = i + 1
+				if len >= self:GetApproachDist() or room == start_room then
+					table.insert( path, room )
+				end
 				room = from_to[ room ]
-				assert( i < 50 )
+				len = len + 1
+				assert( len < 50 )
 			end
 			table.reverse( path )
 			break
@@ -151,6 +169,8 @@ function TilePathFinder:CalculatePath()
 		assert( sanity < 1000 )
 	end
 
+	self.path = path
+
 	return path
 end
 
@@ -165,13 +185,18 @@ end
 function TilePathFinder:AtGoal()
 	local start_room = self:GetStartRoom()
 	local end_room = self:GetEndRoom()
-	local end_impass = self.target.GetAspect and self.target:GetAspect( Aspect.Impass )
 
-	self.path_adjacent = end_impass and not end_impass:IsPassable( self.source )
-	if self.path_adjacent then
-		return self.source:IsAdjacent( end_room )
-	else
+	if self.path then
+		return #self.path == 1
+
+	elseif self:GetApproachDist() == 0 then
 		return start_room == end_room
+
+	else
+		-- Technically, we don't know until we do a pathfind.
+		-- self:CalculatePath()
+		-- return self.path and #self.path == 1
+		return false
 	end
 end
 

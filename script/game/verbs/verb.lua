@@ -276,6 +276,7 @@ function Verb:DoVerb( actor, ... )
 	self:AttachActor( actor )
 
 	self.actor = actor
+	self.world = actor.world
 	self.cancelled = nil
 	self.coro = coroutine.running()
 	assert( self.coro )
@@ -305,6 +306,14 @@ end
 
 function Verb:IsDoing()
 	return self.coro ~= nil
+end
+
+function Verb:IsYielded()
+	return self.coro and coroutine.status( self.coro ) == "suspended"
+end
+
+function Verb:IsRunning()
+	return self.coro == coroutine.running()
 end
 
 function Verb:IsCancelled()
@@ -372,7 +381,7 @@ function Verb:YieldForTime( duration, how, act_rate )
 		self.ACT_RATE = act_rate
 		self.ACT_DURATION = duration
 
-	elseif how == "instant" or how == nil then
+	elseif how == "instant" then
 		-- Time will advance by duration, instantly.
 		self.ACT_RATE = math.huge
 		self.ACT_DURATION = duration
@@ -388,6 +397,22 @@ function Verb:YieldForTime( duration, how, act_rate )
 	self.ACT_RATE = nil
 	
 	return result
+end
+
+function Verb:Unyield()
+	if self.yield_ev then
+		self.world:RescheduleEvent( self.yield_ev, 0 )
+		return true
+
+	elseif self.children then
+		for i, child in ipairs( self.children ) do
+			if child:Unyield() then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 function Verb:Resume( coro )
@@ -419,6 +444,9 @@ function Verb:Resume( coro )
 			panel:AppendTable( ui, self.actor )
 			ui.Separator()
 
+			ui.TextColored( 1, 0, 0, 1, tostring(result) )
+			ui.Spacing()
+
 			self.coro_dbg:RenderPanel( ui, panel )
 
 			ui.NewLine()
@@ -430,6 +458,7 @@ function Verb:Resume( coro )
 	elseif coroutine.status( coro ) == "suspended" then
 		-- Waiting.  Note that even if we are cancelled, the coro is still valid if we are part of a parent verb.
 		assert( not self.cancelled or self.parent ~= nil )
+		--assert( self.yield_ev ) -- A child verb might have yielded, not us.
 	else
 		-- Done!
 		-- print( "DONE", self, coroutine.status(coro))

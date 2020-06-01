@@ -23,3 +23,13 @@ function AccessEntity( obj )
         return obj.owner
     end
 end
+
+function EntityDistance( e1, e2 )
+	local x1, y1 = e1:GetCoordinate()
+	local x2, y2 = e2:GetCoordinate()
+	if x1 == nil or x2 == nil then
+		return math.huge
+	else
+		return distance( x1, y1, x2, y2 )
+	end
+end

@@ -536,9 +536,25 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 			ui.EndMenu()
 		end
 
+		if ui.BeginMenu( "Advance Time..." ) then
+			if ui.MenuItem( "Half Hour" ) then
+				self.world:AdvanceTime( HALF_HOUR )
+			end
+			if ui.MenuItem( "One Hour" ) then
+				self.world:AdvanceTime( HALF_HOUR )
+			end
+			if ui.MenuItem( "12 Hours" ) then
+				self.world:AdvanceTime( HALF_DAY )
+			end
+			if ui.MenuItem( "24 Hours" ) then
+				self.world:AdvanceTime( ONE_DAY )
+			end
+			ui.EndMenu()
+		end
+
 		ui.Separator()
 
-		if ui.MenuItem( "Cursor here" ) then
+		if ui.MenuItem( "Gen-Cursor here" ) then
 			DBSET( "curs", self.puppet:GetLocation().map:CreateCursor( tile:GetCoordinate() ))
 		end
 	end
@@ -675,7 +691,7 @@ function GameScreen:CycleFocus( tile )
 	else
 		contents = self.puppet:GetVisibleObjectsByDistance()
 	end
-	table.arrayremove( contents, self.puppet )
+	-- table.arrayremove( contents, self.puppet )
 
 	local idx = table.arrayfind( contents, self.current_focus ) or 0
 	idx = (idx % #contents) + 1

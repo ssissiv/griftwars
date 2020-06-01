@@ -15,9 +15,9 @@ function Walk:Interact( actor )
 
 		if actor:IsRunning() then
 			actor:DeltaStat( STAT.FATIGUE, 2 )
-			self:YieldForTime( RUN_TIME )
+			self:YieldForTime( RUN_TIME, "instant" )
 		else
-			self:YieldForTime( WALK_TIME )
+			self:YieldForTime( WALK_TIME, "instant" )
 		end
 	end
 end

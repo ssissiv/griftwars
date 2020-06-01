@@ -22,6 +22,10 @@ function Travel:init( dest )
 	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
 end
 
+function Travel:SetApproachDistance( dist )
+	self.approach_dist = dist
+end
+
 function Travel:GetDesc()
 	return loc.format( "Travel to {1}", tostring(self.obj) )
 end
@@ -47,9 +51,22 @@ function Travel:CanInteract( actor )
 end
 
 function Travel:PathToTarget( actor, dest )
-	local pather = TilePathFinder( actor, actor, dest )
-	while not pather:AtGoal() do
-		--
+	local pather = TilePathFinder( actor, actor, dest, self.approach_dist )
+
+	while true do
+
+		self.path = pather:CalculatePath()
+
+		if self.path and #self.path >= 2 then
+			local x1, y1 = self.path[1]:GetCoordinate()
+			local x2, y2 = self.path[2]:GetCoordinate()
+			local exit = OffsetToExit( x1, y1, x2, y2 )
+			actor:Walk( exit )
+		else
+			break
+		end
+
+		-- Path available.  Time to wait.
 		if actor:IsRunning() then
 			actor:DeltaStat( STAT.FATIGUE, 2 )
 			self:YieldForTime( RUN_TIME, "rate", 1.0 )
@@ -61,14 +78,7 @@ function Travel:PathToTarget( actor, dest )
 			break
 		end
 
-		local path = pather:CalculatePath()
-		self.path = path
-		if path then
-			local x1, y1 = path[1]:GetCoordinate()
-			local x2, y2 = path[2]:GetCoordinate()
-			local exit = OffsetToExit( x1, y1, x2, y2 )
-			actor:Walk( exit )
-		else
+		if pather:AtGoal() then
 			break
 		end
 	end

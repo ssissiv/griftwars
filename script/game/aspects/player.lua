@@ -10,6 +10,9 @@ function Player:CollectVerbs( verbs, actor, obj )
 		if self.owner:GetStat( STAT.FATIGUE ):GetThreshold() >= FATIGUE.TIRED then
 			verbs:AddVerb( Verb.Sleep() )
 		end
+
+	elseif is_instance( obj, Agent ) then
+		verbs:AddVerb( Verb.Follow( obj, 4 ))
 	end
 end
 
