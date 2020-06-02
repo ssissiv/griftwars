@@ -20,6 +20,27 @@ function Engram:StampTime( owner )
 		self.when = world:GetDateTime()
 	end
 end
+
+
+-----------------------------------------------------------------------------
+-- You are making a note about something.  When you see it, it is marked in the UI.
+
+local Marked = class( "Engram.Marked", Engram )
+
+function Marked:init( obj )
+	self.obj = obj
+end
+
+function Marked:MergeEngram( other )
+	if is_instance( other, Marked ) then
+		self.when = other.when
+		return true
+	end
+
+	return false
+end
+
+
 -----------------------------------------------------------------------------
 -- You know certain details about an Agent
 

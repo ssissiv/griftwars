@@ -86,6 +86,7 @@ function LeaveLocation:PathToPortal( actor, portal )
 
 		else
 			-- print( "no path!", self, actor, portal )
+			Msg:Echo( actor, "You can't seem to find a way to get there." )
 			self:YieldForTime( ONE_MINUTE )
 		end
 	end

@@ -21,6 +21,8 @@ end
 
 function Follow:Interact( actor, other )
 	other:ListenForAny( self, self.OnOtherEvent )
+	actor:Mark( other )
+
 	local z = 0
 	while not self:IsCancelled() do
 		if actor:GetLocation() ~= other:GetLocation() or EntityDistance( actor, other ) > 2 then
@@ -32,5 +34,6 @@ function Follow:Interact( actor, other )
 		self:YieldForTime( ONE_HOUR )
 	end
 
+	actor:Unmark( other )
 	other:RemoveListener( self )
 end

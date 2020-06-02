@@ -117,8 +117,12 @@ function TilePathFinder:CalculatePath()
 	local start_room = self:GetStartRoom()
 	local end_room = self:GetEndRoom()
 	assert( start_room )
-	assert( end_room )
-	
+
+	if end_room == nil then
+		-- An extant target may have left the current location.
+		return
+	end
+
 	if self:AtGoal() then
 		return
 	end

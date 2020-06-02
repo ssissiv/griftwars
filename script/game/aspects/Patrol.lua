@@ -39,7 +39,7 @@ function Patrol:DoJob()
 	else
 		Msg:Speak( self.owner, "Holding this location." )
 	end
-	self:YieldForTime( ONE_HOUR )
+	self:Idle( self.owner, ONE_HOUR )
 end
 
 function Patrol:GetName()

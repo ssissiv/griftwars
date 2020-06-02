@@ -49,14 +49,22 @@ function Memory:AddEngram( engram )
 	table.insert( self.engrams, engram )
 end
 
+function Memory:RemoveEngram( engram )
+	table.arrayremove( self.engrams, engram )
+end
+
 function Memory:Engrams()
 	return pairs( self.engrams )
 end
 
 function Memory:HasEngram( pred, ... )
+	return self:FindEngram( pred, ... ) ~= nil
+end
+
+function Memory:FindEngram( pred, ... )
 	for i, engram in ipairs( self.engrams ) do
 		if pred( engram, ... ) then
-			return true
+			return engram
 		end
 	end
 end

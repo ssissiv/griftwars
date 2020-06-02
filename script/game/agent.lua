@@ -302,6 +302,27 @@ function Agent:CanSee( obj )
 	return false
 end
 
+function Agent:Mark( obj, why )
+	if self.memory then
+		self.memory:AddEngram( Engram.Marked( obj, why ))
+	end
+end
+
+function Agent:Unmark( obj )
+	if self.memory then
+		local e = self.memory:FindEngram( function( engram ) return is_instance( engram, Engram.Marked ) and engram.obj == obj end )
+		if e then
+			self.memory:RemoveEngram( e )
+		end
+	end
+end
+
+function Agent:IsMarked( obj )
+	if self.memory then
+		return self.memory:HasEngram( function( engram ) return is_instance( engram, Engram.Marked ) and engram.obj == obj end )
+	end
+end
+
 function Agent:HasEngram( pred, ... )
 	if self.memory then
 		return self.memory:HasEngram( pred, ... )
@@ -425,6 +446,11 @@ function Agent:GetTile()
 	if self.location then
 		return self.location:GetTileAt( self.x, self.y )
 	end
+end
+
+function Agent:TeleportToLocation( location, x, y )
+	Msg:Echo( self, "You teleport to {1}", location:GetTitle() )
+	self:WarpToLocation( location, x, y )
 end
 
 function Agent:Walk( exit )
@@ -869,6 +895,11 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	if viewer:GetAffinity( self ) ~= AFFINITY.STRANGER or self:GetTrust( viewer ) > 0 then
 		screen:SetColour( constants.colours.YELLOW )
 		love.graphics.print( "*", x1, (y1), 0, scale, 0.6 * scale )		
+	end
+	-- Show someone who is marked.
+	if viewer:IsMarked( self ) then
+		screen:SetColour( constants.colours.RED )
+		love.graphics.print( "*", x1+(x2-x1)*0.2, (y1), 0, scale, 0.6 * scale )		
 	end
 
 	if self:IsSleeping() then

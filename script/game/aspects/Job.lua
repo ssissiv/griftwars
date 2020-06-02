@@ -167,7 +167,7 @@ function Job:Idle( actor, duration )
 	if self.idle == nil then
 		self.idle = Verb.Idle()
 	end
-	self.idle:DoVerb( actor )
+	self.idle:DoVerb( actor, nil, duration )
 end
 
 function Job:Interact()
