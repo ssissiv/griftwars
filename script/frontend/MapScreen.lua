@@ -147,11 +147,15 @@ function MapScreen:RenderHoveredLocation( gui )
     	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
     	ui.Separator()
     	for i, obj in self.hovered_tile:Contents() do
-    		assert( self.viewer )
-    		local txt = obj:GetShortDesc( self.viewer )
-    		if txt then
-	    		ui.Text( txt )
-	    	end
+    		local portal = obj:GetAspect( Aspect.Portal )
+    		if portal and portal:GetExitFromTag() then
+    			-- dont show
+    		else
+	    		local txt = obj:GetShortDesc( self.viewer )
+	    		if txt then
+		    		ui.Text( txt )
+		    	end
+		    end
     	end
     end
 
@@ -172,7 +176,7 @@ function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
 			if tile then
 				local x1, y1 = self.camera:WorldToScreen( tx, ty )
 				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
-				tile:RenderLocationOnMap( self, x1, y1, x2, y2 )
+				tile:RenderLocationOnMap( self, x1, y1, x2, y2, self.viewer )
 			end
 		end
 	end

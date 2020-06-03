@@ -65,9 +65,8 @@ function Tile:RenderMapTile( screen, x1, y1, x2, y2 )
 	local w, h = x2 - x1, y2 - y1
 
 	if self.image then
-		local sx, sy = w / self.image:getWidth(), h / self.image:getHeight()
 		love.graphics.setColor( 255, 255, 255, 255 )
-		screen:Image( self.image, x1, y1, sx, sy )
+		screen:Image( self.image, x1, y1, w, h )
 	else
 		love.graphics.setColor( 255, 0, 255, 255 )
 		screen:Rectangle( x1, y1, w - 1, h - 1 )

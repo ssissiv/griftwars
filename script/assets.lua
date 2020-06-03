@@ -29,6 +29,7 @@ local assets =
 	IMG =
 	{
 		ZZZ = "sleeping.png",
+		UNKNOWN_LOCATION = "unknown_location.png",
 	},
 
 	TILE_IMG =

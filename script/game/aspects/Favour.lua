@@ -85,4 +85,7 @@ function GainXP:OnUseFavour( agent )
 	self.owner:LoseAspect( self )
 end
 
+------------------
+
+
 

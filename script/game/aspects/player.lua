@@ -16,3 +16,8 @@ function Player:CollectVerbs( verbs, actor, obj )
 	end
 end
 
+function Player:OnLocationChanged( prev, location )
+	if location then
+		location:Discover( self.owner )
+	end
+end

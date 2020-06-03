@@ -847,6 +847,13 @@ function Agent:GetTrust( other )
 	end
 end
 
+function Agent:RewardXP( xp, reason )
+	if self.stats[ STAT.XP ] then
+		self:DeltaStat( STAT.XP, xp )
+		Msg:Echo( self, "You gain {1} xp! ({2})", xp, reason )
+	end
+end
+
 function Agent:GainXP( xp )
 	if self.stats[ STAT.XP ] then
 		self:DeltaStat( STAT.XP, xp )
@@ -906,8 +913,7 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 		local img = assets.IMG.ZZZ
 		screen:SetColour( constants.colours.WHITE )
 		local w, h = (x2 - x1)*0.8, (y2 - y1)*0.8
-		local sx, sy = w / img:getWidth(), h / img:getHeight()
-		screen:Image( img, x1+(x2-x1)*0.5, y1-(y2-y1)*0.5, sx, sy )
+		screen:Image( img, x1+(x2-x1)*0.5, y1-(y2-y1)*0.5, w, h )
 	end
 end
 

@@ -78,6 +78,7 @@ require "game/relationships/Affinity"
 require "game/relationships/Subordinate"
 
 require "game/aspects/aspect"
+require "game/aspects/features/Feature"
 require "game/verbs/verb"
 require "game/verbs/Plan"
 
@@ -130,6 +131,7 @@ function love.load(arg)
 
     LoadAllScripts( "game/aspects" )
     LoadAllScripts( "game/aspects/skills" )
+    LoadAllScripts( "game/aspects/features" )
     LoadAllScripts( "game/verbs" )
     LoadAllScripts( "game/characters" )
     LoadAllScripts( "game/objects" )

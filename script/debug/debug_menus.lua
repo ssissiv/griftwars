@@ -140,6 +140,9 @@ local GAME_BINDINGS =
             local puppet = dbg:GetDebugEnv().puppet
             puppet:GetStat( STAT.HEALTH ):DeltaValue( 999, 999 )
             puppet:GetInventory():DeltaMoney( 1000 )
+            for i, location in pairs( dbg:GetDebugEnv().world:GetBucketByClass( Location )) do
+                location:Discover( puppet )
+            end
         end,
     }
 

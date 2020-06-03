@@ -146,9 +146,8 @@ end
 
 function Object:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	if self.image then
-		local sx, sy = (x2 - x1) / self.image:getWidth(), (y2 - y1) / self.image:getHeight()
 		love.graphics.setColor( 255, 255, 255, 255 )
-		screen:Image( self.image, x1, y1, sx, sy )
+		screen:Image( self.image, x1, y1, x2 - x1, y2 - y1 )
 
 	else
 		love.graphics.setFont( assets.FONTS.MAP_TILE )

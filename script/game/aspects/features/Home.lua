@@ -1,4 +1,3 @@
-require "game/aspects/features"
 
 function Agent:GetHome()
 	return self.home and self.home:GetLocation()

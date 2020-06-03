@@ -265,6 +265,28 @@ local function VisitInternal( visited, location, fn, ... )
 	end
 end
 
+function Location:IsDiscovered( viewer )
+	if viewer == nil then
+		return true
+	end
+	
+	local aspect = self:GetAspect( Feature.Discovered )
+	if aspect and aspect:IsDiscovered( viewer ) then
+		return true
+	end
+
+	return false
+end
+
+function Location:Discover( agent )
+	local aspect = self:GetAspect( Feature.Discovered )
+	if aspect == nil then
+		aspect = self:GainAspect( Feature.Discovered() )
+	end
+	aspect:Discover( agent )
+end
+
+
 -- Depth-first traversal applying fn().
 function Location:Visit( fn, ... )
 	VisitInternal( {}, self, fn, ... )
@@ -460,61 +482,72 @@ function Location:GetTileAt( tx, ty )
 	end
 end
 
-function Location:RenderLocationOnMap( screen, x1, y1, x2, y2 )
-	local w, h = x2 - x1, y2 - y1
-	local map_colour = self.map_colour or (self.zone and self.zone.ZONE_COLOUR) or constants.colours.DEFAULT_TILE
-
-	love.graphics.setColor( table.unpack( map_colour ))
-	screen:Rectangle( x1 + 4, y1 + 4, w - 8, h - 8 )
-
-	if self.contents then
-		local sz = math.floor( w / 8 )
-		local margin = math.ceil( sz / 2 )
-		local x, y = x1 + 4 + margin , y1 + 4 + margin
-		for i, obj in ipairs( self.contents ) do
-			local skip = false
-			if is_instance( obj, Agent ) then
-				love.graphics.setColor( 255, 0, 255 )
-			elseif obj:HasAspect( Aspect.Portal ) then
-				if obj:GetAspect( Aspect.Portal ):GetExitFromTag() then
-					skip = true
-				else
-					love.graphics.setColor( 100, 100, 100 )
-				end
-			else
-				love.graphics.setColor( 255, 255, 0 )
+function Location:RenderLocationOnMap( screen, x1, y1, x2, y2, viewer )
+	if not self:IsDiscovered( viewer ) then
+		for i, portal in ipairs( self.portals ) do
+			if portal:GetDest() and portal:GetDest():IsDiscovered( viewer ) then
+				local w, h = x2 - x1, y2 - y1
+				screen:SetColour( constants.colours.WHITE )
+				screen:Image( assets.IMG.UNKNOWN_LOCATION, x1, y1, w, h )
 			end
+		end
 
-			if not skip then
-				screen:Rectangle( x, y, sz, sz )
-				x = x + sz + margin
-				if x >= x2 - margin - 4 then
-					x, y = x1 + 4 + margin, y + sz + margin
+	else
+		local w, h = x2 - x1, y2 - y1
+		local map_colour = self.map_colour or (self.zone and self.zone.ZONE_COLOUR) or constants.colours.DEFAULT_TILE
+
+		love.graphics.setColor( table.unpack( map_colour ))
+		screen:Rectangle( x1 + 4, y1 + 4, w - 8, h - 8 )
+
+		if self.contents then
+			local sz = math.floor( w / 8 )
+			local margin = math.ceil( sz / 2 )
+			local x, y = x1 + 4 + margin , y1 + 4 + margin
+			for i, obj in ipairs( self.contents ) do
+				local skip = false
+				if is_instance( obj, Agent ) then
+					love.graphics.setColor( 255, 0, 255 )
+				elseif obj:HasAspect( Aspect.Portal ) then
+					if obj:GetAspect( Aspect.Portal ):GetExitFromTag() then
+						skip = true
+					else
+						love.graphics.setColor( 100, 100, 100 )
+					end
+				else
+					love.graphics.setColor( 255, 255, 0 )
+				end
+
+				if not skip then
+					screen:Rectangle( x, y, sz, sz )
+					x = x + sz + margin
+					if x >= x2 - margin - 4 then
+						x, y = x1 + 4 + margin, y + sz + margin
+					end
 				end
 			end
 		end
-	end
 
-	if self.x then
-		local exit_sz = math.floor( w / 6 ) -- width of exit
-		for i, portal in pairs( self.portals ) do
-			local exit = portal:GetExitFromTag()
-			if exit then
-				if portal:GetDest() then
-					love.graphics.setColor( table.unpack( map_colour ))
-				else
-					love.graphics.setColor( 0, 0, 0 )
-				end
+		if self.x then
+			local exit_sz = math.floor( w / 6 ) -- width of exit
+			for i, portal in pairs( self.portals ) do
+				local exit = portal:GetExitFromTag()
+				if exit then
+					if portal:GetDest() then
+						love.graphics.setColor( table.unpack( map_colour ))
+					else
+						love.graphics.setColor( 0, 0, 0 )
+					end
 
-				local x, y = OffsetExit( self.x, self.y, exit )
-				if exit == EXIT.NORTH then
-					screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
-				elseif exit == EXIT.EAST then
-					screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
-				elseif exit == EXIT.WEST then
-					screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
-				elseif exit == EXIT.SOUTH then
-					screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
+					local x, y = OffsetExit( self.x, self.y, exit )
+					if exit == EXIT.NORTH then
+						screen:Rectangle( x1 + (w - exit_sz) / 2, y2 - 4, exit_sz, 4 )
+					elseif exit == EXIT.EAST then
+						screen:Rectangle( x2 - 4, y1 + (h - exit_sz) / 2, 4, exit_sz )
+					elseif exit == EXIT.WEST then
+						screen:Rectangle( x1, y1 + (h - exit_sz) / 2, 4, exit_sz )
+					elseif exit == EXIT.SOUTH then
+						screen:Rectangle( x1 + (w - exit_sz) / 2, y1, exit_sz, 4 )
+					end
 				end
 			end
 		end

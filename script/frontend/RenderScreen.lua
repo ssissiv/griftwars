@@ -30,8 +30,9 @@ function RenderScreen:SetColour( clr )
 	love.graphics.setColor( r, g, b, a )
 end
 
-function RenderScreen:Image( image, w, h, sx, sy )
-	love.graphics.draw( image, w, h, 0, sx, sy )
+function RenderScreen:Image( image, x, y, w, h )
+	local sx, sy = w / image:getWidth(), h / image:getHeight()
+	love.graphics.draw( image, x, y, 0, sx, sy )
 end
 
 function RenderScreen:IsHovered()
