@@ -2,6 +2,8 @@
 package.path = "script/?.lua;foreign/?/init.lua;foreign/?.lua;"..package.path
 -----------------------------------------------------------
 
+START_TIME = love.timer.getTime()
+
 local strict = require "util/strict"
 strictify( _G )
 
@@ -151,6 +153,8 @@ function love.load(arg)
     gui:AddScreen( game )
 
     debug_mgr:TryExecuteDebugFile( "script/startup.lua" )
+
+    print( "Load done, took:", love.timer.getTime() - START_TIME, " secs" )
 end
  
 function love.update(dt)
