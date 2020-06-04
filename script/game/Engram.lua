@@ -96,13 +96,13 @@ end
 -----------------------------------------------------------------------------
 -- You know the location of something
 
-local LearnWhereabouts = class( "Engram.LearnWhereabouts", Engram )
+local Discovered = class( "Engram.Discovered", Engram )
 
-function LearnWhereabouts:init( target )
+function Discovered:init( target )
 	self.target = target
 end
 
-function LearnWhereabouts:RenderImGuiWindow( ui, screen, owner )
+function Discovered:RenderImGuiWindow( ui, screen, owner )
 	if is_instance( self.target, Location ) then
 		ui.Text( loc.format( "You know how to get to {1}.", self.target:GetTitle() ))
 	else
@@ -110,12 +110,7 @@ function LearnWhereabouts:RenderImGuiWindow( ui, screen, owner )
 	end
 end
 
-LearnWhereabouts.ACTIONS =
+Discovered.ACTIONS =
 {
-	{ name = "Travel", verb = function( self, owner ) return owner:DoVerbAsync( Verb.Travel( owner, self.target )) end }
+	{ name = "Travel", verb = function( self, owner ) return owner:DoVerbAsync( Verb.Travel( self.target )) end }
 }
-
-function Engram.HasLearnedLocation( engram, target )
-	return engram._class == LearnWhereabouts and engram.target == target
-end
-

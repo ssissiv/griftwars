@@ -80,11 +80,6 @@ function Scavenger:init()
 	self:GainAspect( Verb.Scavenge( self ))
 end
 
-function Scavenger:GetTitle()
-	return "Scavenger"
-end
-
-
 function Scavenger:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	self:SetDetails( nil, "Here's a guy.", GENDER.MALE )

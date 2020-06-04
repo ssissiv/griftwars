@@ -349,13 +349,6 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 			love.graphics.print( "ALLY", x, y - 16 )
 		end
 	end
-
-	-- if not puppet:HasEngram( Engram.HasLearnedLocation, location ) then
-	-- 	ui.SameLine( 0, 10 )
-	-- 	if ui.SmallButton( "!") then
-	-- 		puppet:GetMemory():AddEngram( Engram.LearnWhereabouts( location ))
-	-- 	end
-	-- end
 end
 
 function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )

@@ -270,20 +270,11 @@ function Location:IsDiscovered( viewer )
 		return true
 	end
 	
-	local aspect = self:GetAspect( Feature.Discovered )
-	if aspect and aspect:IsDiscovered( viewer ) then
-		return true
-	end
-
-	return false
+	return viewer:GetMemory():HasEngram( function( engram ) return is_instance( engram, Engram.Discovered ) and engram.target == self end )
 end
 
 function Location:Discover( agent )
-	local aspect = self:GetAspect( Feature.Discovered )
-	if aspect == nil then
-		aspect = self:GainAspect( Feature.Discovered() )
-	end
-	aspect:Discover( agent )
+	agent:GetMemory():AddEngram( Engram.Discovered( self ))
 end
 
 

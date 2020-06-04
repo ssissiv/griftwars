@@ -4,6 +4,7 @@
 local Fighter = class( "Agent.Fighter", Agent )
 
 Fighter.MAP_CHAR = "f"
+Fighter.unfamiliar_desc = "fighter"
 
 function Fighter:init()
 	Agent.init( self )
@@ -12,8 +13,4 @@ function Fighter:init()
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighter() )
-end
-
-function Fighter:GetTitle()
-	return "Fighter"
 end

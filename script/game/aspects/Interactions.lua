@@ -253,7 +253,7 @@ function RevealObject:Interact( actor )
 	local obj = table.arraypick( candidates )
 	if obj then
 		Msg:Echo( actor, "{1.Id} reveals the location of {2.Id}.", self.owner:LocTable( actor ), obj:LocTable( actor ) )
-		actor:GetMemory():AddEngram( Engram.LearnWhereabouts( obj ))
+		actor:GetMemory():AddEngram( Engram.DiscoverLocation( obj ))
 	else
 		Msg:Echo( actor, "{1.Id} reveals nothing of interest.", self.owner:LocTable( actor ) )
 	end

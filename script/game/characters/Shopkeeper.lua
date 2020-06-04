@@ -4,6 +4,7 @@ Shopkeeps maintain a stock of items, and sells them in a store.
 
 local Shopkeeper = class( "Agent.Shopkeeper", Agent )
 Shopkeeper.MAP_CHAR = "S"
+Shopkeeper.unfamiliar_desc = "shopkeeper"
 
 function Shopkeeper:init()
 	Agent.init( self )
@@ -14,11 +15,6 @@ function Shopkeeper:init()
 
 	self:GainAspect( Aspect.Behaviour() )
 end
-
-function Shopkeeper:GetTitle()
-	return "Shopkeeper"
-end
-
 
 function Shopkeeper:OnSpawn( world )
 	Agent.OnSpawn( self, world )

@@ -17,6 +17,7 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
     if shown then
     	local count = 0
 		for i, engram in self.agent:GetMemory():Engrams() do
+			ui.PushID( rawstring(engram) )
 			ui.Bullet()
 			engram:RenderImGuiWindow( ui, screen, self.agent )
 			ui.SameLine( 0, 10 )
@@ -26,12 +27,15 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 			ui.Indent( 20 )
 			ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
 			for i, action in ipairs( engram.ACTIONS or table.empty ) do
+				ui.PushID( rawstring(action) )
 				if i > 1 then
 					ui.SameLine( 0, 10 )
 				end
 				if ui.Button( action.name ) then
-					action.verb( engram, self.agent )
+					print( action, rawstring(engram) )
+					print( action.verb( engram, self.agent ))
 				end
+				ui.PopID()
 			end
 
 			local duration = engram:GetDuration()
@@ -41,6 +45,7 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 			end
 
 			ui.Unindent( 20 )
+			ui.PopID()
 			count = count + 1
 		end
 		if count == 0 then
