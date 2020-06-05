@@ -672,6 +672,15 @@ function Agent:GetHealth()
 	return self:GetStatValue( STAT.HEALTH )
 end
 
+function Agent:GetFatigue()
+	return self:GetStatValue( STAT.FATIGUE )
+end
+
+function Agent:HasEnergy( cost )
+	local fatigue, max_fatigue = self:GetStatValue( STAT.FATIGUE )
+	return fatigue + cost <= max_fatigue
+end
+
 function Agent:Kill()
 	if self:IsPuppet() then
 		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )

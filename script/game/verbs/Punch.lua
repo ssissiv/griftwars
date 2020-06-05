@@ -2,6 +2,12 @@ local Punch = class( "Attack.Punch", Verb )
 
 Punch.DC = 5
 
+function Punch:init( target )
+	Verb.init( self, nil, target )
+	self.fatigue_cost = 5
+end
+
+
 function Punch:InAttackRange( actor, target )
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
@@ -36,6 +42,10 @@ function Punch:CanInteract( actor, target )
 		return false, reason
 	end
 
+	if not actor:HasEnergy( self.fatigue_cost ) then
+		return false, "Too tired"
+	end
+
 	if not self:InAttackRange( actor, target ) then
 		return false, "Out of range"
 	end
@@ -68,6 +78,8 @@ function Punch:Interact( actor, target )
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self )
 	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
 	target:GetAspect( Aspect.Combat ):EvaluateTargets()
+
+	actor:GetStat( STAT.FATIGUE ):DeltaValue( -self.fatigue_cost )
 
 	-- Check success.
 	local ok, roll = self:CheckDC( actor, target )

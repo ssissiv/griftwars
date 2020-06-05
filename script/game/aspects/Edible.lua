@@ -6,3 +6,10 @@ function Edible:CollectVerbs( verbs, actor, obj )
 	end
 end
 
+function Edible:SetEnergyGain( energy )
+	self.energy = energy
+end
+
+function Edible:GetEnergyGain()
+	return self.energy
+end

@@ -316,6 +316,9 @@ function GameScreen:RenderAgentDetails( ui, puppet )
     ui.SameLine( 0, 15 )
     ui.TextColored( 1, 0, 0, 1, loc.format( "HP: {1}/{2}", puppet:GetHealth() ))
 
+    ui.SameLine( 0, 15 )
+    ui.TextColored( 1, 1, 0, 1, loc.format( "FATIGUE: {1}/{2}", puppet:GetFatigue() ))
+
 	-- local growth = aspect:GetGrowth()
 	-- if growth > 0 then
 	-- 	ui.SameLine( 0, 5 )
