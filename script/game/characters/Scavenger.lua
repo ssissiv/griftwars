@@ -56,7 +56,7 @@ function Scavenge:Interact( actor )
 		if math.random() < 0.4 then
 			self.scrounge:DoVerb( actor )
 		elseif math.random() < 0.5 then
-			self.idle:DoVerb( actor )
+			self.idle:DoVerb( actor, nil, 10 * ONE_MINUTE )
 		else
 			self.leave:DoVerb( actor )
 		end

@@ -17,9 +17,11 @@ end
 
 function District:SpawnCityWalls()
 	local w, h = self.map:GetExtents()
+	local count = 0
 
 	local portal = self:GetBoundaryPortal( EXIT.WEST )
 	if portal and portal:GetDest() then
+		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
@@ -28,6 +30,7 @@ function District:SpawnCityWalls()
 
 	local portal = self:GetBoundaryPortal( EXIT.EAST )
 	if portal and portal:GetDest() then
+		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
@@ -36,6 +39,7 @@ function District:SpawnCityWalls()
 
 	local portal = self:GetBoundaryPortal( EXIT.SOUTH )
 	if portal and portal:GetDest() then
+		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
 			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
@@ -44,11 +48,14 @@ function District:SpawnCityWalls()
 
 	local portal = self:GetBoundaryPortal( EXIT.NORTH )
 	if portal and portal:GetDest() then
+		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor( 1, 1 )
 			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
 			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
 	end
+
+	return count
 end
 
 function District:SpawnDoor( tags )

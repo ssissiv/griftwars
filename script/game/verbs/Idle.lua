@@ -26,7 +26,7 @@ function Idle:Interact( actor, target, duration )
 				actor:Walk( table.arraypick( dirs ))
 			end
 		end
-	until self.world:GetDateTime() >= time
+	until not self:IsCancelled() and self.world:GetDateTime() >= time
 end
 
 function Idle:CalculateUtility( actor )

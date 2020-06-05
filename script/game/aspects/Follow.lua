@@ -9,6 +9,10 @@ function Follow:CanInteract( actor, other )
 	-- if other:GetLocation() ~= actor:GetLocation() then
 	-- 	return false, "Not here"
 	-- end
+	if other:IsDead() then
+		return false
+	end
+	
 	return true
 end
 
