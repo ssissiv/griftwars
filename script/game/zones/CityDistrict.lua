@@ -24,8 +24,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
-			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
+			:SetTile( Tile.StoneWall ):MoveTo( x, 0 )
+			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, h )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.EAST )
@@ -33,8 +33,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):SetCoord( x, 0 )
-			:LineTo( x, y - 1 ):SetCoord( x, y ):LineTo( x, h )
+			:SetTile( Tile.StoneWall ):MoveTo( x, 0 )
+			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, h )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.SOUTH )
@@ -42,8 +42,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
-			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
+			:SetTile( Tile.StoneWall ):MoveTo( 0, y )
+			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( w, y )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.NORTH )
@@ -51,8 +51,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor( 1, 1 )
-			:SetTile( Tile.StoneWall ):SetCoord( 0, y )
-			:LineTo( x - 1, y ):SetCoord( x, y ):LineTo( w, y )
+			:SetTile( Tile.StoneWall ):MoveTo( 0, y )
+			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( w, y )
 	end
 
 	return count

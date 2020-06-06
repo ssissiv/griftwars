@@ -70,18 +70,19 @@ function Camera:Pan( dx, dy )
 end
 
 function Camera:ScreenToWorld( mx, my )
-	local x = mx * self.zoom + self.x
-	local y = my * self.zoom + self.y
+	local x = (mx - self.view_x) * self.zoom + self.x
+	local y = (my - self.view_y) * self.zoom + self.y
 	return x, y
 end
 
 function Camera:WorldToScreen( x, y )
-	local mx = (x - self.x) / self.zoom
-	local my = (y - self.y) / self.zoom
+	local mx = (x - self.x) / self.zoom + self.view_x
+	local my = (y - self.y) / self.zoom + self.view_y
 	return mx, my
 end
 
-function Camera:SetViewPort( w, h )
+function Camera:SetViewPort( x, y, w, h )
+	self.view_x, self.view_y = x, y
 	self.view_width, self.view_height = w, h
 end
 

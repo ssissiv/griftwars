@@ -9,7 +9,7 @@ end
 
 function Door:GetName()
 	if self.portal == nil or self.portal:GetDest() == nil then
-		return "Door to nowhere!"
+		return "Door"
 	else
 		return loc.format( "Door to {1}", self.portal:GetDest() )
 	end

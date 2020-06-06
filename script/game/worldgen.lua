@@ -5,7 +5,7 @@ function WorldGen.MatchWorldGenTag( match_tag, tagstr )
 	if tags == nil or #tags == 0 then
 		return false
 	end
-	local our_tags = match_tag:split( " " )
+	local our_tags = match_tag and match_tag:split( " " )
 	if our_tags == nil or #our_tags == 0 then
 		return false
 	end

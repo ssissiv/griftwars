@@ -21,7 +21,7 @@ function GameScreen:init( world )
 
 	self.zoom_level = 1.0
 	self.camera = Camera()
-	self.camera:SetViewPort( GetGUI():GetSize() )
+	self.camera:SetViewPort( 0, 0, GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
 	self:PanToCurrentInterest()
 
@@ -214,6 +214,14 @@ function GameScreen:RenderScreen( gui )
     end
     ui.Separator()
 
+    self:RenderSenses( ui, puppet )
+	ui.SetScrollHere()
+
+	self.top_height = ui.GetWindowHeight() 
+    ui.End()
+
+   	-- render map --
+
     local location = puppet and puppet:GetLocation() or self.last_location
     if location then
 	    -- Render the things at the player's location.
@@ -223,11 +231,6 @@ function GameScreen:RenderScreen( gui )
 
 	    self.last_location = location
 	end
-
-    self:RenderSenses( ui, puppet )
-	ui.SetScrollHere()
-
-    ui.End()
 
     -- if self.hovered_tile then
 	    self:RenderHoveredLocation( gui, puppet )
@@ -401,7 +404,7 @@ end
 function GameScreen:RenderLocationTiles( location )
 	local W, H = GetGUI():GetSize()
 
-	local wx0, wy0 = self.camera:ScreenToWorld( 0, 0 )
+	local wx0, wy0 = self.camera:ScreenToWorld( 0, self.top_height )
 	wx0, wy0 = math.floor( wx0 ), math.floor( wy0 )
 	local x0, y0 = self.camera:WorldToScreen( wx0, wy0 )
 
@@ -416,6 +419,7 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 	local xtiles = wx1 - wx0
 	local ytiles = wy1 - wy0
 
+	self.ymax = 0
 	-- Render all map tiles.
 	for dx = 1, xtiles do
 		for dy = ytiles, 1, -1 do
@@ -775,12 +779,10 @@ function GameScreen:MousePressed( mx, my, btn )
 			return true
 
 		elseif self.puppet and not self.puppet:IsDead() then
-			if self.current_focus == self.hovered_tile then
-				if self.hovered_tile:IsPassable( self.puppet ) then
-					local verb = Verb.Travel( Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() ))
-					if verb:CanDo( self.puppet ) then
-						self.puppet:DoVerbAsync( verb )
-					end
+			if self.hovered_tile and self.hovered_tile:IsPassable( self.puppet ) then
+				local verb = Verb.Travel( Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() ))
+				if verb:CanDo( self.puppet ) then
+					self.puppet:DoVerbAsync( verb )
 				end
 			else
 				self:CycleFocus( self.hovered_tile )

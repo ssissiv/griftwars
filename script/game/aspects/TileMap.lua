@@ -46,7 +46,7 @@ end
 
 function TileMap:CreateCursor( x, y )
 	local cursor = TileMapCursor( self )
-	cursor:SetCoord( x, y )
+	cursor:MoveTo( x or 1, y or 1 )
 	return cursor
 end
 

@@ -129,7 +129,7 @@ function Zone:GeneratePortalDest( portal, depth )
 			end
 		end
 
-		if not portal:GetDest() then
+		if not portal:GetDest() and portal:GetWorldGenTag() then
 			if portal.one_way then
 				local w, h = new_location.map:GetExtents()
 				local x, y = self.world:Random( w ), self.world:Random( h )

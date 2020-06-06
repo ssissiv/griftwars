@@ -397,7 +397,7 @@ function Location:FindPassableTile( x, y, obj )
 	end
 
 	local origin = self:GetTileAt( x, y )
-	assert( origin )
+	assert( origin, tostring(x)..","..tostring(y) )
 
 	self.map:Flood( origin, IsPassable, obj )
 

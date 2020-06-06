@@ -69,9 +69,9 @@ function Travel:PathToTarget( actor, dest )
 		-- Path available.  Time to wait.
 		if actor:IsRunning() then
 			actor:DeltaStat( STAT.FATIGUE, 2 )
-			self:YieldForTime( RUN_TIME, "rate", 1.0 )
+			self:YieldForTime( RUN_TIME, "rate", 8.0 )
 		else
-			self:YieldForTime( WALK_TIME, "rate", 1.0 )
+			self:YieldForTime( WALK_TIME, "rate", 8.0 )
 		end
 
 		if self:IsCancelled() then

@@ -9,7 +9,7 @@ function MapScreen:init( world, viewer, location )
 
 	self.zoom_level = 0
 	self.camera = Camera()
-	self.camera:SetViewPort( GetGUI():GetSize() )
+	self.camera:SetViewPort( 0, 0, GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
 
 	self.locations = {}
