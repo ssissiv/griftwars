@@ -22,48 +22,6 @@ If you reduce will to 0, you gain: the shtuff.
 * Return to AI Schedules.  Need predictability.
 
 
-STARDEW:
-	* Start with Parsnip Seeds.
-	* Quest: Harvest Parsnips, Talk to 28 people.
-
-	About ~40 seconds an hour (so about 40*20 = 13 minutes max per day)
-	Actions cost Energy. YOu can quickly deplete your energy by 9 am on the first day if you chop furiously.
-
-	Day 1: Plant parsnips.  Water them.  Talk to people.  Explore.  See Calendar, loot items...
-	Day 2: Note from Willy: Meet at Beach.  Get a fishing rod, can fish.
-		You can loot, plant, buy, explore, talk, find quests, dig, fish, clear/chop, harvest,...
-	Day 3: Ad for a 24-slot backpack
-		Night: Level Up Fishing!
-	Day 4: Quests.
-	Day 6-10?: Community Centre
-
-	It is satisfing to plant, water, watch grow.  VERY satisfying to sow.
-	Getting things always feels great.
-
-	End-of-day level ups. You don't see XP.
-
-
-GRIFTWARS:
-	SCAV start: acquainted with a dude.  Start with 3 coins.
-	You can scavenge junk piles, kill things, loot eggs/plants on the outskirts, eavesdrop conversations,
-	Scav:
-
-SCAVENGER:
-	* SCAV: scavenge with them. (follow, attach to verb), get stuff)
-		* GAIN CONTACT: Shopkeeper.  Buys your junk.
-			"I know a guy. Buys scrap."
-		* Shares Food once a day.
-			"You come to me if you need food. We gotsta stick together."
-		* Tells you a high-valued Junk Pile once a day.
-			"Heard some Hisec dropped a carbalytic booster."
-		* Teach thing about scavenge.
-			"I been doing this a long time, this is how you do it..."
-		* Provides you a home.
-			"Come where I stay. It ain't much but it's a bed."
-		* Introduces to another local T1.
-			"My buddy is X around here, he's a good guy."
-
-
 
 * Venture Corp
 	- give CEO salary
@@ -191,12 +149,6 @@ Stats drain over time, and take increasingly more XP to increase.
 
 You must find where your tokens best fit to optimize for XP gain in a cycle of growth.
 
-
-
-CMD LINE
-	- just mud it up.  Fuck the UI.
-
-WORLD should be an entity with a self-ref world ptr?
 
 INFO MODEL:
 	Add verbs for utilizing certain info.

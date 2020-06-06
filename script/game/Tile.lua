@@ -42,6 +42,7 @@ function Tile:AddEntity( obj )
 		self.contents = {}
 	end
 
+	print( obj, debug.traceback() )
 	table.insert( self.contents, obj )
 end
 

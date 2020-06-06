@@ -5,7 +5,7 @@ function GameScreen:init( world )
 	
 	if world == nil then
 		local gen = WorldGen()
-		world = gen:GenerateWorld()
+		world = gen:GenerateTinyWorld()
 		world:Start()
 	end
 	self.world = world

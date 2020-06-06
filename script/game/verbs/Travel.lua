@@ -113,7 +113,7 @@ function Travel:Interact( actor, dest )
 			break
 		end
 
-		self.path = pather:CalculatePath()
+		self.path = pather:GetPath()
 		if self.path then
 			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
 			local ok, reason = self.leave:DoVerb( actor, portal )

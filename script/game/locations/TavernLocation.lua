@@ -18,7 +18,7 @@ function TavernLocation:OnSpawn( world )
 	local name = loc.format( "The {1} {2} Tavern", adj, noun )
 	self:SetDetails( name )
 
-	Object.Door( "tavern exit" ):WarpToLocation( self )
+	Object.Door( "tavern exit" ):WarpToLocation( self, 6, 7 )
 	local barkeep = self:GetAspect( Feature.Tavern ):SpawnBarkeep()
 	-- local home = self:SpawnHome( barkeep )
 end

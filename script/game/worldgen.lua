@@ -51,11 +51,12 @@ function WorldGen:GenerateTinyWorld()
 
 	Msg:SetWorld( world )
 
-	local origin = Location()
+	local origin = Location.JunkYard()
 	origin:SetDetails( "Tiny World", "Not much here." )
 	origin:SetCoordinate( 0, 0 )
+	world:SpawnLocation( origin )
 
-	local player = self:GeneratePlayer( self.world )
+	local player = Agent.Grifter()
 	world:SpawnAgent( player, origin )
 
 	return world

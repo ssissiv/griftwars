@@ -169,6 +169,7 @@ function Location:AddEntity( entity )
 	if entity.world == nil and self.world then
 		self.world:SpawnEntity( entity )		
 	elseif entity.world and self.world == nil then
+		error( "This seems dumb" )
 		SpawnLocation( self, entity.world )
 	end
 	
