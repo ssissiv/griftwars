@@ -17,6 +17,12 @@ function Barkeep:GetWaypoint()
 	return self.tavern:GetWaypoint( WAYPOINT.KEEPER )
 end
 
+function Barkeep:CollectVerbs( verbs, actor, target )
+	if target == self.owner then
+		verbs:AddVerb( Verb.RentRoom( target, 10 ) )
+	end
+end
+
 function Barkeep:AssignTavern( tavern )
 	assert( tavern == nil or is_instance( tavern, Location ))
 	if tavern ~= self.tavern then

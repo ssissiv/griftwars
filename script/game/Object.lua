@@ -53,6 +53,15 @@ function Object:GetShortDesc( viewer )
 	-- return loc.format( "{1} is here.", tostring(self))
 end
 
+function Object:Inscribe( txt )
+	self.scribe_txt = txt
+	return self
+end
+
+function Object:IsInscribed( txt )
+	return self.scribe_txt:find( txt )
+end
+
 local function WarpToLocation( self, location, x, y )
 	local prev_location = self.location
 	if self.location then

@@ -8,6 +8,10 @@ function OpenObject:CanInteract( actor, target )
 	if not actor:CanReach( target ) then
 		return false, "Not adjacent"
 	end
+	local lock = target:GetAspect( Aspect.Lock )
+	if lock and lock:IsLocked() then
+		return false, "Locked"
+	end
 	return true
 end
 

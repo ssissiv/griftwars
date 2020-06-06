@@ -42,6 +42,7 @@ local assets =
 		DIRT_FLOOR = "dirt_floor.png",
 
 		DOOR = "door.png",
+		DOOR_OPEN = "door_open.png",
 		BED = "bed.png",
 		CAVE_ENTRANCE = "cave_entrance.png",
 		CHEST = "chest.png",

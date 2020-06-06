@@ -107,11 +107,12 @@ local GAME_BINDINGS =
     name = "Game",
     {
         Binding = InputBinding{ key = "t", CTRL = true },
-        Text = "Debug Tile",
+        Text = "Teleport here",
         Do = function( dbg )
-            local env = dbg:GetDebugEnv()
-            local tile = env.world.map:GetTile( env.cx, env.cy )
-            DBG(tile)
+            local game = GetGUI():GetTopScreen()
+            if is_instance( game, GameScreen ) and game.hovered_tile and game.puppet then
+                game.puppet:WarpToTile( game.hovered_tile )
+            end
         end,
     },
 

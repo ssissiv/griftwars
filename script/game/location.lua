@@ -408,6 +408,22 @@ function Location:Contents()
 	return ipairs( self.contents or table.empty )
 end
 
+function Location:FindEntity( pred )
+	for i, obj in ipairs( self.contents ) do
+		if pred( obj ) then
+			return obj
+		end
+	end
+end
+
+function Location:FindInscribedEntity( txt )
+	for i, obj in ipairs( self.contents ) do
+		if obj:IsInscribed( txt ) then
+			return obj
+		end
+	end
+end
+
 function Location:GetTitle()
 	local title
 	if type(self.title) == "function" then

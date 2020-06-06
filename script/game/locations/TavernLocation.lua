@@ -40,11 +40,11 @@ function TavernLocation:GenerateTileMap()
 		cursor:SetTile( Tile.WoodenFloor ):Paint()
 		cursor:Line( 0, -5 )
 		-- Room West
-		cursor:Line( -1, 0 ):SpawnEntity( Object.Door() ):Move( -5, 1 )
+		cursor:Line( -1, 0 ):SpawnEntity( Object.Door():Inscribe( "ROOM1" ):Close():Lock() ):Move( -5, 1 )
 		cursor:Box( 5, -3 ):SpawnEntity( Object.Bed() ):Move( 5, -1 )
 
 		-- Room East
-		cursor:Line( 2, 0 ):SpawnEntity( Object.Door() ):Move( 1, 1 )
+		cursor:Line( 2, 0 ):SpawnEntity( Object.Door():Inscribe( "ROOM2" ):Close():Lock() ):Move( 1, 1 )
 		cursor:Box( 5, -3 ):SpawnEntity( Object.Bed() ):Move( -1, -1 )
 
 		self:SetWaypoint( WAYPOINT.KEEPER, Waypoint( self, 5, 2 ))

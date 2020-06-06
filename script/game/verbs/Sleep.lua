@@ -20,13 +20,21 @@ Sleep.event_handlers =
 }
 
 function Sleep:GetDesc()
-	return "Sleep"
+	if self.obj then
+		return loc.format( "Sleep on {1}", self.obj )
+	else
+		return "Sleep"
+	end
 end
 
 function Sleep:RenderAgentDetails( ui, screen, viewer )
 	if viewer:CanSee( self.owner ) then
 		ui.Bullet()
-		ui.Text( "Sleeping" )
+		if self.obj then
+			ui.Text( loc.format( "Sleeping on {1}", self.obj ))
+		else
+			ui.Text( "Sleeping" )
+		end
 	end
 end
 
@@ -51,7 +59,11 @@ end
 
 function Sleep:Interact( actor )
 	Msg:ActToRoom( "{1.Id} goes to sleep.", actor )
-	Msg:Echo( actor, "You go to sleep." )
+	if self.obj then
+		Msg:Echo( actor, "You go to sleep on {1}.", self.obj )
+	else
+		Msg:Echo( actor, "You go to sleep." )
+	end
 	
 	actor:SetMentalState( MSTATE.SLEEPING )
 

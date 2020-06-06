@@ -88,7 +88,7 @@ end
 
 function ManageShop:SellToBuyer( item, buyer )
 	local cost = self:GetBuyCost( item, buyer )
-	buyer:GetInventory():DeltaMoney( -cost )
+	buyer:GetInventory():TransferMoney( cost, self.owner )
 
 	local clone = item:Clone()
 	buyer:GetInventory():AddItem( clone )

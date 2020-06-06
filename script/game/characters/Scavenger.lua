@@ -25,7 +25,7 @@ function Scavenge:init()
 	Scavenge._base.init( self )
 
 	self.scrounge = self:AddChildVerb( Verb.Scrounge() )
-	self.idle = self:AddChildVerb( Verb.Idle() )
+	self.wander = self:AddChildVerb( Verb.Wander() )
 	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
 end
 
@@ -56,7 +56,7 @@ function Scavenge:Interact( actor )
 		if math.random() < 0.4 then
 			self.scrounge:DoVerb( actor )
 		elseif math.random() < 0.5 then
-			self.idle:DoVerb( actor, nil, 10 * ONE_MINUTE )
+			self.wander:DoVerb( actor, nil, 10 * ONE_MINUTE )
 		else
 			self.leave:DoVerb( actor )
 		end

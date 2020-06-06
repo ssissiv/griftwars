@@ -77,6 +77,11 @@ function Inventory:RemoveItem( item )
 	end
 end
 
+function Inventory:TransferMoney( amount, target )
+	self:DeltaMoney( -amount )
+	target:GetInventory():DeltaMoney( amount )
+end
+
 function Inventory:TransferItem( item, inventory )
 	-- Don't use RemoveItem -- we are reassigning, not despawning.
 	assert( self.slots == nil or not table.find( self.slots, item ), "Object not deallocated from slot" )
