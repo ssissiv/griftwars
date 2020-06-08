@@ -8,7 +8,7 @@ end
 function Impass:IsPassable( what )
 	if is_instance( what, Entity ) then
 		local impass = what:GetAspect( Impass )
-		if bit.band( self.pass_type, impass.pass_type ) ~= 0 then
+		if impass and bit.band( self.pass_type, impass.pass_type ) ~= 0 then
 			return false -- could compare impass types
 		end
 

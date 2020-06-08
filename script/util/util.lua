@@ -362,6 +362,14 @@ function HexColour(val)
         bit32.rshift(bit32.band(val, 0xFF), 0)/255
 end
 
+function MakeHexColour(r, g, b, a)
+    r = clamp( math.floor( r*255 ), 0, 255 )
+    g = clamp( math.floor( g*255 ), 0, 255 )
+    b = clamp( math.floor( b*255 ), 0, 255 )
+    a = clamp( math.floor( (a or 1)*255 ), 0, 255 )
+    return bit.bor( bit.lshift( r, 24 ), bit.lshift( g, 16 ), bit.lshift( b, 8 ), a )
+end
+
 function HexColour255(val)
     return bit32.rshift(bit32.band(val, 0xFF000000), 24),
         bit32.rshift(bit32.band(val, 0xFF0000), 16),

@@ -14,6 +14,29 @@ function TilePathFinder:init( actor, source, target, approach_dist )
 	self.target = target
 	self.approach_dist = approach_dist
 	self.query_count = 0
+
+	local function DistFn( t1, t2 )
+		return distance( t1.x, t1.y, t2.x, t2.y )
+	end
+
+	local function HeuristicFn( t1, end_tile )
+		local dx = end_tile.x - t1.x
+		local dy = end_tile.y - t1.y
+		return math.sqrt( dx * dx + dy * dy )
+	end
+
+	local neighbours = {}
+	local function NeighbourFn( tile )
+		table.clear( neighbours )
+		for i, dest in self.map:Neighbours( tile ) do
+			if self.actor == nil or dest:IsPassable( self.actor ) then
+				table.insert( neighbours, dest )
+			end
+		end	
+		return ipairs( neighbours )
+	end
+
+	self.astar = AStarSearcher( DistFn, HeuristicFn, NeighbourFn )
 end
 
 function TilePathFinder:GetApproachDist()
@@ -89,61 +112,16 @@ function TilePathFinder:CalculatePath()
 		return path
 	end
 
-	local queue = { start_room }
-	local from_to = {} -- map of room -> next room back to start
-	local sanity = 0
-
-	self.query_count = self.query_count + 1
-	self.queue, self.from_to = queue, from_to
-
-	while #queue > 0 do
-		local room = table.remove( queue, 1 )
-
-		if room == end_room then
-			-- Found it! Generate path by walking back to start.
-			path = {}
-
-			-- Only add the destination if it is passable, so you can path up to impassable goals.
-			-- if self.actor and not self.path_adjacent then
-			-- 	table.insert( path, room )
-			-- end
-			-- room = from_to[ room ]
-
-			local len = 0
-			while room do
-				if len >= self:GetApproachDist() or room == start_room then
-					table.insert( path, room )
-				end
-				room = from_to[ room ]
-				len = len + 1
-				assert( len < 50 )
-			end
-			table.reverse( path )
-			break
-		end
-
-		local j = #queue
-		for i, dest in self.map:Neighbours( room ) do
-			if from_to[ dest ] == nil and dest ~= start_room and (self.actor == nil or dest == end_room or dest:IsPassable( self.actor )) then
-				assert( dest ~= start_room )
-				from_to[ dest ] = room
-				table.insert( queue, dest )
-			end
-		end
-		-- Shuffle neighbours to mix up the path a bit.
-		table.shuffle( queue, j + 1, #queue )
-
-		sanity = sanity + 1
-		assert( sanity < 1000 )
-	end
-
-	self.path = path
+	self.astar.no_clear = (self.history ~= nil)
+	self.astar:StartSearch( start_room, end_room )
+	self.astar:RunToCompletion()
+	self.path = self.astar:GetPath()
 
 	if self.history then
 		DBG( self )
 	end
 
-	return path
+	return self.path
 end
 
 function TilePathFinder:GetPath()
@@ -222,17 +200,37 @@ function TilePathFinder:RenderDebugPanel( ui, panel )
 	ui.Text( loc.format( "Queries: {1}", self.query_count ))
 	ui.Text( loc.format( "Path: {1}", self.path and #self.path ))
 
-	local explored = self.from_to and table.count( self.from_to )
-	self.max_explored = math.max( 0, explored or 0 )
-	ui.Text( loc.format( "Explored: {1} ({2})", explored, self.max_explored  ))
-
 	local game = GetGUI():FindScreen( GameScreen )
-	if self.path and game then
-		for i, tile in ipairs( self.path ) do
+	if game then
+		local x0, y0 = self.astar.start_node:GetCoordinate()
+		local xt, yt = self.astar.end_node:GetCoordinate()
+		local max_dist = distance( x0, y0, xt, yt )
+
+		for tile in pairs( self.astar.open_set ) do
 			local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
 			local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
-			game:SetColour( 0xFFFF00FF )
+			game:SetColour( 0xFFFFFFAA )
 			game:Box( x1 + 4, y1 + 4, (x2 - x1) - 8, (y2 - y1) - 8 )
+		end
+
+		for tile in pairs( self.astar.closed_set ) do
+			local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
+			local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
+			local dist = distance( tile.x, tile.y, self.astar.start_node:GetCoordinate() )
+			local r, g, b, a = 0.8, 0, 0, clamp( dist / max_dist, 0, 1.0 )
+			game:SetColour( MakeHexColour( r, g, b, a ) )
+			game:Rectangle( x1 + 6, y1 + 6, (x2 - x1) - 12, (y2 - y1) - 12 )
+		end
+
+		if self.path then
+			for i, tile in ipairs( self.path ) do
+				local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
+				local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
+				local dist = distance( tile.x, tile.y, self.astar.start_node:GetCoordinate() )
+				local r, g, b, a = 1, 1, 0, clamp( dist / max_dist, 0, 1.0 )
+				game:SetColour( MakeHexColour( r, g, b, a ) )
+				game:Box( x1 + 4, y1 + 4, (x2 - x1) - 8, (y2 - y1) - 8 )
+			end
 		end
 	end
 end

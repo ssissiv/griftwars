@@ -72,12 +72,13 @@ function AStarSearcher:Step()
 
             if current_node == self.end_node then
                 self:_ConstructPath()
-                
-                table.clear(self.closed_set)
-                table.clear(self.open_set)
-                table.clear(self.came_from)
-                table.clear(self.f_score)
-                table.clear(self.g_score)
+                if not self.no_clear then
+                    table.clear(self.closed_set)
+                    table.clear(self.open_set)
+                    table.clear(self.came_from)
+                    table.clear(self.f_score)
+                    table.clear(self.g_score)
+                end
                 self.status = "done"
                 self.score = lowest_score
                 return
@@ -91,11 +92,13 @@ function AStarSearcher:Step()
             end
 
         else
-            table.clear(self.closed_set)
-            table.clear(self.open_set)
-            table.clear(self.came_from)
-            table.clear(self.f_score)
-            table.clear(self.g_score)
+            if not self.no_clear then
+                table.clear(self.closed_set)
+                table.clear(self.open_set)
+                table.clear(self.came_from)
+                table.clear(self.f_score)
+                table.clear(self.g_score)
+            end
             self.status = "nopath"
         end
     end
@@ -126,11 +129,9 @@ function AStarSearcher:GetScore()
 end
 
 function AStarSearcher:RunToCompletion()
-    engine.inst:ProfilerPush("FIND PATH")
     while self.status == "searching" do 
         self:Step()
     end
-    engine.inst:ProfilerPop()
 end
 
 function AStarSearcher:StartSearch(start_node, end_node)

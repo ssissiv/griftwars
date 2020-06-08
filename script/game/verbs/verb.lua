@@ -457,7 +457,7 @@ function Verb:Resume( coro )
 
 	elseif coroutine.status( coro ) == "suspended" then
 		-- Waiting.  Note that even if we are cancelled, the coro is still valid if we are part of a parent verb.
-		assert( not self.cancelled or self.parent ~= nil )
+		assert_warning( not self.cancelled or self.parent ~= nil, tostring(self))
 		--assert( self.yield_ev ) -- A child verb might have yielded, not us.
 	else
 		-- Done!
