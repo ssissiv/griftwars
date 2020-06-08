@@ -102,7 +102,7 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 			screen:SetLocation( location )
 		end
 
-	elseif event_name == AGENT_EVENT.TILE_CHANGED then
+	elseif event_name == ENTITY_EVENT.TILE_CHANGED then
 		-- if not self.lock_focus then
 		-- 	self:SetCurrentFocus( nil )
 		-- else

@@ -1,11 +1,21 @@
 local Impass = class( "Aspect.Impass", Aspect )
 
-function Impass:IsPassable( obj )
-	if self.wall then
-		return false
-	end
-	if obj:GetAspect( Impass ) then
-		return false -- could compare impass types
+function Impass:init( pass_type )
+	assert( pass_type )
+	self.pass_type = pass_type
+end
+
+function Impass:IsPassable( what )
+	if is_instance( what, Entity ) then
+		local impass = what:GetAspect( Impass )
+		if bit.band( self.pass_type, impass.pass_type ) ~= 0 then
+			return false -- could compare impass types
+		end
+
+	elseif type(what) == "number" then
+		if bit.band( self.pass_type, what ) ~= 0 then
+			return false
+		end
 	end
 	return true
 end

@@ -16,6 +16,14 @@ local SHARED_BINDINGS =
         Binding = InputBinding{key="backspace", CTRL = true },
         Text = "Toggle Debug Render",
         Do = function( dbg )
+            local puppet = dbg:GetDebugEnv().puppet
+            if puppet then
+                if puppet:HasAspect( Aspect.History ) then
+                    puppet:LoseAspect( Aspect.History )
+                else
+                    puppet:GainAspect( Aspect.History() )
+                end
+            end
         end
     },
     {

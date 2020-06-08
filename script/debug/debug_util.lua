@@ -9,8 +9,10 @@ function PAUSE()
 end
 
 function DBG( v )
-    local debug_node = DebugUtil.CreateDebugNode( v )
-    GetDbg():CreatePanel( debug_node )
+    if not GetDbg():FindPanel( v ) then
+        local debug_node = DebugUtil.CreateDebugNode( v )
+        GetDbg():CreatePanel( debug_node )
+    end
 end
 
 function DBQ( k, v )

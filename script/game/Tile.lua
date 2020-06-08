@@ -21,15 +21,15 @@ function Tile:Neighbours( map )
 	return map:Neighbours( self )
 end
 
-function Tile:IsPassable( obj )
+function Tile:IsPassable( what )
 	local impass = self:GetAspect( Aspect.Impass )
-	if impass and ( obj == nil or not impass:IsPassable( obj ) ) then
+	if impass and ( what == nil or not impass:IsPassable( what ) ) then
 		return false
 	end
 	if self.contents then
 		for i, obj in ipairs( self.contents ) do
 			local impass = obj:GetAspect( Aspect.Impass )
-			if impass and not impass:IsPassable( obj ) then
+			if impass and not impass:IsPassable( what ) then
 				return false
 			end
 		end
@@ -42,7 +42,6 @@ function Tile:AddEntity( obj )
 		self.contents = {}
 	end
 
-	print( obj, debug.traceback() )
 	table.insert( self.contents, obj )
 end
 
@@ -127,6 +126,6 @@ StoneWall.name = "Stone Wall"
 
 function StoneWall:init( x, y )
 	StoneWall._base.init( self, x, y )
-	self:GainAspect( Aspect.Impass() ):SetWall( true )
+	self:GainAspect( Aspect.Impass( IMPASS.ALL ) )
 end
 

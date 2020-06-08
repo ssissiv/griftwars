@@ -3,7 +3,7 @@ function Agent:MakeHuman()
 
 	self:MakeGendered()
 	self:MakeBiological()
-	self:GainAspect( Aspect.Impass() )
+	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
 end
 
 function Agent:MakeOrc()
@@ -11,7 +11,7 @@ function Agent:MakeOrc()
 
 	self:MakeGendered()
 	self:MakeBiological()
-	self:GainAspect( Aspect.Impass() )
+	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
 end
 
 function Agent:MakeAnimal()
@@ -19,7 +19,7 @@ function Agent:MakeAnimal()
 
 	self:MakeGendered()
 	self:MakeBiological()
-	self:GainAspect( Aspect.Impass() )
+	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
 end
 
 function Agent:MakeGendered()

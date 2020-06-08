@@ -1,6 +1,22 @@
 local DebugAgent = class( "DebugAgent", DebugTable )
 DebugAgent.REGISTERED_CLASS = Agent
 
+DebugAgent.MENU_BINDINGS =
+{
+	{
+		name = "Agent",
+		{
+			Text = "Trace",
+			Enabled = function( self, agent )
+				return not agent:HasAspect( Aspect.History )
+			end,
+			Do = function( self, agent )
+				agent:GainAspect( Aspect.History() )
+			end
+		}
+	},
+}
+
 function DebugAgent:init( agent )
 	DebugTable.init( self, agent )
 	self.agent = agent
@@ -36,7 +52,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 
 		ui.SameLine( 0, 10 )
-		if ui.Button( "Switch To Player" ) then
+		if not self.agent:IsPlayer() and ui.Button( "Switch To Player" ) then
 			self.agent.world:SetPuppet( self.agent.world:GetPlayer() )
 		end
 	end

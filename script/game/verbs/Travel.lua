@@ -55,13 +55,13 @@ function Travel:PathToTarget( actor, dest )
 
 	while true do
 
-		self.path = pather:CalculatePath()
+		self.path = pather:GetPath()
 
 		if self.path and #self.path >= 2 then
 			local x1, y1 = self.path[1]:GetCoordinate()
 			local x2, y2 = self.path[2]:GetCoordinate()
-			local exit = OffsetToExit( x1, y1, x2, y2 )
-			actor:Walk( exit )
+			local dir = OffsetToDir( x1, y1, x2, y2 )
+			actor:Walk( dir )
 		else
 			break
 		end

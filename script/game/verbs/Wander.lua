@@ -23,7 +23,8 @@ function Wander:Interact( actor, target, duration )
 			end
 
 			if #dirs > 0 then
-				actor:Walk( table.arraypick( dirs ))
+				local dir = ExitToDir( table.arraypick( dirs ))
+				actor:Walk( dir )
 			end
 		end
 	until self:IsCancelled() or self.world:GetDateTime() >= time

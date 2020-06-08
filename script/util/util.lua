@@ -345,6 +345,8 @@ function MakeBitField(args)
         assert(bitfield[v] == nil)
         bitfield[v] = 2^(k-1)
     end
+    bitfield.ALL = 0xFFFFFFFF
+    
     return bitfield
 end
 
@@ -424,6 +426,59 @@ function OffsetToExit( x1, y1, x2, y2 )
             return EXIT.WEST
         end
     end    
+end
+
+function ExitToDir( exit )
+    if exit == EXIT.EAST then
+        return DIR.E
+    elseif exit == EXIT.NORTH then
+        return DIR.N
+    elseif exit == EXIT.WEST then
+        return DIR.W
+    elseif exit == EXIT.SOUTH then
+        return DIR.S
+    end
+end
+
+function OffsetDir( x, y, dir )
+    assert( IsEnum( dir, DIR ))
+    if dir == DIR.N then
+        return x, y + 1
+    elseif dir == DIR.NE then
+        return x + 1, y + 1
+    elseif dir == DIR.E then
+        return x + 1, y
+    elseif dir == DIR.SE then
+        return x + 1, y - 1
+    elseif dir == DIR.S then
+        return x, y - 1
+    elseif dir == DIR.SW then
+        return x - 1, y - 1
+    elseif dir == DIR.W then
+        return x - 1, y
+    elseif dir == DIR.NW then
+        return x - 1, y + 1
+    end
+end
+
+function OffsetToDir( x1, y1, x2, y2 )
+    if x1 == x2 and y1 + 1 == y2 then
+        return DIR.N
+    elseif x1 + 1 == x2 and y1 + 1 == y2 then
+        return DIR.NE
+    elseif x1 + 1 == x2 and y1 == y2 then
+        return DIR.E
+    elseif x1 + 1 == x2 and y1 - 1 == y2 then
+        return DIR.SE
+    elseif x1 == x2 and y1 - 1 == y2 then
+        return DIR.S
+    elseif x1 - 1 == x2 and y1 - 1 == y2 then
+        return DIR.SW
+    elseif x1 - 1 == x2 and y1 == y2 then
+        return DIR.W
+    elseif x1 - 1 == x2 and y1 + 1 == y2 then
+        return DIR.NW
+    end
 end
 
 function IsAdjacentCoordinate( x1, y1, x2, y2 )

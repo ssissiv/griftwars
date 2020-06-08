@@ -55,7 +55,7 @@ function Door:Open()
 end
 
 function Door:Close()
-	self:GainAspect( Aspect.Impass() )
+	self:GainAspect( Aspect.Impass( IMPASS.STATIC ) )
 	self.image = nil
 	return self
 end

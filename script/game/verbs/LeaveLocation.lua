@@ -77,12 +77,12 @@ function LeaveLocation:PathToPortal( actor, portal )
 			break
 		end
 
-		local path = pather:CalculatePath()
+		local path = pather:GetPath()
 		if path then
 			local x1, y1 = path[1]:GetCoordinate()
 			local x2, y2 = path[2]:GetCoordinate()
-			local exit = OffsetToExit( x1, y1, x2, y2 )
-			actor:Walk( exit )
+			local dir = OffsetToDir( x1, y1, x2, y2 )
+			actor:Walk( dir )
 
 		else
 			-- print( "no path!", self, actor, portal )

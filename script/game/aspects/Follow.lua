@@ -17,8 +17,7 @@ function Follow:CanInteract( actor, other )
 end
 
 function Follow:OnOtherEvent( event_name, ... )
-	if event_name == AGENT_EVENT.TILE_CHANGED then
-		local agent, x, y = ...
+	if event_name == ENTITY_EVENT.TILE_CHANGED then
 		self:Unyield()
 	end
 end

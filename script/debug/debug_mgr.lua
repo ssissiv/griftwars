@@ -412,6 +412,14 @@ function DebugManager:CreatePanel( debug_node )
 	table.insert( self.debug_panels, panel )
 end
 
+function DebugManager:FindPanel( obj )
+	for i, panel in ipairs( self.debug_panels ) do
+		if panel:GetNode().t == obj then
+			return panel
+		end
+	end
+end
+
 function DebugManager:DebugPanels()
 	return ipairs( self.debug_panels )
 end

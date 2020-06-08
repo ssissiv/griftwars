@@ -93,6 +93,19 @@ function Object:WarpToLocation( location, x, y )
 	WarpToLocation( self, location, x, y )
 end
 
+function Object:WarpToTile( tile )
+	local prev_tile = self.x and self.location:GetTileAt( self.x, self.y )
+	if prev_tile then
+		prev_tile:RemoveEntity( self )
+	end
+
+	self:SetCoordinate( tile:GetCoordinate() )
+
+	tile:AddEntity( self )
+
+	self:BroadcastEvent( ENTITY_EVENT.TILE_CHANGED, tile, prev_tile )
+end
+
 function Object:WarpToAgent( agent )
 	self:WarpToLocation( agent:GetLocation() )
 end

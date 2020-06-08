@@ -164,6 +164,8 @@ SENSOR = MakeEnum
 	"VISION", -- in-game vision
 }
 
+DIR = MakeEnum{ "N", "NE", "E", "SE", "S", "SW", "W", "NW" }
+
 EXIT = MakeEnum{ "NORTH", "EAST", "WEST", "SOUTH" }
 REXIT = {
 	NORTH = EXIT.SOUTH,
@@ -343,7 +345,16 @@ FACTION_TIERS =
 	[ FACTION_ROLE.GUARD ] = 1,
 }
 
-IMPASS = MakeEnum{ "WALL", "DOOR", "BODY" }
+IMPASS = MakeBitField
+{
+	"STATIC", -- Static obstruction
+	"DYNAMIC", -- Dynamic obstruction (agent, etc.)
+	"DYNAMIC_QUERY", -- Patfind query for DYNAMIC (ignores other DYNAMIC).
+	"LOS", -- Blocks LOS
+}
+
+-- STATIC, DYNAMIC, PATHFIND
+-- To query actual movement: 
 
 INFO = MakeEnum
 {

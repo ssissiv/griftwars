@@ -9,7 +9,7 @@ function BerryBush:OnSpawn( world )
 	self.rng = self:GainAspect( Aspect.Rng())
 	self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.ScroungeTarget())
-	self:GainAspect( Aspect.Impass() )
+	self:GainAspect( Aspect.Impass( bit.bxor( IMPASS.ALL, IMPASS.LOS )))
 
 	self:RefreshBush()
 end

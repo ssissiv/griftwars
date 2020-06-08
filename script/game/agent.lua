@@ -420,7 +420,6 @@ end
 function Agent:SetCoordinate( x, y )
 	if x ~= self.x or y ~= self.y then
 		self.x, self.y = x, y
-		self:BroadcastEvent( AGENT_EVENT.TILE_CHANGED, x, y )
 	end
 end
 
@@ -453,18 +452,11 @@ function Agent:TeleportToLocation( location, x, y )
 	self:WarpToLocation( location, x, y )
 end
 
-function Agent:Walk( exit )
-	local x, y = OffsetExit( self.x, self.y, exit )
+function Agent:Walk( dir )
+	local x, y = OffsetDir( self.x, self.y, dir )
 	local tile = self.location:GetTileAt( x, y )
 	if tile and tile:IsPassable( self ) then
-		local current_tile = self.location:GetTileAt( self.x, self.y )
-		current_tile:RemoveEntity (self )
-
-		self.x, self.y = x, y
-
-		tile:AddEntity( self )
-
-		self:BroadcastEvent( AGENT_EVENT.TILE_CHANGED, x, y )
+		self:WarpToTile( tile )
 	end
 end
 
@@ -517,7 +509,7 @@ function Agent:WarpToTile( tile )
 
 	tile:AddEntity( self )
 
-	self:BroadcastEvent( AGENT_EVENT.TILE_CHANGED, tile, prev_tile )
+	self:BroadcastEvent( ENTITY_EVENT.TILE_CHANGED, tile, prev_tile )
 end
 
 function Agent:GetLocation()

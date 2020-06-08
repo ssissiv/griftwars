@@ -56,6 +56,9 @@ function WorldGen:GenerateTinyWorld()
 	origin:SetCoordinate( 0, 0 )
 	world:SpawnLocation( origin )
 
+	local npc = Agent.Citizen()
+	world:SpawnAgent( npc, origin )
+	
 	local player = Agent.Grifter()
 	world:SpawnAgent( player, origin )
 
