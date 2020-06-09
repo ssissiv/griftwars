@@ -40,7 +40,7 @@ function Befriend:Interact( actor, target )
 
 	-- self:AttachActor( target )
 
-	self:YieldForTime( HALF_HOUR, "wall", 1.0 )
+	self:YieldForTime( 10 * ONE_MINUTE, "wall", 1.0 )
 
 	if self:IsCancelled() then
 		Msg:Echo( actor, "So much for making friends." )
@@ -53,6 +53,8 @@ function Befriend:Interact( actor, target )
 		Msg:Echo( actor, "You befriend {1.Id}.", target:LocTable( actor ))
 		target:DeltaTrust( trust )
 		actor:GainXP( trust )
+	else
+		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent.", target:LocTable( actor ) )
 	end
 end
 

@@ -25,7 +25,7 @@ end
 
 function VerbMenu:RenderSelectedEntity( ui, screen, ent )
     assert( ent.GetShortDesc, tostring(ent))
-    ui.Text( tostring(ent:GetShortDesc( self.actor )))
+    ui.TextWrapped( tostring(ent:GetShortDesc( self.actor )))
 
     local behaviour = ent:GetAspect( Aspect.Behaviour )
     if behaviour then
@@ -44,8 +44,10 @@ function VerbMenu:RenderSelectedEntity( ui, screen, ent )
     -- If has trust, show it.
     if is_instance( ent, Agent ) then
         local aff = ent:GetAffinities()[ self.actor ]
-        if aff and aff:GetTrust() > 0 then
-            ui.Text( loc.format( "Affinity: {1}", aff:GetAffinity() ))
+        if aff ~= AFFINITY.STRANGER or aff:GetTrust() > 0 then
+            ui.TextColored( 1, 1, 0, 1, "*" )
+            ui.SameLine( 0, 10 )
+            ui.Text( tostring(aff:GetAffinity() ))
             ui.SameLine( 0, 20 )
             ui.Text( loc.format( "Trust: {1}", aff:GetTrust() ))
         end

@@ -325,6 +325,7 @@ function Verb:Cancel()
 		return
 	end
 
+	assert( not self.cancelled )
 	self.cancelled = true
 	self.cancelled_trace = debug.traceback()
 	self.cancelled_time = self.actor.world:GetDateTime()

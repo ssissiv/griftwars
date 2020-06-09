@@ -65,7 +65,6 @@ function TilePathFinder:RasterLine( start_room, end_room, plot )
     while true do
 		local tile = self.map:LookupTile( x0, y0 )
 		if not tile or not tile:IsPassable( IMPASS.DYNAMIC_QUERY ) then
-			print( "NO IMPASS", x0, y0 )
 			return
 		else
 			table.insert( path, tile )
@@ -106,16 +105,20 @@ function TilePathFinder:CalculatePath()
 		return
 	end
 
-	local path = self:RasterLine( start_room, end_room )
-	if path then
-		self.path = path
-		return path
-	end
+	-- local path = self:RasterLine( start_room, end_room )
+	-- if path then
+	-- 	self.path = path
+	-- 	return path
+	-- end
 
 	self.astar.no_clear = (self.history ~= nil)
 	self.astar:StartSearch( start_room, end_room )
 	self.astar:RunToCompletion()
-	self.path = self.astar:GetPath()
+	if self.astar:FoundPath() then
+		self.path = self.astar:GetPath()
+	else
+		self.path = nil
+	end
 
 	if self.history then
 		DBG( self )
