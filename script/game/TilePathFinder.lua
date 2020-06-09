@@ -105,11 +105,11 @@ function TilePathFinder:CalculatePath()
 		return
 	end
 
-	-- local path = self:RasterLine( start_room, end_room )
-	-- if path then
-	-- 	self.path = path
-	-- 	return path
-	-- end
+	local path = self:RasterLine( start_room, end_room )
+	if path then
+		self.path = path
+		return path
+	end
 
 	self.astar.no_clear = (self.history ~= nil)
 	self.astar:StartSearch( start_room, end_room )

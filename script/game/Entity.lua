@@ -96,7 +96,7 @@ end
 
 function Entity:LoseAspect( aspect )
 	local id = aspect:GetID()
-	assert( self.aspects_by_id[ id ] == aspect )
+	assert( self.aspects_by_id[ id ] == aspect, id )
 	table.arrayremove( self.aspects, aspect )
 	self.aspects_by_id[ id ] = nil
 

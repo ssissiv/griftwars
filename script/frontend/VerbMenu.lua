@@ -44,7 +44,7 @@ function VerbMenu:RenderSelectedEntity( ui, screen, ent )
     -- If has trust, show it.
     if is_instance( ent, Agent ) then
         local aff = ent:GetAffinities()[ self.actor ]
-        if aff ~= AFFINITY.STRANGER or aff:GetTrust() > 0 then
+        if aff and (aff:GetTrust() > 0 or aff:GetAffinity() ~= AFFINITY.STRANGER) then
             ui.TextColored( 1, 1, 0, 1, "*" )
             ui.SameLine( 0, 10 )
             ui.Text( tostring(aff:GetAffinity() ))

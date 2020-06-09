@@ -53,6 +53,13 @@ function dbg_test( filename )
 	require( filename ) 
 end
 
+function ptime( wall_time )
+	print( Calendar.FormatTime( wall_time, true ))
+end
+
+function pdur( wall_dt )
+	print( Calendar.FormatDuration( wall_dt ))
+end
 
 -----------------------------------------------------------------------------
 
