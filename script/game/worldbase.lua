@@ -249,7 +249,9 @@ function WorldBase:CalculateTimeElapsed( dt )
 end
 
 function WorldBase:UpdateWorld( dt )
-	if self:IsPaused() then
+	if self:IsPaused( PAUSE_TYPE.DEBUG ) then
+		return
+	elseif self:IsPaused() then
 		dt = 0
 	end
 
