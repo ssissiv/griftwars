@@ -22,6 +22,9 @@ local function Classify( t )
     if t._classname then
         setmetatable( t, CLASSES[ t._classname ] )
         t._classname = nil
+        if t.PostLoad then
+            t:PostLoad()
+        end
     end
 end
 

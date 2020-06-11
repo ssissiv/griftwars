@@ -14,7 +14,11 @@ function Rng:OnSpawn( world )
 		self.seed1, self.seed2 = world:Random( 2^32 ), world:Random( 2^32 )
 	end
 
-	self.rng = love.math.newRandomGenerator( self.seed1, self.seed2 )
+	self:InitRng( self.seed1, self.seed2 )
+end
+
+function Rng:InitRng( seed1, seed2 )
+	self.rng = love.math.newRandomGenerator( seed1, seed2 )
 end
 
 function Rng:RollDice( num, size, bonus )
@@ -66,4 +70,20 @@ end
 function Rng:GetSeed()
 	return self.rng:getSeed()
 end
+
+function Rng:__serialize()
+	local seed1, seed2 = self:GetSeed()
+	return
+	{
+		_classname = self._classname,
+		seed1 = seed1,
+		seed2 = seed2,
+	}
+end
+
+function Rng:PostLoad()
+	assert( self.rng == nil )
+	self:InitRng( self.seed1, self.seed2 )
+end
+
 

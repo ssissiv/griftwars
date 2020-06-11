@@ -60,3 +60,15 @@ end
 function History:Items()
 	return IterFn, { head = self.head, iter = nil }
 end
+
+function History:__serialize()
+	return
+	{
+		_classname = self._classname,
+		items = self.items,
+		head = self.head,
+		tail = self.tail,
+		count = self.count
+	}
+end
+
