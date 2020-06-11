@@ -5,7 +5,7 @@ function GameScreen:init( world )
 	
 	if world == nil then
 		local gen = WorldGen()
-		world = gen:GenerateWorld()
+		world = gen:GenerateTinyWorld()
 		world:Start()
 	end
 	self.world = world
@@ -41,6 +41,7 @@ function GameScreen:SaveWorld( filename )
 	assert( filename )
 	SerializeToFile( self.world, filename )
 	print( "Saved to", filename )
+	self:PostMessage( "Saved!", constants.colours.GREEN )
 end
 
 function GameScreen:LoadWorld( filename )
@@ -48,6 +49,18 @@ function GameScreen:LoadWorld( filename )
 	print( "Loading from ", filename )
 	local world = DeserializeFromFile( filename )
 	GetGUI():AddScreen( GameScreen( world ))
+end
+
+function GameScreen:PostMessage( msg, color )
+	self.post_msg = msg
+	self.post_color = color or constants.colours.WHITE
+	self.post_time = love.timer.getTime()
+end
+
+function GameScreen:ClearMessage()
+	self.post_msg = nil
+	self.post_color = nil
+	self.post_time = nil
 end
 
 function GameScreen:UpdateScreen( dt )
@@ -136,12 +149,25 @@ function GameScreen:RenderScreen( gui )
     ui.Text( timestr )
     if self.world:IsPaused() then
     	ui.SameLine( 0, 10 )
-    	ui.Text( "(PAUSED)" )
+    	ui.Text( loc.format( "(PAUSED - {1})", table.concat( self.world.pause, " " ) ))
     end
     local dt = self.world:CalculateTimeElapsed( 1.0 )
     if dt ~= WALL_TO_GAME_TIME then
     	ui.SameLine( 0, 10 )
     	ui.Text( string.format( "(x%.2f)", dt / WALL_TO_GAME_TIME))
+    end
+
+    -- Posted message.
+    if self.post_msg then
+    	ui.SameLine( 0, 20 )
+    	local MSG_DURATION = 5.0
+    	local now = love.timer.getTime()
+    	local t = 1.0 - clamp( (now - self.post_time) / MSG_DURATION, 0, 1.0 )
+    	local r, g, b, a = Colour4( self.post_color, t )
+    	ui.TextColored( r, g, b, a, self.post_msg )
+    	if t >= 1.0 then
+    		self:ClearMessage()
+    	end
     end
 
     -- Render what the player is doing...

@@ -69,13 +69,17 @@ end
 function DebugUtil.GetLocalDebugData( key )
     if DebugUtil.LOCAL_DATA == nil then
         local file = io.open( "script/local_debug.lua" )
-        local data = file:read("*all")
-        file:close()
+        if file then
+            local data = file:read("*all")
+            file:close()
 
-        local ok, result = Serpent.load( data )
-        assert( ok )
+            local ok, result = Serpent.load( data )
+            assert( ok )
 
-        DebugUtil.LOCAL_DATA = result or {}
+            DebugUtil.LOCAL_DATA = result or {}
+        else
+            DebugUtil.LOCAL_DATA = {}
+        end
     end
 
     return DebugUtil.LOCAL_DATA[ key ]
