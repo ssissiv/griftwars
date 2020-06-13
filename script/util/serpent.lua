@@ -53,10 +53,10 @@ local function s(t, opts)
     -- protect from those cases where __tostring may fail
     if type(mt) == 'table' and metatostring ~= false then
       local to, tr = pcall(function() return mt.__tostring(t) end)
-      local so, sr = pcall(function() return mt.__serialize(t) end)
-      if (to or so) then -- knows how to serialize itself
+      local sr = mt.__serialize and mt.__serialize(t)
+      if (to or sr) then -- knows how to serialize itself
         seen[t] = insref or spath
-        t = so and sr or tr
+        t = sr or tr
         ttype = type(t)
       end -- new value falls through to be serialized
     end

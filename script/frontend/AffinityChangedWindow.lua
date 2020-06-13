@@ -46,5 +46,7 @@ end
 
 function AffinityChangedWindow:Show()
 	self.coro = coroutine.running()
-	return coroutine.yield()
+	if self.coro then
+		return coroutine.yield()
+	end
 end

@@ -3,6 +3,10 @@ local History = class( "Aspect.History", Aspect )
 local MAX_SIZE = 1000
 
 function History:init()
+	self:ResetHistory()
+end
+
+function History:ResetHistory()
 	self.items = {}
 	self.tail, self.head = nil, nil
 	self.count = 0
@@ -61,14 +65,14 @@ function History:Items()
 	return IterFn, { head = self.head, iter = nil }
 end
 
-function History:__serialize()
+function History:PostLoad()
+	self:ResetHistory()
+end
+
+function History:__serialize()	
 	return
 	{
 		_classname = self._classname,
-		items = self.items,
-		head = self.head,
-		tail = self.tail,
-		count = self.count
 	}
 end
 

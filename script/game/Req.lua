@@ -53,6 +53,30 @@ end
 
 ----------------------------------------------------
 
+local NotAcquaintedReq = class( "Req.NotAcquainted", Req )
+
+function NotAcquaintedReq:init( agent )
+	self.agent = agent
+end
+
+function NotAcquaintedReq:IsSatisfied( viewer )
+	return not self.agent:IsAcquainted( viewer )
+end
+
+----------------------------------------------------
+
+local AcquaintedReq = class( "Req.Acquainted", Req )
+
+function AcquaintedReq:init( agent )
+	self.agent = agent
+end
+
+function AcquaintedReq:IsSatisfied( viewer )
+	return self.agent:IsAcquainted( viewer )
+end
+
+----------------------------------------------------
+
 local StatReq = class( "Req.Stat", Req )
 
 function StatReq:init( stat, value )

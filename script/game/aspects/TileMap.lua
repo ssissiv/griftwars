@@ -211,5 +211,40 @@ function TileMap:RenderDebugPanel( ui, panel )
 	ui.Text( "HI" )
 end
 
+function TileMap:__serialize()
+	local dense_tiles, tiles = {}, {}
+	for z, layer in pairs( self.layers ) do
+		dense_tiles[ z ] = {}
+		for y, row in pairs( layer ) do
+			for x, tile in pairs( row ) do
+				if tile.contents or tile.aspects then
+					table.insert( tiles, tile )
+				else
+					local coords = dense_tiles[ tile._classname ]
+					if coords == nil then
+						coords = {}
+						dense_tiles[ tile._classname ] = coords
+					end
+					table.insert( coords, x )
+					table.insert( coords, y )
+					table.insert( coords, z )
+				end
+			end
+		end
+	end
+
+	local t =
+	{
+		_classname = self._classname,
+		owner = self.owner,
+		w = self.w,
+		h = self.h,
+		tiles = tiles,
+		dense_tiles = dense_tiles,
+	}
+
+	return t
+end
+
 
 

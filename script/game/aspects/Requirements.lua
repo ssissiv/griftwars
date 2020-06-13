@@ -29,6 +29,10 @@ function Requirements:IsSatisfied( actor )
 	for i, req in ipairs( self.reqs ) do
 		local ok, reason = req:IsSatisfied( actor )
 		if not ok then
+			if not reason then
+				return false -- No reason, total failure.
+			end
+
 			if reasons == nil then
 				reasons = {}
 			end

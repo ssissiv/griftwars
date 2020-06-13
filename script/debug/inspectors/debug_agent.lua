@@ -71,6 +71,15 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		if not puppet:IsAcquainted( self.agent ) and ui.Button( "Acquaint" ) then
 			puppet:Acquaint( self.agent )
 		end
+
+		ui.SameLine( 0, 10 )
+
+		local trust = self.agent:GetTrust( puppet )
+		local _, new_trust = ui.SliderInt( "Trust", trust, 0, 100 )
+		if new_trust and new_trust ~= trust then
+			local delta = new_trust - trust
+			self.agent:DeltaTrust( delta, puppet )
+		end
 	end
 
 	if ui.CollapsingHeader( "Verbs" ) then

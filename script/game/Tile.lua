@@ -47,6 +47,9 @@ end
 
 function Tile:RemoveEntity( obj )
 	table.arrayremove( self.contents, obj )
+	if #self.contents == 0 then
+		self.contents = nil
+	end
 end
 
 function Tile:HasEntity( obj )

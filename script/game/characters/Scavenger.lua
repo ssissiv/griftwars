@@ -93,7 +93,9 @@ function Scavenger:OnSpawn( world )
 	-- self:GainTrustedInteractions( interactions )
 	Aspect.Favour.GainFavours( self,
 	{
+		{ Favour.Acquaint(), 10 },
 		{ Favour.GainXP( 100 ), 20 },
+		{ Favour.BoostTrust( 20 ), 40 },
 	})
 end
 
@@ -104,4 +106,18 @@ function Scavenger:OnLocationEntityEvent( event_name, entity, ... )
 		end
 	end
 end
+
+function Scavenger:GetRelationshipAffinities()
+	if self.RELATIONSHIP_AFFINITIES == nil then
+		self.RELATIONSHIP_AFFINITIES =
+		{
+			AgentClassGenerator( Agent.Scavenger ), 5,
+			AgentClassGenerator( Agent.Snoop ), 2,
+			AgentClassGenerator( Agent.Citizen ), 1,
+		}
+	end
+
+	return self.RELATIONSHIP_AFFINITIES
+end
+
 

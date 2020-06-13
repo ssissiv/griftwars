@@ -39,10 +39,15 @@ function Favour:UseFavour( agent )
 end
 
 function Favour:RenderAgentDetails( ui, panel, viewer )
-	ui.Columns( 3 )
-	ui.Text( self:GetName() )	
+	local enabled, reasons = self.reqs:IsSatisfied( viewer )
+	if not enabled and not reasons then
+		return
+	end
 
-	local enabled = self.reqs:IsSatisfied( viewer )
+	ui.PushID( rawstring(self) )
+	ui.Columns( 3 )
+	ui.TextWrapped( self:GetName() )	
+
 	if enabled then
 		ui.PushStyleColor( "Button", 0, 0.8, 0, 1 )
 	else
@@ -64,6 +69,24 @@ function Favour:RenderAgentDetails( ui, panel, viewer )
 
 	ui.PopStyleColor()
 	ui.Columns( 1 )
+	ui.PopID()
+end
+
+------------------
+
+local Acquaint = class( "Favour.Acquaint", Favour )
+
+function Acquaint:GetName()
+	return "Get acquainted"
+end
+
+function Acquaint:OnSpawn( world )
+	Favour.OnSpawn( self, world )
+	self.reqs:AddReq( Req.NotAcquainted( self.owner ))
+end
+
+function Acquaint:OnUseFavour( agent )
+	self.owner:Acquaint( agent )
 end
 
 ------------------
@@ -79,6 +102,11 @@ function GainXP:GetName()
 	return loc.format( "Gain {1} XP", self.xp )
 end
 
+function GainXP:OnSpawn( world )
+	Favour.OnSpawn( self, world )
+	self.reqs:AddReq( Req.Acquainted( self.owner ))
+end
+
 function GainXP:OnUseFavour( agent )
 	Msg:Echo( agent, "{1.Id} shows you the ropes.", self.owner:LocTable( agent ))
 	agent:GainXP( self.xp )
@@ -86,6 +114,36 @@ function GainXP:OnUseFavour( agent )
 end
 
 ------------------
+
+local BoostTrust = class( "Favour.BoostTrust", Favour )
+
+function BoostTrust:init( trust )
+	Favour.init( self )
+	self.trust = trust
+end
+
+function BoostTrust:GetName()
+	return loc.format( "Gain {1} Trust with a {2}", self.trust, self.category:GetAgentClass()._classname )
+end
+
+function BoostTrust:OnSpawn( world )
+	Favour.OnSpawn( self, world )
+	self.reqs:AddReq( Req.Acquainted( self.owner ))
+	self.category = world:WeightedPick( self.owner:GetRelationshipAffinities() )
+end
+
+function BoostTrust:OnUseFavour( agent )
+	local other = self.category:GenerateAgent( self:GetWorld() )
+	other:DeltaTrust( self.trust, agent )
+
+	Msg:Speak( self.owner, "{1.name}'s a {1.udesc} friend of mine. Pay {1.himher} a visit.", other:LocTable( agent ))
+	if not agent:IsAcquainted( other ) then
+		agent:Acquaint( other )
+	end
+	Msg:Echo( agent, "You gain {1} trust with {2.desc}.", self.trust, other:LocTable( agent ))
+end
+
+
 
 
 

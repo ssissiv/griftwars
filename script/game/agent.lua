@@ -237,6 +237,10 @@ function Agent:GenerateLocTable( viewer )
 		unfamiliar_desc = loc.format( "{1} {2}", SPECIES_PROPS[ self.species ].name, self._classname )
 	end
 
+	t.udesc = unfamiliar_desc
+	t.Udesc = loc.cap( t.udesc )
+
+
 	if self.name == nil then
 		-- Things with no name are simply their unfamiliar description.
 		t.desc = unfamiliar_desc
@@ -285,6 +289,9 @@ function Agent:Acquaint( agent )
 
 	if affinity:GetAffinity() == AFFINITY.STRANGER then
 		affinity:SetAffinity( AFFINITY.KNOWN )
+
+		self:RegenerateLocTable( agent )
+		agent:RegenerateLocTable( self )
 
 		self:GainXP( 10 )
 
@@ -823,8 +830,8 @@ function Agent:GetAffinity( other )
 	end
 end
 
-function Agent:DeltaTrust( trust )
-	local other = self.world:GetPlayer()
+function Agent:DeltaTrust( trust, other )
+	other = other or self.world:GetPlayer()
 	local affinity = self.affinities and self.affinities[ other ]
 	if affinity == nil then
 		affinity = Relationship.Affinity( self, other )
@@ -834,7 +841,6 @@ function Agent:DeltaTrust( trust )
 	if affinity then
 		affinity:DeltaTrust( trust )
 		Msg:Echo( other, "{1.Id}'s trust with you increases! ({2%+d})", self:LocTable( other ), trust )
-
 	end
 end
 
