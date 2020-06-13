@@ -14,12 +14,8 @@ function Chest:GetName()
 	return "Chest"
 end
 
-function Chest:GenerateLoot( loot_table )
-	local fn = self.rng:WeightedPick( loot_table )
-	local items = { fn() }
-	for i, obj in ipairs( items ) do
-		self.inv:AddItem( obj )
-	end
+function Chest:SpawnLoot( loot_table )
+	loot_table:SpawnLoot( self.inv, self.rng )
 end
 
 function Chest:Open()

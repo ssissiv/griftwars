@@ -95,6 +95,7 @@ function Scavenger:OnSpawn( world )
 	{
 		{ Favour.Acquaint(), 10 },
 		{ Favour.GainXP( 100 ), 20 },
+		{ Favour.Gift( LOOT_GIFT_SCAVENGER ), 30 },
 		{ Favour.BoostTrust( 20 ), 40 },
 	})
 end

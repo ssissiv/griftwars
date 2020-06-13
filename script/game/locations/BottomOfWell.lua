@@ -19,7 +19,7 @@ function BottomOfWell:OnSpawn( world )
 	
 	local chest = Object.Chest()
 	chest:WarpToLocation( self )
-	chest:GenerateLoot( LOOT_JUNK_T3 )
+	chest:SpawnLoot( LOOT_JUNK_T3 )
 end
 
 function BottomOfWell:GenerateTileMap()

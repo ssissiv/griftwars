@@ -19,6 +19,7 @@ function Give:Interact( actor, receiver, item )
 
 		Msg:Echo( actor, "You give {1} to {2.Id}.", item, receiver:LocTable() )
 		Msg:Echo( receiver, "{1.Id} gives you {2}.", actor, item )
+		actor:GetInventory():TransferItem( item, receiver:GetInventory() )
 	end
 end
 
@@ -27,12 +28,13 @@ end
 
 local GiveAll = class( "Verb.GiveAll", Verb )
 
-function GiveAll:Interact( actor, receiver, item )
+function GiveAll:Interact( actor, receiver )
 	if actor:GetLocation() == receiver:GetLocation() then
 		Msg:ActToRoom( "{1.Id} gives some things to {2.Id}.", actor, receiver )
 		for i, item in actor:GetInventory():Items() do
-			Msg:Echo( actor, "You give {1} to {2.Id}.", item, receiver:LocTable() )
-			Msg:Echo( receiver, "{1.Id} gives you {2}.", actor, item )
+			Msg:Echo( actor, "You give {1} to {2.Id}.", item, receiver:LocTable( actor ) )
+			Msg:Echo( receiver, "{1.Desc} gives you {2}.", actor:LocTable( receiver ), item )
+			actor:GetInventory():TransferItem( item, receiver:GetInventory() )
 		end
 	end
 end

@@ -22,11 +22,7 @@ end
 
 function ScroungeTarget:GenerateLoot( inventory )
 	if self.loot_table then
-		local fn = self.owner:GetAspect( Aspect.Rng ):WeightedPick( self.loot_table )
-		local items = { fn() }
-		for i, obj in ipairs( items ) do
-			inventory:AddItem( obj )
-		end
+		self.loot_table:SpawnLoot( inventory, self:GetWorld().rng )
 	end
 	self.scrounge_count = (self.scrounge_count or 0) + 1
 end

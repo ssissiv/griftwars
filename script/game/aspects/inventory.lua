@@ -66,6 +66,12 @@ function Inventory:AddItem( item )
 	end
 end
 
+function Inventory:AddItems( items )
+	for i, item in ipairs( items ) do
+		self:AddItem( item )
+	end
+end
+
 function Inventory:RemoveItem( item )
 	assert( self.slots == nil or not table.find( self.slots, item ), "Object not deallocated from slot" )
 

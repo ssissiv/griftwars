@@ -38,9 +38,9 @@ function Affinity:SetAffinity( affinity )
 	assert( IsEnum( affinity, AFFINITY ))
 	self.affinity = affinity
 
-	if affinity ~= AFFINITY.FRIEND then
-		self.trust = 0
-	end
+	-- if affinity ~= AFFINITY.FRIEND then
+	-- 	self.trust = 0
+	-- end
 
 	if (self.first:IsPuppet() or self.second:IsPuppet()) and affinity ~= AFFINITY.STRANGER then
 		self.world.nexus:ShowAffinityChanged( self )

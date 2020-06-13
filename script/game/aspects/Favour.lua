@@ -145,5 +145,31 @@ end
 
 
 
+------------------
+
+local Gift = class( "Favour.Gift", Favour )
+
+function Gift:init( loot_table )
+	Favour.init( self )
+	self.loot_table = loot_table
+end
+
+function Gift:GetName()
+	return loc.format( "Receive a gift ({1})", self.loot_table.name )
+end
+
+function Gift:OnSpawn( world )
+	Favour.OnSpawn( self, world )
+	self.reqs:AddReq( Req.Acquainted( self.owner ))
+	self.gifts = self.loot_table:GenerateLoot( world.rng )
+end
+
+function Gift:OnUseFavour( agent )
+	self.owner:GetInventory():AddItems( self.gifts )
+	self.owner:DoVerbAsync( Verb.GiveAll(), agent )
+end
+
+
+
 
 
