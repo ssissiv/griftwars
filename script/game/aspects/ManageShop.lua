@@ -67,10 +67,20 @@ function ManageShop:IsAssistant( agent )
 	return false
 end
 
+function ManageShop:IsCustomer( agent )
+	if self:IsAssistant( agent ) then
+		return false
+	end
+	if agent:IsEnemy( self.owner ) then
+		return false
+	end
+	return true
+end
+
 function ManageShop:OnLocationEvent( event_name, location, ... )
 	if event_name == LOCATION_EVENT.AGENT_ADDED and location == self.owner:GetLocation() and location == self.shop then
 		local agent = ...
-		if not self:IsAssistant( agent ) then
+		if self:IsCustomer( agent ) then
 			if agent:Acquaint( self.owner ) then
 				Msg:Speak( self.owner, "Welcome, welcome! I'm {1.Id}.", self.owner:LocTable( agent ) )
 			else
