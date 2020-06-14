@@ -1,6 +1,7 @@
 
 local Befriend = class( "Verb.Befriend", Verb )
 
+Befriend.INTENT_FLAGS = INTENT.DIPLOMACY
 Befriend.can_repeat = true -- This interaction can take place multiple times.
 
 function Befriend:GetRoomDesc( viewer )

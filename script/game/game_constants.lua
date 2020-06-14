@@ -72,6 +72,13 @@ GENERATION, GENERATION_ARRAY = MakeEnum
 	"ELDER",
 }
 
+INTENT, INTENT_ARRAY = MakeBitField
+{
+	"HOSTILE",
+	"STEALTH",
+	"DIPLOMACY",
+}
+
 PRIVACY = MakeBitField
 {
 	"ID", -- Name, status, basic stats.

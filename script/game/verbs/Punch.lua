@@ -1,6 +1,7 @@
 local Punch = class( "Attack.Punch", Verb )
 
 Punch.DC = 5
+Punch.INTENT_FLAGS = INTENT.HOSTILE
 
 function Punch:init( target )
 	Verb.init( self, nil, target )

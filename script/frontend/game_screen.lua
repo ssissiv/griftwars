@@ -119,12 +119,16 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 		-- if not self.lock_focus then
 		-- 	self:SetCurrentFocus( nil )
 		-- else
-			local verb_window = self:FindWindow( VerbMenu )
-			if verb_window then
-				verb_window:RefreshContents( self.puppet, self.current_focus )
+			if self.verb_window then
+				self.verb_window:RefreshContents( self.puppet, self.current_focus )
 			end
 		-- end
 		self:PanToCurrentInterest()
+
+	elseif event_name == AGENT_EVENT.INTENT_CHANGED then
+		if self.verb_window then
+			self.verb_window:RefreshContents( self.puppet, self.current_focus )
+		end
 
 	elseif event_name == AGENT_EVENT.DIED then
 		self:SetCurrentFocus( nil )
@@ -169,6 +173,29 @@ function GameScreen:RenderScreen( gui )
     		self:ClearMessage()
     	end
     end
+
+    -- Intent buttons.
+    if puppet:IsPlayer() then
+    	local player = puppet:GetAspect( Aspect.Player )
+	    for i, bitname in pairs( INTENT_ARRAY ) do
+	    	local bits = player:GetIntent()
+	    	if CheckBits( bits, INTENT[ bitname ] ) then
+	    		ui.PushStyleColor( "Button", 1, 0, 0, 1 )
+	    	end
+
+	    	if i > 1 then
+	    		ui.SameLine( 0, 10 )
+	    	end
+	    	if ui.Button( tostring(bitname) ) then
+	    		player:SetIntent( ToggleBits( bits, INTENT[ bitname ] ))
+	    	end
+
+	    	if CheckBits( bits, INTENT[ bitname ] ) then
+	    		ui.PopStyleColor()
+	    	end
+	    end
+	end
+
 
     -- Render what the player is doing...
     for i, verb in puppet:Verbs() do

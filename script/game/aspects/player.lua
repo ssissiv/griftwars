@@ -3,6 +3,22 @@
 
 local Player = class( "Aspect.Player", Aspect )
 
+function Player:init()
+	self.intent = INTENT.DIPLOMACY
+end
+
+function Player:GetIntent()
+	return self.intent
+end
+
+function Player:SetIntent( intent )
+	if intent ~= self.intent then
+		assert(type(intent) == "number")
+		self.intent = intent
+		self.owner:BroadcastEvent( AGENT_EVENT.INTENT_CHANGED, intent )
+	end
+end
+
 function Player:CollectVerbs( verbs, actor, obj )
 	if self.owner == actor and obj == actor then
 		verbs:AddVerb( Verb.Wait())

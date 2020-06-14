@@ -72,6 +72,13 @@ function VerbContainer:SetDirty()
 end
 
 function VerbContainer:AddVerb( v )
+	if v.INTENT_FLAGS then
+		local player = self.actor:GetAspect( Aspect.Player )
+		if player and not CheckBits( player:GetIntent(), v.INTENT_FLAGS ) then
+			return
+		end
+	end
+
 	table.insert( self.verbs, v )
 	v.actor = self.actor
 end

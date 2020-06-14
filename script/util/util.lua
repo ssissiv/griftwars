@@ -4,7 +4,7 @@ require "util/table"
 require "util/random"
 require "util/saveload"
 require "util/AStarSearcher"
-bit = require "bit"
+bit32 = require "bit"
 Easing = require "util/easing"
 Serpent = require "util/serpent"
 
@@ -339,15 +339,32 @@ function IsEnum( val, enum )
 end
 
 function MakeBitField(args)
-    local bitfield = { NONE = 0 }
+    local bitfield = { NONE = 0, ANY = 0, ALL = 0 }
     for k,v in ipairs(args) do
         assert(type(v) == "string", "Bitfields come from strings")
         assert(bitfield[v] == nil)
-        bitfield[v] = 2^(k-1)
+        local n = math.floor(2^(k-1)) -- floor so we are dealing with proper Integers
+        bitfield[v] = n
+        bitfield.ANY = bit32.bor( bitfield.ANY, n )
+        bitfield.ALL = bit32.bor( bitfield.ALL, n )
     end
-    bitfield.ALL = 0xFFFFFFFF
-    
-    return bitfield
+    setmetatable( bitfield, _ENUM_META )
+    return bitfield, args
+end
+
+function StringizeBitField( bits, strings, sep )
+    local str = {}
+    for i, v in ipairs( strings ) do
+        local flag = 2^(i - 1) -- 1 << (i - 1)
+        if bit32.band( bits, flag ) == flag then
+            table.insert( str, v )
+        end
+    end
+    if #str == 0 then
+        return "NO-BITS"
+    else
+        return table.concat( str, sep or " " )
+    end
 end
 
 function Colour4( t, alpha )
@@ -367,7 +384,7 @@ function MakeHexColour(r, g, b, a)
     g = clamp( math.floor( g*255 ), 0, 255 )
     b = clamp( math.floor( b*255 ), 0, 255 )
     a = clamp( math.floor( (a or 1)*255 ), 0, 255 )
-    return bit.bor( bit.lshift( r, 24 ), bit.lshift( g, 16 ), bit.lshift( b, 8 ), a )
+    return bit32.bor( bit32.lshift( r, 24 ), bit32.lshift( g, 16 ), bit32.lshift( b, 8 ), a )
 end
 
 function HexColour255(val)
@@ -401,6 +418,10 @@ end
 
 function CheckBits( bits, flags )
     return bit32.band( bits, flags ) == flags
+end
+
+function ToggleBits( bits, flags )
+    return bit32.bxor( bits, flags )
 end
 
 function ClearBits( bits, flags )

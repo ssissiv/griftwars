@@ -1,5 +1,7 @@
 local Follow = class( "Verb.Follow", Verb )
 
+Follow.INTENT_FLAGS = INTENT.STEALTH
+
 function Follow:init( other, approach_dist )
 	Verb.init( self, nil, other )
 	self.approach_dist = approach_dist
