@@ -1,6 +1,7 @@
 local MapScreen = class( "MapScreen", RenderScreen )
 
-function MapScreen:init( world, viewer, location )
+function MapScreen:init( world, viewer )
+	assert( is_instance( viewer, Agent ))
 	RenderScreen.init( self )
 	self.world = world
 	self.viewer = viewer
@@ -13,16 +14,35 @@ function MapScreen:init( world, viewer, location )
 	self.camera:ZoomToLevel( self.zoom_level )
 
 	self.locations = {}
-	self.location = location
-	self.current_location = location
+	self.markers = {}
+
+	self:GenerateMapMarkers()
+end
+
+function MapScreen:GenerateMapMarkers()
+	table.clear( self.markers )
+
+	table.insert( self.markers, self.viewer )
+
+	for i, v in self.viewer:Relationships() do
+		for k, agent in v:Agents() do
+			if agent ~= self.viewer then
+				table.insert( self.markers, agent )
+			end
+		end
+	end
+
+	if not table.contains( self.markers, self.current_marker ) then
+		self:SetCurrentMarker( self.markers[1] )
+	end
 
 	self:ResetCamera()
 end
 
-function MapScreen:SetLocation( location )
-	self.location = location
-	self.current_location = location
-	self:ResetCamera()
+function MapScreen:SetCurrentMarker( marker )
+	self.current_marker = marker
+	self.location = self.current_marker:GetLocation()
+	self.current_location = self.location
 end
 
 function MapScreen:ResetCamera()
@@ -43,7 +63,12 @@ function MapScreen:UpdateScreen( dt )
 		self.hovered_tile = nil
 	else
 		local mx, my = love.mouse.getPosition()
-		self.hovered_tile = self:ScreenToTile( mx, my )
+		local tile = self:ScreenToTile( mx, my )
+		if tile and tile:IsDiscovered( self.viewer ) then
+			self.hovered_tile = tile
+		else
+			self.hovered_tile = nil
+		end
 
 		-- Calculate hover tile coordinates
 		local wx, wy = self.camera:ScreenToWorld( mx, my )
@@ -75,8 +100,7 @@ function MapScreen:RenderHeader( gui )
 
     ui.Separator()
 
-    local mx, my = love.mouse.getPosition()
-    ui.Text( loc.format( "{1}, {2}", self:ScreenToCell( mx, my ) ))
+    UIHelpers.RenderSelectedEntity( ui, self, self.current_marker, self.viewer )
 
     ui.Text( "Levels:" )
     ui.Indent( 20 )
@@ -91,6 +115,7 @@ function MapScreen:RenderHeader( gui )
     	end
 	    ui.Text( loc.format( "{1} (Layer: {2})", self.location:GetTitle(), z ))
 
+	    -- Show any connected locations that lead to different depths.
 	    for i, portal in self.location:Portals() do
 	    	local dest = portal:GetDest()
 	    	if dest then
@@ -100,7 +125,7 @@ function MapScreen:RenderHeader( gui )
 			    		ui.Text( ">>" )
 			    		ui.SameLine( 0, 5 )
 			    	end
-		    		ui.Text( loc.format( "{1} (Layer: {2})", dest, z ))
+		    		ui.Text( loc.format( "{1} (Layer: {2})", dest, z1 ))
 			    	table.insert( self.locations, dest )
 		    	end
 	    	end
@@ -108,10 +133,26 @@ function MapScreen:RenderHeader( gui )
 	end
     ui.Unindent( 20 )
 
-    if self.hovered_tile then
-    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile))
-    end
+    ui.Separator()
+    for i, marker in ipairs( self.markers ) do
+    	ui.PushID( tostring(marker) )
+    	local hilite = self.current_marker == marker
+    	if hilite then
+    		ui.PushStyleColor( "Button", 0, 0.2, 0, 1 )
+    	end
 
+    	if i > 1 then
+    		ui.SameLine( 0, 10 )
+    	end
+    	if ui.Button( tostring(marker) ) then
+    		self:SetCurrentMarker( marker )
+    	end
+
+    	if hilite then
+    		ui.PopStyleColor()
+    	end
+    	ui.PopID()
+    end
     ui.End()
 end
 
@@ -274,6 +315,7 @@ function MapScreen:KeyPressed( key )
 		local idx = table.arrayfind( self.locations, self.current_location)
 		idx = (idx % #self.locations) + 1
 		self.current_location = self.locations[ idx ]
+		self:ResetCamera()
 
 	elseif key == "=" then
 		self.zoom_level = math.min( (self.zoom_level + 1), 3 )

@@ -24,35 +24,7 @@ function VerbMenu:IsEmpty()
 end
 
 function VerbMenu:RenderSelectedEntity( ui, screen, ent )
-    assert( ent.GetShortDesc, tostring(ent))
-    ui.TextWrapped( tostring(ent:GetShortDesc( self.actor )))
-
-    local behaviour = ent:GetAspect( Aspect.Behaviour )
-    if behaviour then
-        local verb = behaviour:GetHighestPriorityVerb()
-        if verb then
-            ui.SameLine( 0, 10 )
-            ui.Text( " - " .. verb:GetDesc( self.actor ))
-        end
-    end
-
-    ui.SameLine( 0, 10 )
-    if ui.SmallButton( "?" ) then
-        self.world.nexus:Inspect( self.actor, ent )
-    end
-
-    -- If has trust, show it.
-    if is_instance( ent, Agent ) then
-        local aff = ent:GetAffinities()[ self.actor ]
-        if aff and (aff:GetTrust() > 0 or aff:GetAffinity() ~= AFFINITY.STRANGER) then
-            ui.TextColored( 1, 1, 0, 1, "*" )
-            ui.SameLine( 0, 10 )
-            ui.Text( tostring(aff:GetAffinity() ))
-            ui.SameLine( 0, 20 )
-            ui.Text( loc.format( "Trust: {1}", aff:GetTrust() ))
-        end
-    end
-    ui.Separator()
+    UIHelpers.RenderSelectedEntity( ui, screen, ent, self.actor )
 end
 
 function VerbMenu:RenderImGuiWindow( ui, screen )

@@ -59,6 +59,7 @@ function Zone:GenerateZone()
 	else
 		local class = self:RandomLocationClass()
 		self.origin = class( self )
+		-- print( self, "origin:", self.origin, rawstring(self.origin) )
 		self:SpawnLocation( self.origin, depth )
 	end
 

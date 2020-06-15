@@ -112,7 +112,7 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 		self:PanToCurrentInterest()
 		local screen = GetGUI():FindScreen( MapScreen )
 		if screen then
-			screen:SetLocation( location )
+			screen:GenerateMapMarkers()
 		end
 
 	elseif event_name == ENTITY_EVENT.TILE_CHANGED then
@@ -897,7 +897,7 @@ function GameScreen:KeyPressed( key )
 		end
 
 	elseif key == "m" then
-		local screen = MapScreen( self.world, self.puppet, self.last_location )
+		local screen = MapScreen( self.world, self.puppet )
 		GetGUI():AddScreen( screen )
 
 	elseif key == "left" or key == "a" then

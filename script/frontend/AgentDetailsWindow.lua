@@ -24,11 +24,11 @@ end
 
 function AgentDetailsWindow:RenderAspects( txt, ui, screen, class )
 	if self.agent:HasAspect( class ) then
+		ui.Bullet()
 		ui.Text( txt )
 		ui.Indent( 20 )
 		for i, aspect in self.agent:Aspects() do
 			if is_instance( aspect, class ) then
-				ui.Bullet()
 				aspect:RenderAgentDetails( ui, screen, self.viewer )
 			end
 		end

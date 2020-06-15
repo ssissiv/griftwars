@@ -71,6 +71,7 @@ function Location:GetZone()
 	return self.zone
 end
 
+-- How many locations from the origin Location (Location that generated this zone)
 function Location:GetLocationDepth()
 	return self.location_depth
 end

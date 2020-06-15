@@ -41,6 +41,7 @@ require "frontend/MemoryWindow"
 require "frontend/ChallengeWindow"
 require "frontend/ChoiceWindow"
 require "frontend/VerbMenu"
+require "frontend/UIHelpers"
 
 require "camera"
 bit32 = require "bit"
