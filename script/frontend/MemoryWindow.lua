@@ -18,34 +18,39 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
     	local count = 0
 		for i, engram in self.agent:GetMemory():Engrams() do
 			ui.PushID( rawstring(engram) )
-			ui.Bullet()
-			engram:RenderImGuiWindow( ui, screen, self.agent )
+
+			local desc = engram:GetDesc()
+			if ui.TreeNode( tostring(desc) ) then
+				if engram.RenderImGuiWindow then
+					engram:RenderImGuiWindow( ui, screen, self.agent )
+				end
+
+				ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
+				for i, action in ipairs( engram.ACTIONS or table.empty ) do
+					ui.PushID( rawstring(action) )
+					if i > 1 then
+						ui.SameLine( 0, 10 )
+					end
+					if ui.Button( action.name ) then
+						print( action, rawstring(engram) )
+						print( action.verb( engram, self.agent ))
+					end
+					ui.PopID()
+				end
+
+				local duration = engram:GetDuration()
+				if duration then
+					local time_left = duration - engram:GetAge( self.agent )
+					ui.Text( loc.format( "Expires in: {1}", Calendar.FormatDuration( time_left )))
+				end
+				ui.TreePop()
+			end
+			ui.PopID()
+
 			ui.SameLine( 0, 10 )
 			if ui.SmallButton( "?" ) then
 				DBG( engram )
 			end
-			ui.Indent( 20 )
-			ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
-			for i, action in ipairs( engram.ACTIONS or table.empty ) do
-				ui.PushID( rawstring(action) )
-				if i > 1 then
-					ui.SameLine( 0, 10 )
-				end
-				if ui.Button( action.name ) then
-					print( action, rawstring(engram) )
-					print( action.verb( engram, self.agent ))
-				end
-				ui.PopID()
-			end
-
-			local duration = engram:GetDuration()
-			if duration then
-				local time_left = duration - engram:GetAge( self.agent )
-				ui.Text( loc.format( "Expires in: {1}", Calendar.FormatDuration( time_left )))
-			end
-
-			ui.Unindent( 20 )
-			ui.PopID()
 			count = count + 1
 		end
 		if count == 0 then

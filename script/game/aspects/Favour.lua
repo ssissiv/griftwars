@@ -171,5 +171,19 @@ end
 
 
 
+------------------
+
+local LearnIntel = class( "Favour.LearnIntel", Favour )
+
+function LearnIntel:GetName()
+	return loc.format( "Learn some intel ({1})", self.loot_table.name )
+end
+
+function LearnIntel:OnUseFavour( agent )
+	-- Search intel
+	
+	-- Gain Engram.
+end
+
 
 
