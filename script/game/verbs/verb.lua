@@ -267,7 +267,7 @@ function Verb:AttachActor( actor )
 end
 
 
-function Verb:DoVerb( actor, obj, ... )
+function Verb:DoVerb( actor, ... )
 	local ok, reason = self:CanDo( actor, ... )
 	if not ok then
 		return false, reason
@@ -276,7 +276,6 @@ function Verb:DoVerb( actor, obj, ... )
 	self:AttachActor( actor )
 
 	self.actor = actor
-	self.obj = obj
 	self.world = actor.world
 	self.cancelled = nil
 	self.coro = coroutine.running()
