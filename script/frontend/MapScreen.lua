@@ -63,12 +63,7 @@ function MapScreen:UpdateScreen( dt )
 		self.hovered_tile = nil
 	else
 		local mx, my = love.mouse.getPosition()
-		local tile = self:ScreenToTile( mx, my )
-		if tile and tile:IsDiscovered( self.viewer ) then
-			self.hovered_tile = tile
-		else
-			self.hovered_tile = nil
-		end
+		self.hovered_tile = self:ScreenToTile( mx, my )
 
 		-- Calculate hover tile coordinates
 		local wx, wy = self.camera:ScreenToWorld( mx, my )
@@ -185,19 +180,23 @@ function MapScreen:RenderHoveredLocation( gui )
 	ui.SetNextWindowPos( mx + 20, my, 0 )
 
     if ui.Begin( "LOCATION", true, flags ) then
-    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
-    	ui.Separator()
-    	for i, obj in self.hovered_tile:Contents() do
-    		local portal = obj:GetAspect( Aspect.Portal )
-    		if portal and portal:GetExitFromTag() then
-    			-- dont show
-    		else
-	    		local txt = obj:GetShortDesc( self.viewer )
-	    		if txt then
-		    		ui.Text( txt )
-		    	end
-		    end
-    	end
+		if self.hovered_tile:IsDiscovered( self.viewer ) then
+	    	ui.TextColored( 0, 255, 255, 255, tostring(self.hovered_tile ))
+	    	ui.Separator()
+	    	for i, obj in self.hovered_tile:Contents() do
+	    		local portal = obj:GetAspect( Aspect.Portal )
+	    		if portal and portal:GetExitFromTag() then
+	    			-- dont show
+	    		else
+		    		local txt = obj:GetShortDesc( self.viewer )
+		    		if txt then
+			    		ui.Text( txt )
+			    	end
+			    end
+	    	end
+	    else
+	    	ui.Text( "Unknown Location" )
+	    end
     end
 
     ui.End()

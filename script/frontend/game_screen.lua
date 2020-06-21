@@ -40,18 +40,18 @@ end
 function GameScreen:SaveWorld( filename )
 	assert( filename )
 	SerializeToFile( self.world, filename )
-	print( "Saved to", filename )
 	self:PostMessage( "Saved!", constants.colours.GREEN )
 end
 
 function GameScreen:LoadWorld( filename )
 	assert( filename )
-	print( "Loading from ", filename )
+	self:PostMessage( loc.format( "Loading from {1}", filename ), constants.colours.GREEN )
 	local world = DeserializeFromFile( filename )
 	GetGUI():AddScreen( GameScreen( world ))
 end
 
 function GameScreen:PostMessage( msg, color )
+	print( msg )
 	self.post_msg = msg
 	self.post_color = color or constants.colours.WHITE
 	self.post_time = love.timer.getTime()
