@@ -306,6 +306,14 @@ function Location:FindPortalTo( dest )
 	end
 end
 
+function Location:FindPortalWithTag( tag )
+	for i, portal in ipairs( self.portals ) do
+		if portal:HasWorldGenTag( tag ) and portal:GetDest() then
+			return portal
+		end
+	end
+end
+
 function Location:GetBoundaryPortal( exit )
 	for i, portal in ipairs( self.portals ) do
 		if portal:HasWorldGenTag( "boundary" ) and (exit == nil or portal:HasWorldGenTag( EXIT_TAG[ exit ] )) then
@@ -456,11 +464,6 @@ function Location:GenerateTileMap()
 
 	return self.map
 end
-
-function Location:FindPortalTiles()
-	return self.map:FindTiles( function( tile ) return tile:HasAspect( Aspect.Portal ) end )
-end
-
 
 function Location:PlaceEntity( obj )
 	local x, y = obj:GetCoordinate()

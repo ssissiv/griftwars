@@ -30,6 +30,7 @@ CALC_EVENT = MakeEnum{
 	"DAMAGE",
 	"STAT",
 	"DC",
+	"COLLECT_INTEL",
 }
 
 LOCATION_EVENT = MakeEnum{

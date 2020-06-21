@@ -33,3 +33,8 @@ function ScalarCalculator:SetValue( value, source )
 	self.value = value
 	self:AddSource( loc.format( "={1}: {2}", value, source ))
 end
+
+function ScalarCalculator:AppendValue( value, source )
+	table.insert( self.value, value )
+	self:AddSource( loc.format( "+{1}: {2}", value, source ))
+end

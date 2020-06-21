@@ -53,7 +53,7 @@ function Scrounge:GetDesc()
 end
 
 function Scrounge:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.owner ) then
+	if viewer:CanSee( self.actor ) then
 		ui.Bullet()
 		ui.Text( "Busy scrounging" )
 	end

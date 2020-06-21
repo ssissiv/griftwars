@@ -20,6 +20,13 @@ function Cave:OnSpawn( world )
 	local chest = Object.Chest()
 	chest:WarpToLocation( self )
 	chest:SpawnLoot( LOOT_JUNK_T3 )
+
+	world:ListenForEvent( CALC_EVENT.COLLECT_INTEL, self, self.OnCollectIntel )
+end
+
+function Cave:OnCollectIntel( event_name, world, acc )
+	local exit = self:FindPortalWithTag( "exit" )
+	acc:AppendValue( Engram.Discovered( exit:GetDest() ))
 end
 
 function Cave:GenerateTileMap()

@@ -21,6 +21,7 @@ function World:init()
 	self.history = self:GainAspect( Aspect.History() )
 	self.history:SaveToFile( "log.txt" )
 	self.map = self:GainAspect( Aspect.TileMap() )
+	self.acc = self:GainAspect( Aspect.ScalarCalculator() )
 
 	self.names = self:GainAspect( Aspect.NamePool( "data/names.txt" ))
 	self.adjectives = self:GainAspect( Aspect.NamePool( "data/adjectives.txt" ))
@@ -63,6 +64,12 @@ end
 
 function World:UnregisterStatValue( stat )
 	table.arrayremove( self.stats, stat )
+end
+
+function World:CollectIntel()
+	local intels = {}
+	self.acc:CalculateValue( CALC_EVENT.COLLECT_INTEL, intels )
+	return intels
 end
 
 function World:GetLimbo()

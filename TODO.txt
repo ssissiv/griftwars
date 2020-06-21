@@ -2,6 +2,10 @@ TODO
 ====
 
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?
+Show verbs of Agents when inspecting.
+ * Immediate (attacking, moving)
+ * Task (trying to kill you, traveling home)
+ * Goal (defending the city, looking for a magic necklace)
 
 No-Travel zones for agents
 Homes?

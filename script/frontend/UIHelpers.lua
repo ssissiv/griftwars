@@ -4,18 +4,25 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
     assert( ent.GetShortDesc, tostring(ent))
     ui.TextWrapped( tostring(ent:GetShortDesc( viewer )))
 
-    local behaviour = ent:GetAspect( Aspect.Behaviour )
-    if behaviour then
-        local verb = behaviour:GetHighestPriorityVerb()
-        if verb then
-            ui.SameLine( 0, 10 )
-            ui.Text( " - " .. verb:GetDesc( viewer ))
-        end
-    end
-
     ui.SameLine( 0, 10 )
     if ui.SmallButton( "?" ) then
         viewer.world.nexus:Inspect( viewer, ent )
+    end
+
+    if ent.Verbs then
+        -- local behaviour = ent:GetAspect( Aspect.Behaviour )
+        -- if behaviour then
+        --     local verb = behaviour:GetHighestPriorityVerb()
+        --     if verb then
+        --         ui.SameLine( 0, 10 )
+        --         ui.Text( " - " .. verb:GetDesc( viewer ))
+        --     end
+        -- end
+        for i, verb in ent:Verbs() do
+            if verb.RenderAgentDetails then
+                verb:RenderAgentDetails( ui, screen, viewer )
+            end
+        end
     end
 
     -- If has trust, show it.

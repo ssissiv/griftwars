@@ -176,13 +176,16 @@ end
 local LearnIntel = class( "Favour.LearnIntel", Favour )
 
 function LearnIntel:GetName()
-	return loc.format( "Learn some intel ({1})", self.loot_table.name )
+	return loc.format( "Learn some intel" )
 end
 
 function LearnIntel:OnUseFavour( agent )
 	-- Search intel
-	
+	local intels = agent.world:CollectIntel()
 	-- Gain Engram.
+	local engram = table.arraypick( intels )
+	Msg:Echo( agent, "Learned: {1}", engram:GetDesc() )
+	agent:GetMemory():AddEngram( engram )
 end
 
 

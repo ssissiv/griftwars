@@ -204,7 +204,7 @@ function TilePathFinder:RenderDebugPanel( ui, panel )
 	ui.Text( loc.format( "Path: {1}", self.path and #self.path ))
 
 	local game = GetGUI():FindScreen( GameScreen )
-	if game then
+	if game and self.astar.start_node and self.astar.end_node then
 		local x0, y0 = self.astar.start_node:GetCoordinate()
 		local xt, yt = self.astar.end_node:GetCoordinate()
 		local max_dist = distance( x0, y0, xt, yt )
