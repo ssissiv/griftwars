@@ -3,7 +3,7 @@ local LootTable = class( "LootTable" )
 
 function LootTable:GenerateLoot( rng )
 	local fn = rng:WeightedPick( self.loot )
-	local items = { fn( rng or world.rng ) }
+	local items = { fn( rng ) }
 	return items
 end
 
@@ -23,7 +23,7 @@ JunkT1.name = "JUNK_T1"
 JunkT1.loot =
 {
 	function( rng )
-		return Object.Creds( rng( 1, 3 ))
+		return Object.Creds( rng:Random( 1, 3 ))
 	end, 1,
 	function()
 		return Object.Jerky()
@@ -37,10 +37,10 @@ JunkT2.name = "JUNK_T2"
 JunkT2.loot =
 {
 	function( rng )
-		return Object.Creds( rng( 1, 3 ))
+		return Object.Creds( rng:Random( 1, 3 ))
 	end, 1,
 	function( rng )
-		return Object.Creds( rng( 3, 5 ))
+		return Object.Creds( rng:Random( 3, 5 ))
 	end, 1,
 	function()
 		return Object.Jerky()
@@ -54,10 +54,10 @@ JunkT3.name = "JUNK_T3"
 JunkT3.loot =
 {
 	function( rng )
-		return Object.Creds( rng( 2, 4 ))
+		return Object.Creds( rng:Random( 2, 4 ))
 	end, 1,
 	function( rng )
-		return Object.Creds( rng( 6, 8 ))
+		return Object.Creds( rng:Random( 6, 8 ))
 	end, 1,
 	function()
 		return Object.Jerky(), Object.Jerky()

@@ -24,7 +24,7 @@ function Memory:OnSpawn( world )
 		engram:StampTime( self.owner )
 	end
 
-	self:SchedulePeriodicFunction( ONE_HOUR, self.RefreshEngrams )
+	self:SchedulePeriodicFunction( ONE_DAY, self.RefreshEngrams )
 end
 
 function Memory:RefreshEngrams()

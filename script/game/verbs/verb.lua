@@ -223,11 +223,11 @@ function Verb:CanInteract( actor, target )
 	end
 
 	target = target or self.obj
-	if target then
+	if is_instance( target, Agent ) then
 		if not target:IsSpawned() then
 			return false, "Despawned target"
 		end
-		if is_instance( target, Agent ) and target:IsDead() then
+		if target:IsDead() then
 			return false, "Dead target"
 		end
 	end
@@ -267,7 +267,7 @@ function Verb:AttachActor( actor )
 end
 
 
-function Verb:DoVerb( actor, ... )
+function Verb:DoVerb( actor, obj, ... )
 	local ok, reason = self:CanDo( actor, ... )
 	if not ok then
 		return false, reason
@@ -276,6 +276,7 @@ function Verb:DoVerb( actor, ... )
 	self:AttachActor( actor )
 
 	self.actor = actor
+	self.obj = obj
 	self.world = actor.world
 	self.cancelled = nil
 	self.coro = coroutine.running()

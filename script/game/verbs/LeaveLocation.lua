@@ -39,6 +39,17 @@ function LeaveLocation:GetShortDesc( viewer )
 	end
 end
 
+function LeaveLocation:RenderAgentDetails( ui, screen, viewer )
+	ui.Bullet()
+	if is_instance( self.obj, Location ) then
+		ui.Text( loc.format( "Leaving to {1}", self.obj:GetTitle() ))
+	elseif is_instance( self.obj, Aspect.Portal ) then
+		ui.Text( loc.format( "Leaving to {1}", self.obj:GetDest():GetTitle() ))
+	else
+		ui.Text( "Leave somewhere" )
+	end
+end
+
 function LeaveLocation:GetDesc()
 	if is_instance( self.obj, Location ) then
 		return loc.format( "Leave to {1}", self.obj:GetTitle() )

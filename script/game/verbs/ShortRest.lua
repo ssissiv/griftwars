@@ -23,7 +23,7 @@ function ShortRest:GetShortDesc( viewer )
 end
 
 function ShortRest:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.owner ) then
+	if viewer:CanSee( self.actor ) then
 		ui.Bullet()
 		ui.Text( "Resting" )
 	end

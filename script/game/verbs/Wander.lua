@@ -4,6 +4,11 @@ function Wander:GetDesc()
 	return "Wander"
 end
 
+function Wander:RenderAgentDetails( ui, screen, viewer )
+	ui.Bullet()
+	ui.Text( "Idling (wandering)" )
+end
+
 function Wander:Interact( actor, target, duration )
 	-- Idling.
 	local time = self.world:GetDateTime() + (duration or 0)

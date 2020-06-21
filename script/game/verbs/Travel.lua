@@ -31,7 +31,7 @@ function Travel:GetDesc()
 end
 
 function Travel:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.owner ) then
+	if viewer:CanSee( self.actor ) then
 		ui.Bullet()
 		ui.Text( loc.format( "Traveling to {1}", tostring(self.obj) ))
 	end

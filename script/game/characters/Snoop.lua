@@ -5,6 +5,7 @@ function FindInformation:init()
 	FindInformation._base.init( self )
 	self.travel = self:AddChildVerb( Verb.Travel())
 	self.idle = self:AddChildVerb( Verb.Idle() )
+	self.wander = self:AddChildVerb( Verb.Wander() )
 end
 
 function FindInformation:RenderAgentDetails( ui, screen, viewer )
@@ -31,8 +32,12 @@ function FindInformation:Interact( actor )
 		self.travel:DoVerb( actor, dest )
 	end
 
-	Msg:Speak( actor, "Psst. Hear anything interesting?" )
-	self.idle:DoVerb( actor )
+	if actor:GetLocation() and actor:GetLocation():HasAspect( Feature.Tavern ) then
+		Msg:Speak( actor, "Psst. Hear anything interesting?" )
+		self.idle:DoVerb( actor )
+	else
+		self.wander:DoVerb( actor )
+	end
 end
 
 
