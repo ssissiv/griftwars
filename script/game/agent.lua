@@ -894,9 +894,15 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	if self:IsDead() then
 		clr = constants.colours.BLACK
 	end
-	love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
-	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
-	love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
+
+	if self.image then
+		screen:SetColour( clr or 0xFFFFFFFF )
+		screen:Image( self.image, x1, y1, x2 - x1, y2 - y1 )
+	else
+		love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
+		local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
+		love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
+	end
 
 	-- Show as a target in combat
 	local combat = self:GetAspect( Aspect.Combat )

@@ -16,20 +16,15 @@ local assets =
 		ENEMY = "unliked.png",
 	},
 
-	LOCATION_BGS =
-	{
-		HOME = "home.png",
-		INSIDE = "inside.png",
-		SHOP = "shop.png",
-		JUNKYARD_STRIP = "junkyard_strip.png",
-		HALLWAY = "inside.png",
-		FOREST = "forest.png",
-	},
-
 	IMG =
 	{
 		ZZZ = "sleeping.png",
 		UNKNOWN_LOCATION = "unknown_location.png",
+	},
+
+	ATLASES =
+	{
+		NEVANDA = "nevanda.png",
 	},
 
 	TILE_IMG =
@@ -48,27 +43,41 @@ local assets =
 		CHEST = "chest.png",
 		ABANDONED_WELL = "abandoned_well.png",
 
+		PLAYER = { "NEVANDA", 4 * 32, 1 * 32, 32, 32 },
 	},
+
+	LoadImage = function( self, img )
+		if type(img) == "string" then
+			local filename = string.format( "data/%s", img )
+			return love.graphics.newImage( filename )
+		elseif type(img) == "table" then
+			local atlas_name, x, y, w, h = table.unpack(img)
+			assert( self.ATLASES[ atlas_name ], atlas_name )
+			return AtlasedImage( self.ATLASES[ atlas_name ], x, y, w, h )
+		else
+			error( "invalid img: "..tostring(img) )
+		end
+	end,
 
 	LoadAll = function( self )
 		for k, t in pairs( self.FONTS ) do
 			self.FONTS[ k ] = love.graphics.newFont( string.format( "data/%s", t[1] ), t[2] )
 		end
 		 
-		for k, filename in pairs( self.AFFINITY_IMG ) do
-			self.AFFINITY_IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		for k, filename in pairs( self.ATLASES ) do
+			self.ATLASES[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
 		end
 
-		for k, filename in pairs( self.LOCATION_BGS ) do
-			self.LOCATION_BGS[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		for k, v in pairs( self.AFFINITY_IMG ) do
+			self.AFFINITY_IMG[ k ] = self:LoadImage( v )
 		end
 
-		for k, filename in pairs( self.IMG ) do
-			self.IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		for k, v in pairs( self.IMG ) do
+			self.IMG[ k ] = self:LoadImage( v )
 		end
 
-		for k, filename in pairs( self.TILE_IMG ) do
-			self.TILE_IMG[ k ] = love.graphics.newImage( string.format( "data/%s", filename ))
+		for k, v in pairs( self.TILE_IMG ) do
+			self.TILE_IMG[ k ] = self:LoadImage( v )
 		end
 	end
 }

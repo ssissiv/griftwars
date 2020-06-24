@@ -1,5 +1,6 @@
 local Grifter = class( "Agent.Grifter", Agent )
 Grifter.unfamiliar_desc = "grifter"
+Grifter.image = assets.TILE_IMG.PLAYER
 
 function Grifter:init()
 	Agent.init( self )

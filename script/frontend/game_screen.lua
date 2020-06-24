@@ -950,17 +950,17 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "escape" or key == "backspace" then
 		self:SetCurrentFocus( nil )
+
+	elseif key == "=" then
+		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
+		local mx, my = love.mouse.getPosition()
+		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+
+	elseif key == "-" then
+		self.zoom_level = math.max( (self.zoom_level - 1), -3 )
+		local mx, my = love.mouse.getPosition()
+		self.camera:ZoomToLevel( self.zoom_level, mx, my )
 	end
-
-	-- elseif key == "=" then
-	-- 	self.zoom_level = math.min( (self.zoom_level + 1), 3 )
-	-- 	local mx, my = love.mouse.getPosition()
-	-- 	self.camera:ZoomToLevel( self.zoom_level, mx, my )
-
-	-- elseif key == "-" then
-	-- 	self.zoom_level = math.max( (self.zoom_level - 1), -3 )
-	-- 	local mx, my = love.mouse.getPosition()
-	-- 	self.camera:ZoomToLevel( self.zoom_level, mx, my )
 
 	return false
 end

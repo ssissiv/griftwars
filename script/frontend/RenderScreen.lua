@@ -31,8 +31,12 @@ function RenderScreen:SetColour( clr )
 end
 
 function RenderScreen:Image( image, x, y, w, h )
-	local sx, sy = w / image:getWidth(), h / image:getHeight()
-	love.graphics.draw( image, x, y, 0, sx, sy )
+	if is_instance( image, AtlasedImage ) then
+		image:RenderImage( x, y, w, h )
+	else
+		local sx, sy = w / image:getWidth(), h / image:getHeight()
+		love.graphics.draw( image, x, y, 0, sx, sy )
+	end
 end
 
 function RenderScreen:IsHovered()

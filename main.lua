@@ -25,6 +25,7 @@ require "debug/debug_mgr"
 debug_menus = require "debug/debug_menus"
 loc = require "locstring"
 Shaders = require "render/shader_defs"
+require "render/AtlasedImage"
 
 require "frontend/RenderScreen"
 require "frontend/game_screen"
