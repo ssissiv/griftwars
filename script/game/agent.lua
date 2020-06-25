@@ -439,12 +439,12 @@ function Agent:IsAdjacent( obj )
 	return x and y and IsAdjacentCoordinate( x, y, self.x, self.y )
 end
 
-function Agent:CanReach( obj )
-	if obj:GetCarrier() == self.inventory then
+function Agent:CanReach( entity )
+	if entity.GetCarrier and entity:GetCarrier() == self.inventory then
 		return true
 	end
 
-	local x, y = AccessCoordinate( obj )
+	local x, y = AccessCoordinate( entity )
 	return x and y and (IsAdjacentCoordinate( x, y, self.x, self.y ) or (self.x == x and self.y == y))
 end
 

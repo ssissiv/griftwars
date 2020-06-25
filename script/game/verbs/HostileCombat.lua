@@ -13,6 +13,11 @@ function HostileCombat:GetShortDesc( viewer )
 	end
 end
 
+function HostileCombat:RenderAgentDetails( ui, screen, viewer )
+	ui.Bullet()
+	ui.Text( "Fighting!" )
+end
+
 function HostileCombat:CalculateUtility( actor )
 	return UTILITY.COMBAT
 end

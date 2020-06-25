@@ -26,12 +26,15 @@ function Befriend:CanInteract( actor, target )
 	if actor:GetMaxFriends() <= actor:CountAffinities( AFFINITY.FRIEND ) then
 		return false, "Max friends reached"
 	end
+	if actor:InCombat() then
+		return false, "In combat"
+	end
 
 	return Verb.CanInteract( actor, target )
 end
 
 function Befriend:CollectVerbs( verbs, actor, obj )
-	if actor == self.owner and obj ~= actor and is_instance( obj, Agent ) then
+	if actor == self.owner and obj ~= actor and is_instance( obj, Agent ) and not obj:IsDead() then
 		self.obj = obj
 		verbs:AddVerb( self )
 	end

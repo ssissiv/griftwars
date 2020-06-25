@@ -41,12 +41,11 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
             end
         end
 
-        local target
+        local target_ent
         for i, verb in ipairs( self.shown_verbs ) do
-            if target ~= verb:GetTarget() then
-                target = verb:GetTarget()
-                
-                local ent = AccessEntity( target )
+            local ent = AccessEntity( verb:GetTarget() )
+            if target_ent ~= ent then
+                target_ent = ent
                 if ent then
                     self:RenderSelectedEntity( ui, screen, ent )
                 end

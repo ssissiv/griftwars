@@ -69,6 +69,11 @@ function Agent:InCombat()
 	return combat and combat:HasTargets()
 end
 
+function Agent:InCombatWith( target )
+	local combat = self:GetAspect( Aspect.Combat )
+	return combat and combat:IsTarget( target )
+end
+
 function Agent:IsEmployed()
 	return self:HasAspect( Job )
 end

@@ -2,6 +2,7 @@
 ---------------------------------------------------------------------
 
 local Orc = class( "Agent.Orc", Agent )
+Orc.unfamiliar_desc = "wild orc"
 
 function Orc:init()
 	Agent.init( self )
@@ -11,10 +12,6 @@ function Orc:init()
 	self:GainAspect( Aspect.Behaviour() )
 
 	self:SetFeral( true )
-end
-
-function Orc:GetShortDesc()
-	return "wild orc"
 end
 
 function Orc:GetMapChar()
