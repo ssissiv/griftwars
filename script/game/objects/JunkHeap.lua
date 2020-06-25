@@ -8,7 +8,7 @@ function JunkHeap:OnSpawn( world )
 	self.rng = self:GainAspect( Aspect.Rng())
 	self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.ScroungeTarget())
-	self:GainAspect( Aspect.Impass( IMPASS.STATIC ) )
+	self:GainAspect( Aspect.Impass( IMPASS.ALL ) )
 
 	self:RefreshJunk()
 
