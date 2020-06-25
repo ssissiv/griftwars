@@ -19,16 +19,31 @@ function Forest:OnWorldGenPass( pass )
 	end
 
 	if pass == 0 then
-		self:PopulateOrcs()
+		local n = self.world:Random( 3 )
+		print( self, n )
+		if n == 1 then
+			self:PopulateOrcs()
+		elseif n == 3 then
+			self:PopulateWolves()
+		end
 		return true
 	end
 end
 
 
 function Forest:PopulateOrcs()
-	local n = self.worldgen:Random( #self.rooms )
+	local n = self.world:Random( #self.rooms )
 	for i = 1, n do
 		local orc = Agent.Orc()
+		orc:WarpToLocation( self:RandomRoom() )
+	end
+end
+
+
+function Forest:PopulateWolves()
+	local n = self.world:Random( #self.rooms )
+	for i = 1, n do
+		local orc = Agent.GreyWolf()
 		orc:WarpToLocation( self:RandomRoom() )
 	end
 end

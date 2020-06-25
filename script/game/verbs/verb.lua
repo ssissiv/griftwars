@@ -188,7 +188,14 @@ end
 function Verb:CheckDC( actor, target )
 	local dc = self:CalculateDC( actor, target )
 	local roll = math.random( 0, 20 )
-	return roll >= dc, roll
+	local success = roll >= dc
+	local result_str
+	if success then
+		result_str = loc.format( "Success! {1} vs. DC {2}", roll, dc )
+	else
+		result_str = loc.format( "Failed! {1} vs. DC {2}", roll, dc )
+	end
+	return success, result_str
 end
 
 function Verb:CanDo( actor, ... )

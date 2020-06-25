@@ -28,7 +28,6 @@ JunkT1.loot =
 	function()
 		return Object.Jerky()
 	end, 1,
-	nil_function, 5,
 }
 LOOT_JUNK_T1 = JunkT1()
 
@@ -45,7 +44,6 @@ JunkT2.loot =
 	function()
 		return Object.Jerky()
 	end, 1,
-	nil_function, 3,
 }
 LOOT_JUNK_T2 = JunkT2()
 
@@ -62,7 +60,6 @@ JunkT3.loot =
 	function()
 		return Object.Jerky(), Object.Jerky()
 	end, 1,
-	nil_function, 2,
 }
 LOOT_JUNK_T3 = JunkT3()
 

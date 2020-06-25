@@ -83,10 +83,10 @@ function Punch:Interact( actor, target )
 	actor:GetStat( STAT.FATIGUE ):DeltaValue( -self.fatigue_cost )
 
 	-- Check success.
-	local ok, roll = self:CheckDC( actor, target )
+	local ok, result_str = self:CheckDC( actor, target )
 	if ok then
 		Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
-		Msg:Echo( actor, loc.format( "You attack {1.Id}! ({2} damage)", target:LocTable( actor ), damage ))
+		Msg:Echo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))
 		Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
 
 		target:DeltaHealth( -damage )
@@ -96,7 +96,7 @@ function Punch:Interact( actor, target )
 		end
 
 	else
-		Msg:Echo( actor, loc.format( "You miss {1.Id}. (Roll: {2})", target:LocTable( actor ), roll ))
+		Msg:Echo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
 		Msg:Echo( target, loc.format( "{1.Id} misses you with {1.hisher} {2}.", actor:LocTable( target ), self ))
 	end
 

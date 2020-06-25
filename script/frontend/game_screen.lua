@@ -19,7 +19,7 @@ function GameScreen:init( world )
 	-- List of window panels.
 	self.windows = {}
 
-	self.zoom_level = 1.0
+	self.zoom_level = 0.5
 	self.camera = Camera()
 	self.camera:SetViewPort( 0, 0, GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
@@ -954,11 +954,17 @@ function GameScreen:KeyPressed( key )
 	elseif key == "=" then
 		self.zoom_level = math.min( (self.zoom_level + 1), 3 )
 		local mx, my = love.mouse.getPosition()
+		if self.puppet then
+			mx, my = self.camera:WorldToScreen( self.puppet:GetCoordinate() )
+		end
 		self.camera:ZoomToLevel( self.zoom_level, mx, my )
 
 	elseif key == "-" then
 		self.zoom_level = math.max( (self.zoom_level - 1), -3 )
 		local mx, my = love.mouse.getPosition()
+		if self.puppet then
+			mx, my = self.camera:WorldToScreen( self.puppet:GetCoordinate() )
+		end
 		self.camera:ZoomToLevel( self.zoom_level, mx, my )
 	end
 
