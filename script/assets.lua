@@ -44,6 +44,7 @@ local assets =
 		ABANDONED_WELL = "abandoned_well.png",
 
 		PLAYER = { "NEVANDA", 4 * 32, 1 * 32, 32, 32 },
+		ORC = { "NEVANDA", 32 * 32, 1 * 32, 32, 32 },
 	},
 
 	LoadImage = function( self, img )

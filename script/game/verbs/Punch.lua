@@ -12,7 +12,11 @@ end
 function Punch:InAttackRange( actor, target )
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
-	return distance( x1, y1, x2, y2 ) <= 1.5, "Out of range"
+	if distance( x1, y1, x2, y2 ) > 1.5 then
+		return false, "Out of range"
+	end
+
+	return true
 end
 
 function Punch:GetDesc( viewer )

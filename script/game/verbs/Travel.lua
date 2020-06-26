@@ -56,6 +56,7 @@ function Travel:PathToTarget( actor, dest )
 	while true do
 
 		self.path = pather:GetPath()
+		self.pather = pather
 
 		if self.path and #self.path >= 2 then
 			local x1, y1 = self.path[1]:GetCoordinate()

@@ -44,6 +44,8 @@ function HostileCombat:PickAttack( actor )
 		end
 	end
 
+	self.attacks = attacks
+	
 	return self:GetWorld():ArrayPick( attacks )
 end
 

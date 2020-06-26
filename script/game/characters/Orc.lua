@@ -3,6 +3,7 @@
 
 local Orc = class( "Agent.Orc", Agent )
 Orc.unfamiliar_desc = "wild orc"
+Orc.image = assets.TILE_IMG.ORC
 
 function Orc:init()
 	Agent.init( self )
