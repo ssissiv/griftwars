@@ -145,6 +145,7 @@ function Combat:AddTarget( target )
 	if #self.targets == 1 then
 		Msg:Echo( target, loc.format( "{1.Id} charges you!", self.owner:LocTable( target )))
 		Msg:Echo( self.owner, loc.format( "You charge {1.Id}!", target:LocTable( self.owner )))
+		self.owner:BroadcastEvent( ENTITY_EVENT.COMBAT_STARTED, self )
 	end
 
 	if not self.attack then
@@ -177,6 +178,7 @@ function Combat:RemoveTarget( target )
 	if #self.targets == 0 and self.attack then
 		self.owner:LoseAspect( self.attack )
 		self.attack = nil
+		self.owner:BroadcastEvent( ENTITY_EVENT.COMBAT_ENDED, self )
 	end
 
 	self.owner:RegenVerbs()

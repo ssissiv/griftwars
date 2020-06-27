@@ -33,7 +33,13 @@ end
 function Travel:RenderAgentDetails( ui, screen, viewer )
 	if viewer:CanSee( self.actor ) then
 		ui.Bullet()
-		ui.Text( loc.format( "Traveling to {1}", tostring(self.obj) ))
+		if self.obj == viewer then
+			ui.Text( loc.format( "Approaching you!" ))
+		elseif self.obj and self.obj:GetLocation() == viewer:GetLocation() then
+			ui.Text( loc.format( "Approaching {1}", tostring(self.obj) ))
+		else
+			ui.Text( "Traveling" )
+		end
 	end
 end
 
@@ -104,7 +110,7 @@ function Travel:PathToDest( actor, location )
 end
 
 function Travel:Interact( actor, dest )
-	dest = dest or self.obj
+	dest = self:SetTarget( dest or self.obj )
 	assert( dest )
 
 	local pather = PathFinder( actor, dest )

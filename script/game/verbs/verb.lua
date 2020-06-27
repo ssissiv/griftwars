@@ -91,6 +91,11 @@ function Verb:GetTarget()
 	return self.obj
 end
 
+function Verb:SetTarget( target )
+	self.obj = target
+	return target
+end
+
 function Verb:EqualVerb( verb )
 	return verb._class == self._class and self.actor == verb.actor and self.obj == verb.obj
 end

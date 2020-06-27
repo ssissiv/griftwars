@@ -3,6 +3,19 @@
 
 local Player = class( "Aspect.Player", Aspect )
 
+Player.TABLE_KEY = "player"
+
+Player.event_handlers =
+{
+	[ ENTITY_EVENT.COMBAT_STARTED ] = function( self, event_name, entity, ... )
+		self:SetIntent( SetBits( self.intent, INTENT.HOSTILE ))
+	end,
+
+	[ ENTITY_EVENT.COMBAT_ENDED ] = function( self, event_name, entity, ... )
+		self:SetIntent( ClearBits( self.intent, INTENT.HOSTILE ))
+	end,
+}
+
 function Player:init()
 	self.intent = INTENT.DIPLOMACY
 end

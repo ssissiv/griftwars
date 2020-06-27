@@ -425,7 +425,7 @@ function ToggleBits( bits, flags )
 end
 
 function ClearBits( bits, flags )
-    return bit32.bor( bits, bit32.bnot( flags ) )
+    return bit32.band( bits, bit32.bnot( flags ) )
 end
 
 function OffsetExit( x, y, exit )
