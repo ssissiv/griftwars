@@ -12,7 +12,7 @@ function Orc:init()
 
 	self:GainAspect( Aspect.Behaviour() )
 
-	self:SetFeral( true )
+	self:SetFlags( EF.AGGRO_OTHER_CLASS )
 end
 
 function Orc:GetMapChar()

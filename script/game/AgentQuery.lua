@@ -1,6 +1,13 @@
 function Agent:IsEnemy( other )
+	if self:HasFlag( EF.AGGRO_NONE ) then
+		return false
+	end
+
 	if is_instance( other, Agent ) then
-		if self:IsFeral() or other:IsFeral() then
+		if self:HasFlag( EF.AGGRO_ALL ) then
+			return true
+		end
+		if self:HasFlag( EF.AGGRO_OTHER_CLASS ) and not is_instance( other, self._class ) then
 			return true
 		end
 	end
@@ -17,6 +24,12 @@ function Agent:IsEnemy( other )
 
 	local f1 = self:GetAspect( Aspect.FactionMember )
 	local f2 = other:GetAspect( Aspect.FactionMember )
+	if self:HasFlag( EF.AGGRO_OTHER_FACTION ) then
+		if (f1 and f1.faction) ~= (f2 and f2.faction) then
+			return true
+		end
+	end
+
 	return f1 and f2 and f1:IsEnemy( f2 )
 end
 
@@ -76,15 +89,6 @@ end
 
 function Agent:IsEmployed()
 	return self:HasAspect( Job )
-end
-
-
-function Agent:IsFeral()
-	return self.feral == true
-end
-
-function Agent:SetFeral( feral )
-	self.feral = feral
 end
 
 function Agent:IsRunning()

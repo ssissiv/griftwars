@@ -11,7 +11,7 @@ function BrownBear:init()
 	self:GetStat( STAT.HEALTH ):DeltaValue( 50, 50 )
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 4 )
 
-	self:SetFeral( true )
+	self:SetFlags( EF.AGGRO_ALL )
 end
 
 function BrownBear:GetMapChar()

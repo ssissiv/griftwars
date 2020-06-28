@@ -1,5 +1,6 @@
 require "game/event_constants"
 require "game/input_constants"
+require "game/combat_constants"
 
 -- 1.0 unit of datetime is meant to represent 1 hour,
 -- so a WALL_TO_GAME_TIME of 1.0 means every real world second is equivalent to 1 game hour.
@@ -77,6 +78,15 @@ INTENT, INTENT_ARRAY = MakeBitField
 	"HOSTILE",
 	"STEALTH",
 	"DIPLOMACY",
+}
+
+-- Entity flags
+EF = MakeEnum
+{
+	"AGGRO_NONE", -- Aggro to nobody
+	"AGGRO_ALL", -- Aggro to everybody
+	"AGGRO_OTHER_CLASS", -- Aggro to other class instances
+	"AGGRO_OTHER_FACTION", -- Aggro to other factions
 }
 
 PRIVACY = MakeBitField
