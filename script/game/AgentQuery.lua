@@ -2,14 +2,11 @@ function Agent:IsEnemy( other )
 	if self:HasFlag( EF.AGGRO_NONE ) then
 		return false
 	end
-
-	if is_instance( other, Agent ) then
-		if self:HasFlag( EF.AGGRO_ALL ) then
-			return true
-		end
-		if self:HasFlag( EF.AGGRO_OTHER_CLASS ) and not is_instance( other, self._class ) then
-			return true
-		end
+	if self:HasFlag( EF.AGGRO_ALL ) then
+		return true
+	end
+	if self:HasFlag( EF.AGGRO_OTHER_CLASS ) and not is_instance( other, self._class ) then
+		return true
 	end
 
 	local function HasAttacked( engram )
@@ -34,6 +31,10 @@ function Agent:IsEnemy( other )
 end
 
 function Agent:IsAlly( other )
+	if self:HasFlag( EF.AGGRO_OTHER_CLASS ) and is_instance( other, self._class ) then
+		return true
+	end
+
 	local f1 = self:GetAspect( Aspect.FactionMember )
 	local f2 = other:GetAspect( Aspect.FactionMember )
 	return f1 and f2 and f1:IsAlly( f2 )

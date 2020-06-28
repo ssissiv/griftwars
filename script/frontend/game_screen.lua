@@ -135,6 +135,69 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	end
 end
 
+function GameScreen:RenderCombatDetails( ui, puppet )
+    local combat = puppet:GetAspect( Aspect.Combat )
+    if combat and puppet:InCombat() then
+    	ui.Separator()
+
+    	-- Allies.
+		local hp, max_hp = puppet:GetHealth()
+		ui.TextColored( 0, 1, 0, 1, loc.format( "{1.Id} - {2}/{3}",
+			puppet:LocTable( self.puppet ), hp, max_hp ))
+
+		ui.SameLine( 0, 50 )
+    	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
+    	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
+    	local show_tt = ui.IsItemHovered()
+    	ui.SameLine( 0 )
+    	local damage, details = puppet:CalculateAttackPower()
+    	ui.TextColored( 0, 1, 1, 1, tostring(damage))
+    	show_tt = show_tt or ui.IsItemHovered()
+    	if show_tt and details then
+    		ui.SetTooltip( details )
+    	end
+
+    	for i, target in combat:Targets() do
+    		-- Name, health
+    		local hp, max_hp = target:GetHealth()
+    		local txt = loc.format( "{1.Id} - {2}/{3}", target:LocTable( self.puppet ), hp, max_hp )
+    		if self.current_focus == target:GetTile() then
+    			ui.TextColored( 1.0, 0, 0, 1.0, ">>" ..txt )
+    		else
+    			ui.TextColored( 0.5, 0, 0, 1.0, txt )
+    		end
+
+    		-- Attack power
+    		ui.SameLine( 0 )
+	    	local ap, details = target:CalculateAttackPower( puppet )
+	    	ui.TextColored( 0, 1, 1, 1, loc.format( "AP: {1}", ap ))
+	    	local show_tt = show_tt or ui.IsItemHovered()
+	    	if show_tt and details then
+	    		ui.SetTooltip( details )
+	    	end
+
+    		local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
+    		if attack then
+    			local t = attack:GetActingProgress()
+    			if t then
+	    			ui.SameLine( 0, 50 )
+	    			local time_left, total_time = attack:GetActingTime()
+	    			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
+	    				t, Calendar.FormatDuration( total_time )) )
+	    			ui.SameLine( 0, 50 )
+
+			    	local damage, details = attack:CalculateDamage( attack:GetTarget() )
+	    			ui.Text( loc.format( "{1} damage", damage ))
+
+					if details and ui.IsItemHovered() then
+			    		ui.SetTooltip( details )
+    				end
+	    		end
+    		end
+    	end
+    end
+end
+
 function GameScreen:RenderScreen( gui )
 
 	local ui = imgui
@@ -216,55 +279,7 @@ function GameScreen:RenderScreen( gui )
     self:RenderAgentDetails( ui, puppet )
 
     -- Render Combat targets
-    local combat = puppet:GetAspect( Aspect.Combat )
-    if combat and puppet:InCombat() then
-    	ui.Separator()
-
-    	-- Allies.
-		local hp, max_hp = puppet:GetHealth()
-		ui.TextColored( 0, 1, 0, 1, loc.format( "{1.Id} - {2}/{3}",
-			puppet:LocTable( self.puppet ), hp, max_hp ))
-
-		ui.SameLine( 0, 50 )
-    	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
-    	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
-    	local show_tt = ui.IsItemHovered()
-    	ui.SameLine( 0 )
-    	local damage, details = puppet:CalculateAttackPower()
-    	ui.TextColored( 0, 1, 1, 1, tostring(damage))
-    	show_tt = show_tt or ui.IsItemHovered()
-    	if show_tt and details then
-    		ui.SetTooltip( details )
-    	end
-
-    	for i, target in combat:Targets() do
-    		local hp, max_hp = target:GetHealth()
-    		local txt = loc.format( "{1.Id} - {2}/{3}", target:LocTable( self.puppet ), hp, max_hp )
-    		if self.current_focus == target:GetTile() then
-    			ui.TextColored( 1.0, 0, 0, 1.0, ">>" ..txt )
-    		else
-    			ui.TextColored( 0.5, 0, 0, 1.0, txt )
-    		end
-    		local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
-    		if attack then
-    			local t = attack:GetActingProgress()
-    			if t then
-	    			ui.SameLine( 0, 50 )
-	    			local time_left, total_time = attack:GetActingTime()
-	    			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
-	    				t, Calendar.FormatDuration( total_time )) )
-	    			ui.SameLine( 0, 50 )
-
-			    	local damage, details = attack:CalculateDamage( attack:GetTarget() )
-	    			ui.Text( loc.format( "{1} damage", damage ))
-
-					if details and ui.IsItemHovered() then
-			    		ui.SetTooltip( details )
-    				end
-	    		end
-    		end
-    	end
-    end
+    self:RenderCombatDetails( ui, puppet )
     ui.Separator()
 
     self:RenderSenses( ui, puppet )
