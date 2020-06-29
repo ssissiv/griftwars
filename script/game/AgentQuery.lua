@@ -40,8 +40,18 @@ function Agent:IsAlly( other )
 	return f1 and f2 and f1:IsAlly( f2 )
 end
 
+function Agent:GetWeapon()
+    return self.inventory:AccessSlot( EQ_SLOT.WEAPON )
+end
+
 function Agent:CalculateAttackPower( target )
-	return self.acc:CalculateValue( CALC_EVENT.ATTACK_POWER, 0, target )
+	self.acc:InitializeValue( 0 )
+
+	local wpn = self:GetWeapon()
+	if wpn and wpn.attack_power then
+		self.acc:AddValue( wpn.attack_power, wpn )
+	end
+	return self.acc:CalculateValueFromSources( CALC_EVENT.ATTACK_POWER, target )
 end
 
 function Agent:CalculateStat( stat )

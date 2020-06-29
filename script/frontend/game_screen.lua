@@ -146,13 +146,10 @@ function GameScreen:RenderCombatDetails( ui, puppet )
 			puppet:LocTable( self.puppet ), hp, max_hp ))
 
 		ui.SameLine( 0, 50 )
-    	local wpn = puppet:GetInventory():AccessSlot( EQ_SLOT.WEAPON )
-    	ui.Text( loc.format( "{1} damage:", wpn and wpn:GetName( puppet ) or "Unarmed" ))
-    	local show_tt = ui.IsItemHovered()
-    	ui.SameLine( 0 )
+    	local wpn = puppet:GetWeapon()
     	local damage, details = puppet:CalculateAttackPower()
-    	ui.TextColored( 0, 1, 1, 1, tostring(damage))
-    	show_tt = show_tt or ui.IsItemHovered()
+    	ui.Text( loc.format( "AP: {1} ({2})", damage, wpn and wpn:GetName( puppet ) or "Unarmed" ))
+    	local show_tt = ui.IsItemHovered()
     	if show_tt and details then
     		ui.SetTooltip( details )
     	end
@@ -171,7 +168,7 @@ function GameScreen:RenderCombatDetails( ui, puppet )
     		ui.SameLine( 0 )
 	    	local ap, details = target:CalculateAttackPower( puppet )
 	    	ui.TextColored( 0, 1, 1, 1, loc.format( "AP: {1}", ap ))
-	    	local show_tt = show_tt or ui.IsItemHovered()
+	    	local show_tt = ui.IsItemHovered()
 	    	if show_tt and details then
 	    		ui.SetTooltip( details )
 	    	end

@@ -1,11 +1,13 @@
 local ScalarCalculator = class( "Aspect.ScalarCalculator", Aspect )
 
-function ScalarCalculator:CalculateValue( event_name, value, ... )
+function ScalarCalculator:InitializeValue( value )
 	self.value = value
 	if self.sources then
 		table.clear( self.sources )
 	end
+end
 
+function ScalarCalculator:CalculateValueFromSources( event_name, ... )
 	self.owner:BroadcastEvent( event_name, self, ... )
 
 	local details
@@ -14,6 +16,11 @@ function ScalarCalculator:CalculateValue( event_name, value, ... )
 	end
 
 	return self.value, details
+end
+
+function ScalarCalculator:CalculateValue( event_name, value, ... )
+	self:InitializeValue( value )
+	return self:CalculateValueFromSources( event_name, ... )
 end
 
 function ScalarCalculator:AddSource( source )

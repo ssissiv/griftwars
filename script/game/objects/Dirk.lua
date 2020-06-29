@@ -1,13 +1,7 @@
 local Dirk = class( "Weapon.Dirk", Object )
 
 Dirk.image = assets.IMG.DIRK
-
-Dirk.equipment_handlers =
-{
-	[ CALC_EVENT.ATTACK_POWER ] = function( self, agent, event_name, acc )
-		acc:AddValue( 3, self )
-	end,
-}
+Dirk.attack_power = 3
 
 function Dirk:init()
 	Object.init( self )
@@ -25,12 +19,8 @@ end
 
 local JaggedDirk = class( "Weapon.JaggedDirk", Object )
 
-JaggedDirk.equipment_handlers =
-{
-	[ CALC_EVENT.ATTACK_POWER ] = function( self, agent, event_name, acc )
-		acc:AddValue( 5, self )
-	end,
-}
+Dirk.image = assets.IMG.DIRK
+Dirk.attack_power = 4
 
 function JaggedDirk:init()
 	Object.init( self )
