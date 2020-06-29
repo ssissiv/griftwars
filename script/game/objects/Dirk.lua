@@ -1,5 +1,7 @@
 local Dirk = class( "Weapon.Dirk", Object )
 
+Dirk.image = assets.IMG.DIRK
+
 Dirk.equipment_handlers =
 {
 	[ CALC_EVENT.ATTACK_POWER ] = function( self, agent, event_name, acc )

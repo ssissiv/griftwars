@@ -47,6 +47,12 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
     	for i, obj in self.inventory:Items() do 
             local txt = GetObjectDesc( obj )
 
+            if is_instance( obj.image, AtlasedImage ) then
+                obj.image:RenderUI( ui )
+                ui.SameLine( 0, 0 )
+                ui.SetCursorPosY( ui.GetCursorPosY() + 16 )
+            end
+
     		if ui.Selectable( txt, self.selected_obj == obj ) then
                 if obj == self.selected_obj then
                     self.world.nexus:Inspect( self.viewer, obj )

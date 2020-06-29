@@ -20,6 +20,9 @@ local assets =
 	{
 		ZZZ = "sleeping.png",
 		UNKNOWN_LOCATION = "unknown_location.png",
+
+		-- Objects
+		DIRK = { "NEVANDA", 15 * 32, 10 * 32, 32, 32 },
 	},
 
 	ATLASES =
