@@ -69,6 +69,14 @@ return
 		end
 	end,
 
+	duration = function( dt )
+		return Calendar.FormatDuration( dt )
+	end,
+
+	datetime = function( datetime )
+		return Calendar.FormatDateTime( datetime )
+	end,
+
 	realtime = function( datetime )
 		return Calendar.FormatWallTime( datetime )
 	end,

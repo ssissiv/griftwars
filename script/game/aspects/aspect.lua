@@ -72,8 +72,8 @@ function Aspect:OnDespawn()
 	end
 end
 
-function Aspect:SchedulePeriodicFunction( delta, fn, ... )
-	local ev = self.owner.world:SchedulePeriodicFunction( delta, fn, self, ... )
+function Aspect:SchedulePeriodicFunction( delta, period, fn, ... )
+	local ev = self.owner.world:SchedulePeriodicFunction( delta, period, fn, self, ... )
 	if self.scheduled_evs == nil then
 		self.scheduled_evs = {}
 	end

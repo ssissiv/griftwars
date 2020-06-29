@@ -57,15 +57,15 @@ function WorldBase:ScheduleFunction( delta, fn, ... )
 	return ev
 end
 
-function WorldBase:SchedulePeriodicEvent( delta, event_name, ... )
+function WorldBase:SchedulePeriodicEvent( delta, period, event_name, ... )
 	local ev = self:ScheduleEvent( delta, event_name, ... )
-	ev.period = delta
+	ev.period = period
 	return ev
 end
 
-function WorldBase:SchedulePeriodicFunction( delta, fn, ... )
+function WorldBase:SchedulePeriodicFunction( delta, period, fn, ... )
 	local ev = self:ScheduleFunction( delta, fn, ... )
-	ev.period = delta
+	ev.period = period
 	return ev
 end
 

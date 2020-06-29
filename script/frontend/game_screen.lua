@@ -398,6 +398,23 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 	    ui.SameLine( 0, 15 )
 		ui.TextColored( 1, 1, 0, 1, tostring(threshold_name))
 	end
+
+	local effects = 0
+	for i, aspect in puppet:Aspects() do
+		if is_instance( aspect, Aspect.StatusEffect ) then
+			if effects > 0 then
+				ui.SameLine( 0, 5 )
+			end
+			local txt = aspect:GetDesc( puppet )
+			ui.Button( txt )
+			effects = effects + 1
+			if ui.IsItemHovered() then
+				ui.BeginTooltip()
+				aspect:RenderDebugPanel( ui )
+				ui.EndTooltip()
+			end
+		end
+	end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )

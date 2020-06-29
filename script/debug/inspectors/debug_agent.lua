@@ -82,6 +82,14 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
+	if self.agent:HasAspect( Aspect.StatusEffect ) and ui.CollapsingHeader( "Status Effects" ) then
+		for i, aspect in self.agent:Aspects() do
+			if is_instance( aspect, Aspect.StatusEffect ) then
+				aspect:RenderDebugPanel( ui, panel, dbg )
+			end
+		end
+	end
+
 	if ui.CollapsingHeader( "Verbs" ) then
 		for i, verb in self.agent:Verbs() do
 			verb:RenderDebugPanel( ui, panel, dbg )

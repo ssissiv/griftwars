@@ -12,7 +12,7 @@ function JunkHeap:OnSpawn( world )
 
 	self:RefreshJunk()
 
-	world:SchedulePeriodicFunction( ONE_HOUR, self.RefreshJunk, self )
+	world:SchedulePeriodicFunction( ONE_DAY, ONE_DAY, self.RefreshJunk, self )
 end
 
 function JunkHeap:RefreshJunk()

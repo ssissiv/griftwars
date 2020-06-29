@@ -301,6 +301,13 @@ function Agent:Acquaint( agent )
 	end
 end
 
+function Agent:Interrupt( msg )
+	if self:IsPuppet() and not self.world:IsPaused() then
+		self.world:ScheduleInterrupt( 0, msg )
+	end
+end
+
+
 function Agent:CanSee( obj )
 	if self.location and self.location == obj:GetLocation() then
 		return true
