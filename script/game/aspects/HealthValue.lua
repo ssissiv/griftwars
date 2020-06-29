@@ -8,7 +8,7 @@ end
 
 function HealthValue:DeltaValue( value, max_value )
 	HealthValue._base.DeltaValue( self, value, max_value )
-	if self.value <= 0 then
+	if self.value <= 0 and not self.owner:IsDead() then
 		self.owner:Kill()
 	end
 end

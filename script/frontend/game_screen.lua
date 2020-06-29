@@ -135,6 +135,29 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	end
 end
 
+function GameScreen:RenderStatusEffects( ui, agent )
+	ui.PushID( "StatusEffects"..rawstring(agent) )
+
+	local effects = 0
+	for i, aspect in agent:Aspects() do
+		if is_instance( aspect, Aspect.StatusEffect ) then
+			if effects > 0 then
+				ui.SameLine( 0, 5 )
+			end
+			local txt = aspect:GetDesc( agent )
+			ui.Button( txt )
+			effects = effects + 1
+			if ui.IsItemHovered() then
+				ui.BeginTooltip()
+				aspect:RenderDebugPanel( ui )
+				ui.EndTooltip()
+			end
+		end
+	end
+
+	ui.PopID()
+end
+
 function GameScreen:RenderCombatDetails( ui, puppet )
     local combat = puppet:GetAspect( Aspect.Combat )
     if combat and puppet:InCombat() then
@@ -191,6 +214,10 @@ function GameScreen:RenderCombatDetails( ui, puppet )
     				end
 	    		end
     		end
+
+    		ui.SameLine( 0 )
+    		self:RenderStatusEffects( ui, target )
+    		ui.Dummy( 0, 0 )
     	end
     end
 end
@@ -399,22 +426,7 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 		ui.TextColored( 1, 1, 0, 1, tostring(threshold_name))
 	end
 
-	local effects = 0
-	for i, aspect in puppet:Aspects() do
-		if is_instance( aspect, Aspect.StatusEffect ) then
-			if effects > 0 then
-				ui.SameLine( 0, 5 )
-			end
-			local txt = aspect:GetDesc( puppet )
-			ui.Button( txt )
-			effects = effects + 1
-			if ui.IsItemHovered() then
-				ui.BeginTooltip()
-				aspect:RenderDebugPanel( ui )
-				ui.EndTooltip()
-			end
-		end
-	end
+	self:RenderStatusEffects( ui, puppet )
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )

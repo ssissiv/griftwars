@@ -19,8 +19,17 @@ end
 
 local JaggedDirk = class( "Weapon.JaggedDirk", Object )
 
-Dirk.image = assets.IMG.DIRK
-Dirk.attack_power = 4
+JaggedDirk.image = assets.IMG.DIRK
+JaggedDirk.attack_power = 4
+JaggedDirk.equipment_handlers = 
+{
+	[ AGENT_EVENT.ATTACK ] = function( self, event_name, actor, target, attack, success )
+		if success then
+			Msg:Echo( actor, "Your dirk opens a gash in your victim!" )
+			target:GainStatusEffect( StatusEffect.Bleed, math.random( 0, 3 ) )
+		end
+	end,
+}
 
 function JaggedDirk:init()
 	Object.init( self )

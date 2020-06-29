@@ -687,7 +687,24 @@ function Agent:HasEnergy( cost )
 	return fatigue + cost <= max_fatigue
 end
 
+function Agent:GainStatusEffect( class, stacks )
+	if (stacks or 1) <= 0 then
+		return
+	end
+	assert( is_class( class, Aspect.StatusEffect ))
+	
+	local aspect = self:GetAspect( class )
+	if aspect == nil then
+		aspect = self:GainAspect( class() )
+	end
+
+	aspect:GainStacks( stacks or 1 )
+end
+
+
 function Agent:Kill()
+	assert( not self:IsDead() or error( "Already killed at: ".. self.killed_trace ))
+	
 	if self:IsPuppet() then
 		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
 	end

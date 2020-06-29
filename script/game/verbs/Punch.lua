@@ -78,16 +78,17 @@ function Punch:Interact( actor, target )
 	target = target or self.obj
 
 	local damage = self:CalculateDamage( target )
+	local ok, result_str = self:CheckDC( actor, target )
 
 	-- Notify target they were attacked!
-	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self )
+	actor:BroadcastEvent( AGENT_EVENT.ATTACK, target, self, ok )
+	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
 	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
 	target:GetAspect( Aspect.Combat ):EvaluateTargets()
 
 	actor:GetStat( STAT.FATIGUE ):DeltaValue( -self.fatigue_cost )
 
 	-- Check success.
-	local ok, result_str = self:CheckDC( actor, target )
 	if ok then
 		Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
 		Msg:Echo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))

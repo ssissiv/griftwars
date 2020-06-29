@@ -31,7 +31,7 @@ function Agent:MakeGendered()
 end
 
 function Agent:MakeBiological()
-	self:GainAspect( Aspect.HealthValue( 6, 6 ))
+	self:GainAspect( Aspect.HealthValue( self.max_health or 1, self.max_health or 6 ))
 	local fatigue = self:CreateStat( STAT.FATIGUE, 0, 100 )
 	fatigue:SetThresholds( FATIGUE_THRESHOLDS )
 	fatigue:DeltaRegen( 100 / (2 * ONE_DAY) )
