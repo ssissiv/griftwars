@@ -19,7 +19,8 @@ function Grifter:init()
 	self:GetInventory():AddItem( dirk )
 	dirk:GetAspect( Aspect.Wearable ):Equip()
 
-
+	self:GainAspect( Skill.Backstab() )
+	
 	self:GainAspect( Verb.Befriend() )
 end
 

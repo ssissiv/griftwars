@@ -1,5 +1,11 @@
 local Skill = class( "Aspect.Skill", Aspect.StatValue )
 
+function Skill:GetDesc( viewer )
+	if self.desc then
+		return self.desc
+	end
+end
+
 function Skill:SetSkillRank( rank )
 	self:SetValue( rank )
 	return self
@@ -44,6 +50,13 @@ end
 
 function Skill:RenderAgentDetails( ui, screen, viewer )
 	ui.Text( loc.format( "{1} (Rank {2}) -- XP: {3}", self:GetName(), self:GetValue(), self:GetGrowth() ))
+
+	local desc = self:GetDesc( viewer )
+	if desc then
+		ui.Indent( 20 )
+		ui.TextColored( 0.8, 0.8, 0.8, 1, desc )
+		ui.Unindent( 20 )
+	end
 end
 
 function Skill:GetName()

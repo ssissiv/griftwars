@@ -1,5 +1,12 @@
 local StatusEffect = class( "Aspect.StatusEffect", Aspect )
 
+StatusEffect.event_handlers =
+{
+	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
+		agent:LoseAspect( self )
+	end,
+}
+
 function StatusEffect:GetDesc( viewer )
 	if (self.stacks or 0) > 1 then
 		return loc.format( "{1} x{2}", self.name or self._classname, self.stacks )
@@ -24,7 +31,6 @@ end
 
 function StatusEffect:GainStacks( delta )
 	self.stacks = self.stacks + delta
-	print( "STX", self, self.stacks, self.owner )
 
 	if self.max_stacks then
 		self.stacks = math.min( self.stacks, self.max_stacks )

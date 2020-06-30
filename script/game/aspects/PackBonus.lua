@@ -2,18 +2,16 @@ local PackBonus = class( "Aspect.PackBonus", Aspect )
 
 PackBonus.event_handlers =
 {
-	[ CALC_EVENT.ATTACK_POWER ] = function( self, event_name, agent, acc )
-		if agent == self.owner then
-			-- Count adjacent allied NPCs around our target.
-			local allies = 0
-			for i, other in self.owner:GetLocation():Contents() do
-				if other ~= self.owner and is_instance( other, self.owner._class ) and self.owner:IsAlly( other ) then
-					allies = allies + 1
-				end
+	[ CALC_EVENT.ATTACK_POWER ] = function( self, event_name, agent, acc, target )
+		-- Count adjacent allied NPCs around our target.
+		local allies = 0
+		for i, other in agent:GetLocation():Contents() do
+			if other ~= agent and is_instance( other, agent._class ) and agent:IsAlly( other ) then
+				allies = allies + 1
 			end
-			if allies > 0 then
-				acc:AddValue( allies, self )
-			end
+		end
+		if allies > 0 then
+			acc:AddValue( allies, self )
 		end
 	end,
 }

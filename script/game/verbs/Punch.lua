@@ -63,7 +63,7 @@ function Punch:GetDuration()
 end
 
 function Punch:CalculateDamage( target )
-	local damage = self.actor:CalculateAttackPower()
+	local damage = self.actor:CalculateAttackPower( target )
 
 	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
 	damage = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )

@@ -5,6 +5,7 @@ local CityGuard = class( "Agent.CityGuard", Agent )
 
 CityGuard.MAP_CHAR = "g"
 CityGuard.unfamiliar_desc = "city guard"
+CityGuard.max_health = 20
 
 function CityGuard:init()
 	Agent.init( self )

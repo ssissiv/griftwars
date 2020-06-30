@@ -74,7 +74,7 @@ function Combat:OnLocationEvent( event_name, location, ... )
 
 	elseif event_name == AGENT_EVENT.ATTACKED then
 		local victim, attacker, attack = ...
-		if not self:IsTarget( attacker ) and self.owner:CanSee( victim ) then
+		if victim ~= self.owner and not self:IsTarget( attacker ) and self.owner:CanSee( victim ) then
 			self:OnNoticedAttack( victim, attacker, attack )
 		end
 	end
@@ -144,7 +144,7 @@ function Combat:AddTarget( target )
 
 	if #self.targets == 1 then
 		Msg:Echo( target, loc.format( "{1.Id} charges you!", self.owner:LocTable( target )))
-		Msg:Echo( self.owner, loc.format( "You charge {1.Id}!", target:LocTable( self.owner )))
+		-- Msg:Echo( self.owner, loc.format( "You charge {1.Id}!", target:LocTable( self.owner )))
 		self.owner:BroadcastEvent( ENTITY_EVENT.COMBAT_STARTED, self )
 	end
 

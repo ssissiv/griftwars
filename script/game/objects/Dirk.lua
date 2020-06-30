@@ -25,8 +25,11 @@ JaggedDirk.equipment_handlers =
 {
 	[ AGENT_EVENT.ATTACK ] = function( self, event_name, actor, target, attack, success )
 		if success then
-			Msg:Echo( actor, "Your dirk opens a gash in your victim!" )
-			target:GainStatusEffect( StatusEffect.Bleed, math.random( 0, 3 ) )
+			local stacks = math.random( 0, 3 )
+			if stacks > 0 then
+				Msg:Echo( actor, "Your dirk opens a gash in your victim!" )
+				target:GainStatusEffect( StatusEffect.Bleed, stacks )
+			end
 		end
 	end,
 }
