@@ -12,7 +12,7 @@ function CityGuard:init()
 	self:MakeHuman()
 
 	self:GainAspect( Aspect.Behaviour() )
-	self:GainAspect( Skill.Fighter() )
+	self:GainAspect( Skill.Fighting() )
 end
 
 function CityGuard:GetLongDesc()

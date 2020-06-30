@@ -4,6 +4,7 @@ function AgentDetailsWindow:init( viewer, agent )
 	assert( agent )
 	self.viewer = viewer
 	self.agent = agent
+	self.view_fn = self.RenderStats
 end
 
 function AgentDetailsWindow:Refresh( agent )
@@ -80,6 +81,36 @@ function AgentDetailsWindow:RenderRelationships( ui, screen, affinity )
 	end
 end
 
+function AgentDetailsWindow:RenderStats( ui, screen )
+	self:RenderAspects( "Stats:", ui, screen, Aspect.StatValue )
+end
+
+function AgentDetailsWindow:RenderSkills( ui, screen )
+	self:RenderAspects( "Skills:", ui, screen, Aspect.Skill )
+end
+
+function AgentDetailsWindow:RenderFavours( ui, screen )
+	self:RenderAspects( "Favours:", ui, screen, Aspect.Favour )
+end
+
+function AgentDetailsWindow:RenderTabButton( ui, idx, txt, fn )
+	if idx > 1 then
+		ui.SameLine( 0, 10 )
+	end
+	local active = fn == self.view_fn
+	if active then
+		ui.PushStyleColor( "Button", 0, 0.4, 0.5, 1 )
+	end
+
+	if ui.Button( txt ) then
+		self.view_fn = fn
+	end
+
+	if active then
+		ui.PopStyleColor()
+	end
+end
+
 function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 
@@ -90,40 +121,25 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
-		ui.Text( "Description: " .. self.agent:GetLongDesc( self.viewer ))
-		ui.SameLine( 0, 10 )
-		if ui.SmallButton( "?" ) then
-			DBG( self.agent )
-		end
+		UIHelpers.RenderSelectedEntity( ui, screen, self.agent, self.viewer )
 
-		ui.Text( "Gender:" )
-		ui.SameLine( 0, 5 )
-		ui.TextColored( 0, 1, 1, 1, tostring(self.agent.gender) )
+		ui.Text( loc.format( "{1} {2}", self.agent.species, self.agent.gender ))
+		ui.Dummy( 400, 0 )
 
-		if self.agent ~= self.viewer then
-			local affinity, trust = self.agent:GetAffinity( self.viewer ), self.agent:GetTrust( self.viewer )
-			ui.Text( "Relationship:" )
-			ui.SameLine( 0, 5 )
-			ui.TextColored( 1, 1, 0, 1, tostring(affinity))
-			ui.SameLine( 0, 20 )
-			ui.Text( loc.format( "Trust: {1}", trust ))
-		end
+		ui.Spacing()
 
-		-- ASPECTS
-		ui.Separator()
-		for id, aspect in self.agent:Aspects() do
-			if aspect.RenderAgentDetails and not is_instance( aspect, Aspect.Favour ) and not is_instance( aspect, Aspect.Skill ) then
-				aspect:RenderAgentDetails( ui, screen, self.viewer )
-			end
-		end
-		
-		self:RenderAspects( "Favours:", ui, screen, Aspect.Favour )
-		self:RenderAspects( "Skills:", ui, screen, Aspect.Skill )
-
-		ui.NewLine()
-
+		self:RenderTabButton( ui, 1, "Stats", self.RenderStats )
 		if self.agent == self.viewer then
-			self:RenderAllRelationships( ui, screen )
+			self:RenderTabButton( ui, 2, "Relationships", self.RenderAllRelationships )
+		else
+			self:RenderTabButton( ui, 2, "Favours", self.RenderFavours )
+		end
+		self:RenderTabButton( ui, 3, "Skills", self.RenderSkills )
+
+		-- Render Current Tab
+		if self.view_fn then
+			ui.Separator()
+			self.view_fn( self, ui, screen )
 		end
 
 		ui.Separator()

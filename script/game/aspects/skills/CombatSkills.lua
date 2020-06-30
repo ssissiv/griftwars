@@ -1,5 +1,5 @@
 
-local Fighter = class( "Skill.Fighter", Aspect.Skill )
+local Fighter = class( "Skill.Fighting", Aspect.Skill )
 
 Fighter.event_handlers =
 {

@@ -22,7 +22,7 @@ function Captain:init()
 	
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize())
-	self:GainAspect( Skill.Fighter():SetSkillRank( 3 ))
+	self:GainAspect( Skill.Fighting():SetSkillRank( 3 ))
 	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 
@@ -66,7 +66,7 @@ function Captain:Recruit( job )
 			-- function( agent )
 			-- 	return not agent:IsPlayer() and
 			-- 			not agent:IsEnemy( self ) and
-			-- 			agent:CanLearnSkill( Skill.Fighter ) and
+			-- 			agent:CanLearnSkill( Skill.Fighting ) and
 			-- 			not agent:IsEmployed()
 			-- end )
 

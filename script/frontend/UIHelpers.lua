@@ -6,7 +6,11 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
 
     ui.SameLine( 0, 10 )
     if ui.SmallButton( "?" ) then
-        viewer.world.nexus:Inspect( viewer, ent )
+        if Input.IsControl() then
+            DBG( ent )
+        else
+            viewer.world.nexus:Inspect( viewer, ent )
+        end
     end
 
     if ent.Verbs then
@@ -36,5 +40,4 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
             ui.Text( loc.format( "Trust: {1}", aff:GetTrust() ))
         end
     end
-    ui.Separator()
 end
