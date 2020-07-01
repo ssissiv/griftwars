@@ -298,12 +298,9 @@ function Verb:DoVerb( actor, ... )
 
 	self:Interact( actor, ... )
 
-	if self.yield_ev then
-		actor.world:UnscheduleEvent( self.yield_ev )
-		self.yield_ev = nil
-	end
+	assert( self.yield_ev == nil )
+	assert( self.yield_duration == nil )
 
-	self.yield_duration = nil
 	self.coro = nil
 	self.time_finished = actor.world:GetDateTime()
 
@@ -435,6 +432,8 @@ function Verb:Unyield()
 end
 
 function Verb:Resume( coro )
+	assert( self.yield_ev )
+
 	self.yield_ev = nil
 	self.yield_duration = nil
 
