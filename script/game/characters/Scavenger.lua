@@ -52,6 +52,7 @@ end
 -- end
 
 function Scavenge:Interact( actor )
+	local i = 0
 	while not self.cancelled do
 		if math.random() < 0.4 then
 			self.scrounge:DoVerb( actor )
@@ -60,6 +61,8 @@ function Scavenge:Interact( actor )
 		else
 			self.leave:DoVerb( actor )
 		end
+		i = i + 1
+		assert( i < 10000, " bad scavenge ")
 	end
 	Msg:Speak( actor, "Well, that's enough scavenging for now." )
 end
