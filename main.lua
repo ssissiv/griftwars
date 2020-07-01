@@ -3,19 +3,10 @@ package.path = "script/?.lua;foreign/?/init.lua;foreign/?.lua;"..package.path
 -----------------------------------------------------------
 
 START_TIME = love.timer.getTime()
+print( "START_TIME=", START_TIME )
 
 local strict = require "util/strict"
 strictify( _G )
-
-old_print = print
-print = function( ... )
-    local f = debug.getinfo( 3 )
-    if f then
-        old_print( string.format( "%s:%d", f.short_src, f.linedefined ), ... )
-    else
-        old_print( ... )
-    end
-end
 
 util = require "util/util"
 constants = require "constants"

@@ -60,9 +60,15 @@ function DebugManager:init()
 		self.last_print_output = os.clock()
 		self.scroll_to_bottom = true
 		self.print_history_idx = idx
-	    self.logfile:write( str )
-	    self.logfile:write( "\n" )
-		self.logfile:flush()
+
+	    local f = debug.getinfo( 3 )
+	    if f then
+	    	local s = string.format( "%s:%d: %s\n", f.short_src, f.linedefined, str )
+	    	self.logfile:write( s )
+	    else
+	    	self.logfile:write( str.."\n" )
+	    end
+    	self.logfile:flush()
 	end
 end
 
