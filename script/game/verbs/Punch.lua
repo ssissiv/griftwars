@@ -80,9 +80,13 @@ function Punch:Interact( actor, target )
 	local damage = self:CalculateDamage( target )
 	local ok, result_str = self:CheckDC( actor, target )
 
-	-- Notify target they were attacked!
-	actor:BroadcastEvent( AGENT_EVENT.ATTACK, target, self, ok )
+	actor:BroadcastEvent( AGENT_EVENT.PRE_ATTACK, target, self, ok )
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
+
+	if actor:IsDead() or target:IsDead() then
+		return
+	end
+
 	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
 	target:GetAspect( Aspect.Combat ):EvaluateTargets()
 
@@ -104,6 +108,8 @@ function Punch:Interact( actor, target )
 		Msg:Echo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
 		Msg:Echo( target, loc.format( "{1.Id} misses you with {1.hisher} {2}.", actor:LocTable( target ), self ))
 	end
+
+	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )
 
 	self:YieldForTime( self:GetDuration() )
 end

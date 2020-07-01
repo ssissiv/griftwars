@@ -23,8 +23,8 @@ JaggedDirk.image = assets.IMG.DIRK
 JaggedDirk.attack_power = 4
 JaggedDirk.equipment_handlers = 
 {
-	[ AGENT_EVENT.ATTACK ] = function( self, event_name, actor, target, attack, success )
-		if success then
+	[ AGENT_EVENT.POST_ATTACK ] = function( self, event_name, actor, target, attack, success )
+		if success and not target:IsDead() then
 			local stacks = math.random( 0, 3 )
 			if stacks > 0 then
 				Msg:Echo( actor, "Your dirk opens a gash in your victim!" )

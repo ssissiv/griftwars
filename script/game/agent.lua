@@ -691,6 +691,7 @@ function Agent:GainStatusEffect( class, stacks )
 	if (stacks or 1) <= 0 then
 		return
 	end
+	assert( not self:IsDead() )
 	assert( is_class( class, Aspect.StatusEffect ))
 	
 	local aspect = self:GetAspect( class )

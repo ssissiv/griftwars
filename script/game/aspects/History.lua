@@ -13,6 +13,7 @@ function History:ResetHistory()
 end
 
 function History:SaveToFile( filename )
+	-- OSX: /Users/user/Library/Application Support/LOVE/griftwars/
 	local file, err = love.filesystem.newFile( filename, "w" )
 	if not file then
 		print( "SaveToFile failed", filename, err )

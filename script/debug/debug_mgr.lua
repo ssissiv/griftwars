@@ -36,6 +36,7 @@ function DebugManager:init()
 
 	self.print_history = {}
 	self.print_history_idx = 1 -- Ringbuffer index.
+	self.logfile = io.open( "log.txt", "w" )
 
 	local cattable = {}
 
@@ -48,7 +49,7 @@ function DebugManager:init()
 	        table.insert(cattable, tostring(select(k, ...)))
 
 	    end
-		local str = table.concat(cattable, '    ')
+		local str = table.concat(cattable, ' ')
 	    table.clear(cattable)
 
 		local history, idx = self.print_history, self.print_history_idx
@@ -59,11 +60,15 @@ function DebugManager:init()
 		self.last_print_output = os.clock()
 		self.scroll_to_bottom = true
 		self.print_history_idx = idx
+	    self.logfile:write( str )
+	    self.logfile:write( "\n" )
+		self.logfile:flush()
 	end
 end
 
 function DebugManager:Shutdown()
 	print( "DebugManager:Shutdown()")
+	self.logfile:close()
 end
 
 function DebugManager:GetDebugEnv()

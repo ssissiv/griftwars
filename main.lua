@@ -99,6 +99,11 @@ debug_mgr:AddBindingGroup( debug_menus.GAME_BINDINGS )
 
 local myShader
 local global_lcg = lcg()
+local update_frame = 0
+
+function GetFrame()
+    return update_frame
+end
 
 function GetGUI()
     return gui
@@ -163,6 +168,8 @@ function love.load(arg)
 end
  
 function love.update(dt)
+    update_frame = update_frame + 1
+
     imgui.NewFrame()
     debug.sethook( function( hook_type ) print( "INFINITE LOOP?" ) error( "Infinite loop detected!" ) end, "", 10000000 )
     gui:Update( dt )

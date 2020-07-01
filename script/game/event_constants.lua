@@ -25,7 +25,12 @@ AGENT_EVENT = MakeEnum{
 	"ACTIVATED_PORTAL",
 	"DIED",
 	"KILLED",
-	"ATTACK",
+
+	-- Attacker events.
+	"PRE_ATTACK",
+	"POST_ATTACK",
+
+	-- Victim events.
 	"ATTACKED",
 }
 

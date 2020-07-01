@@ -337,10 +337,16 @@ function Verb:Cancel()
 		return
 	end
 
-	assert( not self.cancelled )
+	if self.cancelled then
+		print( self, self.cancelled_frame, self.cancelled_trace )
+		print( GetFrame(), self.actor, self.actor:IsDead() )
+		error( "already cancelled: "..tostring(self)) 
+	end
+
 	self.cancelled = true
 	self.cancelled_trace = debug.traceback()
 	self.cancelled_time = self.actor.world:GetDateTime()
+	self.cancelled_frame = GetFrame()
 
 	-- print ( "CANCEL", self, self.actor, debug.traceback())
 	if self.yield_ev then
