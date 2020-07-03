@@ -61,11 +61,12 @@ function LeaveLocation:GetDesc()
 end
 
 function LeaveLocation:CanInteract( actor )
-	for i, verb in actor:Verbs() do
-		if verb ~= self and verb:HasBusyFlag( VERB_FLAGS.MOVEMENT ) then
-			return false, "Moving"
-		end
-	end
+	-- this seems like it should be unnecessary
+	-- if actor:IsBusy( )	for i, verb in actor:Verbs() do
+	-- 	if verb ~= self and verb:HasBusyFlag( VERB_FLAGS.MOVEMENT ) then
+	-- 		return false, "Moving"
+	-- 	end
+	-- end
 
 	if self.reqs then
 		local ok, details = self.reqs:IsSatisfied( actor )

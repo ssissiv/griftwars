@@ -3,9 +3,9 @@ local FindInformation = class( "Verb.FindInformation", Verb.Plan )
 
 function FindInformation:init()
 	FindInformation._base.init( self )
-	self.travel = self:AddChildVerb( Verb.Travel())
-	self.idle = self:AddChildVerb( Verb.Idle() )
-	self.wander = self:AddChildVerb( Verb.Wander() )
+	self.travel = Verb.Travel()
+	self.idle = Verb.Idle()
+	self.wander = Verb.Wander()
 end
 
 function FindInformation:RenderAgentDetails( ui, screen, viewer )
@@ -29,14 +29,16 @@ function FindInformation:Interact( actor )
 
 	actor.location:Flood( IsTavern )
 	if dest then
-		self.travel:DoVerb( actor, dest )
+		self:DoChildVerb( self.travel, dest )
 	end
 
-	if actor:GetLocation() and actor:GetLocation():HasAspect( Feature.Tavern ) then
-		Msg:Speak( actor, "Psst. Hear anything interesting?" )
-		self.idle:DoVerb( actor )
-	else
-		self.wander:DoVerb( actor )
+	if not self:IsCancelled() then
+		if actor:GetLocation() and actor:GetLocation():HasAspect( Feature.Tavern ) then
+			Msg:Speak( actor, "Psst. Hear anything interesting?" )
+			self:DoChildVerb( self.idle )
+		else
+			self:DoChildVerb( self.wander )
+		end
 	end
 end
 

@@ -4,7 +4,7 @@ function Job:init( employer )
 	Verb.init( self )
 	assert( is_instance( employer, Agent ))
 	self.employer = employer
-	self.idle = self:AddChildVerb( Verb.Idle() )
+	self.idle = Verb.Idle()
 
 	if self.OnInit then
 		self:OnInit()
@@ -164,7 +164,7 @@ function Job:CanInteract( actor )
 end
 
 function Job:Idle( actor, duration )
-	self.idle:DoVerb( actor, nil, duration )
+	self:DoChildVerb( self.idle, nil, duration )
 end
 
 function Job:Interact()
@@ -172,14 +172,18 @@ function Job:Interact()
 	-- Track job location and stay around there.
 	while self:IsTimeForShift( self:GetWorld():GetDateTime() ) and not self:IsCancelled() do
 		if self.travel == nil then
-			self.travel = self:AddChildVerb( Verb.Travel() )
+			self.travel = Verb.Travel()
 		end
 		local waypoint = self:GetWaypoint()
 		if waypoint and not waypoint:AtWaypoint( actor ) then
-			local ok, reason = self.travel:DoVerb( actor, waypoint )
+			local ok, reason = self:DoChildVerb( self.travel, waypoint )
 			if ok then
 				Msg:Speak( actor, "Time for work!" )
 			end
+		end
+
+		if self:IsCancelled() then
+			break
 		end
 
 		if waypoint and waypoint:AtWaypoint( actor ) then

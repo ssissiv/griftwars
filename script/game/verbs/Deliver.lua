@@ -15,7 +15,7 @@ function Deliver:init( giver, receiver )
 	Deliver._base.init( self, giver )
 	self.giver = giver
 	self.receiver = receiver
-	self.travel = self:AddChildVerb( Verb.Travel( self.giver, self.receiver ))
+	self.travel = Verb.Travel( self.giver, self.receiver )
 end
 
 function Deliver:GetShortDesc( viewer )
@@ -45,7 +45,7 @@ function Deliver:CanInteract( actor )
 end
 
 function Deliver:Interact( actor )
-	self.travel:DoVerb( actor )
+	self:DoChildVerb( self.travel )
 
 	Verb.GiveAll.Interact( nil, actor, self.receiver )
 

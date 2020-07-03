@@ -24,9 +24,9 @@ local Scavenge = class( "Verb.Scavenge", Verb.Plan )
 function Scavenge:init()
 	Scavenge._base.init( self )
 
-	self.scrounge = self:AddChildVerb( Verb.Scrounge() )
-	self.wander = self:AddChildVerb( Verb.Wander() )
-	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
+	self.scrounge = Verb.Scrounge()
+	self.wander = Verb.Wander()
+	self.leave = Verb.LeaveLocation()
 end
 
 function Scavenge:RenderAgentDetails( ui, screen, viewer )
@@ -55,11 +55,11 @@ function Scavenge:Interact( actor )
 	local i = 0
 	while not self.cancelled do
 		if math.random() < 0.4 then
-			self.scrounge:DoVerb( actor )
+			self:DoChildVerb( self.scrounge )
 		elseif math.random() < 0.5 then
-			self.wander:DoVerb( actor, nil, 10 * ONE_MINUTE )
+			self:DoChildVerb( self.wander, nil, 10 * ONE_MINUTE )
 		else
-			self.leave:DoVerb( actor )
+			self:DoChildVerb( self.leave )
 		end
 		i = i + 1
 		assert( i < 10000, " bad scavenge ")

@@ -83,7 +83,8 @@ function Punch:Interact( actor, target )
 	actor:BroadcastEvent( AGENT_EVENT.PRE_ATTACK, target, self, ok )
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
 
-	if actor:IsDead() or target:IsDead() then
+	if actor:IsDead() or target:IsDead() or self:IsCancelled() then
+		self:OnCancel()
 		return
 	end
 

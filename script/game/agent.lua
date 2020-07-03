@@ -550,7 +550,7 @@ end
 
 function Agent:IsDoing( verb )
 	for i, v in ipairs( self.verbs or table.empty ) do
-		if v == verb or (is_class( verb ) and is_instance( v, verb )) then
+		if v:FindVerb( verb ) then
 			return true
 		end
 	end
@@ -563,31 +563,35 @@ function Agent:AttemptVerb( verb_class, obj )
 	verbs:SortByDistanceTo( self:GetCoordinate() )
 	local verb = verbs:FindVerbClass( verb_class )
 	if verb then
-		local ok, reason = verb:CanDo( self, obj )
-		if ok then
-			self:DoVerbAsync( verb )
-			return true
-		else
-			if reason then
-				Msg:Echo( self, reason )
-			end
-			return false
+		local ok, reason = self:DoVerbAsync( verb )
+		if not ok and reason then
+			Msg:Echo( self, reason )
 		end
 	end
+end
+
+local function DoVerbCoroutine( self, verb, ... )
+	self:_AddVerb( verb )
+
+	verb:DoVerb( self, ... )
+
+	self:_RemoveVerb( verb )
 end
 
 function Agent:DoVerbAsync( verb, ... )
 	local ok, reason = verb:CanDo( self, ... )
 	if not ok then
 		print( "No can do!", self, verb, reason, ... )
-		return
+		return false, reason
 	end
 
-	local coro = coroutine.create( verb.DoVerb )
-	local ok, result = coroutine.resume( coro, verb, self, ... )
+	local coro = coroutine.create( DoVerbCoroutine )
+	local ok, result = coroutine.resume( coro, self, verb, ... )
 	if not ok then
 		error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
 	end
+
+	return true
 end
 
 function Agent:_AddVerb( verb )

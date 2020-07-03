@@ -123,34 +123,18 @@ function Verb:GetWorld()
 	end
 end
 
-function Verb:AddChildVerb( verb )
-	if self.children == nil then
-		self.children = {}
-	end
-	table.insert( self.children, verb )
-
-	assert( verb.parent == nil )
-	verb.parent = self
-
-	return verb
-end
-
-function Verb:RemoveChildVerb( verb )
-	assert( verb.parent == self )
-	table.arrayremove( self.children, verb )
-	verb.parent = nil
-end
-
 function Verb:GetFlags()
 	return bit32.bor( self.FLAGS or 0, self.flags or 0 )
 end
 
 function Verb:HasBusyFlag( flags )
-	if flags == nil then
+	if flags == nil or bit32.band( self:GetFlags(), flags ) == flags then
 		return true
-	else
-		return bit32.band( self:GetFlags(), flags ) == flags
+	elseif self.child and self.child:HasBusyFlag( flags ) then
+		return true
 	end
+
+	return false
 end
 
 function Verb.RecurseSubclasses( class, fn )
@@ -262,12 +246,47 @@ function Verb:DidWithinTime( actor, dt )
 	return false
 end
 
--- Involves this acting agent in the verb.
-function Verb:AttachActor( actor )
-	actor:_AddVerb( self )
+function Verb:FindVerb( verb )
+	if is_class( verb ) and is_instance( self, verb ) then
+		return self -- We are an instance of the verb class required.
+	elseif self == verb then
+		return self -- We are literally the verb required.
+	end
+	if self.child then
+		return self.child:FindVerb( verb )
+	end
+end
 
-	assert( self.actors, self._classname )
-	table.insert( self.actors, actor )
+function Verb:DoChildVerb( verb, ... )
+	assert( self:IsRunning() )
+
+	if self.cancelled then
+		print( self, " attempted to DoChildVerb while cancelled!" )
+		print( debug.traceback() )
+		return
+	end
+
+	local ok, reason = verb:CanDo( self.actor, ... )
+	if not ok then
+		return false, reason
+	end
+
+	assert( self.child == nil )
+	self.child = verb
+
+	assert( verb.parent == nil )
+	verb.parent = self
+
+	local result = verb:DoVerb( self.actor, ... )
+
+	self.child = nil
+	verb.parent = nil
+
+	return result
+end
+
+function Verb:DoVerb( actor, ... )
+	assert( actor:IsDoing( self ), "not doing" )
 
 	if self.event_handlers then
 		for event_name, fn in pairs( self.event_handlers ) do
@@ -275,21 +294,14 @@ function Verb:AttachActor( actor )
 		end
 	end
 
-	return true
-end
-
-
-function Verb:DoVerb( actor, ... )
-	local ok, reason = self:CanDo( actor, ... )
-	if not ok then
-		return false, reason
-	end
-
-	self:AttachActor( actor )
-
+	table.insert( self.actors, actor )
 	self.actor = actor
 	self.world = actor.world
+
 	self.cancelled = nil
+	self.cancelled_trace = nil
+	self.cancelled_frame = nil
+
 	self.coro = coroutine.running()
 	assert( self.coro )
 	self.time_started = actor.world:GetDateTime()
@@ -300,13 +312,13 @@ function Verb:DoVerb( actor, ... )
 
 	assert( self.yield_ev == nil )
 	assert( self.yield_duration == nil )
+	assert( self.child == nil )
 
 	self.coro = nil
 	self.time_finished = actor.world:GetDateTime()
 
 	for i, actor in ipairs( self.actors ) do
 		actor:RemoveListener( self )
-		actor:_RemoveVerb( self )
 	end
 	table.clear( self.actors )
 
@@ -334,6 +346,8 @@ function Verb:Cancel()
 		return
 	end
 
+	-- print ( "CANCEL", self, self.actor, debug.traceback())
+
 	if self.cancelled then
 		print( self, self.cancelled_frame, self.cancelled_trace )
 		print( GetFrame(), self.actor, self.actor:IsDead() )
@@ -345,20 +359,13 @@ function Verb:Cancel()
 	self.cancelled_time = self.actor.world:GetDateTime()
 	self.cancelled_frame = GetFrame()
 
-	-- print ( "CANCEL", self, self.actor, debug.traceback())
-	if self.yield_ev then
+	if self.child then
+		assert( self.yield_ev == nil ) -- We cannot be the yielding Verb if a child is running.
+		self.child:Cancel()
+
+	elseif self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.actor.world:TriggerEvent( self.yield_ev )
-	end
-
-	if self.children then
-		for i, child in ipairs( self.children ) do
-			child:Cancel()
-		end
-	end
-
-	if self.OnCancel then
-		self:OnCancel()
 	end
 end
 
@@ -382,8 +389,8 @@ function Verb:YieldForTime( duration, how, act_rate )
 	assert( duration > 0 )
 
 	if self.cancelled then
-		print( self, " attempted to yield while cancelled!" )
-		print( debug.traceback() )
+		-- print( self, " attempted to yield while cancelled!" )
+		-- print( debug.traceback() )
 		return
 	end
 
@@ -420,12 +427,8 @@ function Verb:Unyield()
 		self.world:RescheduleEvent( self.yield_ev, 0 )
 		return true
 
-	elseif self.children then
-		for i, child in ipairs( self.children ) do
-			if child:Unyield() then
-				return true
-			end
-		end
+	elseif self.child then
+		return self.child:Unyield()
 	end
 
 	return false
@@ -485,6 +488,8 @@ function Verb:Resume( coro )
 end
 
 function Verb:RenderDebugPanel( ui, panel, dbg )
+	ui.PushID( rawstring( self ))
+
 	panel:AppendTable( ui, self )
 
 	ui.Indent( 20 )
@@ -543,7 +548,15 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 			ui.TextColored( 1, 0, 0, 1, reason or "Invalid" )
 		end
 	end
+
+	if self.child then
+		ui.Indent( 20 )
+		self.child:RenderDebugPanel( ui, panel, dbg )
+		ui.Unindent( 20 )
+	end
+
 	ui.Unindent( 20 )
+	ui.PopID()
 end
 
 function Verb:__tostring()

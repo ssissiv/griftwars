@@ -2,7 +2,7 @@ local HostileCombat = class( "Verb.HostileCombat", Verb )
 
 function HostileCombat:init()
 	Verb.init( self )
-	self.travel = self:AddChildVerb( Verb.Travel() )
+	self.travel = Verb.Travel()
 end
 
 function HostileCombat:GetShortDesc( viewer )
@@ -66,9 +66,9 @@ function HostileCombat:Interact( actor )
 		actor:GetAspect( Aspect.Combat ):SetCurrentAttack( attack )
 		assert( attack.InAttackRange, tostr(attack))
 		if not attack:InAttackRange( actor, target ) then
-			local ok, reason = self.travel:DoVerb( actor, target )
+			local ok, reason = self:DoChildVerb( self.travel, target )
 		else
-			attack:DoVerb( actor, attack:GetTarget() )
+			self:DoChildVerb( attack, attack:GetTarget() )
 		end
 		if actor:GetAspect( Aspect.Combat ) then
 			actor:GetAspect( Aspect.Combat ):SetCurrentAttack( nil )

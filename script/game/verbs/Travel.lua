@@ -19,7 +19,7 @@ Travel.ENTER_STRINGS =
 
 function Travel:init( dest )
 	Verb.init( self, nil, dest )
-	self.leave = self:AddChildVerb( Verb.LeaveLocation() )
+	self.leave = Verb.LeaveLocation()
 end
 
 function Travel:SetApproachDistance( dist )
@@ -123,7 +123,7 @@ function Travel:Interact( actor, dest )
 		self.path = pather:GetPath()
 		if self.path then
 			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
-			local ok, reason = self.leave:DoVerb( actor, portal )
+			local ok, reason = self:DoChildVerb( self.leave, portal )
 			if not ok then
 				print( "Cant travel", actor, reason )
 				self:YieldForTime( HALF_HOUR )

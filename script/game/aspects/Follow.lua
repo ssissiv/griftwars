@@ -5,7 +5,7 @@ Follow.INTENT_FLAGS = INTENT.STEALTH
 function Follow:init( other, approach_dist )
 	Verb.init( self, nil, other )
 	self.approach_dist = approach_dist
-	self.travel = self:AddChildVerb( Verb.Travel() )
+	self.travel = Verb.Travel()
 end
 
 function Follow:CanInteract( actor, other )
@@ -33,7 +33,8 @@ function Follow:Interact( actor, other )
 	while not self:IsCancelled() do
 		if actor:GetLocation() ~= other:GetLocation() or EntityDistance( actor, other ) > 2 then
 			self.travel:SetApproachDistance( self.approach_dist )
-			self.travel:DoVerb( actor, other )
+			self:DoChildVerb( self.travel, other )
+			-- self.travel:DoVerb( actor, other )
 		end
 
 		self:YieldForTime( ONE_HOUR )

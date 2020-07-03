@@ -11,7 +11,7 @@ Help.ACT_DESC =
 function Help:init( actor, obj )
 	Verb.init( self, actor, obj )
 	assert( is_instance, obj, Verb )
-	self.travel = self:AddChildVerb( Verb.Travel( actor, obj.actor ))
+	self.travel = Verb.Travel( actor, obj.actor )
 end
 
 function Help:GetDesc()
@@ -42,7 +42,7 @@ function Help:Interact( actor )
 	self.obj:AddHelperVerb( self )
 
 	while true do
-		self.travel:DoVerb( actor )
+		self:DoChildVerb( self.travel )
 
 		self:YieldForTime( 1 * ONE_MINUTE, "rate", 2.0 )
 

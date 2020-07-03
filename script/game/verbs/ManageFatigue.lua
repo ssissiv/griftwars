@@ -2,9 +2,9 @@ local ManageFatigue = class( "Verb.ManageFatigue", Verb.Plan )
 
 function ManageFatigue:init()
 	ManageFatigue._base.init( self )
-	self.rest = self:AddChildVerb( Verb.ShortRest())
-	self.sleep = self:AddChildVerb( Verb.Sleep())
-	self.travel = self:AddChildVerb( Verb.Travel())
+	self.rest = Verb.ShortRest()
+	self.sleep = Verb.Sleep()
+	self.travel = Verb.Travel()
 end
 
 function ManageFatigue:CalculateUtility( actor )
@@ -48,17 +48,18 @@ function ManageFatigue:Interact( actor )
 		local home = actor:GetHome()
 		if home then
 			Msg:Speak( actor, "I'm going home." )
-			self.travel:DoVerb( actor, home )
+			self:DoChildVerb( self.travel, home )
 		end
 
 		if home and actor:GetLocation() == home then
 			self:GetWorld():Log( "{1} is sleeping at home.", actor )
 		end
 
-		self.sleep:DoVerb( actor )
+		self:DoChildVerb( self.sleep, actor )
+
 	else
 		Msg:Speak( actor, "Maybe I'll rest for a bit." )
-		self.rest:DoVerb( actor )
+		self:DoChildVerb( self.rest, actor )
 	end
 
 	if not self:IsCancelled() then
