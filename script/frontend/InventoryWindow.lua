@@ -60,6 +60,9 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
                     self:SelectObject( obj )
                 end
             end
+            if ui.IsItemHovered() and obj.RenderTooltip then
+                obj:RenderTooltip( ui, screen )
+            end
             if self.selected_obj == obj then
                 screen:RenderPotentialVerbs( ui, self.viewer, "object", obj )
                 self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj )

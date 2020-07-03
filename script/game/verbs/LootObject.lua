@@ -49,6 +49,6 @@ function LootAll:Interact( actor, inventory )
 
 	self.loot = self.loot or Verb.LootObject()
 	for i, obj in inventory:Items() do
-		self.loot:DoVerb( actor, obj )
+		self:DoChildVerb( self.loot, obj )
 	end
 end

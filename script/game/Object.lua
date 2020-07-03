@@ -53,6 +53,10 @@ function Object:GetShortDesc( viewer )
 	-- return loc.format( "{1} is here.", tostring(self))
 end
 
+function Object:GetDesc( viewer )
+	return self.desc
+end
+
 function Object:Inscribe( txt )
 	self.scribe_txt = txt
 	return self
@@ -164,6 +168,26 @@ function Object:GetLocation()
 	elseif self.carrier then
 		return self.carrier:GetLocation()
 	end
+end
+
+function Object:RenderTooltip( ui, screen, viewer )
+	local desc = self:GetDesc( viewer )
+	ui.BeginTooltip()
+	local desc = self:GetDesc( viewer )
+	if desc then
+		ui.TextColored( 0.8, 0.8, 0.8, 1, tostring(desc) )
+		ui.Spacing()
+	end
+	if self.attack_power then
+		ui.Text( "Attack:" )
+		ui.SameLine( 0, 5 )
+		ui.TextColored( 0.8, 0, 0, 1, tostring(self.attack_power) )
+	end
+
+	ui.Text( "Value:" )
+	ui.SameLine( 0, 5 )
+	ui.TextColored( 1, 1, 0, 1, tostring(self:GetValue() ))
+	ui.EndTooltip()
 end
 
 function Object:RenderMapTile( screen, tile, x1, y1, x2, y2 )

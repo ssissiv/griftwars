@@ -2,6 +2,7 @@ local Dirk = class( "Weapon.Dirk", Object )
 
 Dirk.image = assets.IMG.DIRK
 Dirk.attack_power = 3
+Dirk.desc = "A crude weapon."
 
 function Dirk:init()
 	Object.init( self )
@@ -41,6 +42,8 @@ function JaggedDirk:init()
 	self:GainAspect( Aspect.Wearable( EQ_SLOT.WEAPON ))
 	self:GainAspect( Aspect.Carryable() )
 end
+
+JaggedDirk.desc = "75%% to cause Bleed on a successful attack."
 
 function JaggedDirk:GetName()
 	return "jagged dirk"
