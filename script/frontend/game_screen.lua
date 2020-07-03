@@ -289,7 +289,7 @@ function GameScreen:RenderScreen( gui )
 		ui.SameLine( 0, 10 )
     	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
     	ui.SameLine( 0, 10 )
-    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc(), verb:GetActingProgress() or 1.0 ))
+    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc( puppet ) or tostring(verb), verb:GetActingProgress() or 1.0 ))
 
     	if verb:CanCancel() then
     		ui.SameLine( 0, 10 )
@@ -449,50 +449,6 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 			love.graphics.print( "ALLY", x, y - 16 )
 		end
 	end
-end
-
-function GameScreen:RenderPotentialVerbs( ui, agent, id, ... )
-	ui.Indent( 20 )
-
-	for i, verb in agent:PotentialVerbs( id, ... ) do
-		local ok, details = verb:CanDo( agent, ... )
-		local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc() )
-
-		-- if agent:IsBusy() then
-		-- 	ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-		-- 	details = "You are already busy."
-
-		if not ok then
-			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-			details = details or "Can't do."
-
-		else
-			if verb.COLOUR then
-				ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
-			else
-				ui.PushStyleColor( "Text", 1, 1, 0, 1 )
-			end
-
-			if ui.Selectable( txt ) then
-				agent:DoVerbAsync( verb, ... )
-			end
-
-			ui.PopStyleColor()
-		end
-
-		if ui.IsItemHovered() and (details or verb.RenderTooltip) then
-			ui.BeginTooltip()
-			if verb.RenderTooltip then
-				verb:RenderTooltip( ui, agent )
-			end
-			if details then
-				ui.TextColored( 1, 1, 0.5, 1, details )
-			end
-			ui.EndTooltip()
-		end
-	end
-
-	ui.Unindent( 20 )
 end
 
 function GameScreen:RenderLocationTiles( location )

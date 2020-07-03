@@ -5,17 +5,8 @@ function HostileCombat:init()
 	self.travel = Verb.Travel()
 end
 
-function HostileCombat:GetShortDesc( viewer )
-	if viewer == self:GetOwner() then
-		return "You are attacking!"
-	else
-		return loc.format( "{1.Id} is here attacking!", self.actor:LocTable( viewer ))
-	end
-end
-
-function HostileCombat:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
-	ui.Text( "Fighting!" )
+function HostileCombat:GetDesc( viewer )
+	return "Fighting!"
 end
 
 function HostileCombat:CalculateUtility( actor )

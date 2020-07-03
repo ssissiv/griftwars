@@ -15,10 +15,6 @@ function Patrol:SetWaypoint( waypoint )
 	self.waypoint = waypoint
 end
 
-function Patrol:GetDesc()
-	return "On Patrol"
-end
-
 function Patrol:RenderAgentDetails( ui, screen, viewer )
 	local location = self.waypoint and self.waypoint:GetLocation()
 	if location then

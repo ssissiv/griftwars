@@ -18,17 +18,6 @@ function Deliver:init( giver, receiver )
 	self.travel = Verb.Travel( self.giver, self.receiver )
 end
 
-function Deliver:GetShortDesc( viewer )
-	if viewer == self.giver then
-		return loc.format( self.ACT_DESC[1], nil, self.receiver:LocTable( viewer ))
-	elseif viewer == self.receiver then
-		return loc.format( self.ACT_DESC[2], self.actor:LocTable( viewer ), self.receiver:LocTable( viewer ))		
-	else
-		return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.receiver:LocTable( viewer ))
-	end
-end
-
-
 function Deliver:CalculateUtility( actor )
 	if self:DidWithinTime( actor, ONE_DAY ) then
 		return -1

@@ -18,14 +18,6 @@ function Help:GetDesc()
 	return "Help"
 end
 
-function Help:GetShortDesc( viewer )
-	if viewer == self.actor then
-		return loc.format( self.ACT_DESC[1], self.obj.actor:LocTable( viewer ), self.obj )
-	else
-		return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), self.obj.actor:LocTable( viewer ) )
-	end
-end
-
 function Help:CanInteract( actor )
 	if not self:IsDoing() then
 		if actor:IsBusy( self.FLAGS ) then

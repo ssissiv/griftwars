@@ -29,11 +29,6 @@ function Scavenge:init()
 	self.leave = Verb.LeaveLocation()
 end
 
-function Scavenge:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
-	ui.Text( "Scavenging for valuables" )
-end
-
 function Scavenge:CalculateUtility( actor )
 	-- How broke am I?
 	local value = actor:GetInventory():CalculateValue()

@@ -83,6 +83,8 @@ end
 
 function AgentDetailsWindow:RenderStats( ui, screen )
 	self:RenderAspects( "Stats:", ui, screen, Aspect.StatValue )
+	self:RenderAspects( "Combat:", ui, screen, Aspect.Combat )
+	self:RenderAspects( "Job:", ui, screen, Job )
 end
 
 function AgentDetailsWindow:RenderSkills( ui, screen )
@@ -122,8 +124,6 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
     local shown, close, c = ui.Begin( txt, false, flags )
     if shown then
 		UIHelpers.RenderSelectedEntity( ui, screen, self.agent, self.viewer )
-
-		ui.Text( loc.format( "{1} {2}", self.agent.species, self.agent.gender ))
 		ui.Dummy( 400, 0 )
 
 		ui.Spacing()

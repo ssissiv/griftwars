@@ -1,5 +1,7 @@
 local CloseObject = class( "Verb.CloseObject", Verb )
 
+CloseObject.act_desc = "Close"
+
 function CloseObject:init( target )
 	Verb.init( self, nil, target )
 end

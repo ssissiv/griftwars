@@ -392,6 +392,28 @@ function Location:SearchObject( fn, max_depth )
 	return candidates
 end
 
+function Location:FindEmptyPassableTile( x, y, obj )
+	if x == nil or y == nil then
+		local w, h = self.map:GetExtents()
+		x, y = self.rng:Random( w ), self.rng:Random( h )
+	end
+
+	local found_tile
+	local function IsEmptyPassable( tile, depth, obj )
+		if tile:IsEmpty() and tile:IsPassable( obj )then
+			return false, true -- STOP
+		end
+		return true
+	end
+
+	local origin = self:GetTileAt( x, y )
+	assert( origin, tostring(x)..","..tostring(y) )
+
+	self.map:Flood( origin, IsEmptyPassable, obj )
+
+	return found_tile
+end
+
 function Location:FindPassableTile( x, y, obj )
 	local found_tile
 	local function IsPassable( tile, depth, obj )

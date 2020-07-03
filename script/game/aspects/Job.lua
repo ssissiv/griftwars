@@ -16,15 +16,7 @@ function Job:GetName()
 end
 
 function Job:GetDesc()
-	return loc.format( "Work job as {1}", self:GetName() )
-end
-
-function Job:GetShortDesc( viewer )
-	if viewer == self:GetOwner() then
-		return "You are working."
-	else
-		return loc.format( "{1.Id} is here working.", self:GetOwner():LocTable( viewer ))
-	end
+	return loc.format( "Working as {1}", self:GetName() )
 end
 
 function Job:RenderAgentDetails( ui, screen )

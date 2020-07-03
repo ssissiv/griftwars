@@ -7,16 +7,11 @@ function Strategize:init( actor )
 	Strategize._base.init( self, actor )
 end
 
-function Strategize:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
+function Strategize:GetDesc( viewer )
 	if self.target then
-		ui.Text( loc.format( "Strategizing to capture {1}", self.target ))
-		ui.SameLine( 0, 5 )
-		if ui.SmallButton( "?" ) then
-			DBG(self.target)
-		end
+		return loc.format( "Strategizing to capture {1}", self.target )
 	else
-		ui.Text( "Making military plans" )
+		return "Making military plans"
 	end
 end
 

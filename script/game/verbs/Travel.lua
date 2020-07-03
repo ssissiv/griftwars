@@ -26,21 +26,19 @@ function Travel:SetApproachDistance( dist )
 	self.approach_dist = dist
 end
 
-function Travel:GetDesc()
-	return loc.format( "Travel to {1}", tostring(self.obj) )
-end
-
-function Travel:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.actor ) then
-		ui.Bullet()
-		if self.obj == viewer then
-			ui.Text( loc.format( "Approaching you!" ))
-		elseif self.obj and self.obj:GetLocation() == viewer:GetLocation() then
-			ui.Text( loc.format( "Approaching {1}", tostring(self.obj) ))
+function Travel:GetDesc( viewer )
+	if self.obj == viewer then
+		return loc.format( "Approaching you!" )
+	elseif is_instance( self.obj, Location ) then
+		return loc.format( "Traveling to {1}", self.obj )
+	elseif self.obj and self.obj.GetLocation then
+		if viewer and self.obj:GetLocation() == viewer:GetLocation() then
+			return loc.format( "Approaching {1}", tostring(self.obj) )
 		else
-			ui.Text( "Traveling" )
+			return loc.format( "Traveling to {1}", self.obj:GetLocation() )
 		end
 	end
+	return "Traveling"
 end
 
 function Travel:CanInteract( actor )
@@ -138,6 +136,12 @@ function Travel:Interact( actor, dest )
 	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
 		local x, y = AccessCoordinate( dest )
 		if x and y then
+			self:PathToTarget( actor, dest )
+		end
+	else
+		-- Pick a random tile?
+		local dest = dest:FindEmptyPassableTile( nil, nil, actor )
+		if dest then
 			self:PathToTarget( actor, dest )
 		end
 	end

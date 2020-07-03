@@ -1,12 +1,7 @@
 local Wander = class( "Verb.Wander", Verb )
 
-function Wander:GetDesc()
-	return "Wander"
-end
-
-function Wander:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
-	ui.Text( "Idling (wandering)" )
+function Wander:GetDesc( viewer )
+	return "Wandering"
 end
 
 function Wander:Interact( actor, target, duration )

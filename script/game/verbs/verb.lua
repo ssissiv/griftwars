@@ -147,13 +147,7 @@ function Verb.RecurseSubclasses( class, fn )
 end
 
 function Verb:GetRoomDesc( viewer )
-	local desc = self:GetDesc( viewer )
-
-	if self.GetDuration then
-		return loc.format( "{1} ({2})", desc, Calendar.FormatDuration( self:GetDuration() ))
-	else
-		return desc
-	end
+	return self.act_desc or tostring(self)
 end
 
 function Verb:CalculateDC( actor, target )
@@ -231,11 +225,7 @@ function Verb:CanInteract( actor, target )
 	return true
 end
 
-function Verb:GetDesc()
-	return self._classname
-end
-
-function Verb:GetShortDesc( viewer )
+function Verb:GetDesc( viewer )
 end
 
 function Verb:DidWithinTime( actor, dt )

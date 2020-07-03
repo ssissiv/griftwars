@@ -8,9 +8,8 @@ function FindInformation:init()
 	self.wander = Verb.Wander()
 end
 
-function FindInformation:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
-	ui.Text( "Looking for information" )
+function FindInformation:GetDesc( ui, screen, viewer )
+	return "Looking for information"
 end
 
 function FindInformation:CalculateUtility( actor )

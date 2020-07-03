@@ -14,19 +14,8 @@ function ShortRest:GetDesc()
 	return "Short rest"
 end
 
-function ShortRest:GetShortDesc( viewer )
-	if viewer == self.actor then
-		return "You are resting."
-	else
-		return loc.format( "{1.Id} is here resting.", self.actor:LocTable( viewer ))
-	end
-end
-
-function ShortRest:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.actor ) then
-		ui.Bullet()
-		ui.Text( "Resting" )
-	end
+function ShortRest:GetDesc( viewer )
+	return "Resting"
 end
 
 function ShortRest:CanInteract( actor )

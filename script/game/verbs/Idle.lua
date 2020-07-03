@@ -4,9 +4,8 @@ function Idle:GetDesc()
 	return "Idle"
 end
 
-function Idle:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
-	ui.Text( "Idling in place" )
+function Idle:GetDesc( viewer )
+	return "Idling in place"
 end
 
 function Idle:Interact( actor, target, duration )

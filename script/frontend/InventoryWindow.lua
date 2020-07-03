@@ -64,8 +64,14 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
                 obj:RenderTooltip( ui, screen )
             end
             if self.selected_obj == obj then
-                screen:RenderPotentialVerbs( ui, self.viewer, "object", obj )
-                self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj )
+                ui.Indent( 20 )
+
+                self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj)
+                for i, verb in self.shown_verbs:Verbs() do
+                    UIHelpers.RenderPotentialVerb( ui, verb, i, self.viewer, obj )
+                end
+
+                ui.Unindent( 20 )
             end
     	end
 
@@ -90,6 +96,7 @@ function InventoryWindow:SelectObject( obj )
 end
 
 function InventoryWindow:KeyPressed( key, screen )
+    print( "KEY", key, self.shown_verbs)
     if key == "escape" then
         self:Close( screen )
         return true

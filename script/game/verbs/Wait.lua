@@ -1,8 +1,6 @@
 local Wait = class( "Verb.Wait", Verb )
 
-function Wait:GetDesc()
-	return "Wait"
-end
+Wait.act_desc = "Wait"
 
 function Wait:CanInteract( actor )
 	return Verb.CanInteract( self, actor )

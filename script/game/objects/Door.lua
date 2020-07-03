@@ -7,6 +7,7 @@ function Door:init( worldgen_tag )
 		self.portal = self:GainAspect( Aspect.Portal( WALK_TIME ) )
 		self.portal:SetWorldGenTag( worldgen_tag )
 	end
+	self:Close()
 end
 
 function Door:GetName()
@@ -47,16 +48,18 @@ function Door:IsLocked()
 end
 
 function Door:Open()
-	if not self:IsLocked() then
+	if self:IsClosed() and not self:IsLocked() then
 		self:LoseAspect( self:GetAspect( Aspect.Impass ))
+		self.image = assets.TILE_IMG.DOOR_OPEN
 	end
-	self.image = assets.TILE_IMG.DOOR_OPEN
 	return self
 end
 
 function Door:Close()
-	self:GainAspect( Aspect.Impass( IMPASS.STATIC ) )
-	self.image = nil
+	if not self:IsClosed() then
+		self:GainAspect( Aspect.Impass( IMPASS.STATIC ) )
+		self.image = nil
+	end
 	return self
 end
 

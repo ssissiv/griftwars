@@ -23,17 +23,11 @@ function Captain:init()
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize())
 	self:GainAspect( Skill.Fighting():SetSkillRank( 3 ))
-	self:GainAspect( Interaction.Befriend( CR1 ) )
-	self:GainAspect( Interaction.Chat() )
 
 	self.patrols = {}
 	for i = 1, 3 do
 		self.patrols[i] = Job.Patrol( self )
 	end
-end
-
-function Captain:GetLongDesc()
-	return loc.format( "Captain of {1}", self:GetAspect( Aspect.FactionMember ):GetName() )
 end
 
 function Captain:OnSpawn( world )

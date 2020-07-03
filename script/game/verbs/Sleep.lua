@@ -21,20 +21,9 @@ Sleep.event_handlers =
 
 function Sleep:GetDesc()
 	if self.obj then
-		return loc.format( "Sleep on {1}", self.obj )
+		return loc.format( "Sleeping on {1}", self.obj )
 	else
-		return "Sleep"
-	end
-end
-
-function Sleep:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.owner ) then
-		ui.Bullet()
-		if self.obj then
-			ui.Text( loc.format( "Sleeping on {1}", self.obj ))
-		else
-			ui.Text( "Sleeping" )
-		end
+		return "Sleeping"
 	end
 end
 

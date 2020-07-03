@@ -21,6 +21,10 @@ function Tile:Neighbours( map )
 	return map:Neighbours( self )
 end
 
+function Tile:IsEmpty()
+	return self.contents == nil
+end
+
 function Tile:IsPassable( what )
 	local impass = self:GetAspect( Aspect.Impass )
 	if impass and ( what == nil or not impass:IsPassable( what ) ) then

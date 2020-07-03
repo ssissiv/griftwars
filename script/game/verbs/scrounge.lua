@@ -47,25 +47,10 @@ Scrounge.ACT_DESC =
 
 Scrounge.FLAGS = VERB_FLAGS.HANDS
 Scrounge.DC = 10
+Scrounge.act_desc = "Scrounge"
 
-function Scrounge:GetDesc()
-	return "Scrounge"
-end
-
-function Scrounge:RenderAgentDetails( ui, screen, viewer )
-	if viewer:CanSee( self.actor ) then
-		ui.Bullet()
-		ui.Text( "Busy scrounging" )
-	end
-end
-
-
-function Scrounge:GetShortDesc( viewer )
-	if viewer == self.actor then
-		return loc.format( self.ACT_DESC[1] )
-	else
-		return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ) )
-	end
+function Scrounge:GetDesc( viewer )
+	return "Scrounging for valuables"
 end
 
 function Scrounge:FindTarget( actor )

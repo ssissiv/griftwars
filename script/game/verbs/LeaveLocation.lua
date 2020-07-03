@@ -16,41 +16,7 @@ function LeaveLocation:init( dest, reqs )
 	self.reqs = reqs
 end
 
-function LeaveLocation:GetShortDesc( viewer )
-	if self.obj then
-		local dest
-		if is_instance( self.obj, Aspect.Portal ) then
-			dest = self.obj:GetDest()
-		else
-			dest = self.obj
-		end
-
-		if self.actor:IsPuppet() then
-			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ), dest:LocTable( viewer ))
-		else
-			return loc.format( self.ACT_DESC[3], self.actor:LocTable( viewer ), dest:LocTable( viewer ))
-		end
-	else
-		if self.actor:IsPuppet() then
-			return loc.format( self.ACT_DESC[1], self.actor:LocTable( viewer ) )
-		else
-			return loc.format( "{1.Id} is here, leaving.", self.actor:LocTable( viewer ) )
-		end
-	end
-end
-
-function LeaveLocation:RenderAgentDetails( ui, screen, viewer )
-	ui.Bullet()
-	if is_instance( self.obj, Location ) then
-		ui.Text( loc.format( "Leaving to {1}", self.obj:GetTitle() ))
-	elseif is_instance( self.obj, Aspect.Portal ) then
-		ui.Text( loc.format( "Leaving to {1}", self.obj:GetDest():GetTitle() ))
-	else
-		ui.Text( "Leave somewhere" )
-	end
-end
-
-function LeaveLocation:GetDesc()
+function LeaveLocation:GetRoomDesc( viewer )
 	if is_instance( self.obj, Location ) then
 		return loc.format( "Leave to {1}", self.obj:GetTitle() )
 	elseif is_instance( self.obj, Aspect.Portal ) then

@@ -9,10 +9,6 @@ function Give:init( giver, receiver )
 	self.receiver = receiver
 end
 
-function Give:GetShortDesc( viewer )
-	error()
-end
-
 function Give:Interact( actor, receiver, item )
 	if actor:GetLocation() == receiver:GetLocation() then
 		Msg:ActToRoom( "{1.Id} gives something to {2.Id}.", actor, receiver )

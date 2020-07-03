@@ -25,6 +25,7 @@ end
 
 function VerbMenu:RenderSelectedEntity( ui, screen, ent )
     UIHelpers.RenderSelectedEntity( ui, screen, ent, self.actor )
+    ui.Separator()
 end
 
 function VerbMenu:RenderImGuiWindow( ui, screen )
@@ -51,45 +52,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                 end
             end
 
-            local ok, details = verb:CanDo( self.actor, verb:GetTarget() )
-            local txt = loc.format( "{1}] {2}", i, verb:GetRoomDesc( self.actor ) )
-
-            if not ok then
-                ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
-                details = details or "Can't do."
-
-            else
-                if verb.COLOUR then
-                    ui.PushStyleColor( "Text", Colour4( verb.COLOUR) )
-                else
-                    ui.PushStyleColor( "Text", 1, 1, 0, 1 )
-                end
-
-        		ui.Text( txt )
-
-                local dc, details = verb:CalculateDC( self.actor, verb:GetTarget() )
-                if dc ~= nil then
-                    ui.Indent( 20 )
-                    ui.Text( loc.format( "DC: {1}", tostring(dc) ))
-                    if ui.IsItemHovered() and details then
-                        ui.SetTooltip( tostring(details) )
-                    end
-                    ui.Unindent( 20 )
-                end
-
-                ui.PopStyleColor()
-            end
-
-            if details or verb.RenderTooltip then
-                ui.Indent( 20 )
-                if verb.RenderTooltip then
-                    verb:RenderTooltip( ui, verb.actor )
-                end
-                if details then
-                    ui.TextColored( 1, 0, 0, 1, details )
-                end
-                ui.Unindent( 20 )
-            end
+            UIHelpers.RenderPotentialVerb( ui, verb, i, self.actor, verb:GetTarget() )
         end
     end
 
