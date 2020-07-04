@@ -482,9 +482,12 @@ end
 function Agent:Walk( dir )
 	local x, y = OffsetDir( self.x, self.y, dir )
 	local tile = self.location:GetTileAt( x, y )
-	if tile and tile:IsPassable( self ) then
-		self:WarpToTile( tile )
+	if not tile or not tile:IsPassable( self ) then
+		return false
 	end
+
+	self:WarpToTile( tile )
+	return true
 end
 
 local function WarpToLocation( self, location, x, y )

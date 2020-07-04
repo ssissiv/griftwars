@@ -20,13 +20,13 @@ function Follow:CanInteract( actor, other )
 end
 
 function Follow:OnOtherEvent( event_name, ... )
-	if event_name == ENTITY_EVENT.TILE_CHANGED then
+	if event_name == ENTITY_EVENT.TILE_CHANGED or event_name == AGENT_EVENT.LOCATION_CHANGED then
 		self:Unyield()
 	end
 end
 
 function Follow:OnActorEvent( event_name, ... )
-	if event_name == ENTITY_EVENT.TILE_CHANGED then
+	if event_name == ENTITY_EVENT.TILE_CHANGED or event_name == AGENT_EVENT.LOCATION_CHANGED then
 		self:Unyield()
 	end
 end

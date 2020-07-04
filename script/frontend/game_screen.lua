@@ -789,6 +789,14 @@ function GameScreen:SetCurrentFocus( focus )
 	end
 
 	self:PanToCurrentInterest()
+
+	if self.current_focus and self.world:IsPaused( PAUSE_TYPE.DEBUG ) then
+		if self.last_panel then
+			GetDbg():ClearPanel( self.last_panel )
+		end
+
+		self.last_panel = DBG( self.current_focus )
+	end
 	-- print( "CURRENT FOCUS:", self.current_focus )
 end
 

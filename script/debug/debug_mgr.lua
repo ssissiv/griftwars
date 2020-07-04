@@ -421,6 +421,8 @@ function DebugManager:CreatePanel( debug_node )
 	assert( debug_node.RenderPanel )
 	local panel = DebugPanel( self, debug_node )
 	table.insert( self.debug_panels, panel )
+
+	return panel
 end
 
 function DebugManager:FindPanel( obj )
@@ -429,6 +431,11 @@ function DebugManager:FindPanel( obj )
 			return panel
 		end
 	end
+end
+
+function DebugManager:ClearPanel( panel )
+	table.arrayremove( self.debug_panels, panel )
+	panel:OnClose()
 end
 
 function DebugManager:DebugPanels()

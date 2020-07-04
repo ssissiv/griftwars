@@ -132,6 +132,10 @@ function TilePathFinder:CalculatePath()
 	return self.path
 end
 
+function TilePathFinder:ResetPath()
+	self.path = nil
+end
+
 function TilePathFinder:GetPath()
 	if self.path == nil then
 		self.path = self:CalculatePath()

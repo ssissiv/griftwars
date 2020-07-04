@@ -66,7 +66,13 @@ function Travel:PathToTarget( actor, dest )
 			local x1, y1 = self.path[1]:GetCoordinate()
 			local x2, y2 = self.path[2]:GetCoordinate()
 			local dir = OffsetToDir( x1, y1, x2, y2 )
-			actor:Walk( dir )
+			if not actor:Walk( dir ) then
+				self.block_count = (self.block_count or 0) + 1
+				if self.block_count >= 3 then
+					self:ResetPath()
+					print( actor, "couldn't walk", self.path[2] )
+				end
+			end
 		else
 			break
 		end
