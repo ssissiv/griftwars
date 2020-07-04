@@ -50,7 +50,9 @@ Scrounge.DC = 10
 Scrounge.act_desc = "Scrounge"
 
 function Scrounge:GetDesc( viewer )
-	return "Scrounging for valuables"
+	if self.obj then
+		return loc.format( "Scrounging {1.Id}", self.obj:LocTable( viewer ))
+	end
 end
 
 function Scrounge:FindTarget( actor )
@@ -88,9 +90,7 @@ function Scrounge:CanInteract( actor, target )
 end
 
 function Scrounge:Interact( actor, target )
-	if target == nil then
-		target = self:FindTarget( actor )
-	end
+	target = self:SetTarget( target or self:FindTarget( actor))
 
 	Msg:ActToRoom( "{1.Id} begins rummaging around in {2.Id}.", actor, target )
 	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )

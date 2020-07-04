@@ -29,6 +29,10 @@ function Scavenge:init()
 	self.leave = Verb.LeaveLocation()
 end
 
+function Scavenge:GetDesc( viewer )
+	return "Scavenging for valuables"
+end
+
 function Scavenge:CalculateUtility( actor )
 	-- How broke am I?
 	local value = actor:GetInventory():CalculateValue()
