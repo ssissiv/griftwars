@@ -71,10 +71,11 @@ function LeaveLocation:PathToPortal( actor, portal )
 end
 
 function LeaveLocation:Interact( actor, target )
-	target = target or self:GetTarget()
+	target = self:SetTarget( target or self.obj )
 
 	local dest, destx, desty
 	local portal
+	local random = false
 
 	if target == nil then
 		-- Chose a random accessible portal out of here.
@@ -85,6 +86,7 @@ function LeaveLocation:Interact( actor, target )
 			end
 		end
 
+		random = true
 		portal = table.arraypick( portals )
 		if portal == nil then
 			-- No such portal, guess we're done.

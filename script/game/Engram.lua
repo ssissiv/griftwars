@@ -31,16 +31,17 @@ end
 
 local Marked = class( "Engram.Marked", Engram )
 
-function Marked:init( obj )
+function Marked:init( obj, why )
 	self.obj = obj
+	self.why = why
 end
 
 function Marked:GetDesc()
-	return loc.format( "You marked {1}", self.obj )
+	return loc.format( "You marked {1} ({2})", self.obj, self.why )
 end
 
 function Marked:MergeEngram( other )
-	if is_instance( other, Marked ) then
+	if is_instance( other, Marked ) and self.obj == other.obj then
 		self.when = other.when
 		return true
 	end
@@ -95,7 +96,7 @@ function HasAttacked:GetDesc()
 end
 
 function HasAttacked:MergeEngram( other )
-	if is_instance( other, HasAttacked ) then
+	if is_instance( other, HasAttacked ) and self.agent == other.agent then
 		self.when = other.when
 		return true
 	end

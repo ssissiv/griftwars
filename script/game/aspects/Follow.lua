@@ -12,7 +12,7 @@ function Follow:CanInteract( actor, other )
 	-- if other:GetLocation() ~= actor:GetLocation() then
 	-- 	return false, "Not here"
 	-- end
-	if other:IsDead() then
+	if (other or self.obj):IsDead() then
 		return false
 	end
 	
@@ -27,7 +27,7 @@ end
 
 function Follow:Interact( actor, other )
 	other:ListenForAny( self, self.OnOtherEvent )
-	actor:Mark( other )
+	actor:Mark( other, "following" )
 
 	local z = 0
 	while not self:IsCancelled() do
@@ -40,6 +40,6 @@ function Follow:Interact( actor, other )
 		self:YieldForTime( ONE_HOUR )
 	end
 
-	actor:Unmark( other )
+	actor:Unmark( other, "following" )
 	other:RemoveListener( self )
 end

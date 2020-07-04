@@ -311,24 +311,42 @@ function Agent:CanSee( obj )
 	return false
 end
 
+function Agent:GetMarks( why )
+	local t = {}
+	for i, v in self.memory:Engrams() do
+		if is_instance( v, Engram.Marked ) and (why == nil or v.why == why) then
+			table.insert( t, v.obj )
+		end
+	end
+	return t
+end
+
 function Agent:Mark( obj, why )
 	if self.memory then
 		self.memory:AddEngram( Engram.Marked( obj, why ))
 	end
 end
 
-function Agent:Unmark( obj )
+function Agent:Unmark( obj, why )
 	if self.memory then
-		local e = self.memory:FindEngram( function( engram ) return is_instance( engram, Engram.Marked ) and engram.obj == obj end )
+		local e = self.memory:FindEngram( 
+			function( engram )
+			return is_instance( engram, Engram.Marked ) and
+			engram.obj == obj and
+			(why == nil or engram.why == why) end )
+
 		if e then
 			self.memory:RemoveEngram( e )
 		end
 	end
 end
 
-function Agent:IsMarked( obj )
+function Agent:IsMarked( obj, why )
 	if self.memory then
-		return self.memory:HasEngram( function( engram ) return is_instance( engram, Engram.Marked ) and engram.obj == obj end )
+		return self.memory:HasEngram( function( engram )
+			return is_instance( engram, Engram.Marked ) and
+			engram.obj == obj and
+			(why == nil or engram.why == why) end )
 	end
 end
 

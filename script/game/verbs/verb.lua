@@ -192,6 +192,10 @@ function Verb:CanDo( actor, ... )
 		end
 	end
 
+	if not actor:GetLocation() then
+		return false, "In limbo"
+	end
+
 	if self.FLAGS then
 		local busy, verb = actor:IsBusy( self.FLAGS )
 		if busy then
@@ -452,8 +456,8 @@ function Verb:Resume( coro )
 			end
 
 			panel:AppendTable( ui, self )
-			ui.SameLine( 0, 10 )
 			panel:AppendTable( ui, self.actor )
+			panel:AppendTable( ui, self.obj )
 			ui.Separator()
 
 			ui.TextColored( 1, 0, 0, 1, tostring(result) )

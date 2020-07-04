@@ -1,6 +1,7 @@
 local PathFinder = class( "PathFinder" )
 
 function PathFinder:init( source, target )
+	assert( source and target )
 	self.source = source
 	self.target = target
 end
@@ -15,7 +16,7 @@ function PathFinder:CalculatePath()
 		return
 	end
 	local queue = { start_room }
-	assert( start_room )
+	assert( start_room, tostring(self.source))
 	assert( end_room )
 	local from_to = {} -- map of room -> next room back to start
 	local path

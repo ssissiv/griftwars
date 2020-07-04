@@ -5,18 +5,25 @@ Patrol.salary = 5
 
 function Patrol:OnInit()
 	self:SetShiftHours( 0, 24 )
+	self.waypoints = {}
 end
 
 function Patrol:GetWaypoint()
-	return self.waypoint
+	return self.waypoints[1]
 end
 
 function Patrol:SetWaypoint( waypoint )
-	self.waypoint = waypoint
+	table.clear( self.waypoints )
+	self:AddWaypoint( waypoint )
+end
+
+function Patrol:AddWaypoint( waypoint )
+	table.insert( self.waypoints, waypoint )
 end
 
 function Patrol:RenderAgentDetails( ui, screen, viewer )
-	local location = self.waypoint and self.waypoint:GetLocation()
+	local waypoint = self:GetWaypoint()
+	local location = waypoint and waypoint:GetLocation()
 	if location then
 		ui.Bullet()
 		if self.owner:IsAlly( location ) then
@@ -36,6 +43,10 @@ function Patrol:DoJob()
 		Msg:Speak( self.owner, "Holding this location." )
 	end
 	self:Idle( self.owner, ONE_HOUR )
+
+	-- Next waypoint.
+	table.remove( self.waypoints, 1 )
+	table.insert( self.waypoints, self.current_waypoint )
 end
 
 function Patrol:GetName()

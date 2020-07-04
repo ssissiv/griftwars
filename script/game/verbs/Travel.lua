@@ -118,7 +118,7 @@ function Travel:Interact( actor, dest )
 			break
 		end
 
-		self.path = pather:GetPath()
+		self.path = pather:CalculatePath()
 		if self.path then
 			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
 			local ok, reason = self:DoChildVerb( self.leave, portal )
@@ -133,17 +133,18 @@ function Travel:Interact( actor, dest )
 	end
 
 	-- uh... 
+	local tile_dest
 	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
 		local x, y = AccessCoordinate( dest )
 		if x and y then
-			self:PathToTarget( actor, dest )
+			tile_dest = actor:GetLocation():GetTileAt( x, y )
 		end
 	else
 		-- Pick a random tile?
-		local dest = dest:FindEmptyPassableTile( nil, nil, actor )
-		if dest then
-			self:PathToTarget( actor, dest )
-		end
+		tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
+	end
+	if tile_dest then
+		self:PathToTarget( actor, tile_dest )
 	end
 end
 

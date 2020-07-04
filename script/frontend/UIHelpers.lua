@@ -11,12 +11,29 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
 
     ui.SameLine( 0, 10 )
     if ui.SmallButton( "?" ) then
-        if Input.IsControl() then
+        if Input.IsModifierDown() then
             DBG( ent )
         else
             viewer.world.nexus:Inspect( viewer, ent )
         end
     end
+
+    ui.SameLine( 0, 5 )
+    local marked = viewer:IsMarked( ent, "ui" )
+    if marked then
+        ui.PushStyleColor( "Button", 0.85, 0.2, 0.2, 1 )
+    end
+    if ui.SmallButton( "!") then
+        if marked then
+            viewer:Unmark( ent, "ui" )
+        else
+            viewer:Mark( ent, "ui" )
+        end
+    end
+    if marked then
+        ui.PopStyleColor()
+    end
+
 
     if ent.Verbs then
         -- local behaviour = ent:GetAspect( Aspect.Behaviour )

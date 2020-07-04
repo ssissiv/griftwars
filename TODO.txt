@@ -1,6 +1,12 @@
 TODO
 ====
 
+Get following Captain working.
+	Follow seems pretty flaky.
+	NPCs get stuck on portals.
+	> When idling, go somewhere that ain't a portal.
+	> Add a nudge trigger.
+	
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?
 Show verbs of Agents when inspecting.
  * Immediate (attacking, moving)

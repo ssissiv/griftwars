@@ -31,6 +31,9 @@ function MapScreen:GenerateMapMarkers()
 			end
 		end
 	end
+	for i, v in ipairs( self.viewer:GetMarks( "ui" )) do
+		table.insert( self.markers, v )
+	end
 
 	if not table.contains( self.markers, self.current_marker ) then
 		self:SetCurrentMarker( self.markers[1] )

@@ -33,3 +33,8 @@ end
 --
 
 local CityNamePool = class( "Aspect.CityNamePool", NamePool )
+
+function CityNamePool:PickName()
+	return self:ConsumeName()
+end
+

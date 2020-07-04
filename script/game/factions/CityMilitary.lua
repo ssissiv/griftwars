@@ -8,9 +8,19 @@ function CityMilitary:init( name, guard_count )
 end
 
 function CityMilitary:OnSpawn( world )
+	Faction.OnSpawn( self, world )
 
-	self.commander = world:SpawnEntity( Agent.Captain() )
-	self:AddFactionMember( self.commander, FACTION_ROLE.CAPTAIN )
+	self.commander = world:SpawnEntity( Agent.Commander() )
+	self:AddFactionMember( self.commander, FACTION_ROLE.COMMANDER )
+
+	for i = 1, math.max( 1, math.floor( self.guard_count / 10 )) do
+		local captain = world:SpawnEntity( Agent.Captain() )
+		self:AddFactionMember( captain, FACTION_ROLE.CAPTAIN )
+
+		local job = Job.Patrol( self.commander )
+		captain:GainAspect( job )
+		-- table.insert( self.jobs, job )
+	end
 
 	for i = 1, self.guard_count do
 		local guard = world:SpawnEntity( Agent.CityGuard() )
@@ -21,7 +31,19 @@ end
 function CityMilitary:AddPatrolLocation( location )
 	table.insert( self.patrol_locations, location )
 
-	local job = Job.Patrol( self.commander )
+	local employer = self.world:ArrayPick( self:GetAgentsByRole( FACTION_ROLE.CAPTAIN ))
+	if employer == nil then
+		DBG( self )
+		return
+	end
+
+	local captain_job = employer:GetAspect( Job.Patrol )
+	if captain_job then
+		-- Captain patrols this place too.
+		captain_job:AddWaypoint( Waypoint( location ))
+	end
+
+	local job = Job.Patrol( employer )
 	job:SetWaypoint( Waypoint( location ))
 	table.insert( self.jobs, job )
 

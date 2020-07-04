@@ -66,7 +66,7 @@ function Strategize:Interact( actor )
 		end
 
 		actor:BroadcastEvent( AGENT_EVENT.STRATEGIZE, self.target )
-		actor:RecruitAll()
+		-- actor:RecruitAll()
 
 		self:YieldForTime( HALF_DAY )
 	end
