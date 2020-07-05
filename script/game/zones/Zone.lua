@@ -124,8 +124,7 @@ function Zone:GeneratePortalDest( portal, depth )
 		for j, obj2 in new_location:Contents() do
 			local portal2 = obj2:GetAspect( Aspect.Portal )
 			if portal2 and portal2:GetDest() == nil and portal2:MatchWorldGenTag( portal:GetWorldGenTag() ) then
-				portal:Connect( new_location, obj2:GetCoordinate() )
-				portal2:Connect( location, portal.owner:GetCoordinate() )
+				portal:ConnectPortal( portal2 )
 				break
 			end
 		end

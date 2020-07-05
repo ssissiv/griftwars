@@ -27,7 +27,8 @@ function Residence:init()
 
 	Object.Bed():WarpToLocation( self )
 
-	Object.Door( "residence exit"):WarpToLocation( self )
+	Object.Door( "residence exit"):Lock():WarpToLocation( self )
+
 end
 
 function Residence:SetResident( resident )

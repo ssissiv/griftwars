@@ -448,39 +448,48 @@ function Verb:Resume( coro )
 	-- Internally verbs should check IsCancelled after any YieldForTime call.
 	local ok, result = coroutine.resume( coro )
 	if not ok then
-		self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
-		print( "Error resuming", self, "\n", result )
-		print( debug.traceback( coro ))
-		DBG( function( node, ui, panel )
-			if self.coro_dbg == nil then
-				self.coro_dbg = DebugCoroutine( coro )
-			end
-
-			panel:AppendTable( ui, self )
-			panel:AppendTable( ui, self.actor )
-			panel:AppendTable( ui, self.obj )
-			ui.Separator()
-
-			ui.TextColored( 1, 0, 0, 1, tostring(result) )
-			ui.Spacing()
-
-			self.coro_dbg:RenderPanel( ui, panel )
-
-			ui.NewLine()
-			if ui.Button( "Resume" ) then
-				self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
-			end
-		end )
+		self:ShowError( coro, result )
 
 	elseif coroutine.status( coro ) == "suspended" then
 		-- Waiting.  Note that even if we are cancelled, the coro is still valid if we are part of a parent verb.
-		assert_warning( not self.cancelled or self.parent ~= nil, tostring(self))
+		-- assert_warning( not self.cancelled or self.parent ~= nil, tostring(self))
+		if self.cancelled and self.parent == nil then
+			self:ShowError( coro, "cancelled, but still suspended?")
+		end
+
 		--assert( self.yield_ev ) -- A child verb might have yielded, not us.
 	else
 		-- Done!
 		-- print( "DONE", self, coroutine.status(coro))
 	end
 end
+
+function Verb:ShowError( coro, msg )
+	self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
+	print( "Error resuming", self, "\n", msg )
+	print( debug.traceback( coro ))
+	DBG( function( node, ui, panel )
+		if self.coro_dbg == nil then
+			self.coro_dbg = DebugCoroutine( coro )
+		end
+
+		panel:AppendTable( ui, self )
+		panel:AppendTable( ui, self.actor )
+		panel:AppendTable( ui, self.obj )
+		ui.Separator()
+
+		ui.TextColored( 1, 0, 0, 1, tostring(msg) )
+		ui.Spacing()
+
+		self.coro_dbg:RenderPanel( ui, panel )
+
+		ui.NewLine()
+		if ui.Button( "Resume" ) then
+			self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
+		end
+	end )
+end
+
 
 function Verb:RenderDebugPanel( ui, panel, dbg )
 	ui.PushID( rawstring( self ))

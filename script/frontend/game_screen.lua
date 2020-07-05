@@ -951,7 +951,10 @@ function GameScreen:KeyPressed( key )
 			for i, obj in self.puppet:GetTile():Contents() do
 				local portal = obj:GetAspect( Aspect.Portal )
 				if portal and portal:GetDest() then
-					self.puppet:DoVerbAsync( Verb.UsePortal(), portal )
+					local ok, reason = self.puppet:DoVerbAsync( Verb.UsePortal( portal ), portal )
+					if not ok then
+						Msg:Echo( self.puppet, reason )
+					end
 					break
 				end
 			end

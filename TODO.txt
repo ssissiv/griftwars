@@ -1,13 +1,6 @@
 TODO
 ====
 
-NPC pathing: what if they path into eachother.
-
-Get following Captain working.
-	Follow seems pretty flaky.
-	NPCs get stuck on portals.
-	> When idling, go somewhere that ain't a portal.
-	> Add a nudge trigger.
 Marks should not be an Engram.
 
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?

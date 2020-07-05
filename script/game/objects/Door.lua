@@ -10,6 +10,16 @@ function Door:init( worldgen_tag )
 	self:Close()
 end
 
+function Door:OnConnected( ent )
+	if self:IsClosed() and ent.Close then
+		ent:Close()
+	end
+	if self:IsLocked() and ent.Lock then
+		ent:Lock()
+	end
+end
+
+
 function Door:GetName()
 	local name
 	if self.portal == nil or self.portal:GetDest() == nil then
@@ -31,6 +41,11 @@ function Door:Lock()
 	local lock = self:GetAspect( Aspect.Lock ) or self:GainAspect( Aspect.Lock() )
 	if lock then
 		lock:Lock()
+
+		local ent = self.portal and self.portal:GetDestEntity()
+		if ent and ent.Lock then
+			ent:Lock()
+		end
 	end
 	return self
 end
@@ -51,6 +66,11 @@ function Door:Open()
 	if self:IsClosed() and not self:IsLocked() then
 		self:LoseAspect( self:GetAspect( Aspect.Impass ))
 		self.image = assets.TILE_IMG.DOOR_OPEN
+
+		local ent = self.portal and self.portal:GetDestEntity()
+		if ent and ent.Open then
+			ent:Open()
+		end
 	end
 	return self
 end
@@ -59,6 +79,11 @@ function Door:Close()
 	if not self:IsClosed() then
 		self:GainAspect( Aspect.Impass( IMPASS.STATIC ) )
 		self.image = nil
+
+		local ent = self.portal and self.portal:GetDestEntity()
+		if ent and ent.Close then
+			ent:Close()
+		end
 	end
 	return self
 end
@@ -69,7 +94,7 @@ end
 
 function Door:CanUsePortal( actor )
 	-- TODO: see if actor can unlock it
-	return not self:IsLocked()
+	return not self:IsLocked(), "Locked"
 end
 
 function Door:OnActivatePortal( portal, verb )

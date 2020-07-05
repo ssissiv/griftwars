@@ -16,6 +16,17 @@ function Portal:IsOneWay()
 	return false
 end
 
+function Portal:OnDespawn()
+	Aspect.OnDespawn( self )
+
+	-- Disconnect the reverse reference.
+	if self.reverse_portal then
+		assert( self.reverse_portal.reverse_portal == self )
+		self.reverse_portal.reverse_portal = nil
+	end
+end
+
+
 function Portal:WarpToDest( actor )
 	-- Warp to dest Location.
 	local dest, destx, desty = self:GetDest()
@@ -96,16 +107,36 @@ function Portal:IsExitOccupied()
 	return false
 end
 
-function Portal:Connect( location, x, y )
+function Portal:Connect( location, x, y, reverse_portal )
 	if location == nil then
 		self.waypoint = nil
 	else
+		assert( x and y )
 		self.waypoint = Waypoint( location, x, y )
 	end
+
+	if self.owner.OnConnected then
+		self.owner:OnConnected( reverse_portal.owner )
+	end
+end
+
+function Portal:ConnectPortal( portal )
+	local location = portal:GetLocation()
+	local x, y = portal.owner:GetCoordinate()
+	assert( location and x and y )
+
+	self:Connect( location, x, y, portal )
+
+	x, y = self.owner:GetCoordinate()
+	portal:Connect( self:GetLocation(), x, y, self )
 end
 
 function Portal:GetLocation()
 	return self.owner:GetLocation()
+end
+
+function Portal:GetDestEntity()
+	return self.reverse_portal and self.reverse_portal.owner
 end
 
 function Portal:GetDest()

@@ -126,7 +126,6 @@ function Tile:RenderDebugPanel( ui, panel )
 	if self.contents and next(self.contents) then
 		ui.Text( "Contents:" )
 		for i, obj in ipairs( self.contents ) do
-			ui.SameLine( 0, 10 )
 			panel:AppendTable( ui, obj )
 		end
 	end
