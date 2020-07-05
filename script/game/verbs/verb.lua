@@ -449,7 +449,8 @@ function Verb:Resume( coro )
 	local ok, result = coroutine.resume( coro )
 	if not ok then
 		self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
-		print( "Error resuming", self, result )
+		print( "Error resuming", self, "\n", result )
+		print( debug.traceback( coro ))
 		DBG( function( node, ui, panel )
 			if self.coro_dbg == nil then
 				self.coro_dbg = DebugCoroutine( coro )

@@ -67,6 +67,39 @@ function Door:IsClosed()
 	return self:GetAspect( Aspect.Impass ) ~= nil
 end
 
+function Door:CanUsePortal( actor )
+	-- TODO: see if actor can unlock it
+	return not self:IsLocked()
+end
+
+function Door:OnActivatePortal( portal, verb )
+	if self:IsLocked() then
+		return true
+	end
+
+	local was_closed = self:IsClosed()
+	if was_closed then
+		if not verb:DoChildVerb( Verb.OpenObject( self ), self ) then
+			return true
+		end
+	end
+
+	verb:YieldForTime( portal.travel_time )
+
+	if verb:IsCancelled() then
+		return true
+	end		
+
+	portal:WarpToDest( verb.actor )
+
+	if was_closed then
+		-- Free close?
+		self:Close()
+	end
+
+	return true
+end
+
 function Door:CollectVerbs( verbs, actor, target )
 	if target == self then
 		if self:IsClosed() then

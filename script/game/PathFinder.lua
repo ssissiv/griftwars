@@ -1,6 +1,8 @@
 local PathFinder = class( "PathFinder" )
 
-function PathFinder:init( source, target )
+function PathFinder:init( actor, source, target )
+	assert( is_instance( actor, Agent ))
+	self.actor = actor
 	assert( source and target )
 	self.source = source
 	self.target = target
@@ -41,7 +43,7 @@ function PathFinder:CalculatePath()
 		for i, portal in room:Portals() do
 			local dest = portal:GetDest()
 			-- TODO: can we even path to this portal?
-			if dest and from_to[ dest ] == nil and dest ~= start_room then
+			if dest and portal:CanUsePortal( self.actor ) and from_to[ dest ] == nil and dest ~= start_room then
 				assert( dest ~= start_room )
 				from_to[ dest ] = room
 				table.insert( queue, dest )

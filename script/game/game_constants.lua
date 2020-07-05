@@ -183,6 +183,18 @@ SENSOR = MakeEnum
 
 DIR = MakeEnum{ "N", "NE", "E", "SE", "S", "SW", "W", "NW" }
 
+ADJACENT_DIR =
+{
+    [DIR.N] = { DIR.NE, DIR.NW },
+    [DIR.NE] = { DIR.N, DIR.E },
+    [DIR.E] = { DIR.NE, DIR.SE },
+    [DIR.SE] = { DIR.E, DIR.S },
+    [DIR.S] = { DIR.SE, DIR.SW },
+    [DIR.SW] = { DIR.S, DIR.W },
+    [DIR.W] = { DIR.NW, DIR.SW },
+    [DIR.NW] = { DIR.N, DIR.W },
+}
+
 EXIT = MakeEnum{ "NORTH", "EAST", "WEST", "SOUTH" }
 REXIT = {
 	NORTH = EXIT.SOUTH,

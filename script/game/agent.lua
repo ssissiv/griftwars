@@ -479,13 +479,51 @@ function Agent:TeleportToLocation( location, x, y )
 	self:WarpToLocation( location, x, y )
 end
 
-function Agent:Walk( dir )
-	local x, y = OffsetDir( self.x, self.y, dir )
-	local tile = self.location:GetTileAt( x, y )
-	if not tile or not tile:IsPassable( self ) then
+function Agent:CanSwapWith( obj )
+	if self:IsEnemy( obj ) then
 		return false
 	end
+	if self:InCombatWith( obj ) then
+		return false
+	end
+	return true
+end
 
+function Agent:Walk( dir )
+	if dir == nil then
+		return false, "No dir"
+	end
+	
+	local x, y = OffsetDir( self.x, self.y, dir )
+	local tile = self.location:GetTileAt( x, y )
+	if not tile then
+		return false, "No tile"
+	end
+
+	local impassables = ObtainWorkTable()
+	local ok, reason = tile:IsPassable( self, impassables )
+	local swap
+	if not ok then
+		-- Check to see whether it's impassable ONLY due to somethign we can swap with.
+		for i = #impassables, 1, -1 do
+			local obj = impassables[i]
+			if not is_instance( obj, Agent ) or not obj:CanSwapWith( obj ) then
+				table.remove( impassables, i )
+			end
+		end
+		swap = #impassables == 1 and impassables[1] or nil
+		ok = swap ~= nil
+	end
+	ReleaseWorkTable( impassables )
+
+	if not ok then
+		return false, reason
+	end
+
+	if swap then
+		-- These tile warps gotta be atomic??
+		swap:WarpToTile( self:GetTile() )
+	end
 	self:WarpToTile( tile )
 	return true
 end

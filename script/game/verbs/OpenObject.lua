@@ -3,6 +3,7 @@ local OpenObject = class( "Verb.OpenObject", Verb )
 OpenObject.act_desc = "Open"
 
 function OpenObject:init( target )
+	assert( target )
 	Verb.init( self, nil, target )
 end
 

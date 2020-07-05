@@ -25,20 +25,33 @@ function Tile:IsEmpty()
 	return self.contents == nil
 end
 
-function Tile:IsPassable( what )
+function Tile:IsPassable( what, impassables )
 	local impass = self:GetAspect( Aspect.Impass )
 	if impass and ( what == nil or not impass:IsPassable( what ) ) then
-		return false
+		if impassables then
+			table.insert( impassables, self )
+		else
+			return false, "The tile is impassable"
+		end
 	end
 	if self.contents then
 		for i, obj in ipairs( self.contents ) do
 			local impass = obj:GetAspect( Aspect.Impass )
 			if impass and not impass:IsPassable( what ) then
-				return false
+				if impassables then
+					table.insert( impassables, obj )
+				else
+					return false, tostring(obj).." is impassable"
+				end
 			end
 		end
 	end
-	return true
+
+	if impassables then
+		return #impassables == 0
+	else
+		return true
+	end
 end
 
 function Tile:AddEntity( obj )

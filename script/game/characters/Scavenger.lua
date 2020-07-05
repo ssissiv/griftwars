@@ -26,7 +26,6 @@ function Scavenge:init()
 
 	self.scrounge = Verb.Scrounge()
 	self.wander = Verb.Wander()
-	self.leave = Verb.LeaveLocation()
 end
 
 function Scavenge:GetDesc( viewer )
@@ -57,8 +56,6 @@ function Scavenge:Interact( actor )
 			self:DoChildVerb( self.scrounge )
 		elseif math.random() < 0.5 then
 			self:DoChildVerb( self.wander, nil, 10 * ONE_MINUTE )
-		else
-			self:DoChildVerb( self.leave )
 		end
 		i = i + 1
 		assert( i < 10000, " bad scavenge ")

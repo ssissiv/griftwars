@@ -1,25 +1,7 @@
 local Travel = class( "Verb.Travel", Verb )
 
--- Travel.FLAGS = VERB_FLAGS.MOVEMENT
-
-
-Travel.EXIT_STRINGS =
-{
-	"You leave {2.title}.",
-	nil,
-	"{1.Id} leaves.",
-}
-
-Travel.ENTER_STRINGS =
-{
-	"You enter {2.title}.",
-	nil,
-	"{1.Id} enters."
-}
-
 function Travel:init( dest )
 	Verb.init( self, nil, dest )
-	self.leave = Verb.LeaveLocation()
 end
 
 function Travel:SetApproachDistance( dist )
@@ -54,26 +36,55 @@ function Travel:CanInteract( actor )
 	return true
 end
 
-function Travel:PathToTarget( actor, dest )
-	local pather = TilePathFinder( actor, actor, dest, self.approach_dist )
+function Travel:FindDirToPath( actor, path )
+	local x1, y1 = actor:GetCoordinate()
+	for i, tile in ipairs( path ) do
+		local x2, y2 = tile:GetCoordinate()
+		if IsAdjacentCoordinate( x1, y1, x2, y2 ) then
+			return OffsetToDir( x1, y1, x2, y2 )
+		end
+	end
+end
 
-	while true do
+function Travel:PathToTarget( actor, dest, approach_dist )
+	local pather = TilePathFinder( actor, actor, dest, approach_dist )
+
+	while not pather:AtGoal() do
 
 		self.path = pather:GetPath()
 		self.pather = pather
 
-		if self.path and #self.path >= 2 then
-			local x1, y1 = self.path[1]:GetCoordinate()
-			local x2, y2 = self.path[2]:GetCoordinate()
-			local dir = OffsetToDir( x1, y1, x2, y2 )
-			if not actor:Walk( dir ) then
-				self.block_count = (self.block_count or 0) + 1
-				if self.block_count >= 3 then
-					self:ResetPath()
-					print( actor, "couldn't walk", self.path[2] )
-				end
+		local ok, reason = false
+		if self.path and #self.path > 0 then
+			-- Find out which direction to walk:
+			-- (a) If we're on the path follow it.
+			-- (b) If we're off the path, can we get back on it?
+			local path_idx = table.arrayfind( self.path, actor:GetTile() )
+			local dir
+			if path_idx and self.path[ path_idx + 1 ] then
+				local x1, y1 = self.path[ path_idx ]:GetCoordinate()
+				local x2, y2 = self.path[ path_idx + 1 ]:GetCoordinate()
+				dir = OffsetToDir( x1, y1, x2, y2 )
+			else
+				dir = self:FindDirToPath( actor, self.path )
 			end
-		else
+
+			ok, reason = actor:Walk( dir )
+			if not ok then
+				-- Try a perpendicular direction.
+				dir = table.arraypick( ADJACENT_DIR[ dir ] )
+				ok, reason = actor:Walk( dir )
+			end
+		end
+
+		if not ok then				
+			-- Finally, we just fail.
+			self.block_count = (self.block_count or 0) + 1
+			if self.block_count >= 3 then
+				print( actor, "couldn't walk:", reason, self.path )
+				print( tostr(self.path) )
+				pather:ResetPath()
+			end
 			break
 		end
 
@@ -88,36 +99,34 @@ function Travel:PathToTarget( actor, dest )
 		if self:IsCancelled() then
 			break
 		end
-
-		if pather:AtGoal() then
-			break
-		end
 	end
 
 	return actor:GetTile() == pather:GetEndRoom()
 end
 
-function Travel:PathToDest( actor, location )
+function Travel:PathToLocation( actor, location )
 	-- Find a portal to this location.
 	for i, portal in actor.location:Portals() do
 		if portal:GetDest() == location and portal.owner:GetTile() then
 			-- Path tiles to dest.
-			if self:PathToTarget( actor, portal ) then
-				actor:WarpToLocation( portal:GetDest() )
+			local ok = self:PathToTarget( actor, portal )
+			if self:IsCancelled() then
 				break
-
-			elseif self:IsCancelled() then
+			elseif ok then
+				portal:ActivatePortal( self )
 				break
 			end
 		end
 	end
+
+	return actor:GetLocation() == location
 end
 
 function Travel:Interact( actor, dest )
 	dest = self:SetTarget( dest or self.obj )
 	assert( dest )
 
-	local pather = PathFinder( actor, dest )
+	local pather = PathFinder( actor, actor, dest )
 	while actor:GetLocation() ~= pather:GetEndRoom() do
 
 		if self:IsCancelled() then
@@ -125,20 +134,26 @@ function Travel:Interact( actor, dest )
 		end
 
 		self.path = pather:CalculatePath()
-		if self.path then
-			local portal = actor:GetLocation():FindPortalTo( self.path[2] )
-			local ok, reason = self:DoChildVerb( self.leave, portal )
-			if not ok then
-				print( "Cant travel", actor, reason )
-				self:YieldForTime( HALF_HOUR )
-			end
+		if not self.path then
+			print( actor, "No path!", dest )
+			self.fail_count = (self.fail_count or 0) + 1
+			self:YieldForTime( ONE_MINUTE * self.fail_count )
+
+		elseif not self:PathToLocation( actor, self.path[2] ) then
+			print( actor, "Overworld path found, but can't find or access portal!" )
+			self.fail_count = (self.fail_count or 0) + 1
+			self:YieldForTime( ONE_MINUTE * self.fail_count )
+
 		else
-			print( "No path!", actor, dest )
-			self:YieldForTime( HALF_HOUR )
+			self.fail_count = nil
+			if actor:GetLocation() ~= pather:GetEndRoom() then
+				-- this needed? safety valve.
+				self:YieldForTime( ONE_SECOND )
+			end
 		end
 	end
 
-	-- uh... 
+	-- At the destination Location, now go to a specific tile.
 	local tile_dest
 	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
 		local x, y = AccessCoordinate( dest )
@@ -150,7 +165,7 @@ function Travel:Interact( actor, dest )
 		tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
 	end
 	if tile_dest then
-		self:PathToTarget( actor, tile_dest )
+		self:PathToTarget( actor, tile_dest, self.approach_dist )
 	end
 end
 

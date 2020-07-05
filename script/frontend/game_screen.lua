@@ -907,7 +907,7 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "left" or key == "a" then
 		if self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not self.puppet:IsBusy() and self.puppet:IsSpawned() then
-			local verb = Verb.Walk( EXIT.WEST )
+			local verb = Verb.Walk( DIR.W )
 			if verb:CanDo( self.puppet ) then
 				self.puppet:DoVerbAsync( verb )
 			end
@@ -916,7 +916,7 @@ function GameScreen:KeyPressed( key )
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			local verb = Verb.Walk( EXIT.EAST )
+			local verb = Verb.Walk( DIR.E )
 			if verb:CanDo( puppet ) then
 				puppet:DoVerbAsync( verb )
 			end
@@ -925,7 +925,7 @@ function GameScreen:KeyPressed( key )
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			local verb = Verb.Walk( EXIT.SOUTH )
+			local verb = Verb.Walk( DIR.S )
 			if verb:CanDo( puppet ) then
 				puppet:DoVerbAsync( verb )
 			end
@@ -934,19 +934,26 @@ function GameScreen:KeyPressed( key )
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			local verb = Verb.Walk( EXIT.NORTH )
+			local verb = Verb.Walk( DIR.N )
 			if verb:CanDo( puppet ) then
 				puppet:DoVerbAsync( verb )
 			end
 		end
 
 	elseif key == "." then
-		local puppet = self.world:GetPuppet()
-		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			if Input.IsShift() then
-				puppet:AttemptVerb( Verb.LeaveLocation )
-			else
-				puppet:AttemptVerb( Verb.Wait, puppet )
+		if self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not self.puppet:IsBusy() and self.puppet:IsSpawned() then
+			self.puppet:AttemptVerb( Verb.Wait, self.puppet )
+		end
+
+	elseif key == "return" or key == "enter" then
+		if self.puppet then
+			-- Is there a portal to activate?
+			for i, obj in self.puppet:GetTile():Contents() do
+				local portal = obj:GetAspect( Aspect.Portal )
+				if portal and portal:GetDest() then
+					self.puppet:DoVerbAsync( Verb.UsePortal(), portal )
+					break
+				end
 			end
 		end
 

@@ -161,8 +161,10 @@ function TilePathFinder:AtGoal()
 	local start_room = self:GetStartRoom()
 	local end_room = self:GetEndRoom()
 
-	if self.path then
-		return #self.path == 1
+	if self.path and #self.path == 1 then
+		-- If the generated path only has our tile, then we are where we want to be.
+		-- Note that this doesn't imply start_room == end_room in general, if approach dist > 0.
+		return true
 
 	elseif self:GetApproachDist() == 0 then
 		return start_room == end_room

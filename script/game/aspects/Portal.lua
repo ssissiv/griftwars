@@ -16,20 +16,13 @@ function Portal:IsOneWay()
 	return false
 end
 
-function Portal:ActivatePortal( verb )
-	verb:YieldForTime( self.travel_time )
-
-	if verb:IsCancelled() then
-		return
-	end		
-
+function Portal:WarpToDest( actor )
 	-- Warp to dest Location.
 	local dest, destx, desty = self:GetDest()
-	local actor = verb.actor
 	
 	Msg:ActToRoom( "{1.Id} leaves to {2.title}.", actor, dest )
 
-	verb.actor:DeltaStat( STAT.FATIGUE, 5 )
+	actor:DeltaStat( STAT.FATIGUE, 5 )
 
 	local entry_tile = dest:FindPassableTile( destx, desty, actor )
 	if entry_tile then
@@ -42,6 +35,28 @@ function Portal:ActivatePortal( verb )
 		print( actor, "couldn't leave to", dest )
 		DBG( dest:GetTileAt( destx, desty ))
 	end
+end
+
+function Portal:CanUsePortal( actor )
+	if self.owner.CanUsePortal then
+		return self.owner:CanUsePortal( actor )
+	end
+
+	return true
+end
+
+function Portal:ActivatePortal( verb )
+	if self.owner.OnActivatePortal and self.owner:OnActivatePortal( self, verb ) then
+		return
+	end
+
+	verb:YieldForTime( self.travel_time )
+
+	if verb:IsCancelled() then
+		return
+	end		
+
+	self:WarpToDest( verb.actor )
 end
 
 function Portal:SetWorldGenTag( tag )
@@ -105,12 +120,6 @@ function Portal:OnLocationChanged( prev_location, location )
 	end
 	if location then
 		location:AddPortal( self )
-	end
-end
-
-function Portal:CollectVerbs( verbs, actor, obj )
-	if self.waypoint and obj == self.owner then
-		verbs:AddVerb( Verb.LeaveLocation( self, self.owner:GetAspect( Aspect.Requirements ) ))
 	end
 end
 
