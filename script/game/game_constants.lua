@@ -380,7 +380,6 @@ IMPASS = MakeBitField
 {
 	"STATIC", -- Static obstruction
 	"DYNAMIC", -- Dynamic obstruction (agent, etc.)
-	"DYNAMIC_QUERY", -- Patfind query for DYNAMIC (ignores other DYNAMIC).
 	"LOS", -- Blocks LOS
 }
 

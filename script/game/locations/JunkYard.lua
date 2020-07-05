@@ -15,5 +15,7 @@ function JunkYard:GenerateTileMap()
 
 		local cursor = self.map:CreateCursor( 8, 12 ):SetTile( Tile.StoneWall )
 		cursor:Line( 8, 0 )
+
+		cursor:MoveTo( 8, 14 ):Line( 8, 0 )
 	end
 end

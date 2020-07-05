@@ -25,6 +25,27 @@ function Tile:IsEmpty()
 	return self.contents == nil
 end
 
+
+-- Conditionally passable is passability for path finding purposes.
+-- ie. the actor has means to make this Tile passable, even if it isn't
+-- strictly passable now.
+function Tile:IsConditionallyPassable( what )
+	local impass = self:GetAspect( Aspect.Impass )
+	if impass and ( what == nil or not impass:IsConditionallyPassable( what ) ) then
+		return false, "The tile is impassable"
+	end
+	if self.contents then
+		for i, obj in ipairs( self.contents ) do
+			local impass = obj:GetAspect( Aspect.Impass )
+			if impass and not impass:IsConditionallyPassable( what ) then
+				return false, tostring(obj).." is impassable"
+			end
+		end
+	end
+
+	return true
+end
+
 function Tile:IsPassable( what, impassables )
 	local impass = self:GetAspect( Aspect.Impass )
 	if impass and ( what == nil or not impass:IsPassable( what ) ) then

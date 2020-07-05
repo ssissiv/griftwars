@@ -38,7 +38,8 @@ end
 
 function Travel:FindDirToPath( actor, path )
 	local x1, y1 = actor:GetCoordinate()
-	for i, tile in ipairs( path ) do
+	for i = #path, 1, -1 do
+		local tile = path[i]
 		local x2, y2 = tile:GetCoordinate()
 		if IsAdjacentCoordinate( x1, y1, x2, y2 ) then
 			return OffsetToDir( x1, y1, x2, y2 )

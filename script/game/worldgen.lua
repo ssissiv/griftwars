@@ -57,7 +57,7 @@ function WorldGen:GenerateTinyWorld()
 	world:SpawnLocation( origin )
 
 	local npc = Agent.Citizen()
-	world:SpawnAgent( npc, origin )
+	npc:WarpToLocation( origin, 8, 13 )
 	
 	local player = Agent.Grifter()
 	world:SpawnAgent( player, origin )

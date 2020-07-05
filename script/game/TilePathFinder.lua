@@ -29,7 +29,7 @@ function TilePathFinder:init( actor, source, target, approach_dist )
 	local function NeighbourFn( tile )
 		table.clear( neighbours )
 		for i, dest in self.map:Neighbours( tile ) do
-			if self.actor == nil or dest:IsPassable( self.actor ) then
+			if self.actor == nil or dest:IsConditionallyPassable( self.actor ) then
 				table.insert( neighbours, dest )
 			end
 		end	
@@ -64,7 +64,7 @@ function TilePathFinder:RasterLine( start_room, end_room, plot )
     local path = {}
     while true do
 		local tile = self.map:LookupTile( x0, y0 )
-		if not tile or not tile:IsPassable( IMPASS.DYNAMIC_QUERY ) then
+		if not tile or not tile:IsConditionallyPassable( self.actor ) then
 			return
 		else
 			table.insert( path, tile )
@@ -104,6 +104,9 @@ function TilePathFinder:CalculatePath()
 	if self:AtGoal() then
 		return
 	end
+
+	-- Track these for debug rendering purposes
+	self.start_room, self.end_room = start_room, end_room
 
 	local path = self:RasterLine( start_room, end_room )
 	if path then
@@ -215,32 +218,36 @@ function TilePathFinder:RenderDebugPanel( ui, panel )
 	ui.Text( loc.format( "Path: {1}", self.path and #self.path ))
 
 	local game = GetGUI():FindScreen( GameScreen )
-	if game and self.astar.start_node and self.astar.end_node then
-		local x0, y0 = self.astar.start_node:GetCoordinate()
-		local xt, yt = self.astar.end_node:GetCoordinate()
+	if game and self.start_room then
+		local x0, y0 = self.start_room:GetCoordinate()
+		local xt, yt = self.end_room:GetCoordinate()
 		local max_dist = distance( x0, y0, xt, yt )
 
-		for tile in pairs( self.astar.open_set ) do
-			local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
-			local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
-			game:SetColour( 0xFFFFFFAA )
-			game:Box( x1 + 4, y1 + 4, (x2 - x1) - 8, (y2 - y1) - 8 )
+		if self.astar.open_set then
+			for tile in pairs( self.astar.open_set ) do
+				local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
+				local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
+				game:SetColour( 0xFFFFFFAA )
+				game:Box( x1 + 4, y1 + 4, (x2 - x1) - 8, (y2 - y1) - 8 )
+			end
 		end
 
-		for tile in pairs( self.astar.closed_set ) do
-			local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
-			local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
-			local dist = distance( tile.x, tile.y, self.astar.start_node:GetCoordinate() )
-			local r, g, b, a = 0.8, 0, 0, clamp( dist / max_dist, 0, 1.0 )
-			game:SetColour( MakeHexColour( r, g, b, a ) )
-			game:Rectangle( x1 + 6, y1 + 6, (x2 - x1) - 12, (y2 - y1) - 12 )
+		if self.astar.closed_set then
+			for tile in pairs( self.astar.closed_set ) do
+				local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
+				local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
+				local dist = distance( tile.x, tile.y, self.astar.start_node:GetCoordinate() )
+				local r, g, b, a = 0.8, 0, 0, clamp( dist / max_dist, 0, 1.0 )
+				game:SetColour( MakeHexColour( r, g, b, a ) )
+				game:Rectangle( x1 + 6, y1 + 6, (x2 - x1) - 12, (y2 - y1) - 12 )
+			end
 		end
 
 		if self.path then
 			for i, tile in ipairs( self.path ) do
 				local x1, y1 = game.camera:WorldToScreen( tile.x, tile.y )
 				local x2, y2 = game.camera:WorldToScreen( tile.x + 1, tile.y + 1 )
-				local dist = distance( tile.x, tile.y, self.astar.start_node:GetCoordinate() )
+				local dist = distance( tile.x, tile.y, self.start_room:GetCoordinate() )
 				local r, g, b, a = 1, 1, 0, clamp( dist / max_dist, 0, 1.0 )
 				game:SetColour( MakeHexColour( r, g, b, a ) )
 				game:Box( x1 + 4, y1 + 4, (x2 - x1) - 8, (y2 - y1) - 8 )
