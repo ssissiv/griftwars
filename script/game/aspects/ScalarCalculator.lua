@@ -31,17 +31,17 @@ function ScalarCalculator:AddSource( source )
 	table.insert( self.sources, source )
 end
 
-function ScalarCalculator:AddValue( mod, source )
+function ScalarCalculator:AddValue( mod, source, source_desc )
 	self.value = self.value + mod
-	self:AddSource( loc.format( "{1%+d}: {2}", mod, source ))
+	self:AddSource( loc.format( "{1%+d}: {2}", mod, source_desc or source ))
 end
 
-function ScalarCalculator:SetValue( value, source )
+function ScalarCalculator:SetValue( value, source, source_desc )
 	self.value = value
-	self:AddSource( loc.format( "={1}: {2}", value, source ))
+	self:AddSource( loc.format( "={1}: {2}", value, source_desc or source ))
 end
 
-function ScalarCalculator:AppendValue( value, source )
+function ScalarCalculator:AppendValue( value, source, source_desc )
 	table.insert( self.value, value )
-	self:AddSource( loc.format( "+{1}: {2}", value, source ))
+	self:AddSource( loc.format( "+{1}: {2}", value, source_desc or source ))
 end

@@ -44,14 +44,14 @@ function Agent:GetWeapon()
     return self.inventory:AccessSlot( EQ_SLOT.WEAPON )
 end
 
-function Agent:CalculateAttackPower( target )
+function Agent:CalculateAttackPower()
 	self.acc:InitializeValue( 0 )
 
 	local wpn = self:GetWeapon()
 	if wpn and wpn.attack_power then
 		self.acc:AddValue( wpn.attack_power, wpn )
 	end
-	return self.acc:CalculateValueFromSources( CALC_EVENT.ATTACK_POWER, target )
+	return self.acc:CalculateValueFromSources( CALC_EVENT.ATTACK_POWER )
 end
 
 function Agent:CalculateStat( stat )

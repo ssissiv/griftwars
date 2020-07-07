@@ -1,6 +1,8 @@
 TODO
 ====
 
+History vs. Log vs. SenseLog???
+
 Marks should not be an Engram.
 
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?

@@ -3,7 +3,7 @@ local Fighter = class( "Skill.Fighting", Aspect.Skill )
 
 Fighter.event_handlers =
 {
- 	[ CALC_EVENT.ATTACK_POWER ] = function( self, event_name, agent, acc, target )
+ 	[ CALC_EVENT.ATTACK_POWER ] = function( self, event_name, agent, acc )
     	acc:AddValue( self:GetSkillRank(), self )
     end,
 }

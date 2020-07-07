@@ -17,7 +17,7 @@ function WarpToWell()
 	puppet:WarpToLocation( obj.location )
 end
 
-local obj = table.arraypick( world:CreateBucketByClass( Agent.Captain ))
+local obj = table.arraypick( world:CreateBucketByClass( Agent.CityGuard ))
 puppet:TeleportToLocation( obj.location )
 
 -- DBG(agent:GetAspect( Verb.Strategize ))

@@ -48,6 +48,7 @@ local assets =
 
 		PLAYER = { "NEVANDA", 4 * 32, 1 * 32, 32, 32 },
 		ORC = { "NEVANDA", 32 * 32, 1 * 32, 32, 32 },
+		CAPTAIN = { "NEVANDA", 3 * 32, 7 * 32, 32, 32 },
 	},
 
 	LoadImage = function( self, img )

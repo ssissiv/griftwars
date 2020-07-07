@@ -189,7 +189,7 @@ function GameScreen:RenderCombatDetails( ui, puppet )
 
     		-- Attack power
     		ui.SameLine( 0 )
-	    	local ap, details = target:CalculateAttackPower( puppet )
+	    	local ap, details = target:CalculateAttackPower()
 	    	ui.TextColored( 0, 1, 1, 1, loc.format( "AP: {1}", ap ))
 	    	local show_tt = ui.IsItemHovered()
 	    	if show_tt and details then

@@ -19,7 +19,7 @@ function Punch:InAttackRange( actor, target )
 	return true
 end
 
-function Punch:GetDesc( viewer )
+function Punch:GetRoomDesc( viewer )
 	if self.obj then
 		return loc.format( "Punch for {1} damage", self:CalculateDamage( self.obj ))
 	else
@@ -63,15 +63,24 @@ function Punch:GetDuration()
 end
 
 function Punch:CalculateDamage( target )
-	local damage = self.actor:CalculateAttackPower( target )
+	local ap = self.actor:CalculateAttackPower()
+	local all_details = loc.format( "Attack Power: {1}", ap )
 
 	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
-	damage = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )
+	local damage, details = acc:CalculateValue( CALC_EVENT.DAMAGE, ap, target )
 	
 	local acc = target:GetAspect( Aspect.ScalarCalculator )
-	damage = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )
+	local damage, details2 = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )
 
-	return damage
+	if details and details2 then
+		all_details = all_details .."\n" .. details .. "\n" .. details2
+	elseif details then
+		all_details = all_details .."\n" .. details
+	elseif details2 then
+		all_details = all_details .."\n" .. details2
+	end
+
+	return damage, all_details
 end
 
 function Punch:Interact( actor, target )
@@ -113,4 +122,9 @@ function Punch:Interact( actor, target )
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )
 
 	self:YieldForTime( self:GetDuration() )
+end
+
+function Punch:RenderTooltip( ui, viewer )
+	local damage, details = self:CalculateDamage( self.obj )
+	ui.Text( tostring(details) )
 end

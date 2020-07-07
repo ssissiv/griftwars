@@ -4,7 +4,7 @@ local Strength = class( "Aspect.Strength", Aspect.StatValue )
 
 Strength.event_handlers =
 {
-	[ CALC_EVENT.ATTACK_POWER ] = function( self, event_name, agent, acc, target )
+	[ CALC_EVENT.ATTACK_POWER ] = function( self, event_name, agent, acc )
 		acc:AddValue( self:GetValue(), self )
 	end,
 }
