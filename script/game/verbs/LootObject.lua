@@ -6,7 +6,11 @@ end
 
 function LootObject:CanInteract( actor, obj )
 	if obj:GetCarrier() then
-		return false, "Already carried"
+		if is_instance( obj:GetCarrier().owner, Agent ) and obj:GetCarrier().owner:IsDead() then
+			-- ok, you can loot dead people
+		else
+			return false, "Already carried"
+		end
 	elseif obj:GetCarrier() == nil then
 		if not actor:CanReach( obj ) then
 			return false, "Can't reach"
@@ -48,7 +52,14 @@ function LootAll:Interact( actor, inventory )
 	inventory = inventory or self.inventory
 
 	self.loot = self.loot or Verb.LootObject()
-	for i, obj in inventory:Items() do
+
+	local items = table.shallowcopy( inventory:GetItems() )
+	for i, obj in ipairs( items ) do
+		local wearable = obj:GetAspect( Aspect.Wearable )
+		if wearable and wearable:IsEquipped() then
+			Msg:Echo( actor, "You remove {1} from {2.desc}.", obj:GetName(), inventory.owner:LocTable( actor ))
+			wearable:Unequip()
+		end
 		self:DoChildVerb( self.loot, obj )
 	end
 end
