@@ -5,8 +5,8 @@ function LootObject:GetRoomDesc( actor )
 end
 
 function LootObject:CanInteract( actor, obj )
-	if obj:GetCarrier() == actor:GetInventory() then
-		return false, "Already owned"
+	if obj:GetCarrier() then
+		return false, "Already carried"
 	elseif obj:GetCarrier() == nil then
 		if not actor:CanReach( obj ) then
 			return false, "Can't reach"

@@ -1,6 +1,6 @@
 local EquipObject = class( "Verb.EquipObject", Verb )
 
-function EquipObject:GetDesc()
+function EquipObject:GetRoomDesc()
 	local wearable = self.obj:GetAspect( Aspect.Wearable )
 	if wearable and wearable:IsEquipped() then
 		return loc.format( "Remove {1}", tostring(self.obj) )

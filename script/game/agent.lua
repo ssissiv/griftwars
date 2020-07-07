@@ -267,6 +267,17 @@ function Agent:GetInventory()
 	return self.inventory
 end
 
+function Agent:EquipItem( obj )
+	local carrier = obj:GetCarrier()
+	if carrier == nil then
+		self.inventory:AddItem( obj )
+	else
+		assert( carrier == self.inventory, tostring(carrier))
+	end
+
+	obj:GetAspect( Aspect.Wearable ):Equip()
+end
+
 function Agent:GetMemory()
 	return self.memory -- Assigned by Aspect.Memory when attained.
 end

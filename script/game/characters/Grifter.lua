@@ -13,13 +13,11 @@ function Grifter:init()
 	self:CreateStat( STAT.XP, 0 )
 	self:GetStat( STAT.HEALTH ):DeltaValue( 10, 10 )
 
+	-- Equipment
 	self:GetInventory():DeltaMoney( 2 )
+	self:EquipItem( Weapon.JaggedDirk() )
 
-	local dirk = Weapon.JaggedDirk()
-	self:GetInventory():AddItem( dirk )
-	dirk:GetAspect( Aspect.Wearable ):Equip()
-
-	self:GainAspect( Skill.Backstab() )
+	-- self:GainAspect( Skill.Backstab() )
 	
 	self:GainAspect( Verb.Befriend() )
 end

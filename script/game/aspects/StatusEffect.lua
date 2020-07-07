@@ -16,6 +16,7 @@ function StatusEffect:GetDesc( viewer )
 end
 
 function StatusEffect:OnSpawn( world )
+	Aspect.OnSpawn( self, world )
 	if self.tick_duration then
 		assert( self.TickStatusEffect )
 		self.tick_ev = world:SchedulePeriodicFunction( 0, self.tick_duration, self.TickStatusEffect, self )
@@ -25,6 +26,7 @@ function StatusEffect:OnSpawn( world )
 end
 
 function StatusEffect:OnDespawn()
+	Aspect.OnDespawn( self )
 	self:GetWorld():UnscheduleEvent( self.tick_ev )
 	self.tick_ev = nil
 end

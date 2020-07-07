@@ -19,8 +19,8 @@ function Object:OnDespawn()
 	end
 end
 
-function Object:GetName()
-	return "object"
+function Object:GetName( viewer )
+	return self.name or "object"
 end
 
 function Object:GetMapChar()

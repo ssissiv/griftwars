@@ -80,6 +80,8 @@ function Punch:CalculateDamage( target )
 		all_details = all_details .."\n" .. details2
 	end
 
+	damage = math.max( 0, damage )
+
 	return damage, all_details
 end
 

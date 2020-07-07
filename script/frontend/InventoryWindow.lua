@@ -37,6 +37,39 @@ function InventoryWindow:LootAll()
     self.viewer:DoVerbAsync( Verb.LootAll( self.inventory ), self.inventory )
 end
 
+function InventoryWindow:RenderInventory( ui, screen )
+    for i, obj in self.inventory:Items() do 
+        local txt = GetObjectDesc( obj )
+
+        if is_instance( obj.image, AtlasedImage ) then
+            obj.image:RenderUI( ui )
+            ui.SameLine( 0, 0 )
+            ui.SetCursorPosY( ui.GetCursorPosY() + 16 )
+        end
+
+        if ui.Selectable( txt, self.selected_obj == obj ) then
+            if obj == self.selected_obj then
+                self.world.nexus:Inspect( self.viewer, obj )
+            else
+                self:SelectObject( obj )
+            end
+        end
+        if ui.IsItemHovered() and obj.RenderTooltip then
+            obj:RenderTooltip( ui, screen )
+        end
+        if self.selected_obj == obj then
+            ui.Indent( 20 )
+
+            self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj)
+            for i, verb in self.shown_verbs:Verbs() do
+                UIHelpers.RenderPotentialVerb( ui, verb, i, self.viewer, obj )
+            end
+
+            ui.Unindent( 20 )
+        end
+    end
+end
+
 function InventoryWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
     ui.SetNextWindowSize( 400, 150 )
@@ -44,36 +77,7 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
 
     local shown, close, c = ui.Begin( self.title or "Inventory", false, flags )
     if shown then
-    	for i, obj in self.inventory:Items() do 
-            local txt = GetObjectDesc( obj )
-
-            if is_instance( obj.image, AtlasedImage ) then
-                obj.image:RenderUI( ui )
-                ui.SameLine( 0, 0 )
-                ui.SetCursorPosY( ui.GetCursorPosY() + 16 )
-            end
-
-    		if ui.Selectable( txt, self.selected_obj == obj ) then
-                if obj == self.selected_obj then
-                    self.world.nexus:Inspect( self.viewer, obj )
-                else
-                    self:SelectObject( obj )
-                end
-            end
-            if ui.IsItemHovered() and obj.RenderTooltip then
-                obj:RenderTooltip( ui, screen )
-            end
-            if self.selected_obj == obj then
-                ui.Indent( 20 )
-
-                self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj)
-                for i, verb in self.shown_verbs:Verbs() do
-                    UIHelpers.RenderPotentialVerb( ui, verb, i, self.viewer, obj )
-                end
-
-                ui.Unindent( 20 )
-            end
-    	end
+        self:RenderInventory( ui, screen )
 
         if self.coro then
             local done = self.inventory:IsEmpty()
@@ -96,7 +100,6 @@ function InventoryWindow:SelectObject( obj )
 end
 
 function InventoryWindow:KeyPressed( key, screen )
-    print( "KEY", key, self.shown_verbs)
     if key == "escape" then
         self:Close( screen )
         return true

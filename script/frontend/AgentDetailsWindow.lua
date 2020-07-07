@@ -5,6 +5,18 @@ function AgentDetailsWindow:init( viewer, agent )
 	self.viewer = viewer
 	self.agent = agent
 	self.view_fn = self.RenderStats
+	self.tab_buttons =
+	{
+		{ name = "Stats", fn = self.RenderStats },
+		{ name = "Skills", fn = self.RenderSkills },
+		{ name = "Equipment", fn = self.RenderEquipment },
+	}
+
+	if self.agent == self.viewer then
+		table.insert( self.tab_buttons, { name = "Relationships", fn = self.RenderAllRelationships })
+	else
+		table.insert( self.tab_buttons, { name = "Favours", fn = self.RenderFavours })
+	end
 end
 
 function AgentDetailsWindow:Refresh( agent )
@@ -87,6 +99,27 @@ function AgentDetailsWindow:RenderStats( ui, screen )
 	self:RenderAspects( "Job:", ui, screen, Job )
 end
 
+function AgentDetailsWindow:RenderEquipment( ui, screen )
+	if self.inventory_window == nil then
+		self.inventory_window = InventoryWindow( self.agent.world, self.viewer, self.agent:GetInventory() )
+	end
+
+	ui.Spacing()
+	ui.Indent( 20 )
+	self.inventory_window:RenderInventory( ui, screen )
+	ui.Unindent( 20 )
+	ui.Spacing()
+
+	-- for i, slot in ipairs( EQ_SLOT_ARRAY ) do
+	-- 	local obj = self.agent:GetInventory():AccessSlot( slot )
+	-- 	if obj then
+	-- 		ui.Text( loc.format( "<{1}>", EQ_SLOT_NAMES[ slot ] ))
+	-- 		ui.SameLine( 80 )
+	-- 		ui.Text( obj:GetName( self.viewer ))
+	-- 	end
+	-- end
+end
+
 function AgentDetailsWindow:RenderSkills( ui, screen )
 	self:RenderAspects( "Skills:", ui, screen, Aspect.Skill )
 end
@@ -128,14 +161,10 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 
 		ui.Spacing()
 
-		self:RenderTabButton( ui, 1, "Stats", self.RenderStats )
-		if self.agent == self.viewer then
-			self:RenderTabButton( ui, 2, "Relationships", self.RenderAllRelationships )
-		else
-			self:RenderTabButton( ui, 2, "Favours", self.RenderFavours )
+		for i, t in ipairs( self.tab_buttons ) do
+			self:RenderTabButton( ui, i, t.name, t.fn )
 		end
-		self:RenderTabButton( ui, 3, "Skills", self.RenderSkills )
-
+	
 		-- Render Current Tab
 		if self.view_fn then
 			ui.Separator()
@@ -155,6 +184,19 @@ end
 function AgentDetailsWindow:KeyPressed( key, screen )
 	if key == "return" or key == "escape" then
 		screen:RemoveWindow( self )
+		return true
+
+	elseif key == "tab" then
+		for i, t in ipairs( self.tab_buttons ) do
+			if t.fn == self.view_fn then
+				self.view_fn = self.tab_buttons[ (i % #self.tab_buttons) + 1 ].fn
+				break
+			end
+		end
+		return true
+	end
+
+	if self.inventory_window and self.inventory_window:KeyPressed( key, screen ) then
 		return true
 	end
 end

@@ -149,6 +149,8 @@ EQ_SLOT = MakeEnum
 	"FEET",
 	"RING",
 }
+EQ_SLOT_ARRAY = MakeArrayFromEnum( EQ_SLOT )
+
 
 EQ_SLOT_NAMES =
 {
