@@ -36,6 +36,7 @@ end
 function TileMap:ClearTileMap()
 	self.layers = { [0] = {} } -- array of arrays.
 	self.max_depth = 0
+	self.tile_count = 0
 end
 
 function TileMap:GenerateTileMap()
@@ -119,6 +120,7 @@ function TileMap:AssignToGrid( location )
 	else
 		table.insert( row[ x ], location )
 	end
+	self.tile_count = self.tile_count + 1
 end
 
 function TileMap:ReassignToGrid( tile )
@@ -143,6 +145,8 @@ function TileMap:UnassignFromGrid( location )
 		obj:Despawn()
 	end
 
+	self.tile_count = self.tile_count - 1
+
 	if t == location then
 		layer[ y ][ x ] = nil
 	elseif t then
@@ -154,6 +158,22 @@ function TileMap:UnassignFromGrid( location )
 		end
 	else
 		error( location )
+	end
+end
+
+function TileMap:GetRandomTile()
+	local n = math.random( 1, self.tile_count )
+	local i = n
+	for z, layer in pairs( self.layers ) do
+		for y, row in pairs( layer ) do
+			for x, tile in pairs( row ) do
+				if i == 1 then
+					return tile
+				else
+					i = i - 1
+				end
+			end
+		end
 	end
 end
 

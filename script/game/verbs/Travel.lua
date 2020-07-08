@@ -55,7 +55,7 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 		self.path = pather:GetPath()
 		self.pather = pather
 
-		local ok, reason = false
+		local ok, reason = false, "no path"
 		if self.path and #self.path > 0 then
 			-- Find out which direction to walk:
 			-- (a) If we're on the path follow it.
@@ -81,7 +81,8 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 		if not ok then				
 			-- Finally, we just fail.
 			self.block_count = (self.block_count or 0) + 1
-			print( actor, "couldn't walk:", reason, self.block_count, tostr(self.path) )
+			print( actor, "couldn't walk:", reason, self.block_count )
+			print( "Path:", tostr(self.path) )
 			if self.block_count >= 3 then
 				pather:ResetPath()
 			end
@@ -155,13 +156,13 @@ function Travel:Interact( actor, dest )
 		end
 	end
 
-	-- At the destination Location, now go to a specific tile.
-	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
-		self:PathToTarget( actor, dest, self.approach_dist )
-	else
+	if is_instance( dest, Location ) then
 		-- Pick a random tile?
 		local tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
+		assert( tile_dest, tostring(dest))
 		self:PathToTarget( actor, tile_dest, self.approach_dist )
+	else
+		self:PathToTarget( actor, dest, self.approach_dist )
 	end
 end
 
