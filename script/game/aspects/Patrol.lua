@@ -6,6 +6,7 @@ Patrol.salary = 5
 function Patrol:OnInit()
 	self:SetShiftHours( 0, 24 )
 	self.waypoints = {}
+	self.wander = Verb.Wander()
 end
 
 function Patrol:GetWaypoint()
@@ -42,7 +43,7 @@ function Patrol:DoJob()
 	else
 		Msg:Speak( self.owner, "Holding this location." )
 	end
-	self:Idle( self.owner, ONE_HOUR )
+	self:DoChildVerb( self.wander, nil, ONE_HOUR )
 
 	-- Next waypoint.
 	table.remove( self.waypoints, 1 )
