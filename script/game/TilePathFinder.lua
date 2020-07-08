@@ -14,29 +14,6 @@ function TilePathFinder:init( actor, source, target, approach_dist )
 	self.target = target
 	self.approach_dist = approach_dist
 	self.query_count = 0
-
-	local function DistFn( t1, t2 )
-		return distance( t1.x, t1.y, t2.x, t2.y )
-	end
-
-	local function HeuristicFn( t1, end_tile )
-		local dx = end_tile.x - t1.x
-		local dy = end_tile.y - t1.y
-		return math.sqrt( dx * dx + dy * dy )
-	end
-
-	local neighbours = {}
-	local function NeighbourFn( tile )
-		table.clear( neighbours )
-		for i, dest in self.map:Neighbours( tile ) do
-			if self.actor == nil or dest:IsConditionallyPassable( self.actor ) then
-				table.insert( neighbours, dest )
-			end
-		end	
-		return ipairs( neighbours )
-	end
-
-	self.astar = AStarSearcher( DistFn, HeuristicFn, NeighbourFn )
 end
 
 function TilePathFinder:GetApproachDist()
@@ -51,6 +28,40 @@ function TilePathFinder:GetApproachDist()
 	end
 
 	return 0
+end
+
+function TilePathFinder:CreateAStar()
+	if self.astar then
+		return self.astar
+	end
+
+	local function DistFn( t1, t2 )
+		return distance( t1.x, t1.y, t2.x, t2.y )
+	end
+
+	local function HeuristicFn( t1, end_tile )
+		local dx = end_tile.x - t1.x
+		local dy = end_tile.y - t1.y
+		return math.sqrt( dx * dx + dy * dy )
+	end
+
+	local neighbours = {}
+	local function NeighbourFn( tile )
+		table.clear( neighbours )
+		local end_room = self:GetEndRoom()
+		for i, dest in self.map:Neighbours( tile ) do
+			if self.actor == nil or dest:IsConditionallyPassable( self.actor ) then
+				table.insert( neighbours, dest )
+			elseif dest == end_room then
+				-- A tile occupied by a hostile agent is not passable but we still need to path to it.
+				table.insert( neighbours, dest )
+			end
+		end	
+		return ipairs( neighbours )
+	end
+
+	self.astar = AStarSearcher( DistFn, HeuristicFn, NeighbourFn )
+	return self.astar
 end
 
 function TilePathFinder:RasterLine( start_room, end_room, plot )
@@ -105,13 +116,15 @@ function TilePathFinder:CalculatePath()
 		return
 	end
 
-	-- Track these for debug rendering purposes
 	self.start_room, self.end_room = start_room, end_room
 
 	local path = self:RasterLine( start_room, end_room )
 	if path then
 		self.path = path
+		self.rastered = true
 	else
+		self.rastered = nil
+		local astar = self:CreateAStar()
 		self.astar.no_clear = (self.history ~= nil)
 		self.astar:StartSearch( start_room, end_room )
 		self.astar:RunToCompletion()
@@ -142,10 +155,13 @@ end
 function TilePathFinder:GetPath()
 	if self.path == nil then
 		self.path = self:CalculatePath()
-	elseif is_instance( self.target, Agent ) then
-		self.path = self:CalculatePath() -- for now
+
+	elseif self.end_room ~= self:GetEndRoom() then
+		-- Target moved, just recalc.
+		-- if the target is still on the path, we could reuse it, but then we need to maintain the full path and
+		-- handle approach dist one level up.
+		self.path = self:CalculatePath()
 	else
-		-- Assumed static target.  If start room is still on the path, use that.
 		local idx = table.find( self.path, self:GetStartRoom() )
 		if idx then
 			for i = idx - 1, 1, -1 do

@@ -113,6 +113,8 @@ function Behaviour:OnTickBehaviour()
 		end
 	end
 
+	self.active_verb = active_verb
+	
 	if active_verb and not self.owner:IsDoing( active_verb ) then
 		self.owner:DoVerbAsync( active_verb )
 	end

@@ -19,7 +19,7 @@ function World:init()
 	-- self:SpawnLocation( self.limbo )
 
 	self.history = self:GainAspect( Aspect.History() )
-	self.history:SaveToFile( "log.txt" )
+	self.history:SaveToFile( "history.txt" )
 	self.map = self:GainAspect( Aspect.TileMap() )
 	self.acc = self:GainAspect( Aspect.ScalarCalculator() )
 

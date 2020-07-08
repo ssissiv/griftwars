@@ -195,5 +195,7 @@ function Job:Interact()
 		end
 	end
 
-	Msg:Speak( actor, "Clocking out." )
+	if not self:IsCancelled() then
+		Msg:Speak( actor, "Clocking out." )
+	end
 end

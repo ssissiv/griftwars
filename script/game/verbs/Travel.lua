@@ -81,11 +81,12 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 		if not ok then				
 			-- Finally, we just fail.
 			self.block_count = (self.block_count or 0) + 1
+			print( actor, "couldn't walk:", reason, self.block_count, tostr(self.path) )
 			if self.block_count >= 3 then
-				print( actor, "couldn't walk:", reason, self.path )
-				print( tostr(self.path) )
 				pather:ResetPath()
 			end
+
+			self:YieldForTime( ONE_SECOND * self.block_count * self.block_count )
 			break
 		end
 
@@ -141,7 +142,7 @@ function Travel:Interact( actor, dest )
 			self:YieldForTime( ONE_MINUTE * self.fail_count )
 
 		elseif not self:PathToLocation( actor, self.path[2] ) then
-			print( actor, "Overworld path found, but can't find or access portal!" )
+			print( actor, "Overworld path found, but can't find or access portal!", self.fail_count )
 			self.fail_count = (self.fail_count or 0) + 1
 			self:YieldForTime( ONE_MINUTE * self.fail_count )
 
@@ -155,17 +156,11 @@ function Travel:Interact( actor, dest )
 	end
 
 	-- At the destination Location, now go to a specific tile.
-	local tile_dest
 	if is_instance( dest, Waypoint ) or is_instance( dest, Agent ) or is_instance( dest, Object ) then
-		local x, y = AccessCoordinate( dest )
-		if x and y then
-			tile_dest = actor:GetLocation():GetTileAt( x, y )
-		end
+		self:PathToTarget( actor, dest, self.approach_dist )
 	else
 		-- Pick a random tile?
-		tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
-	end
-	if tile_dest then
+		local tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
 		self:PathToTarget( actor, tile_dest, self.approach_dist )
 	end
 end
