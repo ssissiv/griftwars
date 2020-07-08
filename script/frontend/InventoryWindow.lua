@@ -42,9 +42,9 @@ function InventoryWindow:RenderInventory( ui, screen )
         local txt = GetObjectDesc( obj )
 
         if is_instance( obj.image, AtlasedImage ) then
-            obj.image:RenderUI( ui )
+            obj.image:RenderUI( ui, 36, 36 )
             ui.SameLine( 0, 0 )
-            ui.SetCursorPosY( ui.GetCursorPosY() + 16 )
+            ui.SetCursorPosY( ui.GetCursorPosY() + 8 )
         end
 
         if ui.Selectable( txt, self.selected_obj == obj ) then
@@ -58,25 +58,22 @@ function InventoryWindow:RenderInventory( ui, screen )
             obj:RenderTooltip( ui, screen )
         end
         if self.selected_obj == obj then
-            ui.Indent( 20 )
-
             self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj)
             for i, verb in self.shown_verbs:Verbs() do
                 UIHelpers.RenderPotentialVerb( ui, verb, i, self.viewer, obj )
             end
-
-            ui.Unindent( 20 )
         end
     end
 end
 
 function InventoryWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
-    ui.SetNextWindowSize( 400, 150 )
+    -- ui.SetNextWindowSize( 400, 150 )
     ui.SetNextWindowPos( (love.graphics.getWidth() - 400) / 2, (love.graphics.getHeight() - 150) / 2 )
 
     local shown, close, c = ui.Begin( self.title or "Inventory", false, flags )
     if shown then
+        ui.Dummy( 400, 0 )
         self:RenderInventory( ui, screen )
 
         if self.coro then
@@ -105,8 +102,10 @@ function InventoryWindow:KeyPressed( key, screen )
         return true
 
     elseif key == "return" then
-        self:LootAll()
-        return true
+        if self.viewer:GetInventory() ~= self.inventory then            
+            self:LootAll()
+            return true
+        end
 
     elseif key == "/" and Input.IsShift() then
         if self.selected_obj then
