@@ -76,10 +76,10 @@ function Punch:CalculateDamage( target )
 	local all_details = loc.format( "Attack Power: {1}", ap )
 
 	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
-	local damage, details = acc:CalculateValue( CALC_EVENT.DAMAGE, ap, target )
+	local damage, details = acc:CalculateValue( CALC_EVENT.DAMAGE, ap, self.actor, target )
 	
 	local acc = target:GetAspect( Aspect.ScalarCalculator )
-	local damage, details2 = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, target )
+	local damage, details2 = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, self.actor, target )
 
 	if details and details2 then
 		all_details = all_details .."\n" .. details .. "\n" .. details2

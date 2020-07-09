@@ -9,7 +9,7 @@ end
 
 Armour.equipment_handlers =
 {
-	[ CALC_EVENT.DAMAGE ] = function( self, event_name, agent, acc, target )
+	[ CALC_EVENT.DAMAGE ] = function( self, event_name, agent, acc, actor, target )
 		if target == self.carrier.owner and self:GetAspect( Aspect.Wearable ):IsEquipped() then
 			acc:AddValue( -self.defense_power, self, self:GetName() )
 		end

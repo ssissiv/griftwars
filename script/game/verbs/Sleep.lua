@@ -12,7 +12,7 @@ Sleep.FLAGS = bit32.bor( VERB_FLAGS.ATTENTION, VERB_FLAGS.MOVEMENT, VERB_FLAGS.H
 
 Sleep.event_handlers =
 {
-	[ CALC_EVENT.DAMAGE ] = function( self, verb, event_name, acc, target )
+	[ CALC_EVENT.DAMAGE ] = function( self, verb, event_name, acc, actor, target )
 		if target == self.actor then
 			acc:AddValue( acc.value, "Sleeping" )
 		end

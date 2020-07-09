@@ -48,6 +48,10 @@ function Agent:GetWeapon()
     return self.inventory:AccessSlot( EQ_SLOT.WEAPON )
 end
 
+function Agent:IsUnarmed()
+	return self:GetWeapon() == nil -- Or gloves/knuckleS?
+end
+
 function Agent:CalculateAttackPower()
 	self.acc:InitializeValue( 0 )
 

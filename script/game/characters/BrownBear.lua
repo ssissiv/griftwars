@@ -11,6 +11,8 @@ function BrownBear:init()
 	self:GetStat( STAT.HEALTH ):DeltaValue( 50, 50 )
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 4 )
 
+	self:GainAspect( Skill.RendingClaws() )
+
 	self:SetFlags( EF.AGGRO_ALL )
 end
 

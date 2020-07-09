@@ -6,8 +6,8 @@ Backstab.name = "Backstab"
 
 Backstab.event_handlers =
 {
- 	[ CALC_EVENT.DAMAGE ] = function( self, event_name, agent, acc, target )
- 		if target and not target:InCombatWith( self.owner ) then
+ 	[ CALC_EVENT.DAMAGE ] = function( self, event_name, agent, acc, actor, target )
+ 		if self.owner == actor and target and not target:InCombatWith( self.owner ) then
 	    	acc:AddValue( acc.value, self, self:GetName() )
 	    end
     end,
