@@ -15,6 +15,8 @@ function CityGuard:init()
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighting() )
 
+	self:EquipItem( Weapon.LongSword() )
+
 	Aspect.Favour.GainFavours( self,
 	{
 		{ Favour.Acquaint(), 10 },

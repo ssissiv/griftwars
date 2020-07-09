@@ -26,5 +26,6 @@ function Captain:init()
 	self:GainAspect( Skill.Fighting():SetSkillRank( 3 ))
 
 	self:EquipItem( Armour.ChainMail() )
+	self:EquipItem( Weapon.LongSword() )
 end
 

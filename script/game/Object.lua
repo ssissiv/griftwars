@@ -3,7 +3,7 @@ Object.MAP_CHAR = "."
 
 function Object:init()
 	Entity.init( self )
-	self.value = 0
+	self.value = self.value or 0
 end
 
 function Object:OnDespawn()

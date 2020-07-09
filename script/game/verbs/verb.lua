@@ -153,6 +153,7 @@ end
 function Verb:CalculateDC( actor, target )
 	local dc, details = self.DC
 	if dc == nil then
+		print( "No DC specified:", self, actor )
 		return
 	end
 	if target and target.CalculateDC then

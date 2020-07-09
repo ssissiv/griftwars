@@ -1,27 +1,24 @@
-local Dirk = class( "Weapon.Dirk", Object )
+require "game/objects/Weapon"
+
+local Dirk = class( "Weapon.Dirk", Object.Weapon )
 
 Dirk.image = assets.IMG.DIRK
 Dirk.attack_power = 3
 Dirk.desc = "A crude weapon."
-
-function Dirk:init()
-	Object.init( self )
-	self.value = 12
-
-	self:GainAspect( Aspect.Wearable( EQ_SLOT.WEAPON ))
-	self:GainAspect( Aspect.Carryable() )
-end
-
-function Dirk:GetName()
-	return "dirk"
-end
+Dirk.value = 26
+Dirk.name = "dirk"
 
 ------------------------------------------------------------------
 
-local JaggedDirk = class( "Weapon.JaggedDirk", Object )
+local JaggedDirk = class( "Weapon.JaggedDirk", Object.Weapon )
 
 JaggedDirk.image = assets.IMG.DIRK
 JaggedDirk.attack_power = 4
+JaggedDirk.value = 60
+JaggedDirk.desc = "75%% to cause Bleed on a successful attack."
+JaggedDirk.name = "jagged dirk"
+
+
 JaggedDirk.equipment_handlers = 
 {
 	[ AGENT_EVENT.POST_ATTACK ] = function( self, event_name, actor, target, attack, success )
@@ -35,16 +32,4 @@ JaggedDirk.equipment_handlers =
 	end,
 }
 
-function JaggedDirk:init()
-	Object.init( self )
-	self.value = 35
 
-	self:GainAspect( Aspect.Wearable( EQ_SLOT.WEAPON ))
-	self:GainAspect( Aspect.Carryable() )
-end
-
-JaggedDirk.desc = "75%% to cause Bleed on a successful attack."
-
-function JaggedDirk:GetName()
-	return "jagged dirk"
-end

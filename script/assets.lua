@@ -23,6 +23,7 @@ local assets =
 
 		-- Objects
 		DIRK = { "NEVANDA", 15 * 32, 10 * 32, 32, 32 },
+		LONG_SWORD = { "NEVANDA", 23 * 32, 10 * 32, 32, 32 },
 		CHAIN_MAIL = { "NEVANDA", 23 * 32, 12 * 32, 32, 32 },
 	},
 
