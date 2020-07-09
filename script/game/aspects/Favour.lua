@@ -58,9 +58,12 @@ function Favour:RenderAgentDetails( ui, panel, viewer )
 	ui.Text( tostring(self:GetRequiredTrust()) )
 
 	ui.NextColumn()
-	if ui.Button( "Call In" ) and enabled then
+	if self.OnUseFavour == nil then
+		ui.Button( "Passive" )
+	elseif ui.Button( "Call In" ) and enabled then
 		self:UseFavour( viewer )
 	end
+
 	if ui.IsItemHovered() then
 		ui.BeginTooltip()
 		self.reqs:RenderDebugPanel( ui, panel, GetDbg(), viewer )
@@ -186,6 +189,24 @@ function LearnIntel:OnUseFavour( agent )
 	local engram = table.arraypick( intels )
 	Msg:Echo( agent, "Learned: {1}", engram:GetDesc() )
 	agent:GetMemory():AddEngram( engram )
+end
+
+
+------------------
+
+local NonAggression = class( "Favour.NonAggression", Favour )
+
+NonAggression.event_handlers =
+{
+	[ CALC_EVENT.IS_ALLY ] = function( self, event_name, agent, acc, other )
+		if self.reqs:IsSatisfied( other ) then
+			acc:SetValue( true, self )
+		end
+	end,
+}
+
+function NonAggression:GetName()
+	return loc.format( "Non-aggression" )
 end
 
 

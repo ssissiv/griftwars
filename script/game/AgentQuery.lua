@@ -35,6 +35,10 @@ function Agent:IsAlly( other )
 		return true
 	end
 
+	if self.acc:CalculateValue( CALC_EVENT.IS_ALLY, false, other ) then
+		return true
+	end
+
 	local f1 = self:GetAspect( Aspect.FactionMember )
 	local f2 = other:GetAspect( Aspect.FactionMember )
 	return f1 and f2 and f1:IsAlly( f2 )

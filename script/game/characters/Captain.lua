@@ -15,6 +15,7 @@ local Captain = class( "Agent.Captain", Agent )
 Captain.MAP_CHAR = "c"
 Captain.unfamiliar_desc = "captain"
 Captain.image = assets.TILE_IMG.CAPTAIN
+Captain.max_health = 40
 
 function Captain:init()
 	Agent.init( self )

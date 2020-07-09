@@ -14,4 +14,10 @@ function CityGuard:init()
 
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighting() )
+
+	Aspect.Favour.GainFavours( self,
+	{
+		{ Favour.Acquaint(), 10 },
+		{ Favour.NonAggression( 100 ), 20 },
+	})
 end

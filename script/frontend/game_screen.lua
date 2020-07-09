@@ -317,9 +317,9 @@ function GameScreen:RenderScreen( gui )
     local location = puppet and puppet:GetLocation() or self.last_location
     if location then
 	    -- Render the things at the player's location.
-	    self:RenderLocationDetails( ui, location )
-
 	    self:RenderLocationTiles( location, puppet )
+
+	    self:RenderLocationDetails( ui, location )
 
 	    self.last_location = location
 	end

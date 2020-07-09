@@ -216,7 +216,6 @@ function Zone:RandomRoomOfClass( class )
 	assert( #self.rooms > 0 )
 	assert( class )
 	local t = table.arrayadd_if( {}, self.rooms, function( room ) return is_instance( room, class ) end )
-	assert( #t > 0 )
 	return self.worldgen:ArrayPick( t )
 end
 

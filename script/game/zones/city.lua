@@ -42,8 +42,10 @@ function City:OnWorldGenPass( pass )
 			Agent.Scavenger():WarpToLocation( room )
 		end
 		for i = 1, 3 do
-			local room = self:RandomRoomOfClass( Location.CityDistrict )
-			Agent.Snoop():WarpToLocation( room )
+			local room = self:RandomRoomOfClass( Location.Tavern )
+			if room then
+				Agent.Snoop():WarpToLocation( room )
+			end
 		end
 
 		-- Localize faction members.

@@ -3,6 +3,7 @@ local Befriend = class( "Verb.Befriend", Verb )
 
 Befriend.INTENT_FLAGS = INTENT.DIPLOMACY
 Befriend.can_repeat = true -- This interaction can take place multiple times.
+Befriend.DC = 10
 
 function Befriend:GetRoomDesc( viewer )
 	return loc.format( "Befriend {1.Id}", self.obj and self.obj:LocTable( viewer ))
@@ -44,21 +45,23 @@ function Befriend:Interact( actor, target )
 
 	-- self:AttachActor( target )
 
-	self:YieldForTime( 10 * ONE_MINUTE, "wall", 1.0 )
+	-- self:YieldForTime( 10 * ONE_MINUTE, "wall", 1.0 )
 
 	if self:IsCancelled() then
 		Msg:Echo( actor, "So much for making friends." )
 		return
 	end
 
-	local trust = math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA ))
+	-- Check to generate
+	local ok, result_str = self:CheckDC( actor, target )
+	if ok then
+		local trust = math.max( 1, math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA )))
 
-	if trust > 0 then
-		Msg:Echo( actor, "You befriend {1.Id}.", target:LocTable( actor ))
+		Msg:Echo( actor, "You befriend {1.Id}. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( trust )
 		actor:GainXP( trust )
 	else
-		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent.", target:LocTable( actor ) )
+		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent. ({2})", target:LocTable( actor ), result_str )
 	end
 end
 

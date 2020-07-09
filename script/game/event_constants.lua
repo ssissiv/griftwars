@@ -40,6 +40,7 @@ CALC_EVENT = MakeEnum{
 	"STAT",
 	"DC",
 	"COLLECT_INTEL",
+	"IS_ALLY",
 }
 
 LOCATION_EVENT = MakeEnum{

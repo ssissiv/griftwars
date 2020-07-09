@@ -81,7 +81,7 @@ function Combat:OnLocationEvent( event_name, location, ... )
 end
 
 function Combat:OnNoticedAttack( victim, attacker, attack )
-	if self.owner:IsAlly( victim ) and math.random() < 0.5 then
+	if self.owner:IsAlly( victim ) and not self.owner:IsAlly( attacker ) then
 		Msg:Speak( self.owner, "Banzaii!", victim:LocTable())
 
 		if self.owner:CanSee( attacker ) then
