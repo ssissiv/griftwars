@@ -5,7 +5,7 @@ function GameScreen:init( world )
 	
 	if world == nil then
 		local gen = WorldGen()
-		world = gen:GenerateWorld()
+		world = gen:GenerateTinyWorld()
 		world:Start()
 	end
 	self.world = world
@@ -196,24 +196,45 @@ function GameScreen:RenderCombatDetails( ui, puppet )
 	    		ui.SetTooltip( details )
 	    	end
 
-    		local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
-    		if attack then
-    			local t = attack:GetActingProgress()
-    			if t then
-	    			ui.SameLine( 0, 50 )
-	    			local time_left, total_time = attack:GetActingTime()
-	    			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
-	    				t, Calendar.FormatDuration( total_time )) )
-	    			ui.SameLine( 0, 50 )
+	    	local verb_desc
+			for i, verb in target:Verbs() do
+	            while verb do
+	                local desc = verb:GetDesc( puppet )
+	                if desc then
+	                	if verb_desc then
+							local time_left = verb:GetActingTime()
+							verb_desc = loc.format( "{1}, {2} ({3#duration})", verb_desc, desc, time_left )
+		                else
+		                	verb_desc = desc
+		                end
+	                end
+	                verb = verb.child
+	            end
+	        end
+	        if verb_desc then
+	        	ui.SameLine( 200 )
+	        	ui.Text( verb_desc )
+	        end
 
-			    	local damage, details = attack:CalculateDamage( attack:GetTarget() )
-	    			ui.Text( loc.format( "{1} damage", damage ))
 
-					if details and ui.IsItemHovered() then
-			    		ui.SetTooltip( details )
-    				end
-	    		end
-    		end
+    	-- 	local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
+    	-- 	if attack then
+    	-- 		local t = attack:GetActingProgress()
+    	-- 		if t then
+	    -- 			ui.SameLine( 0, 50 )
+	    -- 			local time_left, total_time = attack:GetActingTime()
+	    -- 			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
+	    -- 				t, Calendar.FormatDuration( total_time )) )
+	    -- 			ui.SameLine( 0, 50 )
+
+			  --   	local damage, details = attack:CalculateDamage( attack:GetTarget() )
+	    -- 			ui.Text( loc.format( "{1} damage", damage ))
+
+					-- if details and ui.IsItemHovered() then
+			  --   		ui.SetTooltip( details )
+    	-- 			end
+	    -- 		end
+    	-- 	end
 
     		ui.SameLine( 0 )
     		self:RenderStatusEffects( ui, target )

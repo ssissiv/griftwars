@@ -1,4 +1,5 @@
 local Eat = class( "Verb.Eat", Verb )
+Eat.act_desc = "Eat"
 
 function Eat:GetDesc()
 	local edible = self.obj:GetAspect( Aspect.Edible )

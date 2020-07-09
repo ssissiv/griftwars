@@ -19,6 +19,15 @@ function Punch:InAttackRange( actor, target )
 	return true
 end
 
+function Punch:GetDesc( viewer )
+	local wpn = self.actor:GetWeapon()
+	if wpn then
+		return loc.format( "Attacking ({1})", wpn:GetName( viewer ) )
+	else
+		return "Attacking unarmed"
+	end
+end
+
 function Punch:GetRoomDesc( viewer )
 	if self.obj then
 		return loc.format( "Punch for {1} damage", self:CalculateDamage( self.obj ))
