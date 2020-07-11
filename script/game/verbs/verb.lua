@@ -12,7 +12,7 @@ Verb.event_handlers =
 }
 
 function Verb:init( actor, obj )
-	assert( actor == nil )
+	assert( actor == nil, tostring(self) )
 	self.obj = obj
 	self.utility = 0
 	self.actors = {}
@@ -75,6 +75,13 @@ end
 
 function Verb:Helpers()
 	return ipairs( self:GetHelpers() or table.empty )
+end
+
+function Verb:AddReq( req )
+	if self.reqs == nil then
+		self.reqs = Aspect.Requirements()
+	end
+	self.reqs:AddReq( req )
 end
 
 function Verb:GetRandomActor()
@@ -228,6 +235,13 @@ function Verb:CanInteract( actor, target )
 		end
 		if target:IsDead() then
 			return false, "Dead target"
+		end
+	end
+
+	if self.reqs then
+		local ok, reason = self.reqs:IsSatisfied( actor )
+		if not ok then
+			return false, reason
 		end
 	end
 

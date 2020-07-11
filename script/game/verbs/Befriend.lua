@@ -31,7 +31,7 @@ function Befriend:CanInteract( actor, target )
 		return false, "In combat"
 	end
 
-	return Verb.CanInteract( actor, target )
+	return Verb.CanInteract( self, actor, target )
 end
 
 function Befriend:CollectVerbs( verbs, actor, obj )

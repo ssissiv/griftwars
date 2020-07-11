@@ -4,7 +4,7 @@
 local Give = class( "Verb.Give", Verb )
 
 function Give:init( giver, receiver )
-	Give._base.init( self, giver )
+	Give._base.init( self, nil, receiver )
 	self.giver = giver
 	self.receiver = receiver
 end
