@@ -47,7 +47,7 @@ end
 function Job:CalculateUtility()
 	local world = self:GetWorld()
 	if self:IsTimeForShift( world:GetDateTime() ) or self:IsDoing() then
-		return UTILITY.OBLIGATION
+		return UTILITY.DUTY
 	else
 		return 0
 	end

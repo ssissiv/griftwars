@@ -52,6 +52,10 @@ function Agent:OnDespawn()
 		self.world.names:AddName( self.name )
 	end
 
+	if self.leader then
+		self:SetLeader( nil )
+	end
+
 	self:WarpToNowhere()
 
 	if self.verbs then
@@ -135,9 +139,29 @@ function Agent:GetLeader()
 end
 
 function Agent:SetLeader( leader )
-	assert( is_instance( leader, Agent ))
-	assert( leader:GetAspect( Trait.Leader ))
-	self.leader = leader
+	assert( leader == nil or is_instance( leader, Agent ))
+	if self.leader then
+		Msg:Echo( self, "You stop following {1.desc}.", leader:LocTable( self ))
+		Msg:Echo( self.leader, "{1.desc} stops following you.", self:LocTable( self.leader ))
+
+		self:LoseAspect( self:GetAspect( Trait.Follower ))
+		self.leader:GetAspect( Trait.Leader ):RemoveFollower( self )
+		self.leader = nil
+	end
+
+	if leader then
+		Msg:Echo( self, "You start following {1.desc}.", leader:LocTable( self ))
+		Msg:Echo( leader, "{1.desc} starts following you.", self:LocTable( leader ))
+
+		self.leader = leader
+		self:GainAspect( Trait.Follower( leader ) )
+
+		local lead = leader:GetAspect( Trait.Leader ) or leader:GainAspect( Trait.Leader() )
+		if not lead then
+			lead:GainAspect( Trait.Leader() )
+		end
+		lead:AddFollower( self )
+	end
 end
 
 function Agent:RegenVerbs( id )

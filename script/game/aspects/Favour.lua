@@ -26,6 +26,15 @@ function Favour:GetRequiredTrust()
 	return req and req.trust or 0
 end
 
+function Favour:CanUseFavour( viewer )
+	local enabled, reasons = self.reqs:IsSatisfied( viewer )
+	if not enabled then
+		return false, reasons
+	end
+
+	return true
+end
+
 function Favour:UseFavour( agent )
 	local used = self.used[ agent ]
 	if used == nil then
@@ -39,7 +48,7 @@ function Favour:UseFavour( agent )
 end
 
 function Favour:RenderAgentDetails( ui, panel, viewer )
-	local enabled, reasons = self.reqs:IsSatisfied( viewer )
+	local enabled, reasons = self:CanUseFavour( viewer )
 	if not enabled and not reasons then
 		return
 	end
@@ -66,6 +75,9 @@ function Favour:RenderAgentDetails( ui, panel, viewer )
 
 	if ui.IsItemHovered() then
 		ui.BeginTooltip()
+		if reasons then
+			ui.TextColored( 1, 0, 0, 1, tostring(reasons))
+		end
 		self.reqs:RenderDebugPanel( ui, panel, GetDbg(), viewer )
 		ui.EndTooltip()
 	end
@@ -210,4 +222,25 @@ function NonAggression:GetName()
 end
 
 
+
+------------------
+
+local JoinParty = class( "Favour.JoinParty", Favour )
+
+function JoinParty:GetName()
+	return loc.format( "Join party" )
+end
+
+function JoinParty:CanUseFavour( actor )
+	if self.owner:GetLeader() == actor then
+		return false, "Already following"
+	end
+
+	return Favour.CanUseFavour( self, actor )
+end
+
+function JoinParty:OnUseFavour( agent )
+	Msg:Speak( agent, "Let's go!" )
+	self.owner:SetLeader( agent )
+end
 

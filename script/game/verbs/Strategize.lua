@@ -16,7 +16,7 @@ function Strategize:GetDesc( viewer )
 end
 
 function Strategize:CalculateUtility( actor )
-	return UTILITY.OBLIGATION
+	return UTILITY.DUTY
 end
 
 function Strategize:FindStrategicPoint( actor )

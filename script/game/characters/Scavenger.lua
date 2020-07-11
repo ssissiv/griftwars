@@ -36,7 +36,7 @@ function Scavenge:CalculateUtility( actor )
 	-- How broke am I?
 	local value = actor:GetInventory():CalculateValue()
 	if value <= WEALTH.DESTITUTE then
-		return UTILITY.OBLIGATION
+		return UTILITY.DUTY
 	else
 		return 1
 	end

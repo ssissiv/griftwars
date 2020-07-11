@@ -235,8 +235,10 @@ UTILITY =
 	EMERGENCY = 100,
 	-- Comat priorites basically trump everything except EMERGENCY.
 	COMBAT = 80,
-	-- Something an Agent really should be doing, like a job.
-	OBLIGATION = 50,
+	-- A higher promise the Agent is bound to, above their duty. eg. Joining the player.
+	OATH = 60,
+	-- Something an Agent really should be doing normally, like a job.
+	DUTY = 50,
 	-- A habit that takes place when any Obligations are satisfied.
 	HABIT = 30,
 	-- Low priority verbs, only if nothing else is going on.

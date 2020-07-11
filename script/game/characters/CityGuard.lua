@@ -26,5 +26,6 @@ function CityGuard:init()
 	{
 		{ Favour.Acquaint(), 10 },
 		{ Favour.NonAggression( 100 ), 20 },
+		{ Favour.JoinParty(), 80 },
 	})
 end
