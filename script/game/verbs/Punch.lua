@@ -127,7 +127,7 @@ function Punch:Interact( actor, target )
 
 	else
 		Msg:Echo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
-		Msg:Echo( target, loc.format( "{1.Id} misses you with {1.hisher} {2}.", actor:LocTable( target ), self ))
+		Msg:Echo( target, loc.format( "{1.Id} misses you.", actor:LocTable( target )))
 	end
 
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )

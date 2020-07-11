@@ -2,6 +2,7 @@ local Travel = class( "Verb.Travel", Verb )
 
 function Travel:init( dest )
 	Verb.init( self, nil, dest )
+	self.walk = Verb.Walk()
 end
 
 function Travel:SetApproachDistance( dist )
@@ -70,11 +71,15 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 				dir = self:FindDirToPath( actor, self.path )
 			end
 
-			ok, reason = actor:Walk( dir )
-			if not ok then
+			if dir then
+				self.walk:SetDirection( dir )
+				ok, reason = self:DoChildVerb( self.walk )
+			end
+			if not ok and dir then
 				-- Try a perpendicular direction.
 				dir = table.arraypick( ADJACENT_DIR[ dir ] )
-				ok, reason = actor:Walk( dir )
+				self.walk:SetDirection( dir )
+				ok, reason = self:DoChildVerb( self.walk )
 			end
 		end
 
@@ -89,14 +94,6 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 
 			self:YieldForTime( ONE_SECOND * self.block_count * self.block_count )
 			break
-		end
-
-		-- Path available.  Time to wait.
-		if actor:IsRunning() then
-			actor:DeltaStat( STAT.FATIGUE, 2 )
-			self:YieldForTime( RUN_TIME, "rate", 8.0 )
-		else
-			self:YieldForTime( WALK_TIME, "rate", 8.0 )
 		end
 
 		if self:IsCancelled() then

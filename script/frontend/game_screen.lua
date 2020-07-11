@@ -203,7 +203,9 @@ function GameScreen:RenderCombatDetails( ui, puppet )
 	                if desc then
 	                	if verb_desc then
 							local time_left = verb:GetActingTime()
-							verb_desc = loc.format( "{1}, {2} ({3#duration})", verb_desc, desc, time_left )
+							if time_left then
+								verb_desc = loc.format( "{1}, {2} ({3#duration})", verb_desc, desc, time_left )
+							end
 		                else
 		                	verb_desc = desc
 		                end

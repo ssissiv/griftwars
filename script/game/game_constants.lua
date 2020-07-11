@@ -118,20 +118,24 @@ SPECIES_PROPS =
 	NONE =
 	{
 		name = "NO-SPECIES",
+		can_speak = true,
 	},
 	HUMAN = 
 	{
 		name = "human",
 		sentient = true,
 		name_pool = true,
+		can_speak = true,
 	},
 	ORC =
 	{
 		name = "orc",
+		can_speak = true,
 	},
 	MAMMAL =
 	{
 		name = "mammal",
+		can_speak = false,
 	},
 }
 for i, species in ipairs( SPECIES_ARRAY ) do

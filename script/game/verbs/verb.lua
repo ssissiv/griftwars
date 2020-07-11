@@ -3,7 +3,11 @@ local Verb = class( "Verb", Aspect )
 Verb.event_handlers =
 {
 	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
-		agent:LoseAspect( self )
+		if agent:HasAspect( self ) then
+			agent:LoseAspect( self )
+		else
+			self:Cancel()
+		end
 	end,
 }
 
@@ -369,8 +373,10 @@ function Verb:CanCancel()
 end
 
 function Verb:GetActingTime()
-	local time_left = self.yield_ev.when - self.actor.world:GetDateTime()
-	return time_left, self.yield_duration
+	if self.yield_ev then
+		local time_left = self.yield_ev.when - self.actor.world:GetDateTime()
+		return time_left, self.yield_duration
+	end
 end
 
 function Verb:GetActingProgress()
@@ -560,8 +566,10 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 end
 
 function Verb:__tostring()
-	if self.obj then
-		return string.format( "<%s : %s>", self._classname, tostring(self.obj))
+	if self.obj and self.actor then
+		return string.format( "<%s:%s-%s>", self._classname, tostring(self.actor), tostring(self.obj))
+	elseif self.actor then
+		return string.format( "<%s:%s>", self._classname, tostring(self.actor))
 	else
 		return string.format( "<%s>", self._classname )
 	end

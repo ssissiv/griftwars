@@ -59,15 +59,26 @@ function Msg:Speak( actor, msg, ... )
 	for i, obj in location:Contents() do
 		if obj.Sense then
 			if obj == actor then
-				-- This message goes to the actor 
-				local txt = loc.format( "You say, '{1}'", msg )
-				txt = loc.format( txt, self:LocTable( actor ), ... )
-				actor:Sense( txt )
+				if actor:CanSpeak() then
+					-- This message goes to the actor 
+					local txt = loc.format( "You say, '{1}'", msg )
+					txt = loc.format( txt, self:LocTable( actor ), ... )
+					actor:Sense( txt )
+				else
+					local txt = loc.format( "You think '{1}' -- but can't speak!", msg )
+					txt = loc.format( txt, self:LocTable( actor ), ... )
+					actor:Sense( txt )
+				end
 
 			else
-				msg = loc.format( msg, ... )
-				local txt = loc.format( "{1.Id} says, '{2}'", self:LocTable( actor ), msg )
-				obj:Sense( txt )
+				if actor:CanSpeak() then
+					msg = loc.format( msg, ... )
+					local txt = loc.format( "{1.Id} says, '{2}'", self:LocTable( actor ), msg )
+					obj:Sense( txt )
+				else
+					local txt = loc.format( "{1.Id} mumbles something you cant understand.", self:LocTable( actor ) )
+					obj:Sense( txt )
+				end
 			end
 		end
 	end

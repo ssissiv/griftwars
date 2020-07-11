@@ -106,6 +106,10 @@ function Agent:GetDesc()
 	return self.desc or "No Desc"
 end
 
+function Agent:CanSpeak()
+	return SPECIES_PROPS[ self.species ].can_speak
+end
+
 function Agent:IsPlayer()
 	return self:HasAspect( Aspect.Player )
 end
@@ -500,7 +504,7 @@ function Agent:CanSwapWith( obj )
 	return true
 end
 
-function Agent:Walk( dir )
+function Agent:MoveDirection( dir )
 	if dir == nil then
 		return false, "No dir"
 	end
