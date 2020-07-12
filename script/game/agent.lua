@@ -717,6 +717,8 @@ function Agent:_RemoveVerb( verb )
 			if self:IsPuppet() then
 				self.world:RefreshTimeSpeed()
 			end
+
+			self.last_verb = verb
 			return
 		end
 	end
@@ -725,6 +727,10 @@ end
 
 function Agent:Verbs()
 	return ipairs( self.verbs or table.empty )
+end
+
+function Agent:GetLastVerb()
+	return self.last_verb
 end
 
 function Agent:CancelInvalidVerbs()

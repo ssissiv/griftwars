@@ -259,6 +259,12 @@ function Verb:DidWithinTime( actor, dt )
 	return false
 end
 
+function Verb:GetDuration()
+	if self.time_finished then
+		return self.time_finished - self.time_started
+	end
+end
+
 function Verb:FindVerb( verb )
 	if is_class( verb ) and is_instance( self, verb ) then
 		return self -- We are an instance of the verb class required.

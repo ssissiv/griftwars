@@ -323,6 +323,13 @@ function GameScreen:RenderScreen( gui )
     	end
     end
 
+    -- Show last verb executed
+    local last_verb = puppet:GetLastVerb()
+    if last_verb and last_verb:GetDuration() then
+	    ui.SameLine( 0, 15 )
+	    ui.Text( loc.format( "({1} took {2#duration})", last_verb:GetRoomDesc(), last_verb:GetDuration() ))
+	end
+
     self:RenderAgentDetails( ui, puppet )
 
     -- Render Combat targets

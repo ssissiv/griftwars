@@ -13,6 +13,10 @@ function Walk:GetDesc( viewer )
 	end
 end
 
+function Walk:GetRoomDesc()
+	return loc.format( "{1} {2}", self.running and "Walk" or "Run", self.dir )
+end
+
 function Walk:SetDirection( dir )
 	self.dir = dir
 end
@@ -33,11 +37,13 @@ function Walk:CanInteract( actor )
 end
 
 function Walk:Interact( actor )
+	self.running = actor:InCombat()
+
 	if not actor:MoveDirection( self.dir ) then
 		assert_warning( false, "Oops?" )
 	end
 
-	if actor:InCombat() then
+	if self.running then
 		actor:DeltaStat( STAT.FATIGUE, 2 )
 		self:YieldForTime( RUN_TIME, "instant" )
 	else
