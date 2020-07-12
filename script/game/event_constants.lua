@@ -41,6 +41,7 @@ CALC_EVENT = MakeEnum{
 	"DC",
 	"COLLECT_INTEL",
 	"IS_ALLY",
+	"MOVE_SPEED",
 }
 
 LOCATION_EVENT = MakeEnum{

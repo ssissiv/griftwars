@@ -19,10 +19,12 @@ function StatusEffect:OnSpawn( world )
 	Aspect.OnSpawn( self, world )
 	if self.tick_duration then
 		assert( self.TickStatusEffect )
-		self.tick_ev = world:SchedulePeriodicFunction( 0, self.tick_duration, self.TickStatusEffect, self )
+		self.tick_ev = world:SchedulePeriodicFunction( self.tick_duration, self.tick_duration, self.TickStatusEffect, self )
 	end
-	self.ticks = self.max_ticks or 1
-	self.stacks = 0
+
+	if self.OnGainStatusEffect then
+		self:OnGainStatusEffect()
+	end
 end
 
 function StatusEffect:OnDespawn()
@@ -32,7 +34,7 @@ function StatusEffect:OnDespawn()
 end
 
 function StatusEffect:GainStacks( delta )
-	self.stacks = self.stacks + delta
+	self.stacks = (self.stacks or 0) + delta
 
 	if self.max_stacks then
 		self.stacks = math.min( self.stacks, self.max_stacks )

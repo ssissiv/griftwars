@@ -2,6 +2,7 @@ local MeleeAttack = class( "Verb.MeleeAttack", Verb )
 
 MeleeAttack.DC = 5
 MeleeAttack.INTENT_FLAGS = INTENT.HOSTILE
+MeleeAttack.act_desc = "Attack"
 
 function MeleeAttack:init( target )
 	Verb.init( self, nil, target )
@@ -10,9 +11,12 @@ end
 
 
 function MeleeAttack:InAttackRange( actor, target )
+	local wpn = actor:GetWeapon()
+	local range = wpn and wpn:GetAttackRange() or 1.5
+
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
-	if distance( x1, y1, x2, y2 ) > 1.5 then
+	if distance( x1, y1, x2, y2 ) > range then
 		return false, "Out of range"
 	end
 
@@ -30,9 +34,9 @@ end
 
 function MeleeAttack:GetRoomDesc( viewer )
 	if self.obj then
-		return loc.format( "MeleeAttack for {1} damage", self:CalculateDamage( self.obj ))
+		return loc.format( "{1} for {2} damage", self.act_desc, self:CalculateDamage( self.obj ))
 	else
-		return "MeleeAttack"
+		return "Attack"
 	end
 end	
 
@@ -115,6 +119,8 @@ function MeleeAttack:Interact( actor, target )
 
 	-- Check success.
 	if ok then
+		self.total_damage = damage
+
 		Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
 		Msg:Echo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))
 		Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
@@ -126,6 +132,7 @@ function MeleeAttack:Interact( actor, target )
 		end
 
 	else
+		self.total_damage = nil
 		Msg:Echo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
 		Msg:Echo( target, loc.format( "{1.Id} misses you.", actor:LocTable( target )))
 	end

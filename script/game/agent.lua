@@ -799,10 +799,12 @@ function Agent:GainStatusEffect( class, stacks )
 	
 	local aspect = self:GetAspect( class )
 	if aspect == nil then
-		aspect = self:GainAspect( class() )
+		aspect = class()
+		aspect:GainStacks( stacks or 1 )
+		self:GainAspect( aspect )
+	else
+		aspect:GainStacks( stacks or 1 )
 	end
-
-	aspect:GainStacks( stacks or 1 )
 end
 
 

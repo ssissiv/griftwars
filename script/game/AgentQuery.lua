@@ -70,6 +70,10 @@ function Agent:CalculateDC( value, verb )
 	return self.acc:CalculateValue( CALC_EVENT.DC, value, verb )
 end
 
+function Agent:CalculateMoveSpeed()
+	return self.acc:CalculateValue( CALC_EVENT.MOVE_SPEED, 1.0 )
+end
+
 function Agent:CanSee( obj )
 	if obj.location ~= self.location then
 		return false

@@ -1,7 +1,6 @@
 local Bleed = class( "StatusEffect.Bleed", Aspect.StatusEffect )
 
 Bleed.tick_duration = ONE_MINUTE
-Bleed.max_ticks = 3
 Bleed.name = "Bleeding"
 
 function Bleed:TickStatusEffect()

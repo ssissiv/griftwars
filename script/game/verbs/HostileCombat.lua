@@ -54,6 +54,7 @@ function HostileCombat:Interact( actor )
 	local attack = self:PickAttack( actor )
 	if attack then
 		local target = attack:GetTarget()
+		assert( target, tostring(attack) )
 		actor:GetAspect( Aspect.Combat ):SetCurrentAttack( attack )
 		assert( attack.InAttackRange, tostr(attack))
 		if not attack:InAttackRange( actor, target ) then

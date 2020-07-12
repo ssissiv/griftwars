@@ -17,7 +17,7 @@ function Grifter:init()
 	self:GetInventory():DeltaMoney( 2 )
 	self:EquipItem( Weapon.JaggedDirk() )
 
-	-- self:GainAspect( Skill.Backstab() )
+	self:GainAspect( Skill.Hamstring() )
 	
 	self:GainAspect( Verb.Befriend() )
 end

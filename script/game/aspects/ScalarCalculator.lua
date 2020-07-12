@@ -36,6 +36,11 @@ function ScalarCalculator:AddValue( mod, source, source_desc )
 	self:AddSource( loc.format( "{1%+d}: {2}", mod, source_desc or source ))
 end
 
+function ScalarCalculator:MultiplyValue( mod, source, source_desc )
+	self.value = self.value * mod
+	self:AddSource( loc.format( "*{1}: {2}", mod, source_desc or source ))
+end
+
 function ScalarCalculator:SetValue( value, source, source_desc )
 	self.value = value
 	self:AddSource( loc.format( "={1}: {2}", value, source_desc or source ))

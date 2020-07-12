@@ -6,3 +6,7 @@ function Weapon:init()
 	self:GainAspect( Aspect.Wearable( EQ_SLOT.WEAPON ))
 	self:GainAspect( Aspect.Carryable() )
 end
+
+function Weapon:GetAttackRange()
+	return self.attack_range or 1.5
+end
