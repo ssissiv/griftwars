@@ -9,6 +9,10 @@ function Travel:SetApproachDistance( dist )
 	self.approach_dist = dist
 end
 
+function Travel:GetRoomDesc()
+	return "Travel"
+end
+
 function Travel:GetDesc( viewer )
 	if self.obj == viewer then
 		return loc.format( "Approaching you!" )

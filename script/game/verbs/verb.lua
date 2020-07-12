@@ -259,7 +259,7 @@ function Verb:DidWithinTime( actor, dt )
 	return false
 end
 
-function Verb:GetDuration()
+function Verb:GetDurationTook()
 	if self.time_finished then
 		return self.time_finished - self.time_started
 	end

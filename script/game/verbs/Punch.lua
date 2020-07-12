@@ -1,15 +1,15 @@
-local Punch = class( "Attack.Punch", Verb )
+local MeleeAttack = class( "Verb.MeleeAttack", Verb )
 
-Punch.DC = 5
-Punch.INTENT_FLAGS = INTENT.HOSTILE
+MeleeAttack.DC = 5
+MeleeAttack.INTENT_FLAGS = INTENT.HOSTILE
 
-function Punch:init( target )
+function MeleeAttack:init( target )
 	Verb.init( self, nil, target )
 	self.fatigue_cost = 5
 end
 
 
-function Punch:InAttackRange( actor, target )
+function MeleeAttack:InAttackRange( actor, target )
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
 	if distance( x1, y1, x2, y2 ) > 1.5 then
@@ -19,7 +19,7 @@ function Punch:InAttackRange( actor, target )
 	return true
 end
 
-function Punch:GetDesc( viewer )
+function MeleeAttack:GetDesc( viewer )
 	local wpn = self.actor:GetWeapon()
 	if wpn then
 		return loc.format( "Attacking ({1})", wpn:GetName( viewer ) )
@@ -28,15 +28,15 @@ function Punch:GetDesc( viewer )
 	end
 end
 
-function Punch:GetRoomDesc( viewer )
+function MeleeAttack:GetRoomDesc( viewer )
 	if self.obj then
-		return loc.format( "Punch for {1} damage", self:CalculateDamage( self.obj ))
+		return loc.format( "MeleeAttack for {1} damage", self:CalculateDamage( self.obj ))
 	else
-		return "Punch"
+		return "MeleeAttack"
 	end
 end	
 
-function Punch:OnCancel()
+function MeleeAttack:OnCancel()
 	if self.obj and self.obj:IsDead() then
 		return
 	end
@@ -48,7 +48,7 @@ function Punch:OnCancel()
 	end
 end
 
-function Punch:CanInteract( actor, target )
+function MeleeAttack:CanInteract( actor, target )
 	target = target or self.obj
 
 	local ok, reason = Verb.CanInteract( self, actor, target )
@@ -67,11 +67,11 @@ function Punch:CanInteract( actor, target )
 	return true	
 end
 
-function Punch:GetDuration()
+function MeleeAttack:GetDuration()
 	return ATTACK_TIME
 end
 
-function Punch:CalculateDamage( target )
+function MeleeAttack:CalculateDamage( target )
 	local ap = self.actor:CalculateAttackPower()
 	local all_details = loc.format( "Attack Power: {1}", ap )
 
@@ -94,7 +94,7 @@ function Punch:CalculateDamage( target )
 	return damage, all_details
 end
 
-function Punch:Interact( actor, target )
+function MeleeAttack:Interact( actor, target )
 	target = target or self.obj
 
 	local damage = self:CalculateDamage( target )
@@ -135,7 +135,7 @@ function Punch:Interact( actor, target )
 	self:YieldForTime( self:GetDuration() )
 end
 
-function Punch:RenderTooltip( ui, viewer )
+function MeleeAttack:RenderTooltip( ui, viewer )
 	local damage, details = self:CalculateDamage( self.obj )
 	ui.Text( tostring(details) )
 end

@@ -5,6 +5,10 @@ function LootInventory:init( inventory )
 	self.inventory = inventory
 end
 
+function LootInventory:GetDesc( viewer )
+	return "Looting"
+end
+
 function LootInventory:GetRoomDesc( actor )
 	return loc.format( "Loot the {1}", tostring(self.inventory.owner))
 end
