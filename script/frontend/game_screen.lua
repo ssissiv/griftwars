@@ -158,6 +158,72 @@ function GameScreen:RenderStatusEffects( ui, agent )
 	ui.PopID()
 end
 
+function GameScreen:RenderCombatTargetDetails( ui, puppet, target )
+	-- Name, health
+	local hp, max_hp = target:GetHealth()
+	local txt = loc.format( "{1.Id} - {2}/{3}", target:LocTable( self.puppet ), hp, max_hp )
+	if self.current_focus == target:GetTile() then
+		ui.TextColored( 1.0, 0, 0, 1.0, ">>" ..txt )
+	else
+		ui.TextColored( 0.5, 0, 0, 1.0, txt )
+	end
+
+	-- Attack power
+	ui.SameLine( 0 )
+	local ap, details = target:CalculateAttackPower()
+	ui.TextColored( 0, 1, 1, 1, loc.format( "AP: {1}", ap ))
+	local show_tt = ui.IsItemHovered()
+	if show_tt and details then
+		ui.SetTooltip( details )
+	end
+
+	local verb_desc
+	for i, verb in target:Verbs() do
+        while verb do
+            local desc = verb:GetDesc( puppet )
+            if desc then
+            	if verb_desc then
+					local time_left = verb:GetActingTime()
+					if time_left then
+						verb_desc = loc.format( "{1}, {2} ({3#duration})", verb_desc, desc, time_left )
+					end
+                else
+                	verb_desc = desc
+                end
+            end
+            verb = verb.child
+        end
+    end
+    if verb_desc then
+    	ui.SameLine( 200 )
+    	ui.Text( verb_desc )
+    end
+
+
+-- 	local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
+-- 	if attack then
+-- 		local t = attack:GetActingProgress()
+-- 		if t then
+-- 			ui.SameLine( 0, 50 )
+-- 			local time_left, total_time = attack:GetActingTime()
+-- 			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
+-- 				t, Calendar.FormatDuration( total_time )) )
+-- 			ui.SameLine( 0, 50 )
+
+	  --   	local damage, details = attack:CalculateDamage( attack:GetTarget() )
+-- 			ui.Text( loc.format( "{1} damage", damage ))
+
+			-- if details and ui.IsItemHovered() then
+	  --   		ui.SetTooltip( details )
+-- 			end
+-- 		end
+-- 	end
+
+	ui.SameLine( 0 )
+	self:RenderStatusEffects( ui, target )
+	ui.Dummy( 0, 0 )
+end
+
 function GameScreen:RenderCombatDetails( ui, puppet )
     local combat = puppet:GetAspect( Aspect.Combat )
     if combat and puppet:InCombat() then
@@ -178,69 +244,10 @@ function GameScreen:RenderCombatDetails( ui, puppet )
     	end
 
     	for i, target in combat:Targets() do
-    		-- Name, health
-    		local hp, max_hp = target:GetHealth()
-    		local txt = loc.format( "{1.Id} - {2}/{3}", target:LocTable( self.puppet ), hp, max_hp )
-    		if self.current_focus == target:GetTile() then
-    			ui.TextColored( 1.0, 0, 0, 1.0, ">>" ..txt )
-    		else
-    			ui.TextColored( 0.5, 0, 0, 1.0, txt )
-    		end
-
-    		-- Attack power
-    		ui.SameLine( 0 )
-	    	local ap, details = target:CalculateAttackPower()
-	    	ui.TextColored( 0, 1, 1, 1, loc.format( "AP: {1}", ap ))
-	    	local show_tt = ui.IsItemHovered()
-	    	if show_tt and details then
-	    		ui.SetTooltip( details )
+    	-- for i, target in puppet:GetLocation():Contents() do
+    		if target.InCombatWith and target:InCombatWith( puppet ) then
+    			self:RenderCombatTargetDetails( ui, puppet, target )
 	    	end
-
-	    	local verb_desc
-			for i, verb in target:Verbs() do
-	            while verb do
-	                local desc = verb:GetDesc( puppet )
-	                if desc then
-	                	if verb_desc then
-							local time_left = verb:GetActingTime()
-							if time_left then
-								verb_desc = loc.format( "{1}, {2} ({3#duration})", verb_desc, desc, time_left )
-							end
-		                else
-		                	verb_desc = desc
-		                end
-	                end
-	                verb = verb.child
-	            end
-	        end
-	        if verb_desc then
-	        	ui.SameLine( 200 )
-	        	ui.Text( verb_desc )
-	        end
-
-
-    	-- 	local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
-    	-- 	if attack then
-    	-- 		local t = attack:GetActingProgress()
-    	-- 		if t then
-	    -- 			ui.SameLine( 0, 50 )
-	    -- 			local time_left, total_time = attack:GetActingTime()
-	    -- 			ui.Text( loc.format( "{1} {2%.2d} ({3})", attack:GetDesc(),
-	    -- 				t, Calendar.FormatDuration( total_time )) )
-	    -- 			ui.SameLine( 0, 50 )
-
-			  --   	local damage, details = attack:CalculateDamage( attack:GetTarget() )
-	    -- 			ui.Text( loc.format( "{1} damage", damage ))
-
-					-- if details and ui.IsItemHovered() then
-			  --   		ui.SetTooltip( details )
-    	-- 			end
-	    -- 		end
-    	-- 	end
-
-    		ui.SameLine( 0 )
-    		self:RenderStatusEffects( ui, target )
-    		ui.Dummy( 0, 0 )
     	end
     end
 end

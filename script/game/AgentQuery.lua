@@ -27,7 +27,7 @@ function Agent:IsEnemy( other )
 		end
 	end
 
-	return f1 and f2 and f1:IsEnemy( f2 )
+	return f1 and f2 and f1:IsEnemy( f2 ) or false
 end
 
 function Agent:IsAlly( other )
@@ -41,7 +41,7 @@ function Agent:IsAlly( other )
 
 	local f1 = self:GetAspect( Aspect.FactionMember )
 	local f2 = other:GetAspect( Aspect.FactionMember )
-	return f1 and f2 and f1:IsAlly( f2 )
+	return f1 and f2 and f1:IsAlly( f2 ) or false
 end
 
 function Agent:GetWeapon()

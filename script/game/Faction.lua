@@ -35,7 +35,7 @@ end
 function Faction:HasTag( faction, tag )
 	assert( IsEnum( tag, FACTION_TAG ))
 	local t = self.tags[ faction ]
-	return t and table.contains( t, tag )
+	return t and table.contains( t, tag ) or false
 end
 
 function Faction:AddTag( faction, tag )
