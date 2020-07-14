@@ -21,6 +21,7 @@ function Cave:OnSpawn( world )
 	chest:WarpToLocation( self )
 	chest:SpawnLoot( LOOT_JUNK_T3 )
 
+	-- self:AddAspect( Aspect.Intel( Engram.Discovered( exit:GetDesc() )))
 	world:ListenForEvent( CALC_EVENT.COLLECT_INTEL, self, self.OnCollectIntel )
 end
 

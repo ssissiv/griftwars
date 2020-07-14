@@ -34,7 +34,8 @@ function Aspect:OnGainAspect( owner )
 	if self.event_handlers then
 		for event, fn in pairs( self.event_handlers ) do
 			if not IsEnum( event, WORLD_EVENT ) then
-				owner:ListenForEvent( event, self, fn )
+				local priority = self.event_priorities and self.event_priorities[ event ]
+				owner:ListenForEvent( event, self, fn, priority )
 			end
 		end
 	end
@@ -43,6 +44,7 @@ end
 function Aspect:OnSpawn( world )
 	if self.event_handlers then
 		for event, fn in pairs( self.event_handlers ) do
+			local priority = self.event_priorities and self.event_priorities[ event ]
 			if IsEnum( event, WORLD_EVENT ) then
 				self.owner.world:ListenForEvent( event, self, fn )
 			else

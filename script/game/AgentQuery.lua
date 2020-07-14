@@ -59,7 +59,7 @@ function Agent:CalculateAttackPower()
 	if wpn and wpn.attack_power then
 		self.acc:AddValue( wpn.attack_power, wpn )
 	end
-	return self.acc:CalculateValueFromSources( CALC_EVENT.ATTACK_POWER )
+	return self.acc:CalculateValueFromSources( self, CALC_EVENT.ATTACK_POWER )
 end
 
 function Agent:CalculateStat( stat )

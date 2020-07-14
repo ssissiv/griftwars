@@ -7,8 +7,9 @@ function ScalarCalculator:InitializeValue( value )
 	end
 end
 
-function ScalarCalculator:CalculateValueFromSources( event_name, ... )
-	self.owner:BroadcastEvent( event_name, self, ... )
+function ScalarCalculator:CalculateValueFromSources( owner, event_name, ... )
+	assert( is_instance( owner, Entity ))
+	owner:BroadcastEvent( event_name, self, ... )
 
 	local details
 	if self.sources then
@@ -20,7 +21,7 @@ end
 
 function ScalarCalculator:CalculateValue( event_name, value, ... )
 	self:InitializeValue( value )
-	return self:CalculateValueFromSources( event_name, ... )
+	return self:CalculateValueFromSources( self.owner, event_name, ... )
 end
 
 function ScalarCalculator:AddSource( source )

@@ -77,25 +77,21 @@ end
 
 function MeleeAttack:CalculateDamage( target )
 	local ap = self.actor:CalculateAttackPower()
-	local all_details = loc.format( "Attack Power: {1}", ap )
+	local acc = self.actor:GetAspect( Aspect.DamageCalculator ) or self.actor:GainAspect( Aspect.DamageCalculator() )
 
-	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
-	local damage, details = acc:CalculateValue( CALC_EVENT.DAMAGE, ap, self.actor, target )
-	
-	local acc = target:GetAspect( Aspect.ScalarCalculator )
-	local damage, details2 = acc:CalculateValue( CALC_EVENT.DAMAGE, damage, self.actor, target )
-
-	if details and details2 then
-		all_details = all_details .."\n" .. details .. "\n" .. details2
-	elseif details then
-		all_details = all_details .."\n" .. details
-	elseif details2 then
-		all_details = all_details .."\n" .. details2
+	acc:InitializeValue( ap )
+	acc:AddSource( loc.format( "Attack Power: {1}", ap ))
+	if self.piercing then
+		acc:SetPiercing( self.piercing, self, self.act_desc )
 	end
+
+	acc:CalculateValueFromSources( self.actor, CALC_EVENT.DAMAGE, self.actor, target )
+
+	local damage, details = acc:CalculateValueFromSources( target, CALC_EVENT.DAMAGE, self.actor, target )
 
 	damage = math.max( 0, damage )
 
-	return damage, all_details
+	return damage, details
 end
 
 function MeleeAttack:Interact( actor, target )

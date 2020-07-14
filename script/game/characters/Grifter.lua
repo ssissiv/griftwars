@@ -18,6 +18,7 @@ function Grifter:init()
 	self:EquipItem( Weapon.JaggedDirk() )
 
 	self:GainAspect( Skill.Hamstring() )
+	self:GainAspect( Skill.Puncture() )
 	
 	self:GainAspect( Verb.Befriend() )
 end

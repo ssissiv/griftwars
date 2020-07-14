@@ -603,6 +603,19 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 			self.puppet:WarpToTile( tile )
 		end
 
+		if ui.BeginMenu( "Spawn Agent..." ) then
+			local changed, filter_str = ui.InputText( "Filter", self.debug_filter or "", 128 )
+			if changed then
+				self.debug_filter = filter_str
+			end
+			recurse_subclasses( Agent, function( class )
+				if ui.MenuItem( class._classname ) then
+					class():WarpToLocation( self.puppet:GetLocation(), tile:GetCoordinate() )
+				end
+			end )
+			ui.EndMenu()			
+		end
+
 		if ui.BeginMenu( "Spawn Carryable..." ) then
 			local changed, filter_str = ui.InputText( "Filter", self.debug_filter or "", 128 )
 			if changed then

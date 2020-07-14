@@ -92,7 +92,7 @@ function EventSystem:AddListenerToList(listener, fn, priority, t)
         return
     end
 
-    priority = priority or -math.huge
+    priority = priority or 0
     fn = fn or true
 
     for i = 1, #t, 3 do
