@@ -130,24 +130,24 @@ end
 
 ------------------
 
-local BoostTrust = class( "Favour.BoostTrust", Favour )
+local BoostTrustWithClass = class( "Favour.BoostTrustWithClass", Favour )
 
-function BoostTrust:init( trust )
+function BoostTrustWithClass:init( trust )
 	Favour.init( self )
 	self.trust = trust
 end
 
-function BoostTrust:GetName()
+function BoostTrustWithClass:GetName()
 	return loc.format( "Gain {1} Trust with a {2}", self.trust, self.category:GetAgentClass()._classname )
 end
 
-function BoostTrust:OnSpawn( world )
+function BoostTrustWithClass:OnSpawn( world )
 	Favour.OnSpawn( self, world )
 	self.reqs:AddReq( Req.Acquainted( self.owner ))
 	self.category = world:WeightedPick( self.owner:GetRelationshipAffinities() )
 end
 
-function BoostTrust:OnUseFavour( agent )
+function BoostTrustWithClass:OnUseFavour( agent )
 	local other = self.category:GenerateAgent( self:GetWorld() )
 	other:DeltaTrust( self.trust, agent )
 

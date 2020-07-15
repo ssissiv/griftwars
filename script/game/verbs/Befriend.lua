@@ -3,7 +3,6 @@ local Befriend = class( "Verb.Befriend", Verb )
 
 Befriend.INTENT_FLAGS = INTENT.DIPLOMACY
 Befriend.can_repeat = true -- This interaction can take place multiple times.
-Befriend.DC = 10
 
 function Befriend:GetRoomDesc( viewer )
 	return loc.format( "Befriend {1.Id}", self.obj and self.obj:LocTable( viewer ))
@@ -53,7 +52,14 @@ function Befriend:Interact( actor, target )
 	end
 
 	-- Check to generate
-	local ok, result_str = self:CheckDC( actor, target )
+	local dc = 10
+	local age = target:GetMemory():FindEngramAge( Engram.Befriended.Find, actor )
+	print( age )
+	if age then
+		dc = dc + 5 - math.ceil( age / ONE_DAY)
+	end
+
+	local ok, result_str = self:CheckDC( dc, actor, target )
 	if ok then
 		local trust = math.max( 1, math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA )))
 
@@ -63,5 +69,7 @@ function Befriend:Interact( actor, target )
 	else
 		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent. ({2})", target:LocTable( actor ), result_str )
 	end
+
+	target:AddEngram( Engram.Befriended( actor ))
 end
 

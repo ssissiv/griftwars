@@ -69,6 +69,13 @@ function Memory:FindEngram( pred, ... )
 	end
 end
 
+function Memory:FindEngramAge( pred, ... )
+	local engram = self:FindEngram( pred, ... )
+	if engram then
+		return engram:GetAge( self.owner )
+	end
+end
+
 function Memory:CheckPrivacy( target, flag )
 	local pr_flags = 0
 	for i, engram in ipairs( self.engrams ) do

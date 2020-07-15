@@ -161,12 +161,13 @@ function Verb:GetRoomDesc( viewer )
 	return self.act_desc or tostring(self)
 end
 
-function Verb:CalculateDC( actor, target )
-	local dc, details = self.DC
+function Verb:CalculateDC( dc, actor, target )
 	if dc == nil then
 		print( "No DC specified:", self, actor )
 		return
 	end
+	
+	local details
 	if target and target.CalculateDC then
 		dc, details = target:CalculateDC( dc, actor, target )
 	end
@@ -180,8 +181,8 @@ function Verb:CalculateDC( actor, target )
 	return dc, details
 end
 
-function Verb:CheckDC( actor, target )
-	local dc = self:CalculateDC( actor, target )
+function Verb:CheckDC( dc, actor, target )
+	local dc = self:CalculateDC( dc, actor, target )
 	local roll = math.random( 0, 20 )
 	local success = roll >= dc
 	local result_str

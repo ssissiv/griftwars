@@ -46,7 +46,6 @@ Scrounge.ACT_DESC =
 }
 
 Scrounge.FLAGS = VERB_FLAGS.HANDS
-Scrounge.DC = 10
 Scrounge.act_desc = "Scrounge"
 
 function Scrounge:GetDesc( viewer )
@@ -107,7 +106,8 @@ function Scrounge:Interact( actor, target )
 		local inv = target:GetAspect( Aspect.Inventory )
 
 		-- Check to generate
-		local ok, result_str = self:CheckDC( actor, target )
+		local dc = 10
+		local ok, result_str = self:CheckDC( dc, actor, target )
 		if ok then
 			target:GetAspect( Aspect.ScroungeTarget ):GenerateLoot( inv )
 		end

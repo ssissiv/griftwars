@@ -105,6 +105,33 @@ function HasAttacked:MergeEngram( other )
 end
 
 
+-----------------------------------------------------------------------------
+-- The agent was befriended recently.
+
+local Befriended = class( "Engram.Befriended", Engram )
+
+function Befriended.Find( e, by )
+	return is_instance( e, Befriended ) and e.by == by
+end
+
+function Befriended:init( by )
+	assert( is_instance( by, Agent ))
+	self.by = by
+end
+
+function Befriended:GetDesc()
+	return loc.format( "{1.Id} befriended you.", self.by:LocTable( owner ))
+end
+
+function Befriended:MergeEngram( other )
+	if is_instance( other, Befriended ) and self.by == other.by then
+		self.when = other.when
+		return true
+	end
+
+	return false
+end
+
 
 -----------------------------------------------------------------------------
 -- You know the location of something

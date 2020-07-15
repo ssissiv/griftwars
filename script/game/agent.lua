@@ -397,6 +397,12 @@ function Agent:HasEngram( pred, ... )
 	return false
 end
 
+function Agent:AddEngram( engram )
+	if self.memory then
+		self.memory:AddEngram( engram )
+	end
+end
+
 function Agent:CheckPrivacy( obj, pr_flags )
 	if self.memory then
 		if self.memory:CheckPrivacy( obj, pr_flags ) then

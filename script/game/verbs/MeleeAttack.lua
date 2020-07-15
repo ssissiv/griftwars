@@ -1,6 +1,5 @@
 local MeleeAttack = class( "Verb.MeleeAttack", Verb )
 
-MeleeAttack.DC = 5
 MeleeAttack.INTENT_FLAGS = INTENT.HOSTILE
 MeleeAttack.act_desc = "Attack"
 
@@ -98,7 +97,8 @@ function MeleeAttack:Interact( actor, target )
 	target = target or self.obj
 
 	local damage = self:CalculateDamage( target )
-	local ok, result_str = self:CheckDC( actor, target )
+	local dc = 5
+	local ok, result_str = self:CheckDC( dc, actor, target )
 
 	actor:BroadcastEvent( AGENT_EVENT.PRE_ATTACK, target, self, ok )
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
