@@ -42,6 +42,9 @@ CALC_EVENT = MakeEnum{
 	"COLLECT_INTEL",
 	"IS_ALLY",
 	"MOVE_SPEED",
+
+	-- DC events
+	"BEFRIEND",
 }
 
 CALC_PRIORITY_ADD = 10

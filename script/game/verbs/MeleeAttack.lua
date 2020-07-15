@@ -31,7 +31,7 @@ function MeleeAttack:GetDesc( viewer )
 	end
 end
 
-function MeleeAttack:GetRoomDesc( viewer )
+function MeleeAttack:GetActDesc( actor )
 	if self.obj then
 		return loc.format( "{1} for {2} damage", self.act_desc, self:CalculateDamage( self.obj ))
 	else
@@ -93,12 +93,15 @@ function MeleeAttack:CalculateDamage( target )
 	return damage, details
 end
 
+function MeleeAttack:CalculateDC()
+	return 5
+end
+
 function MeleeAttack:Interact( actor, target )
 	target = target or self.obj
 
 	local damage = self:CalculateDamage( target )
-	local dc = 5
-	local ok, result_str = self:CheckDC( dc, actor, target )
+	local ok, result_str = self:CheckDC( actor, target )
 
 	actor:BroadcastEvent( AGENT_EVENT.PRE_ATTACK, target, self, ok )
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )

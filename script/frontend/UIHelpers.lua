@@ -63,7 +63,7 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
     -- If has trust, show it.
     if is_instance( ent, Agent ) then
         local aff = ent:GetAffinities()[ viewer ]
-        if aff and (aff:GetTrust() > 0 or aff:GetAffinity() ~= AFFINITY.STRANGER) then
+        if aff and (aff:GetTrust() ~= 0 or aff:GetAffinity() ~= AFFINITY.STRANGER) then
             ui.TextColored( 1, 1, 0, 1, "*" )
             ui.SameLine( 0, 10 )
             ui.Text( tostring(aff:GetAffinity() ))
@@ -77,15 +77,8 @@ end
 function UIHelpers.RenderPotentialVerb( ui, verb, i, agent, ... )
     local ok, details = verb:CanDo( agent, ... )
 
-    local desc
-    if verb.GetDuration then
-        desc = loc.format( "{1} ({2#duration})", verb:GetRoomDesc( agent ), verb:GetDuration() )
-    else
-        desc = verb:GetRoomDesc( agent )
-    end
-
+    local desc = verb:GetActDesc( agent )
     local txt = loc.format( "{1}] {2}", i, desc )
-
     if not ok then
         ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
         details = details or "Can't do."
@@ -100,6 +93,35 @@ function UIHelpers.RenderPotentialVerb( ui, verb, i, agent, ... )
         if ui.Selectable( txt ) then
             agent:DoVerbAsync( verb, ... )
         end
+
+        ui.Indent( 20 )
+        if verb.GetDuration then
+            ui.Text( "Duration:" )
+            ui.SameLine( 0, 5 )
+            ui.TextColored( 0, 1, 1, 1, loc.format( "{1#duration}", verb:GetDuration() ))
+        end
+        if verb.CalculateDC then
+            local dc, details, fail_str = verb:CalculateDC()
+            ui.Text( "DC:" )
+            ui.SameLine( 0, 5 )
+            if dc < 10 then
+                ui.TextColored( 0, 1, 0, 1, tostring(dc))
+            elseif dc < 15 then
+                ui.TextColored( 0.5, 0.5, 0, 1, tostring(dc))
+            else
+                ui.TextColored( 1, 0, 0, 1, tostring(dc))
+            end
+            if ui.IsItemHovered() and details then
+                ui.SetTooltip( details )
+            end
+            if fail_str then
+                ui.Text( "On Fail:" )
+                ui.SameLine( 0, 5 )
+                ui.TextColored( 1, 0, 0, 1, tostring(fail_str))
+            end
+        end
+        ui.Unindent( 20 )
+
 
         ui.PopStyleColor()
     end

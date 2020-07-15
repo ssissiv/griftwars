@@ -66,10 +66,6 @@ function Agent:CalculateStat( stat )
 	return self.acc:CalculateValue( CALC_EVENT.STAT, self:GetStatValue( stat ), stat )
 end
 
-function Agent:CalculateDC( value, verb )
-	return self.acc:CalculateValue( CALC_EVENT.DC, value, verb )
-end
-
 function Agent:CalculateMoveSpeed()
 	return self.acc:CalculateValue( CALC_EVENT.MOVE_SPEED, 1.0 )
 end

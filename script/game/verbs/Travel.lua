@@ -9,7 +9,7 @@ function Travel:SetApproachDistance( dist )
 	self.approach_dist = dist
 end
 
-function Travel:GetRoomDesc()
+function Travel:GetActDesc()
 	return "Travel"
 end
 

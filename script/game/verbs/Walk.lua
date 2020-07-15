@@ -13,7 +13,7 @@ function Walk:GetDesc( viewer )
 	end
 end
 
-function Walk:GetRoomDesc()
+function Walk:GetActDesc()
 	return loc.format( "{1} {2}", self.running and "Walk" or "Run", self.dir )
 end
 

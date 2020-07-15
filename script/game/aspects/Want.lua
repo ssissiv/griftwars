@@ -13,7 +13,7 @@ function WantMoney:init( amount )
 	self.amount = amount
 end
 
-function WantMoney:GetRoomDesc( viewer )
+function WantMoney:GetActDesc()
 	return loc.format( "Offer {1#money}", self.amount )
 end
 

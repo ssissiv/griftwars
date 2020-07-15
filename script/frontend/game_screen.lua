@@ -334,7 +334,7 @@ function GameScreen:RenderScreen( gui )
     local last_verb = puppet:GetLastVerb()
     if last_verb and last_verb:GetDurationTook() then
 	    ui.SameLine( 0, 15 )
-	    ui.Text( loc.format( "({1} took {2#duration})", last_verb:GetRoomDesc(), last_verb:GetDurationTook() ))
+	    ui.Text( loc.format( "({1} took {2#duration})", last_verb:GetActDesc( puppet ), last_verb:GetDurationTook() ))
 	end
 
     self:RenderAgentDetails( ui, puppet )

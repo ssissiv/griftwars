@@ -9,7 +9,7 @@ function LootInventory:GetDesc( viewer )
 	return "Looting"
 end
 
-function LootInventory:GetRoomDesc( actor )
+function LootInventory:GetActDesc( actor )
 	return loc.format( "Loot the {1}", tostring(self.inventory.owner))
 end
 

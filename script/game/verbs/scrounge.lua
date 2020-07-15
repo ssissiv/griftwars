@@ -88,6 +88,10 @@ function Scrounge:CanInteract( actor, target )
 	return self._base.CanInteract( self, actor )
 end
 
+function Scrounge:CalculateDC()
+	return 10
+end
+
 function Scrounge:Interact( actor, target )
 	target = self:SetTarget( target or self:FindTarget( actor))
 
@@ -106,8 +110,7 @@ function Scrounge:Interact( actor, target )
 		local inv = target:GetAspect( Aspect.Inventory )
 
 		-- Check to generate
-		local dc = 10
-		local ok, result_str = self:CheckDC( dc, actor, target )
+		local ok, result_str = self:CheckDC( actor, target )
 		if ok then
 			target:GetAspect( Aspect.ScroungeTarget ):GenerateLoot( inv )
 		end

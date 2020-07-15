@@ -69,6 +69,16 @@ function Memory:FindEngram( pred, ... )
 	end
 end
 
+function Memory:CountEngrams( pred, ... )
+	local count = 0
+	for i, engram in ipairs( self.engrams ) do
+		if pred( engram, ... ) then
+			count = count + 1
+		end
+	end
+	return count
+end
+
 function Memory:FindEngramAge( pred, ... )
 	local engram = self:FindEngram( pred, ... )
 	if engram then

@@ -157,32 +157,12 @@ function Verb.RecurseSubclasses( class, fn )
 	end
 end
 
-function Verb:GetRoomDesc( viewer )
-	return self.act_desc or tostring(self)
+function Verb:GetActDesc()
+    return self.act_desc or tostring(self)
 end
 
-function Verb:CalculateDC( dc, actor, target )
-	if dc == nil then
-		print( "No DC specified:", self, actor )
-		return
-	end
-	
-	local details
-	if target and target.CalculateDC then
-		dc, details = target:CalculateDC( dc, actor, target )
-	end
-	
-	local details2
-	dc, details2 = actor:CalculateDC( dc, self )
-	if details2 and details then
-		details = details .. "\n" .. details2
-	end
-
-	return dc, details
-end
-
-function Verb:CheckDC( dc, actor, target )
-	local dc = self:CalculateDC( dc, actor, target )
+function Verb:CheckDC( actor, target )
+	local dc = self:CalculateDC( actor, target )
 	local roll = math.random( 0, 20 )
 	local success = roll >= dc
 	local result_str

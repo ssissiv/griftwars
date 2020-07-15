@@ -9,7 +9,7 @@ function RentRoom:init( target, cost )
 	self.cost = cost
 end
 
-function RentRoom:GetRoomDesc( viewer )
+function RentRoom:GetActDesc( viewer )
 	return loc.format( "Rent a room ({1#money})", self.cost )
 end
 

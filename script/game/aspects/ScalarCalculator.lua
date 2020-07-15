@@ -1,27 +1,31 @@
 local ScalarCalculator = class( "Aspect.ScalarCalculator", Aspect )
 
 function ScalarCalculator:InitializeValue( value )
-	self.value = value
 	if self.sources then
 		table.clear( self.sources )
 	end
+	self:SetValue( value, nil, "Base Value" )
 end
 
 function ScalarCalculator:CalculateValueFromSources( owner, event_name, ... )
 	assert( is_instance( owner, Entity ))
 	owner:BroadcastEvent( event_name, self, ... )
 
+	return self:GetValue()
+end
+
+function ScalarCalculator:CalculateValue( event_name, value, ... )
+	self:InitializeValue( value )
+	return self:CalculateValueFromSources( self.owner, event_name, ... )
+end
+
+function ScalarCalculator:GetValue()
 	local details
 	if self.sources then
 		details = table.concat( self.sources, "\n" )
 	end
 
 	return self.value, details
-end
-
-function ScalarCalculator:CalculateValue( event_name, value, ... )
-	self:InitializeValue( value )
-	return self:CalculateValueFromSources( self.owner, event_name, ... )
 end
 
 function ScalarCalculator:AddSource( source )

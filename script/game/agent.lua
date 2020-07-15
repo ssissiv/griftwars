@@ -967,6 +967,10 @@ function Agent:GetAffinity( other )
 end
 
 function Agent:DeltaTrust( trust, other )
+	if trust == 0 then
+		return
+	end
+
 	other = other or self.world:GetPlayer()
 	local affinity = self.affinities and self.affinities[ other ]
 	if affinity == nil then
@@ -976,7 +980,11 @@ function Agent:DeltaTrust( trust, other )
 
 	if affinity then
 		affinity:DeltaTrust( trust )
-		Msg:Echo( other, "{1.Id}'s trust with you increases! ({2%+d})", self:LocTable( other ), trust )
+		if trust > 0 then
+			Msg:Echo( other, "{1.Id}'s trust with you increases! ({2%+d})", self:LocTable( other ), trust )
+		elseif trust < 0 then
+			Msg:Echo( other, "{1.Id}'s trust with you decreases! ({2%+d})", self:LocTable( other ), trust )
+		end
 	end
 end
 

@@ -1,6 +1,6 @@
 local LootObject = class( "Verb.LootObject", Verb )
 
-function LootObject:GetRoomDesc( actor )
+function LootObject:GetActDesc( actor )
 	return loc.format( "Get {1}", tostring(self.obj))
 end
 
@@ -38,14 +38,11 @@ end
 -------------------------------------------------------------
 
 local LootAll = class( "Verb.LootAll", Verb )
+LootAll.act_desc = "Loot all"
 
 function LootAll:init( inventory )
 	Verb.init( self, nil, inventory )
 	self.inventory = inventory
-end
-
-function LootAll:GetRoomDesc( actor )
-	return "Loot all"
 end
 
 function LootAll:Interact( actor, inventory )

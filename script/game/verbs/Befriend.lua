@@ -4,8 +4,8 @@ local Befriend = class( "Verb.Befriend", Verb )
 Befriend.INTENT_FLAGS = INTENT.DIPLOMACY
 Befriend.can_repeat = true -- This interaction can take place multiple times.
 
-function Befriend:GetRoomDesc( viewer )
-	return loc.format( "Befriend {1.Id}", self.obj and self.obj:LocTable( viewer ))
+function Befriend:GetActDesc( actor )
+	return loc.format( "Befriend {1.Id}", self.obj and self.obj:LocTable( actor ))
 end
 
 function Befriend:CalculateUtility()
@@ -40,6 +40,20 @@ function Befriend:CollectVerbs( verbs, actor, obj )
 	end
 end
 
+function Befriend:CalculateDC()
+	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
+	acc:CalculateValue( CALC_EVENT.BEFRIEND, 10 )
+	
+	local count = self.obj:GetMemory():CountEngrams( Engram.Befriended.Find, self.actor )
+	if count > 0 then
+		acc:AddValue( count, self, loc.format( "{1} attempts within the last day", count ))
+	end
+
+	local dc, details = acc:GetValue()
+	local fail_str = count > 0 and "Lose 1 Trust"
+	return dc, details, fail_str
+end
+
 function Befriend:Interact( actor, target )
 
 	-- self:AttachActor( target )
@@ -51,21 +65,16 @@ function Befriend:Interact( actor, target )
 		return
 	end
 
-	-- Check to generate
-	local dc = 10
-	local age = target:GetMemory():FindEngramAge( Engram.Befriended.Find, actor )
-	print( age )
-	if age then
-		dc = dc + 5 - math.ceil( age / ONE_DAY)
-	end
-
-	local ok, result_str = self:CheckDC( dc, actor, target )
+	local ok, result_str = self:CheckDC()
 	if ok then
 		local trust = math.max( 1, math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA )))
 
 		Msg:Echo( actor, "You befriend {1.Id}. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( trust )
 		actor:GainXP( trust )
+	elseif self.obj:GetMemory():FindEngram( Engram.Befriended.Find, self.actor ) then
+		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems rather annoyed. ({2})", target:LocTable( actor ), result_str )
+		target:DeltaTrust( -1 )
 	else
 		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent. ({2})", target:LocTable( actor ), result_str )
 	end
