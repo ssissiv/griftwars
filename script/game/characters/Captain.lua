@@ -24,8 +24,12 @@ function Captain:init()
 	
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighting():SetSkillRank( 3 ))
-
+	self:GainAspect( Aspect.Intel())
+	
 	self:EquipItem( Armour.ChainMail() )
 	self:EquipItem( Weapon.LongSword() )
 end
 
+function Captain:OnSpawn( world )
+	Agent.OnSpawn( self, world )
+end

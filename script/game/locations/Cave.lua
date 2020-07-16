@@ -27,7 +27,7 @@ end
 
 function Cave:OnCollectIntel( event_name, world, acc )
 	local exit = self:FindPortalWithTag( "exit" )
-	acc:AppendValue( Engram.Discovered( exit:GetDest() ))
+	acc:AppendValue( Engram.Discovered( exit:GetDest(), "You learned the location of a cave!" ))
 end
 
 function Cave:GenerateTileMap()

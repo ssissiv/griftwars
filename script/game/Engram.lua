@@ -25,6 +25,10 @@ function Engram:StampTime( owner )
 	end
 end
 
+function Engram:Clone()
+	return setmetatable( table.shallowcopy( self ), self._class )
+end
+
 
 -----------------------------------------------------------------------------
 -- You are making a note about something.  When you see it, it is marked in the UI.
@@ -132,15 +136,41 @@ end
 
 local Discovered = class( "Engram.Discovered", Engram )
 
-function Discovered:init( target )
+function Discovered:init( target, desc )
 	self.target = target
+	self.desc = desc
+end
+
+function Discovered:CheckPrivacy( target, pr_flags )
+	if target == self.target then
+		return SetBits( pr_flags, PRIVACY_ALL )
+	else
+		return pr_flags
+	end
 end
 
 function Discovered:GetDesc()
+	if self.desc then
+		return self.desc
+	end
 	if is_instance( self.target, Location ) then
 		return loc.format( "You know how to get to {1}.", self.target:GetTitle() )
+
+	elseif is_instance( self.target, Agent ) then
+		local faction = self.target:GetAspect( Aspect.FactionMember )
+		if faction then
+			local role = faction:GetRole()
+			if role then
+				return loc.format( "You learn about {1.name}, {2} of {3}.", self.target:LocTable(), role, faction:GetName() )
+			else
+				return loc.format( "You learn about {1.name}, of {2}.", self.target:LocTable(), faction:GetName() )
+			end
+		else
+			return loc.format( "You know of {1.name}.", self.target:LocTable() )
+		end
+
 	else
-		return loc.format( "You know how to get to {1}.", self.target )
+		return loc.format( "You know of {1}.", self.target )
 	end
 end
 

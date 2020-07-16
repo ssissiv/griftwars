@@ -66,10 +66,8 @@ function World:UnregisterStatValue( stat )
 	table.arrayremove( self.stats, stat )
 end
 
-function World:CollectIntel()
-	local intels = {}
-	self.acc:CalculateValue( CALC_EVENT.COLLECT_INTEL, intels )
-	return intels
+function World:CollectIntel( quality )
+	return self.acc:CalculateValue( CALC_EVENT.COLLECT_INTEL, {}, quality )
 end
 
 function World:GetLimbo()

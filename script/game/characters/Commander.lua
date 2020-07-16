@@ -23,6 +23,7 @@ function Commander:init()
 	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize())
 	self:GainAspect( Skill.Fighting():SetSkillRank( 5 ))
+	self:GainAspect( Aspect.Intel())
 end
 
 function Commander:OnSpawn( world )
