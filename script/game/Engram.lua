@@ -174,7 +174,18 @@ function Discovered:GetDesc()
 	end
 end
 
-Discovered.ACTIONS =
-{
-	{ name = "Travel", verb = function( self, owner ) return owner:DoVerbAsync( Verb.Travel( self.target )) end }
-}
+function Discovered:RenderImGuiWindow( ui, screen, viewer )
+	if is_instance( self.target, Agent ) then
+		local marked = viewer:IsMarked( self.target, "ui" )
+		if marked and ui.Button( "Unmark" ) then
+			viewer:Unmark( self.target, "ui" )
+		elseif not marked and ui.Button( "Mark" ) then
+			viewer:Mark( self.target, "ui" )
+		end
+
+	elseif is_instance( self.target, Location ) then
+		if ui.Button( "Travel To" ) then
+			viewer:DoVerbAsync( Verb.Travel( self.target ))
+		end
+	end
+end

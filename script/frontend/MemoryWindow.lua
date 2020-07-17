@@ -21,28 +21,20 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 
 			local desc = engram:GetDesc()
 			if ui.TreeNode( tostring(desc) ) then
-				if engram.RenderImGuiWindow then
-					engram:RenderImGuiWindow( ui, screen, self.agent )
-				end
-
+				ui.PushID( rawstring(engram) )
 				ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
-				for i, action in ipairs( engram.ACTIONS or table.empty ) do
-					ui.PushID( rawstring(action) )
-					if i > 1 then
-						ui.SameLine( 0, 10 )
-					end
-					if ui.Button( action.name ) then
-						print( action, rawstring(engram) )
-						print( action.verb( engram, self.agent ))
-					end
-					ui.PopID()
-				end
 
 				local duration = engram:GetDuration()
 				if duration then
 					local time_left = duration - engram:GetAge( self.agent )
 					ui.Text( loc.format( "Expires in: {1}", Calendar.FormatDuration( time_left )))
 				end
+
+				if engram.RenderImGuiWindow then
+					engram:RenderImGuiWindow( ui, screen, self.agent )
+				end
+
+				ui.PopID()
 				ui.TreePop()
 			end
 			ui.PopID()

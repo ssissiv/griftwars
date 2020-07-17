@@ -90,7 +90,7 @@ function Memory:CheckPrivacy( target, flag )
 	local pr_flags = 0
 	for i, engram in ipairs( self.engrams ) do
 		if engram.CheckPrivacy then
-			pr_flags = engram:CheckPrivacy( target, flag )
+			pr_flags = engram:CheckPrivacy( target, pr_flags )
 		end
 	end
 
