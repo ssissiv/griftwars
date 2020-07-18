@@ -30,10 +30,12 @@ function Location:OnSpawn( world )
 		for i, obj in ipairs( self.contents ) do		
 			local x, y = obj:GetCoordinate()
 			local tile = x and y and self.map:LookupTile( x, y )
-			if tile then
-				tile:AddEntity( obj )
-			else
-				self:PlaceEntity( obj )
+			if not tile or not tile:HasEntity( obj ) then -- could be added during GenerateTileMap().
+				if tile then
+					tile:AddEntity( obj )
+				else
+					self:PlaceEntity( obj )
+				end
 			end
 			if not obj:IsSpawned() then
 				world:SpawnEntity( obj )

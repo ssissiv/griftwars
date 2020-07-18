@@ -79,7 +79,7 @@ function Tile:AddEntity( obj )
 	if self.contents == nil then
 		self.contents = {}
 	end
-
+	assert( not table.contains( self.contents, obj ), tostring(obj))
 	table.insert( self.contents, obj )
 end
 

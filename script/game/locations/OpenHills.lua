@@ -33,7 +33,9 @@ function OpenHills:GenerateTileMap()
 
 		for i = 3, 10 do
 			local x, y = self.world:Random( w ), self.world:Random( h )
-			Object.Boulder():WarpToLocation( self, x, y )
+			if self.map:LookupTile( x, y ):IsEmpty() then
+				Object.Boulder():WarpToLocation( self, x, y )
+			end
 		end
 	end
 end

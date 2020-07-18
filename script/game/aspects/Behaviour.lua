@@ -91,6 +91,9 @@ function Behaviour:GetHighestPriorityVerb()
 end
 
 function Behaviour:OnTickBehaviour()
+	if self.owner:IsPuppet() then
+		return
+	end
 	
 	self:UpdatePriorities()
 

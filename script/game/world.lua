@@ -195,7 +195,9 @@ end
 
 function World:RefreshTimeSpeed()
 	-- Need to PAUSE while the puppet is idle (not doing verbs)
-	if not self.puppet:IsBusy() and self.puppet == self.player then
+	-- This needs to be some kind of 'autoplay' option, so you can switch to anyone but still have them carry out behaviour
+	--if not self.puppet:IsBusy() and self.puppet == self.player then
+	if not self.puppet:IsBusy() then
 		if not self:IsPaused( PAUSE_TYPE.IDLE ) then
 			self:TogglePause( PAUSE_TYPE.IDLE )
 		end

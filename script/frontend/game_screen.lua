@@ -432,7 +432,7 @@ function GameScreen:FindWindow( window )
 end
 
 function GameScreen:RenderAgentDetails( ui, puppet )
-    ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetName() )
+    ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetDesc() )
     ui.SameLine( 0, 5 )
     if ui.SmallButton( "?" ) then
 		self.nexus:Inspect( puppet, puppet )

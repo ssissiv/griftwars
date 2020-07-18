@@ -27,6 +27,9 @@ function LootObject:CanInteract( actor, obj )
 end
 
 function LootObject:Interact( actor, obj )
+
+	Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))
+
 	if obj:GetCarrier() == nil then
 		local tile = obj:GetTile()
 		if tile then
@@ -34,7 +37,6 @@ function LootObject:Interact( actor, obj )
 		end
 		actor:GetInventory():AddItem( obj )
 	else
-		Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))
 		obj:GetCarrier():TransferItem( obj, actor:GetInventory() )
 	end
 end
