@@ -63,6 +63,17 @@ function Behaviour:OnAspectsChanged( event_name, owner, aspect )
 				self.scheduled_reason = aspect
 			end
 		end
+
+	elseif is_instance( aspect, Aspect.Puppet ) then
+		if event_name == ENTITY_EVENT.ASPECT_LOST then
+			self:ScheduleNextTick( 0 )
+			self.scheduled_reason = aspect
+		else
+			if self.tick_ev then
+				self:GetWorld():UnscheduleEvent( self.tick_ev )
+				self.tick_ev = nil
+			end
+		end
 	end
 end
 
@@ -72,6 +83,10 @@ function Behaviour:OnVerbUnassigned( event_name, owner, verb )
 end
 
 function Behaviour:ScheduleNextTick( delta )
+	if self.owner:IsPuppet() then
+		return
+	end
+
 	if delta == nil then
 		delta = math.randomGauss( 0.1 * ONE_HOUR, 0.1 * ONE_HOUR, ONE_HOUR / 60 )
 	end

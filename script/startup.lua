@@ -20,4 +20,8 @@ end
 local obj = table.arraypick( world:CreateBucketByClass( Agent.HillGiant ))
 puppet:TeleportToLocation( obj.location )
 
+han = world:GetPuppet()
+g = obj
+
+
 -- DBG(agent:GetAspect( Verb.Strategize ))

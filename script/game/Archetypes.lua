@@ -51,8 +51,6 @@ function Agent:MakeBiological()
 	self:GainAspect( Verb.Wander() )
 	
 	self:GainAspect( Aspect.Combat() )
-	if not self:IsPlayer() then
-		self:GainAspect( Aspect.Behaviour() )
-	end
+	self:GainAspect( Aspect.Behaviour() )
 end
 

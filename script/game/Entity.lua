@@ -80,7 +80,7 @@ function Entity:GainAspect( aspect )
 	table.insert( self.aspects, aspect )
 
 	local id = aspect:GetID()
-	assert( self.aspects_by_id[ id ] == nil, tostring(id) )
+	assert( self.aspects_by_id[ id ] == nil or error( "Aspect id exists:" .. tostring(id)))
 	self.aspects_by_id[ id ] = aspect
 
 	aspect:OnGainAspect( self )
@@ -94,7 +94,8 @@ function Entity:GainAspect( aspect )
 	return aspect
 end
 
-function Entity:LoseAspect( aspect )
+function Entity:LoseAspect( arg )
+	local aspect = self:GetAspect( arg )
 	local id = aspect:GetID()
 	assert( self.aspects_by_id[ id ] == aspect or error( string.format( "aspect %s found instead with id %s", tostring(self.aspects_by_id[ id ] ), tostring( id ))))
 	table.arrayremove( self.aspects, aspect )

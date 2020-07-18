@@ -25,7 +25,7 @@ function GameScreen:init( world )
 	self.camera:ZoomToLevel( self.zoom_level )
 	self:PanToCurrentInterest()
 
-	self.world:SetPuppet( self.world:GetPlayer() )
+	self:OnPuppetChanged( self.world:GetPuppet() )
 
 	GetDbg().game = self
 	
@@ -292,26 +292,24 @@ function GameScreen:RenderScreen( gui )
     end
 
     -- Intent buttons.
-    if puppet:IsPlayer() then
-    	local player = puppet:GetAspect( Aspect.Player )
-	    for i, bitname in pairs( INTENT_ARRAY ) do
-	    	local bits = player:GetIntent()
-	    	if CheckBits( bits, INTENT[ bitname ] ) then
-	    		ui.PushStyleColor( "Button", 1, 0, 0, 1 )
-	    	end
+	local aspect = puppet:GetAspect( Aspect.Puppet )
+    for i, bitname in pairs( INTENT_ARRAY ) do
+    	local bits = aspect:GetIntent()
+    	if CheckBits( bits, INTENT[ bitname ] ) then
+    		ui.PushStyleColor( "Button", 1, 0, 0, 1 )
+    	end
 
-	    	if i > 1 then
-	    		ui.SameLine( 0, 10 )
-	    	end
-	    	if ui.Button( tostring(bitname) ) then
-	    		player:SetIntent( ToggleBits( bits, INTENT[ bitname ] ))
-	    	end
+    	if i > 1 then
+    		ui.SameLine( 0, 10 )
+    	end
+    	if ui.Button( tostring(bitname) ) then
+    		aspect:SetIntent( ToggleBits( bits, INTENT[ bitname ] ))
+    	end
 
-	    	if CheckBits( bits, INTENT[ bitname ] ) then
-	    		ui.PopStyleColor()
-	    	end
-	    end
-	end
+    	if CheckBits( bits, INTENT[ bitname ] ) then
+    		ui.PopStyleColor()
+    	end
+    end
 
 
     -- Render what the player is doing...
@@ -957,37 +955,25 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "left" or key == "a" then
 		if self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not self.puppet:IsBusy() and self.puppet:IsSpawned() then
-			local verb = Verb.Walk( DIR.W )
-			if verb:CanDo( self.puppet ) then
-				self.puppet:DoVerbAsync( verb )
-			end
+			self.puppet:AttemptVerb( Verb.Walk( DIR.W ))
 		end
 
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			local verb = Verb.Walk( DIR.E )
-			if verb:CanDo( puppet ) then
-				puppet:DoVerbAsync( verb )
-			end
+			self.puppet:AttemptVerb( Verb.Walk( DIR.E ))
 		end
 
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			local verb = Verb.Walk( DIR.S )
-			if verb:CanDo( puppet ) then
-				puppet:DoVerbAsync( verb )
-			end
+			self.puppet:AttemptVerb( Verb.Walk( DIR.S ))
 		end
 
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			local verb = Verb.Walk( DIR.N )
-			if verb:CanDo( puppet ) then
-				puppet:DoVerbAsync( verb )
-			end
+			self.puppet:AttemptVerb( Verb.Walk( DIR.N ))
 		end
 
 	elseif key == "." then

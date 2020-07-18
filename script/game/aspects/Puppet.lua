@@ -1,11 +1,11 @@
 ---------------------------------------------------------------
--- Traits used only by the Player agent.
+-- Traits used only by the Puppet agent.
 
-local Player = class( "Aspect.Player", Aspect )
+local Puppet = class( "Aspect.Puppet", Aspect )
 
-Player.TABLE_KEY = "player"
+Puppet.TABLE_KEY = "puppet"
 
-Player.event_handlers =
+Puppet.event_handlers =
 {
 	[ ENTITY_EVENT.COMBAT_STARTED ] = function( self, event_name, entity, ... )
 		self:SetIntent( SetBits( self.intent, INTENT.HOSTILE ))
@@ -16,15 +16,15 @@ Player.event_handlers =
 	end,
 }
 
-function Player:init()
+function Puppet:init()
 	self.intent = INTENT.DIPLOMACY
 end
 
-function Player:GetIntent()
+function Puppet:GetIntent()
 	return self.intent
 end
 
-function Player:SetIntent( intent )
+function Puppet:SetIntent( intent )
 	if intent ~= self.intent then
 		assert(type(intent) == "number")
 		self.intent = intent
@@ -32,7 +32,7 @@ function Player:SetIntent( intent )
 	end
 end
 
-function Player:CollectVerbs( verbs, actor, obj )
+function Puppet:CollectVerbs( verbs, actor, obj )
 	if self.owner == actor and obj == actor then
 		verbs:AddVerb( Verb.Wait())
 
@@ -45,7 +45,7 @@ function Player:CollectVerbs( verbs, actor, obj )
 	end
 end
 
-function Player:OnLocationChanged( prev, location )
+function Puppet:OnLocationChanged( prev, location )
 	if location then
 		location:Discover( self.owner )
 	end

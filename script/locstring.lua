@@ -72,6 +72,8 @@ function loc.format( format, ... )
                 -- v is a table, options is the field-name.
                 if is_instance( v, Object ) then
                 	v = v:LocTable()
+            	elseif is_instance( v, Agent ) then
+            		v = v:LocTable()
                 end
                 substr = tostring( v[ options ] )
             elseif fn == '%' then

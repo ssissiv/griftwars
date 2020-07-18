@@ -28,6 +28,7 @@ end
 
 function Combat:CollectVerbs( verbs, actor, target )
 	if self.owner == actor and target ~= actor and is_instance( target, Agent ) and not target:IsDead() then --and self:IsTarget( target ) then
+		print( "ADD VERB", actor, target )
 		verbs:AddVerb( Verb.MeleeAttack( target ) )
 	end
 end

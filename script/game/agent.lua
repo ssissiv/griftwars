@@ -115,15 +115,11 @@ function Agent:CanSpeak()
 end
 
 function Agent:IsPlayer()
-	return self:HasAspect( Aspect.Player )
-end
-
-function Agent:GetPlayer()
-	return self:GetAspect( Aspect.Player )
+	return self.world:GetPlayer() == self
 end
 
 function Agent:IsPuppet()
-	return self.world:GetPuppet() == self
+	return self:HasAspect( Aspect.Puppet )
 end
 
 function Agent:GetSpeciesProps()
@@ -656,11 +652,14 @@ function Agent:IsDoing( verb )
 	return false
 end
 
-function Agent:AttemptVerb( verb_class, obj )
-	self:RegenVerbs( "room" )
-	local verbs = self:GetPotentialVerbs( "room", obj )
-	verbs:SortByDistanceTo( self:GetCoordinate() )
-	local verb = verbs:FindVerbClass( verb_class )
+function Agent:AttemptVerb( verb, obj )
+	if is_class( verb ) then
+		self:RegenVerbs( "room" )
+		local verbs = self:GetPotentialVerbs( "room", obj )
+		verbs:SortByDistanceTo( self:GetCoordinate() )
+		verb = verbs:FindVerbClass( verb )
+	end
+
 	if verb then
 		local ok, reason = self:DoVerbAsync( verb )
 		if not ok and reason then
@@ -817,9 +816,9 @@ end
 function Agent:Kill()
 	assert( not self:IsDead() or error( "Already killed at: ".. self.killed_trace ))
 	
-	if self:IsPuppet() then
-		self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
-	end
+	-- if self:IsPuppet() then
+	-- 	self.world:TogglePause( PAUSE_TYPE.GAME_OVER )
+	-- end
 
 	print( self, "died!" )
 	self.killed_trace = debug.traceback()
@@ -971,7 +970,7 @@ function Agent:DeltaTrust( trust, other )
 		return
 	end
 
-	other = other or self.world:GetPlayer()
+	other = other or self.world:GetPuppet()
 	local affinity = self.affinities and self.affinities[ other ]
 	if affinity == nil then
 		affinity = Relationship.Affinity( self, other )

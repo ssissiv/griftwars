@@ -78,6 +78,10 @@ function p_xp( delta )
 	coroutine.resume( c )
 end
 
+function switch( agent )
+	world:SetPuppet( agent )
+end
+
 -----------------------------------------------------------------------------
 
 -- Shows all functions in the dbg_env.

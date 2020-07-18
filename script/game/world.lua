@@ -183,7 +183,15 @@ end
 function World:SetPuppet( agent )
 	assert( agent == nil or is_instance( agent, Agent ))
 
+	if self.puppet then
+		self.puppet:LoseAspect( Aspect.Puppet )
+	end
+
 	self.puppet = agent
+
+	if agent then
+		agent:GainAspect( Aspect.Puppet() )
+	end
 
 	self:BroadcastEvent( WORLD_EVENT.PUPPET_CHANGED, agent )
 	self:RefreshTimeSpeed()

@@ -33,7 +33,7 @@ function Walk:CanInteract( actor )
 		return false, "Not passable"
 	end
 
-	return true
+	return Verb.CanInteract( self, actor )
 end
 
 function Walk:Interact( actor )

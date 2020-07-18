@@ -74,7 +74,7 @@ end
 function VerbContainer:AddVerb( v )
 	assert( is_instance( v, Verb ))
 	if v.INTENT_FLAGS then
-		local player = self.actor:GetAspect( Aspect.Player )
+		local player = self.actor:GetAspect( Aspect.Puppet )
 		if player and not CheckBits( player:GetIntent(), v.INTENT_FLAGS ) then
 			return
 		end

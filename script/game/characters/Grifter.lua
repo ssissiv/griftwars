@@ -5,8 +5,6 @@ Grifter.image = assets.TILE_IMG.PLAYER
 function Grifter:init()
 	Agent.init( self )
 
-	self:GainAspect( Aspect.Player() )
-
 	Agent.MakeHuman( self )
 
 	self:SetDetails( "Han", nil, GENDER.MALE )
