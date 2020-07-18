@@ -21,7 +21,8 @@ end
 
 function OpenHills:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 12, 12 ))
+		local w, h = 12, 12
+		self.map = self:GainAspect( Aspect.TileMap( w, h ))
 		self.map:FillTiles( function( x, y )
 			if self.world:Random() < 0.05 then
 				return Tile.Tree( x, y )
@@ -29,6 +30,12 @@ function OpenHills:GenerateTileMap()
 				return Tile.Grass( x, y )
 			end
 		end )
+
+		for i = 3, 10 do
+			local x, y = self.world:Random( w ), self.world:Random( h )
+			Object.Boulder():WarpToLocation( self, x, y )
+		end
 	end
 end
+
 

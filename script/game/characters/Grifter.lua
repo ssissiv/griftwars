@@ -5,10 +5,11 @@ Grifter.image = assets.TILE_IMG.PLAYER
 function Grifter:init()
 	Agent.init( self )
 
+	self:GainAspect( Aspect.Player() )
+
 	Agent.MakeHuman( self )
 
 	self:SetDetails( "Han", nil, GENDER.MALE )
-	self:GainAspect( Aspect.Player() )
 
 	self:CreateStat( STAT.XP, 0 )
 	self:GetStat( STAT.HEALTH ):DeltaValue( 10, 10 )

@@ -22,7 +22,6 @@ function Captain:init()
 	
 	Agent.MakeHuman( self )
 	
-	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighting():SetSkillRank( 3 ))
 	self:GainAspect( Aspect.Intel())
 	

@@ -11,6 +11,5 @@ function Fighter:init()
 	
 	self:MakeHuman()
 
-	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighting() )
 end

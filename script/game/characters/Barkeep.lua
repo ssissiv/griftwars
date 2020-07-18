@@ -13,6 +13,4 @@ function Barkeep:init()
 	self:MakeHuman()
 
 	self.job = self:GainAspect( Job.Barkeep( self ) )
-
-	self:GainAspect( Aspect.Behaviour() )
 end

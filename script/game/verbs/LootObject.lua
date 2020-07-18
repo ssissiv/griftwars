@@ -16,6 +16,10 @@ function LootObject:CanInteract( actor, obj )
 			return false, "Can't reach"
 		end
 	end
+	if obj.mass > actor:CalculateStat( CORE_STAT.STRENGTH ) then
+		return false, loc.format( "Too heavy (Need {1} {2})", obj.mass, CORE_STAT.STRENGTH )
+	end
+
 	if not obj:GetAspect( Aspect.Carryable ) then
 		return false -- Not even carryable
 	end

@@ -10,8 +10,6 @@ function Citizen:init()
 
 	self:MakeHuman()
 
-	self:GainAspect( Aspect.Behaviour() )
-
 	self:GainAspect( Interaction.Befriend( CR1 ) )
 	self:GainAspect( Interaction.Chat() )
 end

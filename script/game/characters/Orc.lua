@@ -11,8 +11,6 @@ function Orc:init()
 
 	Agent.MakeOrc( self )
 
-	self:GainAspect( Aspect.Behaviour() )
-
 	self:SetFlags( EF.AGGRO_OTHER_CLASS )
 end
 

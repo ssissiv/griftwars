@@ -12,8 +12,6 @@ function Shopkeeper:init()
 	self:MakeHuman()
 
 	self.job = self:GainAspect( Job.ManageShop( self ) )
-
-	self:GainAspect( Aspect.Behaviour() )
 end
 
 function Shopkeeper:OnSpawn( world )

@@ -12,7 +12,6 @@ function CityGuard:init()
 	
 	self:MakeHuman()
 
-	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Skill.Fighting() )
 
 	self:EquipItem( Weapon.LongSword() )

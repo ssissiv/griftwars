@@ -75,7 +75,6 @@ function Scavenger:init()
 
 	self:MakeHuman()
 
-	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Scavenge( self ))
 end
 

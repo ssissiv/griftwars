@@ -14,6 +14,14 @@ function Agent:MakeOrc()
 	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
 end
 
+function Agent:MakeHillGiant()
+	self.species = SPECIES.GIANT
+
+	self:MakeGendered()
+	self:MakeBiological()
+	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
+end
+
 function Agent:MakeAnimal()
 	self.species = SPECIES.MAMMAL
 
@@ -36,11 +44,15 @@ function Agent:MakeBiological()
 	fatigue:SetThresholds( FATIGUE_THRESHOLDS )
 	fatigue:DeltaRegen( 100 / (2 * ONE_DAY) )
 
-	self:GainAspect( Aspect.Charisma( 1 ))
-	self:GainAspect( Aspect.Strength( 1 ))
+	self:GainAspect( Aspect.Charisma( self.charisma or 1 ))
+	self:GainAspect( Aspect.Strength( self.strength or 1 ))
 
 	self:GainAspect( Verb.ManageFatigue( self ))
 	self:GainAspect( Verb.Wander() )
 	
 	self:GainAspect( Aspect.Combat() )
+	if not self:IsPlayer() then
+		self:GainAspect( Aspect.Behaviour() )
+	end
 end
+

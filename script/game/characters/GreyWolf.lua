@@ -7,7 +7,6 @@ function GreyWolf:init()
 
 	Agent.MakeAnimal( self )
 
-	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Aspect.PackBonus() )
 	self:GetStat( STAT.HEALTH ):DeltaValue( 12, 12 )
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 2 )

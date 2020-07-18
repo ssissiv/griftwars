@@ -20,7 +20,6 @@ function Commander:init()
 	
 	Agent.MakeHuman( self )
 	
-	self:GainAspect( Aspect.Behaviour() )
 	self:GainAspect( Verb.Strategize())
 	self:GainAspect( Skill.Fighting():SetSkillRank( 5 ))
 	self:GainAspect( Aspect.Intel())

@@ -108,9 +108,9 @@ AFFINITY = MakeEnum
 	"ENEMY", -- Enemy!
 }
 
-SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC", "MAMMAL" }
-
+SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC", "GIANT", "MAMMAL" }
 SPECIES_ARRAY = MakeArrayFromEnum( SPECIES )
+
 table.arrayremove( SPECIES_ARRAY, SPECIES.NONE )
 
 SPECIES_PROPS =
@@ -132,6 +132,11 @@ SPECIES_PROPS =
 		name = "orc",
 		can_speak = true,
 	},
+	GIANT =
+	{
+		name = "giant",
+		can_speak = true,
+	},
 	MAMMAL =
 	{
 		name = "mammal",
@@ -139,7 +144,7 @@ SPECIES_PROPS =
 	},
 }
 for i, species in ipairs( SPECIES_ARRAY ) do
-	assert( SPECIES_PROPS[ species ] ~= nil, tostring(species))
+	assert( SPECIES_PROPS[ species ] ~= nil or error( "Missing props for: " ..tostring(species) ))
 end
 
 EQ_SLOT = MakeEnum

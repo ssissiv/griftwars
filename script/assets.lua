@@ -44,6 +44,7 @@ local assets =
 		DOOR = "door.png",
 		DOOR_OPEN = "door_open.png",
 		BED = "bed.png",
+		BOULDER = { "NEVANDA", 0 * 32, 21 * 32, 32, 32 },
 		CAVE_ENTRANCE = "cave_entrance.png",
 		CHEST = "chest.png",
 		ABANDONED_WELL = "abandoned_well.png",
@@ -51,6 +52,7 @@ local assets =
 		PLAYER = { "NEVANDA", 4 * 32, 1 * 32, 32, 32 },
 		ORC = { "NEVANDA", 32 * 32, 1 * 32, 32, 32 },
 		CAPTAIN = { "NEVANDA", 3 * 32, 7 * 32, 32, 32 },
+		HILL_GIANT = { "NEVANDA", 16 * 32, 4 * 32, 32, 32 },
 	},
 
 	LoadImage = function( self, img )

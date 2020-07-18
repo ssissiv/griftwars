@@ -7,7 +7,6 @@ function GiantLizard:init()
 
 	Agent.MakeAnimal( self )
 
-	self:GainAspect( Aspect.Behaviour() )
 	self:GetStat( STAT.HEALTH ):DeltaValue( 6, 6 )
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 1 )
 
