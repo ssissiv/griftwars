@@ -14,6 +14,9 @@ function HillGiant:init()
 	Agent.MakeHillGiant( self )
 
 	self:SetFlags( EF.AGGRO_ALL )
+
+	self:GainAspect( Verb.GrabNearbyBoulders() )
+	self:GainAspect( Verb.ThrowObject() )
 end
 
 function HillGiant:GetMapChar()

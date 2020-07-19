@@ -127,7 +127,8 @@ function Travel:PathToLocation( actor, location )
 end
 
 function Travel:Interact( actor, dest )
-	dest = self:SetTarget( dest or self.obj )
+	self:SetTarget( dest or self.obj )
+	dest = self.obj
 	assert( dest )
 
 	local pather = PathFinder( actor, actor, dest )

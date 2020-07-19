@@ -29,6 +29,7 @@ end
 function LootObject:Interact( actor, obj )
 
 	Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))
+	Msg:ActToRoom( "{1.desc} picks up {2.desc}.", actor, obj )
 
 	if obj:GetCarrier() == nil then
 		local tile = obj:GetTile()

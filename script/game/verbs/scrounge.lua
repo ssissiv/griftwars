@@ -93,7 +93,8 @@ function Scrounge:CalculateDC()
 end
 
 function Scrounge:Interact( actor, target )
-	target = self:SetTarget( target or self:FindTarget( actor))
+	self:SetTarget( target or self:FindTarget( actor ))
+	target = self.obj
 
 	Msg:ActToRoom( "{1.Id} begins rummaging around in {2.Id}.", actor, target )
 	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )

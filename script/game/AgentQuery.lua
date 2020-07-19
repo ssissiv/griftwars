@@ -48,6 +48,10 @@ function Agent:GetWeapon()
     return self.inventory:AccessSlot( EQ_SLOT.WEAPON )
 end
 
+function Agent:GetHeldObject()
+    return self.inventory:AccessSlot( EQ_SLOT.HELD )
+end
+
 function Agent:IsUnarmed()
 	return self:GetWeapon() == nil -- Or gloves/knuckleS?
 end
@@ -104,6 +108,10 @@ end
 function Agent:InCombatWith( target )
 	local combat = self:GetAspect( Aspect.Combat )
 	return combat and combat:IsTarget( target )
+end
+
+function Agent:IsCarrying( obj )
+	return obj:GetCarrier() == self.inventory
 end
 
 function Agent:IsEmployed()

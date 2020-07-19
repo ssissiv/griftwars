@@ -27,11 +27,9 @@ function HostileCombat:PickAttack( actor )
 	local combat = actor:GetAspect( Aspect.Combat )
 	local attacks = {}
 	for i, target in combat:Targets() do
-		local verbs = actor:GetPotentialVerbs( nil, target )
+		local verbs = actor:GetPotentialVerbs( "attacks", target )
 		for i, verb in verbs:Verbs() do
-			if verb.InAttackRange then -- and verb:CanDo( actor, target ) then
-				table.insert( attacks, verb )
-			end
+			table.insert( attacks, verb )
 		end
 	end
 

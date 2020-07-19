@@ -150,6 +150,7 @@ end
 EQ_SLOT = MakeEnum
 {
 	"WEAPON",
+	"HELD",
 	-- "HAND",
 	-- "LHAND",
 	-- "RHAND",
@@ -164,6 +165,7 @@ EQ_SLOT_ARRAY = MakeArrayFromEnum( EQ_SLOT )
 EQ_SLOT_NAMES =
 {
 	[EQ_SLOT.WEAPON] = "main weapon",
+	[EQ_SLOT.HELD] = "held",
 	-- [EQ_SLOT.LHAND] = "left hands",
 	-- [EQ_SLOT.RHAND] = "right hand",
 	[EQ_SLOT.HEAD] = "head",

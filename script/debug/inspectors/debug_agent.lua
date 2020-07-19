@@ -118,6 +118,15 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 			ui.SameLine( 0, 10 )
 			panel:AppendTable( ui, combat.current_attack )
 		end
+		local hcombat = self.agent:GetAspect( Verb.HostileCombat )
+		if hcombat and hcombat.attacks then
+			ui.Text( "Attacks:" )
+			ui.Indent( 20 )
+			for i, attack in ipairs( hcombat.attacks ) do
+				ui.Text( tostring(attack) )
+			end
+			ui.Unindent( 20 )
+		end
 		ui.Text( "Targets:" )
 		for i, target in combat:Targets() do
 			ui.SameLine( 0, 10 )

@@ -104,7 +104,7 @@ end
 
 function Verb:SetTarget( target )
 	self.obj = target
-	return target
+	return self
 end
 
 function Verb:EqualVerb( verb )

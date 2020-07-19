@@ -31,7 +31,9 @@ end
 function Object:GenerateLocTable( viewer )
 	local t = { viewer = viewer, name = self:GetName() }
 
-	t.id = loc.format( "<{1}>", self:GetName() )
+	t.desc = loc.format( "<{1}>", self:GetName() )
+
+	t.id = t.desc
 	t.Id = t.id
 	t.name = self:GetName()
 
@@ -168,6 +170,12 @@ function Object:GetLocation()
 		return self.location
 	elseif self.carrier then
 		return self.carrier:GetLocation()
+	end
+end
+
+function Object:CollectVerbs( verbs, actor, target )
+	if target == self then
+		verbs:AddVerb( Verb.HoldObject():SetTarget( target ))
 	end
 end
 
