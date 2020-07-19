@@ -24,6 +24,13 @@ function Puppet:GetIntent()
 	return self.intent
 end
 
+function Puppet:OnSpawn( world )
+	Aspect.OnSpawn( self, world )
+	if self.owner:InCombat() then
+		self:SetIntent( SetBits( self.intent, INTENT.HOSTILE ))
+	end
+end
+
 function Puppet:SetIntent( intent )
 	if intent ~= self.intent then
 		assert(type(intent) == "number")

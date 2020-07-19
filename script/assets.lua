@@ -4,7 +4,8 @@ local assets =
 	{
 		TITLE = { "Ayuthaya.ttf", 16 },
 		SUBTITLE = { "Ayuthaya.ttf", 12 },
-		MAP_TILE = { "Ayuthaya.ttf", 48 }
+		MAP_TILE = { "Ayuthaya.ttf", 48 },
+		FLOATER = { "Arial Black.ttf", 24 },
 	},
 
 	AFFINITY_IMG =

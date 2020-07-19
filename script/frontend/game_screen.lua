@@ -18,6 +18,7 @@ function GameScreen:init( world )
 
 	-- List of window panels.
 	self.windows = {}
+	self.floaters = {}
 
 	self.zoom_level = 0.5
 	self.camera = Camera()
@@ -65,6 +66,8 @@ end
 
 function GameScreen:UpdateScreen( dt )
 	self.world:UpdateWorld( dt )
+
+	self:UpdateFloaters( dt )
 
 	self.camera:UpdateCamera( dt )
 
@@ -128,6 +131,16 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 	elseif event_name == AGENT_EVENT.INTENT_CHANGED then
 		if self.verb_window then
 			self.verb_window:RefreshContents( self.puppet, self.current_focus )
+		end
+
+	elseif event_name == ENTITY_EVENT.STAT_CHANGED then
+		local stat, new_value, old_value, aspect = ...
+		if stat == STAT.HEALTH then
+			if new_value < old_value then
+				self:AddDamageFloater( old_value - new_value, aspect.owner )
+			else
+				self:AddHealFloater( new_value - old_value )
+			end
 		end
 
 	elseif event_name == AGENT_EVENT.DIED then
@@ -356,6 +369,8 @@ function GameScreen:RenderScreen( gui )
 
 	    self:RenderLocationDetails( ui, location )
 
+	    self:RenderFloaters()
+
 	    self.last_location = location
 	end
 
@@ -426,6 +441,38 @@ function GameScreen:FindWindow( window )
 				return w
 			end
 		end
+	end
+end
+
+function GameScreen:AddFloater( floater )
+	table.insert( self.floaters, floater )
+end
+
+function GameScreen:AddDamageFloater( damage, agent )
+	local floater = Floater( tostring(damage) )
+	floater:SetCoordinate( agent:GetCoordinate() )
+	floater:SetColour( 0xFF0000FF )
+	self:AddFloater( floater )
+end
+
+function GameScreen:AddHealFloater( amount, agent )
+	local floater = Floater( tostring(amount) )
+	floater:SetCoordinate( agent:GetCoordinate() )
+	floater:SetColour( 0x00FF00FF )
+	self:AddFloater( floater )
+end
+
+function GameScreen:UpdateFloaters( dt )
+	for i = #self.floaters, 1, -1 do
+		if not self.floaters[i]:UpdateFloater( dt ) then
+			table.remove( self.floaters, i )
+		end
+	end
+end
+
+function GameScreen:RenderFloaters()
+	for i, floater in ipairs( self.floaters ) do
+		floater:RenderFloater( self )
 	end
 end
 

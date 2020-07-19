@@ -65,17 +65,22 @@ function StatValue:SetValue( value, max_value )
 
 	local new_value
 	if self.max_value then
-		new_value = math.max( 0, math.min( self.max_value, value ))
+		new_value = math.min( self.max_value, value )
 	else
-		new_value = math.max( 0, value )
+		new_value = value
 	end
 
 	if new_value ~= self.value then
+		local old_value = self.value
 		self.value = new_value
 		if IsEnum( self.stat, CORE_STAT ) then
 			Msg:Echo( self.owner, "Your {1} is now {2}!", self.stat, self.value )
 		end
-	end	
+
+		if self.owner then
+			self.owner:BroadcastEvent( ENTITY_EVENT.STAT_CHANGED, self.stat, new_value, old_value, self )
+		end
+	end
 end
 
 function StatValue:GetPercent()

@@ -115,7 +115,7 @@ function Agent:CanSpeak()
 end
 
 function Agent:IsPlayer()
-	return self.world:GetPlayer() == self
+	return self:HasFlag( FLAGS.PLAYER )
 end
 
 function Agent:IsPuppet()

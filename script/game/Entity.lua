@@ -21,7 +21,7 @@ end
 
 function Entity:BroadcastEvent( event_name, ... )
 	if self.events then
-		self:GetEvents():BroadcastEvent( event_name, self, ... )
+		self.events:BroadcastEvent( event_name, self, ... )
 	end
 end
 

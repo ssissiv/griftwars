@@ -131,20 +131,24 @@ function EventSystem:BroadcastEvent(eventname, ...)
     for i = 1, #self.listeners, 3 do
         self:AddListenerToList( self.listeners[i], self.listeners[i+1], self.listeners[i+2], listeners )
     end
-    -- listeners is processed in reverse order, so invert the list.
-    table.reverse( listeners )
 
-    while #listeners > 0 do
-        local listener = table.remove( listeners )
-        local fn = table.remove( listeners )
-        local p = table.remove( listeners )
-    	if type(fn) == "function" then
-    		fn(listener, eventname, ...)
-    	else
-    		listener:OnGlobalEvent(eventname, ...)
-    	end
+    if #listeners > 0 then
+        -- listeners is processed in reverse order, so invert the list.
+        table.reverse( listeners )
+
+        while #listeners > 0 do
+            local listener = table.remove( listeners )
+            local fn = table.remove( listeners )
+            local p = table.remove( listeners )
+        	if type(fn) == "function" then
+        		fn(listener, eventname, ...)
+        	else
+        		listener:OnGlobalEvent(eventname, ...)
+        	end
+        end
+        table.clear( listeners )
     end
-    table.clear( listeners )
+
     self.depth = self.depth - 1
 end
 
