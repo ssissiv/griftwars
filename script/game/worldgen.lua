@@ -65,6 +65,7 @@ function WorldGen:GenerateTinyWorld()
 	end
 	
 	local player = Agent.Grifter()
+	player:SetFlags( Agent.FLAGS.PLAYER )
 	world:SpawnAgent( player, origin )
 	world:SetPuppet( player )
 
@@ -125,6 +126,7 @@ function WorldGen:GenerateWorld()
 	-- Place the player.
 
 	local player = Agent.Grifter()
+	player:SetFlags( Agent.FLAGS.PLAYER )
 	world:SpawnAgent( player, city:RandomRoom() )
 	world:SetPuppet( player )
 

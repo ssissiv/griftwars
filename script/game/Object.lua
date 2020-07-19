@@ -175,7 +175,7 @@ function Object:GetLocation()
 end
 
 function Object:CollectVerbs( verbs, actor, target )
-	if target == self then
+	if target == self and self:GetCarrier() == actor:GetInventory() then
 		verbs:AddVerb( Verb.HoldObject():SetTarget( target ))
 	end
 end

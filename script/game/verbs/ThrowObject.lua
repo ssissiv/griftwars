@@ -33,7 +33,6 @@ end
 function ThrowObject:Interact( actor, target )
 	assert( self.proj == actor:GetHeldObject() )
 	
-	Msg:Speak( actor, "{1.desc}!", self.proj )
 	self.proj:GetAspect( Aspect.Wearable ):Unequip()
 	actor:GetInventory():RemoveItem( self.proj )
 	self.proj:WarpToLocation( actor:GetLocation(), actor:GetCoordinate() )
