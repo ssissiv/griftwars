@@ -18,9 +18,11 @@ function GrabNearbyBoulders:FindNearbyBoulder( actor )
 		end
 	end
 
-	local x0, y0 = actor:GetCoordinate()
-	table.sort( boulders, function( e1, e2 ) return distance( x0, y0, e1:GetCoordinate() ) < distance( x0, y0, e2:GetCoordinate() ) end )
-	return boulders[1]
+	if boulders then
+		local x0, y0 = actor:GetCoordinate()
+		table.sort( boulders, function( e1, e2 ) return distance( x0, y0, e1:GetCoordinate() ) < distance( x0, y0, e2:GetCoordinate() ) end )
+		return boulders[1]
+	end
 end
 
 function GrabNearbyBoulders:CalculateUtility( actor )

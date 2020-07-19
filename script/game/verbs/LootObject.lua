@@ -32,10 +32,7 @@ function LootObject:Interact( actor, obj )
 	Msg:ActToRoom( "{1.desc} picks up {2.desc}.", actor, obj )
 
 	if obj:GetCarrier() == nil then
-		local tile = obj:GetTile()
-		if tile then
-			tile:RemoveEntity( obj )
-		end
+		obj:WarpToNowhere()
 		actor:GetInventory():AddItem( obj )
 	else
 		obj:GetCarrier():TransferItem( obj, actor:GetInventory() )

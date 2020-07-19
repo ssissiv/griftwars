@@ -27,9 +27,12 @@ function HostileCombat:PickAttack( actor )
 	local combat = actor:GetAspect( Aspect.Combat )
 	local attacks = {}
 	for i, target in combat:Targets() do
+		actor:RegenVerbs( "attacks" )
 		local verbs = actor:GetPotentialVerbs( "attacks", target )
 		for i, verb in verbs:Verbs() do
-			table.insert( attacks, verb )
+			if verb.InAttackRange then -- TODO: this is dumb, GetPotentialVerbs shouldn't harvest non-attacks
+				table.insert( attacks, verb )
+			end
 		end
 	end
 
@@ -54,12 +57,16 @@ function HostileCombat:Interact( actor )
 		local target = attack:GetTarget()
 		assert( target, tostring(attack) )
 		actor:GetAspect( Aspect.Combat ):SetCurrentAttack( attack )
-		assert( attack.InAttackRange, tostr(attack))
+
+		-- Move into attack range if possible.
 		if not attack:InAttackRange( actor, target ) then
+			self.travel:SetApproachDistance( attack:GetAttackRange() )
 			local ok, reason = self:DoChildVerb( self.travel, target )
-		else
-			self:DoChildVerb( attack, attack:GetTarget() )
 		end
+
+		-- Atttaaack.
+		self:DoChildVerb( attack, attack:GetTarget() )
+
 		if actor:GetAspect( Aspect.Combat ) then
 			actor:GetAspect( Aspect.Combat ):SetCurrentAttack( nil )
 		end

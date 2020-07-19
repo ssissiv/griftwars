@@ -56,9 +56,12 @@ function WorldGen:GenerateTinyWorld()
 	origin:SetCoordinate( 0, 0 )
 	world:SpawnLocation( origin )
 
-	for i = 1, 2 do
-		local npc = Agent.Orc()
+	for i = 1, 1 do
+		local npc = Agent.HillGiant()
 		npc:WarpToLocation( origin, 8, 13 )
+	end
+	for i = 1, 4 do
+		Object.Boulder():WarpToLocation( origin, math.random( 10 ), math.random( 10 ))
 	end
 	
 	local player = Agent.Grifter()

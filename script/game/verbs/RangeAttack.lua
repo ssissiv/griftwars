@@ -3,8 +3,13 @@ local RangeAttack = class( "Verb.RangeAttack", Verb )
 RangeAttack.INTENT_FLAGS = INTENT.HOSTILE
 RangeAttack.act_desc = "Attack"
 
+function RangeAttack:SetProjectile( proj )
+	self.proj = proj
+	return self
+end
+
 function RangeAttack:InAttackRange( actor, target )
-	local range = 10
+	local range = self:GetAttackRange()
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
 	if distance( x1, y1, x2, y2 ) > range then
@@ -12,6 +17,10 @@ function RangeAttack:InAttackRange( actor, target )
 	end
 
 	return true
+end
+
+function RangeAttack:GetAttackRange()
+	return 10
 end
 
 function RangeAttack:GetDesc( viewer )
@@ -39,6 +48,10 @@ function RangeAttack:CanInteract( actor, target )
 		return false, reason
 	end
 
+	if not self.proj then
+		return false, "No projectile"
+	end
+	
 	if not actor:HasEnergy( self.fatigue_cost ) then
 		return false, "Too tired"
 	end
@@ -55,7 +68,7 @@ function RangeAttack:GetDuration()
 end
 
 function RangeAttack:CalculateDamage( target )
-	local ap = self.actor:CalculateAttackPower()
+	local ap = self.actor:CalculateRangeAttackPower( self.proj )
 	local acc = self.actor:GetAspect( Aspect.DamageCalculator ) or self.actor:GainAspect( Aspect.DamageCalculator() )
 
 	acc:InitializeValue( ap )

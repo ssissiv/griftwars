@@ -511,7 +511,7 @@ end
 
 function Agent:GetTile()
 	if self.location then
-		return self.location:GetTileAt( self.x, self.y )
+		return self.location:LookupTile( self.x, self.y )
 	end
 end
 
@@ -536,7 +536,7 @@ function Agent:MoveDirection( dir )
 	end
 	
 	local x, y = OffsetDir( self.x, self.y, dir )
-	local tile = self.location:GetTileAt( x, y )
+	local tile = self.location:LookupTile( x, y )
 	if not tile then
 		return false, "No tile"
 	end
@@ -580,8 +580,9 @@ local function WarpToLocation( self, location, x, y )
 	self:CancelInvalidVerbs()
 	self:RegenVerbs()
 
+	self.location = location
+
 	if location then
-		self.location = location
 		self:SetCoordinate( x, y )
 		location:AddAgent( self )
 	end
@@ -609,7 +610,7 @@ function Agent:WarpToAgent( agent )
 end
 
 function Agent:WarpToTile( tile )
-	local prev_tile = self.x and self.location:GetTileAt( self.x, self.y )
+	local prev_tile = self.x and self.location:LookupTile( self.x, self.y )
 	if prev_tile then
 		prev_tile:RemoveEntity( self )
 	end

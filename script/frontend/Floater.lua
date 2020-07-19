@@ -27,14 +27,15 @@ function Floater:RenderFloater( screen )
 
 	local a = 1.0 - math.max( 0, self.dt - self.duration * 0.8) / (self.duration * 0.2)
 	love.graphics.setFont( assets.FONTS.FLOATER )
+	local scale = 1 / screen.zoom_level
 
 	-- Black background
 	screen:SetColour( AlphaColour( 0x000000FF, a ))
-	love.graphics.print( self.txt, x + 1, y + 2 )
+	love.graphics.print( self.txt, x + 1, y + 2, 0, scale )
 
 	-- Foreground
 	local clr = AlphaColour( self.colour or 0xFFFFFFFF, a )
 	screen:SetColour( clr )
 
-	love.graphics.print( self.txt, x, y )
+	love.graphics.print( self.txt, x, y, 0, scale )
 end

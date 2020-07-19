@@ -5,7 +5,7 @@ function GameScreen:init( world )
 	
 	if world == nil then
 		local gen = WorldGen()
-		world = gen:GenerateWorld()
+		world = gen:GenerateTinyWorld()
 		world:Start()
 	end
 	self.world = world
@@ -556,7 +556,7 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 	for dx = 1, xtiles do
 		for dy = ytiles, 1, -1 do
 			local tx, ty = wx0 + dx - 1, wy0 + dy - 1
-			local tile = location:GetTileAt( tx, ty )
+			local tile = location:LookupTile( tx, ty )
 			if tile then
 				local x1, y1 = self.camera:WorldToScreen( tx, ty )
 				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
@@ -569,7 +569,7 @@ function GameScreen:RenderMapTiles( gui, location, wx0, wy0, wx1, wy1 )
 	for dx = 1, xtiles do
 		for dy = ytiles, 1, -1 do
 			local tx, ty = wx0 + dx - 1, wy0 + dy - 1
-			local tile = location:GetTileAt( tx, ty )
+			local tile = location:LookupTile( tx, ty )
 			if tile then
 				local x1, y1 = self.camera:WorldToScreen( tx, ty )
 				local x2, y2 = self.camera:WorldToScreen( tx + 1, ty + 1 )
@@ -778,7 +778,7 @@ end
 function GameScreen:ScreenToTile( mx, my )
 	local cx, cy = self:ScreenToCell( mx, my )
 	if self.puppet and self.puppet:GetLocation() then
-		return self.puppet:GetLocation():GetTileAt( cx, cy ), cx, cy
+		return self.puppet:GetLocation():LookupTile( cx, cy ), cx, cy
 	end
 end
 

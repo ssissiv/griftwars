@@ -388,7 +388,7 @@ function Verb:GetActingProgress()
 end
 
 function Verb:YieldForTime( duration, how, act_rate )
-	assert( duration > 0 )
+	assert( duration > 0 or how == "instant" )
 
 	if self.cancelled then
 		-- print( self, " attempted to yield while cancelled!" )
@@ -422,6 +422,13 @@ function Verb:YieldForTime( duration, how, act_rate )
 	self.ACT_RATE = nil
 	
 	return result
+end
+
+function Verb:YieldForInterrupt( agent, msg )
+	if agent:IsPuppet() then --and not self.world:IsPaused() then
+		self.world:ScheduleInterrupt( 0, msg )
+		self:YieldForTime( ONE_SECOND, "instant" )
+	end	
 end
 
 function Verb:Unyield()

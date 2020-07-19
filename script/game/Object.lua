@@ -75,8 +75,9 @@ local function WarpToLocation( self, location, x, y )
 		self.location:RemoveEntity( self )
 	end
 
+	self.location = location
+
 	if location then
-		self.location = location
 		self:SetCoordinate( x, y )
 		location:AddEntity( self )
 	end
@@ -101,7 +102,7 @@ function Object:WarpToLocation( location, x, y )
 end
 
 function Object:WarpToTile( tile )
-	local prev_tile = self.x and self.location:GetTileAt( self.x, self.y )
+	local prev_tile = self.x and self.location:LookupTile( self.x, self.y )
 	if prev_tile then
 		prev_tile:RemoveEntity( self )
 	end
@@ -161,7 +162,7 @@ end
 
 function Object:GetTile()
 	if self.location then
-		return self.location:GetTileAt( self.x, self.y )
+		return self.location:LookupTile( self.x, self.y )
 	end
 end
 

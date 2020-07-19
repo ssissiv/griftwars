@@ -66,6 +66,22 @@ function Agent:CalculateAttackPower()
 	return self.acc:CalculateValueFromSources( self, CALC_EVENT.ATTACK_POWER )
 end
 
+function Agent:CalculateRangeAttackPower( proj )
+	self.acc:InitializeValue( 0 )
+
+	if proj.range_attack_power then
+		self.acc:AddValue( proj.range_attack_power, proj )
+	end
+	
+	-- local wpn = self:GetWeapon()
+	-- if wpn and wpn.attack_power then
+	-- 	self.acc:AddValue( wpn.attack_power, wpn )
+	-- end
+	
+	-- self.acc:CalculateValueFromSources( proj, CALC_EVENT.ATTACK_POWER )
+	return self.acc:CalculateValueFromSources( self, CALC_EVENT.RANGE_ATTACK_POWER )
+end
+
 function Agent:CalculateStat( stat )
 	return self.acc:CalculateValue( CALC_EVENT.STAT, self:GetStatValue( stat ), stat )
 end

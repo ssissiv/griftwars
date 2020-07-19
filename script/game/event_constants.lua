@@ -37,6 +37,7 @@ AGENT_EVENT = MakeEnum{
 
 CALC_EVENT = MakeEnum{
 	"ATTACK_POWER",
+	"RANGE_ATTACK_POWER",
 	"DAMAGE",
 	"STAT",
 	"DC",

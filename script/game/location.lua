@@ -404,7 +404,7 @@ function Location:FindEmptyPassableTile( x, y, obj )
 		return true
 	end
 
-	local origin = x and self:GetTileAt( x, y ) or self.map:GetRandomTile()
+	local origin = x and self:LookupTile( x, y ) or self.map:GetRandomTile()
 	assert( origin, tostring(x)..","..tostring(y) )
 
 	self.map:Flood( origin, IsEmptyPassable, obj )
@@ -426,7 +426,7 @@ function Location:FindPassableTile( x, y, obj )
 		return true
 	end
 
-	local origin = self:GetTileAt( x, y )
+	local origin = self:LookupTile( x, y )
 	assert( origin, tostring(x)..","..tostring(y) )
 
 	self.map:Flood( origin, IsPassable, obj )
@@ -508,7 +508,7 @@ function Location:DisposeReality()
 	-- end
 end
 
-function Location:GetTileAt( tx, ty )
+function Location:LookupTile( tx, ty )
 	if self.map then
 		return self.map:LookupTile( tx, ty )
 	end

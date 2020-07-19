@@ -2,6 +2,7 @@ local Boulder = class( "Object.Boulder", Object )
 Boulder.MAP_CHAR = "B"
 Boulder.image = assets.TILE_IMG.BOULDER
 Boulder.mass = 12
+Boulder.range_attack_power = 3
 
 function Boulder:GetName()
 	return "Boulder"

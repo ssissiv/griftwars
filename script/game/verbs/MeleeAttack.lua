@@ -8,11 +8,13 @@ function MeleeAttack:init( target )
 	self.fatigue_cost = 5
 end
 
-
-function MeleeAttack:InAttackRange( actor, target )
-	local wpn = actor:GetWeapon()
+function MeleeAttack:GetAttackRange()
+	local wpn = self.actor:GetWeapon()
 	local range = wpn and wpn:GetAttackRange() or 1.5
-
+	return range
+end
+function MeleeAttack:InAttackRange( actor, target )
+	local range = self:GetAttackRange()
 	local x1, y1 = actor:GetCoordinate()
 	local x2, y2 = target:GetCoordinate()
 	if distance( x1, y1, x2, y2 ) > range then

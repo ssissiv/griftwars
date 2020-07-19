@@ -28,7 +28,7 @@ function Walk:CanInteract( actor )
 
 	local x, y = actor:GetCoordinate()
 	x, y = OffsetDir( x, y, self.dir )
-	local tile = actor:GetLocation():GetTileAt( x, y )
+	local tile = actor:GetLocation():LookupTile( x, y )
 	if not tile or not tile:IsPassable( actor ) then
 		return false, "Not passable"
 	end

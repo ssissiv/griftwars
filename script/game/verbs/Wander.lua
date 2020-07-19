@@ -16,7 +16,7 @@ function Wander:Interact( actor, target, duration )
 			for i, dir in ipairs( EXIT_ARRAY ) do
 				local x, y = actor:GetCoordinate()
 				x, y = OffsetExit( x, y, dir )
-				local tile = actor.location:GetTileAt( x, y )
+				local tile = actor.location:LookupTile( x, y )
 				if tile and tile:IsPassable( self ) then
 					table.insert( dirs, dir )
 				end

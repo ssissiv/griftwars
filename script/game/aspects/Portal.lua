@@ -44,7 +44,7 @@ function Portal:WarpToDest( actor )
 	else
 		Msg:Echo( actor, "The other side seems to be blocked!" )
 		print( actor, "couldn't leave to", dest )
-		DBG( dest:GetTileAt( destx, desty ))
+		DBG( dest:LookupTile( destx, desty ))
 	end
 end
 
