@@ -22,6 +22,14 @@ function Verb:SetUtility( utility )
 	self.utility = clamp( utility, 0, 100 )
 end
 
+function Verb:GetUtility()
+	return self.utility
+end
+
+function Verb.SortByUtility( a, b )
+	return a.utility > b.utility
+end
+
 function Verb:CalculateTimeElapsed( dt )
 	if self.ACT_RATE then
 		if self.ACT_RATE == math.huge then

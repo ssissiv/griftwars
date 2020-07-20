@@ -20,6 +20,10 @@ function ThrowObject:GetActDesc( actor )
 	return loc.format( "Throw {1.desc} for {2} damage", self.proj, self:CalculateDamage( self.obj ))
 end	
 
+function ThrowObject:CalculateUtility( actor )
+	return 20
+end
+
 function ThrowObject:CollectVerbs( verbs, actor, target )
 	if verbs.id == "attacks" and actor:GetHeldObject() then
 		verbs:AddVerb( Verb.ThrowObject():SetProjectile( actor:GetHeldObject() ):SetTarget( target ) )

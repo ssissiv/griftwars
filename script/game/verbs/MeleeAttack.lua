@@ -13,6 +13,7 @@ function MeleeAttack:GetAttackRange()
 	local range = wpn and wpn:GetAttackRange() or 1.5
 	return range
 end
+
 function MeleeAttack:InAttackRange( actor, target )
 	local range = self:GetAttackRange()
 	local x1, y1 = actor:GetCoordinate()
@@ -22,6 +23,14 @@ function MeleeAttack:InAttackRange( actor, target )
 	end
 
 	return true
+end
+
+function MeleeAttack:CalculateUtility( actor )
+	if self:InAttackRange( actor, self.obj ) then
+		return 50
+	end
+
+	return 0
 end
 
 function MeleeAttack:GetDesc( viewer )

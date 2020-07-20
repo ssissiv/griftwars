@@ -37,8 +37,16 @@ function HostileCombat:PickAttack( actor )
 	end
 
 	self.attacks = attacks
-	
-	return self:GetWorld():ArrayPick( attacks )
+
+	for i, verb in ipairs( attacks ) do
+		if verb.CalculateUtility then
+			verb:SetUtility( verb:CalculateUtility( actor ))
+		end
+	end
+
+	table.sort( attacks, Verb.SortByUtility )
+
+	return attacks[1]
 end
 
 function HostileCombat:GetCurrentAttack()

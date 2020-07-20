@@ -97,10 +97,6 @@ function Behaviour:ScheduleNextTick( delta )
 	end
 end
 
-function Behaviour.SortVerbs( a, b )
-	return a.utility > b.utility
-end
-
 function Behaviour:GetHighestPriorityVerb()
 	return self.verbs[1]
 end
@@ -150,7 +146,7 @@ function Behaviour:UpdatePriorities()
 		end
 	end
 
-	table.sort( self.verbs, self.SortVerbs )
+	table.sort( self.verbs, Verb.SortByUtility )
 end
 
 function Behaviour:RenderDebugPanel( ui, panel, dbg )

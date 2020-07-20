@@ -14,7 +14,7 @@ function Walk:GetDesc( viewer )
 end
 
 function Walk:GetActDesc()
-	return loc.format( "{1} {2}", self.running and "Walk" or "Run", self.dir )
+	return loc.format( "{1} {2}", self.running and "Run" or "Walk", self.dir )
 end
 
 function Walk:SetDirection( dir )

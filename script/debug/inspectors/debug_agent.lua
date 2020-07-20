@@ -122,9 +122,15 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		if hcombat and hcombat.attacks then
 			ui.Text( "Attacks:" )
 			ui.Indent( 20 )
+			ui.Columns( 2 )
 			for i, attack in ipairs( hcombat.attacks ) do
-				ui.Text( tostring(attack) )
+				ui.TextColored( 0, 1, 1, 1, tostring(attack:GetUtility()))
+				ui.NextColumn()
+
+				panel:AppendTable( ui, attack )
+				ui.NextColumn()
 			end
+			ui.Columns( 1 )
 			ui.Unindent( 20 )
 		end
 		ui.Text( "Targets:" )
