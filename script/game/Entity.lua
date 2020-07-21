@@ -52,10 +52,20 @@ function Entity:OnSpawn( world )
 			end
 		end
 	end
+
+	if self.OnTickUpdate then
+		assert( self.tick_duration )
+		assert( self.tick_update_ev == nil )
+		self.tick_update_ev = world:SchedulePeriodicFunction( self.tick_duration, self.tick_duration, self.OnTickUpdate, self )
+	end
 end
 
 function Entity:OnDespawn()
 	assert( self.world )
+
+	if self.tick_update_ev then
+		self.world:UnscheduleEvent( self.tick_update_ev )
+	end
 
 	if self.aspects then
 		for i, aspect in ipairs( self.aspects ) do

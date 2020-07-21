@@ -24,4 +24,9 @@ function Fields:OnWorldGenPass( pass )
 			self.name = loc.format( "The {1} Fields", adj )
 		end
 	end
+
+	if pass == 0 then
+		local room = self:RandomRoom()
+		Object.LizardNest():WarpToLocation( room )
+	end
 end
