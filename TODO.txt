@@ -1,6 +1,10 @@
 TODO
 ====
 
+Msg:Echo -> to room
+Msg:Send -> to agent
+	Sets loc.viewer_agent to target so that loc.format() will pass the correct viewer
+
 Marks should not be an Engram.
 
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?

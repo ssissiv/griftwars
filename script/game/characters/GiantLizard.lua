@@ -11,6 +11,7 @@ function GiantLizard:init()
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 1 )
 
 	self:GainAspect( Skill.ScalyHide() )
+	self:GainAspect( Verb.FleeFromCombat() )
 end
 
 function GiantLizard:GetMapChar()

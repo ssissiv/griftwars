@@ -5,7 +5,7 @@ function GameScreen:init( world )
 	
 	if world == nil then
 		local gen = WorldGen()
-		world = gen:GenerateWorld()
+		world = gen:GenerateTinyWorld()
 		world:Start()
 	end
 	self.world = world
@@ -139,7 +139,7 @@ function GameScreen:OnPuppetEvent( event_name, agent, ... )
 			if new_value < old_value then
 				self:AddDamageFloater( old_value - new_value, aspect.owner )
 			else
-				self:AddHealFloater( new_value - old_value )
+				self:AddHealFloater( new_value - old_value, aspect.owner )
 			end
 		end
 

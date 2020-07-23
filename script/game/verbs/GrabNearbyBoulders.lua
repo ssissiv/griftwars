@@ -40,7 +40,8 @@ function GrabNearbyBoulders:CalculateUtility( actor )
 		return 2
 	end
 
-	return actor:GetAspect( Verb.HostileCombat ):CalculateUtility( actor ) + 1
+	-- +1 to take precednce as long as no other attacks are in range.
+	return UTILITY.COMBAT + 1
 end
 
 function GrabNearbyBoulders:Interact( actor )

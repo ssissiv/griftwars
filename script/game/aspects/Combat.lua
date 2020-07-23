@@ -27,7 +27,7 @@ function Combat:OnLoseAspect()
 end
 
 function Combat:CollectVerbs( verbs, actor, target )
-	if verbs.id == "attacks" and self.owner == actor and target ~= actor and is_instance( target, Agent ) and not target:IsDead() then --and self:IsTarget( target ) then
+	if self.owner == actor and target ~= actor and is_instance( target, Agent ) and not target:IsDead() then --and self:IsTarget( target ) then
 		verbs:AddVerb( Verb.MeleeAttack( target ) )
 	end
 end
@@ -48,6 +48,15 @@ end
 
 function Combat:SetCurrentAttack( current_attack )
 	self.current_attack = current_attack
+end
+
+function Combat:GetTargetsByDistance()
+	local function SortByDistance( e1, e2 )
+		return EntityDistance( self.owner, e1 ) < EntityDistance( self.owner, e2 )
+	end
+	local targets = table.shallowcopy( self.targets )
+	table.sort( targets, SortByDistance )
+	return targets
 end
 
 function Combat:OnTargetEvent( event_name, target, ... )

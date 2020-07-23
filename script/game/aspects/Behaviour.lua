@@ -2,6 +2,8 @@
 -- Manages a prioritized list of Verbs
 local Behaviour = class( "Aspect.Behaviour", Aspect )
 
+Behaviour.TABLE_KEY = "behaviour"
+
 Behaviour.event_handlers =
 {
 	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
@@ -130,7 +132,11 @@ function Behaviour:OnTickBehaviour()
 	self.active_verb = active_verb
 	
 	if active_verb and not self.owner:IsDoing( active_verb ) then
-		self.owner:DoVerbAsync( active_verb )
+		local ok, reason = self.owner:DoVerbAsync( active_verb )
+		if not self.owner:IsDoing( active_verb ) then
+			-- Verb was valid, but is either an insta-complete or perhaps something was not right during processing.
+			print( "Not doing", self.owner, active_verb, ok, reason, active_verb:IsCancelled() )
+		end
 	end
 
 	self:ScheduleNextTick()
@@ -163,6 +169,9 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 		ui.SameLine( 0, 10 )
 		local txt = Calendar.FormatDuration( self.tick_ev.when - world:GetDateTime() )
 		ui.TextColored( 0, 1, 1, 1, txt )
+	end
+	if ui.Button( "Schedule Now" ) then
+		self:ScheduleNextTick(0)
 	end
 
 	ui.Columns( 3 )

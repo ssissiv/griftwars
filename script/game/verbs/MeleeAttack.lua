@@ -125,7 +125,7 @@ function MeleeAttack:Interact( actor, target )
 	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
 	target:GetAspect( Aspect.Combat ):EvaluateTargets()
 
-	actor:GetStat( STAT.FATIGUE ):DeltaValue( -self.fatigue_cost )
+	actor:GetStat( STAT.FATIGUE ):DeltaValue( self.fatigue_cost )
 
 	-- Check success.
 	if ok then

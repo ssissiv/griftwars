@@ -57,7 +57,7 @@ function WorldGen:GenerateTinyWorld()
 	world:SpawnLocation( origin )
 
 	for i = 1, 1 do
-		local npc = Agent.HillGiant()
+		local npc = Agent.GiantLizard()
 		npc:WarpToLocation( origin, 8, 13 )
 	end
 	for i = 1, 4 do

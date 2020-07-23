@@ -10,7 +10,9 @@ function HostileCombat:GetDesc( viewer )
 end
 
 function HostileCombat:CalculateUtility( actor )
-	return UTILITY.COMBAT
+	local attacks = self:CollectAttacks( actor )
+	local attack_utility = attacks[1] and attacks[1]:GetUtility() or 0
+	return UTILITY.COMBAT + attack_utility
 end
 
 function HostileCombat:CanInteract( actor )
@@ -23,7 +25,7 @@ function HostileCombat:CanInteract( actor )
 	return true
 end
 
-function HostileCombat:PickAttack( actor )
+function HostileCombat:CollectAttacks( actor )
 	local combat = actor:GetAspect( Aspect.Combat )
 	local attacks = {}
 	for i, target in combat:Targets() do
@@ -31,22 +33,17 @@ function HostileCombat:PickAttack( actor )
 		local verbs = actor:GetPotentialVerbs( "attacks", target )
 		for i, verb in verbs:Verbs() do
 			if verb.InAttackRange then -- TODO: this is dumb, GetPotentialVerbs shouldn't harvest non-attacks
+				if verb.CalculateUtility then
+					verb:SetUtility( verb:CalculateUtility( actor ))
+				end
 				table.insert( attacks, verb )
 			end
 		end
 	end
 
-	self.attacks = attacks
-
-	for i, verb in ipairs( attacks ) do
-		if verb.CalculateUtility then
-			verb:SetUtility( verb:CalculateUtility( actor ))
-		end
-	end
-
 	table.sort( attacks, Verb.SortByUtility )
 
-	return attacks[1]
+	return attacks
 end
 
 function HostileCombat:GetCurrentAttack()
@@ -60,7 +57,9 @@ function HostileCombat:Interact( actor )
 		return
 	end
 
-	local attack = self:PickAttack( actor )
+
+	self.attacks = self:CollectAttacks( actor )
+	local attack = self.attacks[1]
 	if attack then
 		local target = attack:GetTarget()
 		assert( target, tostring(attack) )

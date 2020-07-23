@@ -245,6 +245,15 @@ function math.unit( x )
     end
 end
 
+function math.round( x )
+    local xf = math.floor( x )
+    if x - xf >= 0.5 then
+        return xf + 1
+    else
+        return xf
+    end
+end
+
 -- Choose a random number in a gaussian distribution.
 -- Based on the polar form of the Box-Muller transformation.
 function math.randomGauss( mean, stddev, min_clamp, max_clamp, rnd )
@@ -511,6 +520,35 @@ function OffsetToDir( x1, y1, x2, y2 )
         return DIR.W
     elseif x1 - 1 == x2 and y1 + 1 == y2 then
         return DIR.NW
+    end
+end
+
+function VectorToDir( dx, dy )
+    local angle = math.atan2( dx, dy )
+    if angle > 0 then
+        if angle < math.pi/8 then
+            return DIR.N
+        elseif angle < 3*math.pi/8 then
+            return DIR.NE
+        elseif angle < 5*math.pi/8 then
+            return DIR.E
+        elseif angle < 7*math.pi/8 then
+            return DIR.SE
+        else
+            return DIR.S
+        end
+    else
+        if angle > -math.pi/8 then
+            return DIR.N
+        elseif angle > -3*math.pi/8 then
+            return DIR.NW
+        elseif angle > -5*math.pi/8 then
+            return DIR.W
+        elseif angle > -7*math.pi/8 then
+            return DIR.SW
+        else
+            return DIR.S
+        end
     end
 end
 

@@ -1,10 +1,11 @@
 local StatValue = class( "Aspect.StatValue", Aspect )
 
-function StatValue:init( stat, value, max_value )
+function StatValue:init( stat, value, max_value, min_value )
 	assert( value )
 	self.stat = stat
 	self.value = value
 	self.max_value = max_value
+	self.min_value = min_value
 end
 
 function StatValue:GetID()
@@ -69,8 +70,13 @@ function StatValue:SetValue( value, max_value )
 	else
 		new_value = value
 	end
+	if self.min_value then
+		new_value = math.max( self.min_value, new_value )
+	end
 
 	if new_value ~= self.value then
+		assert( new_value ~= nil )
+
 		local old_value = self.value
 		self.value = new_value
 		if IsEnum( self.stat, CORE_STAT ) then
