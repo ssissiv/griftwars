@@ -1,8 +1,8 @@
 TODO
 ====
 
-Msg:Echo -> to room
-Msg:Send -> to agent
+Msg:EchoTo -> to room
+Msg:EchoTo -> to agent
 	Sets loc.viewer_agent to target so that loc.format() will pass the correct viewer
 
 Marks should not be an Engram.

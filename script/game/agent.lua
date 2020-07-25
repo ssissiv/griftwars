@@ -137,8 +137,8 @@ end
 function Agent:SetLeader( leader )
 	assert( leader == nil or is_instance( leader, Agent ))
 	if self.leader then
-		Msg:Echo( self, "You stop following {1.desc}.", leader:LocTable( self ))
-		Msg:Echo( self.leader, "{1.desc} stops following you.", self:LocTable( self.leader ))
+		Msg:EchoTo( self, "You stop following {1.desc}.", leader:LocTable( self ))
+		Msg:EchoTo( self.leader, "{1.desc} stops following you.", self:LocTable( self.leader ))
 
 		self:LoseAspect( self:GetAspect( Trait.Follower ))
 		self.leader:GetAspect( Trait.Leader ):RemoveFollower( self )
@@ -146,8 +146,8 @@ function Agent:SetLeader( leader )
 	end
 
 	if leader then
-		Msg:Echo( self, "You start following {1.desc}.", leader:LocTable( self ))
-		Msg:Echo( leader, "{1.desc} starts following you.", self:LocTable( leader ))
+		Msg:EchoTo( self, "You start following {1.desc}.", leader:LocTable( self ))
+		Msg:EchoTo( leader, "{1.desc} starts following you.", self:LocTable( leader ))
 
 		self.leader = leader
 		self:GainAspect( Trait.Follower( leader ) )
@@ -516,7 +516,7 @@ function Agent:GetTile()
 end
 
 function Agent:TeleportToLocation( location, x, y )
-	Msg:Echo( self, "You teleport to {1}", location:GetTitle() )
+	Msg:EchoTo( self, "You teleport to {1}", location:GetTitle() )
 	self:WarpToLocation( location, x, y )
 end
 
@@ -668,7 +668,7 @@ function Agent:AttemptVerb( verb, obj )
 	if verb then
 		local ok, reason = self:DoVerbAsync( verb )
 		if not ok and reason then
-			Msg:Echo( self, reason )
+			Msg:EchoTo( self, reason )
 		end
 	end
 end
@@ -779,7 +779,7 @@ function Agent:DeltaStat( stat, delta )
 	local aspect = self.stats[ stat ]
 	if aspect then
 		aspect:DeltaValue( delta )
-		-- Msg:Echo( self, "You gain {1} {2}!", delta, stat )
+		-- Msg:EchoTo( self, "You gain {1} {2}!", delta, stat )
 	end
 end
 
@@ -828,8 +828,8 @@ function Agent:Kill()
 	print( self, "died!" )
 	self.killed_trace = debug.traceback()
 
-	Msg:ActToRoom( "{1.Id} dies!", self )
-	Msg:Echo( self, "You die!" )
+	Msg:EchoAround( self, "{1.Id} dies!", self )
+	Msg:EchoTo( self, "You die!" )
 
 	self:GainAspect( Aspect.Killed() )
 	self:LoseAspect( self:GetAspect( Aspect.Impass ))
@@ -985,9 +985,9 @@ function Agent:DeltaTrust( trust, other )
 	if affinity then
 		affinity:DeltaTrust( trust )
 		if trust > 0 then
-			Msg:Echo( other, "{1.Id}'s trust with you increases! ({2%+d})", self:LocTable( other ), trust )
+			Msg:EchoTo( other, "{1.Id}'s trust with you increases! ({2%+d})", self:LocTable( other ), trust )
 		elseif trust < 0 then
-			Msg:Echo( other, "{1.Id}'s trust with you decreases! ({2%+d})", self:LocTable( other ), trust )
+			Msg:EchoTo( other, "{1.Id}'s trust with you decreases! ({2%+d})", self:LocTable( other ), trust )
 		end
 	end
 end
@@ -1005,7 +1005,7 @@ end
 function Agent:RewardXP( xp, reason )
 	if self.stats[ STAT.XP ] then
 		self:DeltaStat( STAT.XP, xp )
-		Msg:Echo( self, "You gain {1} xp! ({2})", xp, reason )
+		Msg:EchoTo( self, "You gain {1} xp! ({2})", xp, reason )
 	end
 end
 

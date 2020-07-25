@@ -31,7 +31,7 @@ function Portal:WarpToDest( actor )
 	-- Warp to dest Location.
 	local dest, destx, desty = self:GetDest()
 	
-	Msg:ActToRoom( "{1.Id} leaves to {2.title}.", actor, dest )
+	Msg:EchoAround( actor, "{1.Id} leaves to {2.title}.", actor, dest )
 
 	actor:DeltaStat( STAT.FATIGUE, 5 )
 
@@ -39,10 +39,10 @@ function Portal:WarpToDest( actor )
 	if entry_tile then
 		actor:WarpToLocation( dest, entry_tile:GetCoordinate() )
 
-		Msg:Echo( actor, "You enter {1}.", dest:GetTitle() )
-		Msg:ActToRoom( "{1.Id} enters.", actor )
+		Msg:EchoTo( actor, "You enter {1}.", dest:GetTitle() )
+		Msg:EchoAround( actor, "{1.Id} enters.", actor )
 	else
-		Msg:Echo( actor, "The other side seems to be blocked!" )
+		Msg:EchoTo( actor, "The other side seems to be blocked!" )
 		print( actor, "couldn't leave to", dest )
 		DBG( dest:LookupTile( destx, desty ))
 	end

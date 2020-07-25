@@ -1036,7 +1036,7 @@ function GameScreen:KeyPressed( key )
 				if portal and portal:GetDest() then
 					local ok, reason = self.puppet:DoVerbAsync( Verb.UsePortal( portal ), portal )
 					if not ok then
-						Msg:Echo( self.puppet, reason )
+						Msg:EchoTo( self.puppet, reason )
 					end
 					break
 				end

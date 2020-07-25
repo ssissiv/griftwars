@@ -61,7 +61,7 @@ function Befriend:Interact( actor, target )
 	-- self:YieldForTime( 10 * ONE_MINUTE, "wall", 1.0 )
 
 	if self:IsCancelled() then
-		Msg:Echo( actor, "So much for making friends." )
+		Msg:EchoTo( actor, "So much for making friends." )
 		return
 	end
 
@@ -69,14 +69,14 @@ function Befriend:Interact( actor, target )
 	if ok then
 		local trust = math.max( 1, math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA )))
 
-		Msg:Echo( actor, "You befriend {1.Id}. ({2})", target:LocTable( actor ), result_str )
+		Msg:EchoTo( actor, "You befriend {1.Id}. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( trust )
 		actor:GainXP( trust )
 	elseif self.obj:GetMemory():FindEngram( Engram.Befriended.Find, self.actor ) then
-		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems rather annoyed. ({2})", target:LocTable( actor ), result_str )
+		Msg:EchoTo( actor, "You try to befriend {1.Id}, but {1.heshe} seems rather annoyed. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( -1 )
 	else
-		Msg:Echo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent. ({2})", target:LocTable( actor ), result_str )
+		Msg:EchoTo( actor, "You try to befriend {1.Id}, but {1.heshe} seems indifferent. ({2})", target:LocTable( actor ), result_str )
 	end
 
 	target:AddEngram( Engram.Befriended( actor ))

@@ -197,7 +197,7 @@ function Befriend:Interact( actor )
 			self:OnSuccess( actor, challenge )
 		end
 	else
-		Msg:Echo( actor, "{1.Id} seems indifferent.", self.owner:LocTable( actor ))
+		Msg:EchoTo( actor, "{1.Id} seems indifferent.", self.owner:LocTable( actor ))
 	end
 end
 
@@ -252,10 +252,10 @@ function RevealObject:Interact( actor )
 	local candidates = location:SearchObject( function( obj ) return is_instance( obj, self.class_name ) end, self.range )
 	local obj = table.arraypick( candidates )
 	if obj then
-		Msg:Echo( actor, "{1.Id} reveals the location of {2.Id}.", self.owner:LocTable( actor ), obj:LocTable( actor ) )
+		Msg:EchoTo( actor, "{1.Id} reveals the location of {2.Id}.", self.owner:LocTable( actor ), obj:LocTable( actor ) )
 		actor:GetMemory():AddEngram( Engram.DiscoverLocation( obj ))
 	else
-		Msg:Echo( actor, "{1.Id} reveals nothing of interest.", self.owner:LocTable( actor ) )
+		Msg:EchoTo( actor, "{1.Id} reveals nothing of interest.", self.owner:LocTable( actor ) )
 	end
 end
 
@@ -310,8 +310,8 @@ end
 function TrainSkill:Interact( actor )
 	self:SatisfyReqs( actor )
 
-	Msg:Echo( actor, "{1.Id} teaches you the {2} skill!", self.owner:LocTable( actor ), self.skill:GetName() )
-	Msg:ActToRoom( "{I.Id{} learns the {2} skill!", actor )
+	Msg:EchoTo( actor, "{1.Desc} teaches you the {2} skill!", self.owner:LocTable( actor ), self.skill:GetName() )
+	Msg:EchoAround( actor, "{I.Desc} learns the {2} skill!", actor, self.skill:GetName() )
 
 	actor:GainAspect( self.skill:Clone() )
 
@@ -359,8 +359,8 @@ function OfferJob:Interact( actor )
 	if self:GetWorld().nexus:ConfirmChoice( title, body ) then
 		self:SatisfyReqs( actor )
 	
-		Msg:Echo( actor, "{1.Id} gives you a new job: {2}", self.owner:LocTable( actor ), self.job:GetName() )
-		Msg:ActToRoom( "{I.Id} gives {2} a new job.", self.owner, actor )
+		Msg:EchoTo( actor, "{1.Id} gives you a new job: {2}", self.owner:LocTable( actor ), self.job:GetName() )
+		Msg:EchoAround( actor, "{I.Id} gives {2} a new job.", self.owner, actor )
 
 		actor:GainAspect( self.job )
 	end

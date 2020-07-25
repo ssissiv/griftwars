@@ -29,8 +29,8 @@ function ShortRest:CanInteract( actor )
 end
 
 function ShortRest:Interact( actor )
-	Msg:ActToRoom( "{1.Id} sits down and rests.", actor )
-	Msg:Echo( actor, "You sit down and take a load off." )
+	Msg:EchoAround( actor, "{1.Id} sits down and rests.", actor )
+	Msg:EchoTo( actor, "You sit down and take a load off." )
 	
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -40 )
 
@@ -38,6 +38,6 @@ function ShortRest:Interact( actor )
 
 	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 40 )
 
-	Msg:Echo( actor, "You stop resting." )
-	Msg:ActToRoom( "{1.Id} stops resting.", actor )
+	Msg:EchoTo( actor, "You stop resting." )
+	Msg:EchoAround( actor, "{1.Id} stops resting.", actor )
 end

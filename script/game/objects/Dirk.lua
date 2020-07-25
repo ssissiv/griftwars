@@ -25,7 +25,7 @@ JaggedDirk.equipment_handlers =
 		if success and not target:IsDead() then
 			local stacks = math.random( 0, 3 )
 			if stacks > 0 then
-				Msg:Echo( actor, "Your dirk opens a gash in your victim!" )
+				Msg:EchoTo( actor, "Your dirk opens a gash in your victim!" )
 				target:GainStatusEffect( StatusEffect.Bleed, stacks )
 			end
 		end

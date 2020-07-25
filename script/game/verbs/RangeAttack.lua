@@ -115,13 +115,13 @@ function RangeAttack:Interact( actor, target )
 
 		-- Whats the right way to organize this garbage?
 		if is_instance( self, Verb.ThrowObject ) then
-			Msg:ActToRoom( "{1.Id} throws {4.desc} at {2.Id} for {3} damage!", actor, target, damage, self.proj )
-			Msg:Echo( actor, loc.format( "You throw {4.desc} at {1.Id} for {2} damage! ({3})", target, damage, result_str, self.proj ))
-			Msg:Echo( target, loc.format( "{1.Id} throws {3.desc} at you! ({2} damage)", actor:LocTable( target ), damage, self.proj ))
+			Msg:EchoAround2( actor, target, "{1.Id} throws {4.desc} at {2.Id} for {3} damage!", actor, target, damage, self.proj )
+			Msg:EchoTo( actor, loc.format( "You throw {4.desc} at {1.Id} for {2} damage! ({3})", target, damage, result_str, self.proj ))
+			Msg:EchoTo( target, loc.format( "{1.Id} throws {3.desc} at you! ({2} damage)", actor:LocTable( target ), damage, self.proj ))
 		else
-			Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
-			Msg:Echo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))
-			Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
+			Msg:EchoAround2( actor, target, "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
+			Msg:EchoTo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))
+			Msg:EchoTo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
 		end
 
 		target:DeltaHealth( -damage )
@@ -132,8 +132,8 @@ function RangeAttack:Interact( actor, target )
 
 	else
 		self.total_damage = nil
-		Msg:Echo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
-		Msg:Echo( target, loc.format( "{1.Id} misses you.", actor:LocTable( target )))
+		Msg:EchoTo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
+		Msg:EchoTo( target, loc.format( "{1.Id} misses you.", actor:LocTable( target )))
 	end
 
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )

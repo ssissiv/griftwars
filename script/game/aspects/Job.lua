@@ -122,12 +122,12 @@ function Job:PaySalary( salary )
 		owner:GetInventory():DeltaMoney( salary )
 
 		if owner == self.employer then
-			Msg:Echo( owner, "You generated {3#money} as profit!", salary )
+			Msg:EchoTo( owner, "You generated {3#money} as profit!", salary )
 		else
-			Msg:Echo( owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
+			Msg:EchoTo( owner, "You get an e-transfer from {1.Id} for your job as {2}: {3#money}",
 				self.employer:LocTable( owner ), self:GetName(), salary )
 		end
-		Msg:ActToRoom( "{1.Id} counts {1.hisher} earnings for the day.", owner )
+		Msg:EchoAround( owner, "{1.Id} counts {1.hisher} earnings for the day." )
 	end
 end
 

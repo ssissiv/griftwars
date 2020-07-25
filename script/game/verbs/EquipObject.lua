@@ -20,10 +20,10 @@ end
 function EquipObject:Interact( actor, obj )	
 	local wearable = obj:GetAspect( Aspect.Wearable )
 	if wearable:IsEquipped() then
-		Msg:Echo( actor, "You unequip {1}.", obj )
+		Msg:EchoTo( actor, "You unequip {1}.", obj )
 		wearable:Unequip()
 	else
-		Msg:Echo( actor, "You equip {1}.", obj )
+		Msg:EchoTo( actor, "You equip {1}.", obj )
 		wearable:Equip()
 	end
 end

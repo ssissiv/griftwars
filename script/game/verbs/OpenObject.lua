@@ -19,7 +19,7 @@ function OpenObject:CanInteract( actor, target )
 end
 
 function OpenObject:Interact( actor, target )
-	Msg:Echo( actor, "You open the {1.Id}.", target:LocTable( actor ))
+	Msg:EchoTo( actor, "You open the {1.Id}.", target:LocTable( actor ))
 	target:Open()
 end
 

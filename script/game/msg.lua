@@ -36,15 +36,39 @@ end
 
 Msg.Action = Msg.Act
 
-function Msg:ActToRoom( msg, actor, target, ... )
+function Msg:EchoAround( actor, msg, ... )
 	-- This message goes to everybody else
 	local location = actor:GetLocation()
 	if not location then
 		return
 	end
+	local txt = loc.format( msg, ... )
 	for i, obj in location:Contents() do
-		if obj.Sense and obj ~= actor and obj ~= target then
-			local txt = loc.format( msg, self:LocTable( actor ), target and self:LocTable( target ), ... )
+		if obj.Sense and obj ~= actor then
+			obj:Sense( txt )
+		end
+	end
+end
+
+function Msg:EchoAround2( actor, other, msg, ... )
+	-- This message goes to everybody else
+	local location = actor:GetLocation()
+	if not location then
+		return
+	end
+	local txt = loc.format( msg, ... )
+	for i, obj in location:Contents() do
+		if obj.Sense and obj ~= actor and obj ~= other then
+			obj:Sense( txt )
+		end
+	end
+end
+
+function Msg:Echo( location, msg, ... )
+	-- This message goes to everybody
+	local txt = loc.format( msg, ... )
+	for i, obj in location:Contents() do
+		if obj.Sense then
 			obj:Sense( txt )
 		end
 	end
@@ -109,7 +133,8 @@ function Msg:SpeakTo( actor, target, msg, ... )
 		end
 	end
 end
-function Msg:Echo( actor, format, ... )
+
+function Msg:EchoTo( actor, format, ... )
 	if actor.Echo then
 		local txt = loc.format( format, ... )
 		actor:Echo( txt )

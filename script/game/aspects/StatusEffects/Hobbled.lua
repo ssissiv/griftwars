@@ -15,9 +15,9 @@ function Hobbled:TickStatusEffect()
 end
 
 function Hobbled:OnGainStatusEffect()
-	Msg:Echo( self.owner, "Your movement is crippled." )
+	Msg:EchoTo( self.owner, "Your movement is crippled." )
 end
 
 function Hobbled:OnExpireStatusEffect()
-	Msg:Echo( self.owner, "You can move normally again." )
+	Msg:EchoTo( self.owner, "You can move normally again." )
 end

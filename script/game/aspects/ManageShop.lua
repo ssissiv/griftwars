@@ -103,8 +103,8 @@ function ManageShop:SellToBuyer( item, buyer )
 	local clone = item:Clone()
 	buyer:GetInventory():AddItem( clone )
 
-	Msg:Echo( buyer, "You bought a {1} from {2}.", item:GetName(), self.owner )
-	Msg:Echo( self.owner, "You sell a {1} to {2}.", item, buyer )
+	Msg:EchoTo( buyer, "You bought a {1} from {2}.", item:GetName(), self.owner )
+	Msg:EchoTo( self.owner, "You sell a {1} to {2}.", item, buyer )
 end
 
 function ManageShop:GetBuyCost( item, buyer )
@@ -113,7 +113,7 @@ end
 
 function ManageShop:BuyFromSeller( item, seller )
 	seller:GetInventory():TransferItem( item, self.owner:GetInventory() )
-	Msg:Echo( self.owner, "You bought a {1} from {2}.", item:GetName(), seller )
-	Msg:Echo( seller, "You sell a {1} to {2}.", item, self.owner )
+	Msg:EchoTo( self.owner, "You bought a {1} from {2}.", item:GetName(), seller )
+	Msg:EchoTo( seller, "You sell a {1} to {2}.", item, self.owner )
 end
 

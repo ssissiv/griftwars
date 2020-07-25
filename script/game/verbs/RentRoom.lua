@@ -41,8 +41,8 @@ function RentRoom:Interact( actor, target )
 		door:Unlock()
 		
 		actor:GetInventory():TransferMoney( self.cost, target )
-		Msg:Echo( actor, "You rent a room from {1.Id}.", target:LocTable( actor ))
-		Msg:Echo( actor, "You hand over {1#money}.", self.cost )
+		Msg:EchoTo( actor, "You rent a room from {1.Id}.", target:LocTable( actor ))
+		Msg:EchoTo( actor, "You hand over {1#money}.", self.cost )
 	end
 end
 

@@ -123,7 +123,7 @@ function GainXP:OnSpawn( world )
 end
 
 function GainXP:OnUseFavour( agent )
-	Msg:Echo( agent, "{1.Id} shows you the ropes.", self.owner:LocTable( agent ))
+	Msg:EchoTo( agent, "{1.Id} shows you the ropes.", self.owner:LocTable( agent ))
 	agent:GainXP( self.xp )
 	self.owner:LoseAspect( self )
 end
@@ -155,7 +155,7 @@ function BoostTrustWithClass:OnUseFavour( agent )
 	if not agent:IsAcquainted( other ) then
 		agent:Acquaint( other )
 	end
-	Msg:Echo( agent, "You gain {1} trust with {2.desc}.", self.trust, other:LocTable( agent ))
+	Msg:EchoTo( agent, "You gain {1} trust with {2.desc}.", self.trust, other:LocTable( agent ))
 end
 
 
@@ -199,7 +199,7 @@ function LearnIntel:OnUseFavour( agent )
 	local intels = agent.world:CollectIntel()
 	-- Gain Engram.
 	local engram = table.arraypick( intels )
-	Msg:Echo( agent, "Learned: {1}", engram:GetDesc() )
+	Msg:EchoTo( agent, "Learned: {1}", engram:GetDesc() )
 	agent:GetMemory():AddEngram( engram )
 end
 

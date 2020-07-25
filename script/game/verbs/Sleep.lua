@@ -47,11 +47,11 @@ function Sleep:CanInteract( actor )
 end
 
 function Sleep:Interact( actor )
-	Msg:ActToRoom( "{1.Id} goes to sleep.", actor )
+	Msg:EchoAround( actor, "{1.Id} goes to sleep.", actor )
 	if self.obj then
-		Msg:Echo( actor, "You go to sleep on {1}.", self.obj )
+		Msg:EchoTo( actor, "You go to sleep on {1}.", self.obj )
 	else
-		Msg:Echo( actor, "You go to sleep." )
+		Msg:EchoTo( actor, "You go to sleep." )
 	end
 	
 	actor:SetMentalState( MSTATE.SLEEPING )
@@ -75,6 +75,6 @@ function Sleep:Interact( actor )
 		end
 	end
 
-	Msg:Echo( actor, "You awaken." )
-	Msg:ActToRoom( "{1.Id} wakes up.", actor )
+	Msg:EchoTo( actor, "You awaken." )
+	Msg:EchoAround( actor, "{1.Id} wakes up.", actor )
 end

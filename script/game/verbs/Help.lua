@@ -29,7 +29,7 @@ function Help:CanInteract( actor )
 end
 
 function Help:Interact( actor )
-	Msg:Echo( actor, "You begin to help {1.Id} out.", self.obj.actor:LocTable( actor ) )
+	Msg:EchoTo( actor, "You begin to help {1.Id} out.", self.obj.actor:LocTable( actor ) )
 
 	self.obj:AddHelperVerb( self )
 
@@ -39,7 +39,7 @@ function Help:Interact( actor )
 		self:YieldForTime( 1 * ONE_MINUTE, "rate", 2.0 )
 
 		if self:IsCancelled() then
-			Msg:Echo( actor, "You stop helping." )
+			Msg:EchoTo( actor, "You stop helping." )
 			break
 		end
 	end

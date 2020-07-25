@@ -14,7 +14,7 @@ function CloseObject:CanInteract( actor, target )
 end
 
 function CloseObject:Interact( actor, target )
-	Msg:Echo( actor, "You close the {1.Id}.", target:LocTable( actor ))
+	Msg:EchoTo( actor, "You close the {1.Id}.", target:LocTable( actor ))
 	target:Close()
 end
 

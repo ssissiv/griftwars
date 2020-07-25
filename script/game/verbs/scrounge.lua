@@ -96,8 +96,8 @@ function Scrounge:Interact( actor, target )
 	self:SetTarget( target or self:FindTarget( actor ))
 	target = self.obj
 
-	Msg:ActToRoom( "{1.Id} begins rummaging around in {2.Id}.", actor, target )
-	Msg:Echo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
+	Msg:EchoAround( actor, "{1.Id} begins rummaging around in {2.Id}.", actor, target )
+	Msg:EchoTo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
 
 	-- while true do
 		self:YieldForTime( 30 * ONE_MINUTE, "rate", 8.0 )
@@ -118,15 +118,15 @@ function Scrounge:Interact( actor, target )
 
 		if not inv:IsEmpty() then
 			if ok then
-				Msg:Echo( finder, "You scrounge and find something... ({1})", result_str )
+				Msg:EchoTo( finder, "You scrounge and find something... ({1})", result_str )
 			else
-				Msg:Echo( finder, "You don't find anything new. ({1})", result_str )
+				Msg:EchoTo( finder, "You don't find anything new. ({1})", result_str )
 			end
 			actor.world.nexus:LootInventory( actor, inv )
-			Msg:ActToRoom( "{1.Id} scrounges about and finds something.", finder )
+			Msg:EchoAround( finder, "{1.Id} scrounges about and finds something.", finder )
 		else
-			Msg:Echo( finder, "You fail to find anything of use. ({1})", result_str )
-			Msg:ActToRoom( "{1.Id} mutters something unhappily.", finder )
+			Msg:EchoTo( finder, "You fail to find anything of use. ({1})", result_str )
+			Msg:EchoAround( finder, "{1.Id} mutters something unhappily.", finder )
 		end
 
 		actor:GainXP( 1 )

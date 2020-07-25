@@ -56,9 +56,9 @@ function MeleeAttack:OnCancel()
 	end
 
 	-- TODO: should only be certain reasons really, like out of range.
-	Msg:Echo( self.actor, "You mutter as your attack is foiled." )
+	Msg:EchoTo( self.actor, "You mutter as your attack is foiled." )
 	if self.obj then
-		Msg:Echo( self.obj, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.obj ))
+		Msg:EchoTo( self.obj, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.obj ))
 	end
 end
 
@@ -131,9 +131,9 @@ function MeleeAttack:Interact( actor, target )
 	if ok then
 		self.total_damage = damage
 
-		Msg:ActToRoom( "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
-		Msg:Echo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))
-		Msg:Echo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
+		Msg:EchoAround2( actor, target, "{1.Id} attacks {2.Id} for {3} damage!", actor, target, damage )
+		Msg:EchoTo( actor, loc.format( "You attack {1.Id} for {2} damage! ({3})", target:LocTable( actor ), damage, result_str ))
+		Msg:EchoTo( target, loc.format( "{1.Id} attacks you! ({2} damage)", actor:LocTable( target ), damage ))
 
 		target:DeltaHealth( -damage )
 
@@ -143,8 +143,8 @@ function MeleeAttack:Interact( actor, target )
 
 	else
 		self.total_damage = nil
-		Msg:Echo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
-		Msg:Echo( target, loc.format( "{1.Id} misses you.", actor:LocTable( target )))
+		Msg:EchoTo( actor, loc.format( "You miss {1.Id}. ({2})", target:LocTable( actor ), result_str ))
+		Msg:EchoTo( target, loc.format( "{1.Id} misses you.", actor:LocTable( target )))
 	end
 
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )

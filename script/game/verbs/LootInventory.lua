@@ -27,7 +27,7 @@ function LootInventory:Interact( actor, inventory )
 	inventory = inventory or self.obj
 
 	if inventory:IsEmpty() then
-		Msg:Echo( actor, "Nothing found!" )
+		Msg:EchoTo( actor, "Nothing found!" )
 	else
 		actor.world.nexus:LootInventory( actor, inventory )
 	end

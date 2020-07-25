@@ -16,7 +16,7 @@ RendingClaws.event_handlers =
 		if success and not target:IsDead() then
 			local stacks = math.random( 0, 3 )
 			if stacks > 0 then
-				Msg:Echo( actor, "Your claws gash your victim!" )
+				Msg:EchoTo( actor, "Your claws gash your victim!" )
 				target:GainStatusEffect( StatusEffect.Bleed, stacks )
 			end
 		end

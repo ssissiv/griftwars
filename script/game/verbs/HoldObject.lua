@@ -16,10 +16,10 @@ function HoldObject:Interact( actor, obj )
 		wearable = obj:GainAspect( Aspect.Wearable( EQ_SLOT.HELD ))
 	end
 	if wearable:IsEquipped() then
-		Msg:Echo( actor, "You release {1}.", obj )
+		Msg:EchoTo( actor, "You release {1}.", obj )
 		wearable:Unequip()
 	else
-		Msg:Echo( actor, "You hold {1}.", obj )
+		Msg:EchoTo( actor, "You hold {1}.", obj )
 		wearable:Equip()
 	end
 end

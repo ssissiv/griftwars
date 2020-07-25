@@ -28,8 +28,8 @@ end
 
 function LootObject:Interact( actor, obj )
 
-	Msg:Echo( actor, "You pick up {1}.", obj:GetName( actor ))
-	Msg:ActToRoom( "{1.desc} picks up {2.desc}.", actor, obj )
+	Msg:EchoTo( actor, "You pick up {1}.", obj:GetName( actor ))
+	Msg:EchoAround( actor, "{1.desc} picks up {2.desc}.", actor, obj )
 
 	if obj:GetCarrier() == nil then
 		obj:WarpToNowhere()
@@ -58,7 +58,7 @@ function LootAll:Interact( actor, inventory )
 	for i, obj in ipairs( items ) do
 		local wearable = obj:GetAspect( Aspect.Wearable )
 		if wearable and wearable:IsEquipped() then
-			Msg:Echo( actor, "You remove {1} from {2.desc}.", obj:GetName(), inventory.owner:LocTable( actor ))
+			Msg:EchoTo( actor, "You remove {1} from {2.desc}.", obj:GetName(), inventory.owner:LocTable( actor ))
 			wearable:Unequip()
 		end
 		self:DoChildVerb( self.loot, obj )

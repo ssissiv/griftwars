@@ -16,7 +16,7 @@ end
 
 function Eat:Interact( actor, obj )	
 	local edible = obj:GetAspect( Aspect.Edible )
-	Msg:Echo( actor, "You eat {1}. You restore {2} fatigue.", obj, edible:GetEnergyGain() )
+	Msg:EchoTo( actor, "You eat {1}. You restore {2} fatigue.", obj, edible:GetEnergyGain() )
 	actor:GetStat( STAT.FATIGUE ):DeltaValue( -edible:GetEnergyGain() )
 	actor.world:DespawnEntity( obj )
 end

@@ -80,7 +80,7 @@ function StatValue:SetValue( value, max_value )
 		local old_value = self.value
 		self.value = new_value
 		if IsEnum( self.stat, CORE_STAT ) then
-			Msg:Echo( self.owner, "Your {1} is now {2}!", self.stat, self.value )
+			Msg:EchoTo( self.owner, "Your {1} is now {2}!", self.stat, self.value )
 		end
 
 		if self.owner then
