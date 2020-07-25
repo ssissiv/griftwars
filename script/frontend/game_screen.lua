@@ -315,7 +315,7 @@ function GameScreen:RenderScreen( gui )
     	if i > 1 then
     		ui.SameLine( 0, 10 )
     	end
-    	if ui.Button( tostring(bitname) ) then
+    	if ui.Button( INTENT_NAME[ bitname ] ) then
     		aspect:SetIntent( ToggleBits( bits, INTENT[ bitname ] ))
     	end
 
@@ -994,6 +994,24 @@ function GameScreen:KeyPressed( key )
 			self:RemoveWindow( window )
 		else
 			self:AddWindow( MemoryWindow( self.puppet ))
+		end
+
+	elseif key == "h" then
+		if self.puppet then
+			local aspect = self.puppet:GetAspect( Aspect.Puppet )
+			aspect:ToggleIntent( INTENT.HOSTILE )
+		end
+
+	elseif key == "l" then
+		if self.puppet then
+			local aspect = self.puppet:GetAspect( Aspect.Puppet )
+			aspect:ToggleIntent( INTENT.STEALTH )
+		end
+
+	elseif key == "d" then
+		if self.puppet then
+			local aspect = self.puppet:GetAspect( Aspect.Puppet )
+			aspect:ToggleIntent( INTENT.DIPLOMACY )
 		end
 
 	elseif key == "m" then

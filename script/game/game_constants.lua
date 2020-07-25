@@ -80,6 +80,13 @@ INTENT, INTENT_ARRAY = MakeBitField
 	"DIPLOMACY",
 }
 
+INTENT_NAME =
+{
+	HOSTILE = "[H]ostile",
+	STEALTH = "Stea[l]th",
+	DIPLOMACY = "[D]iplomacy",
+}
+
 -- Entity flags
 EF = MakeEnum
 {

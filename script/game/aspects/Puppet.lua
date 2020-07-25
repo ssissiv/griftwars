@@ -39,6 +39,10 @@ function Puppet:SetIntent( intent )
 	end
 end
 
+function Puppet:ToggleIntent( intent )
+	self:SetIntent( ToggleBits( self.intent, intent ))
+end
+
 function Puppet:CollectVerbs( verbs, actor, obj )
 	if self.owner == actor and obj == actor then
 		verbs:AddVerb( Verb.Wait())
