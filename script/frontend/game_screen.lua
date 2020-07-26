@@ -5,7 +5,7 @@ function GameScreen:init( world )
 	
 	if world == nil then
 		local gen = WorldGen()
-		world = gen:GenerateTinyWorld()
+		world = gen:GenerateWorld()
 		world:Start()
 	end
 	self.world = world
@@ -941,9 +941,7 @@ function GameScreen:MousePressed( mx, my, btn )
 		elseif self.puppet and not self.puppet:IsDead() then
 			if self.hovered_tile and self.hovered_tile:IsPassable( self.puppet ) then
 				local verb = Verb.Travel( Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() ))
-				if verb:CanDo( self.puppet ) then
-					self.puppet:DoVerbAsync( verb )
-				end
+				self.puppet:AttemptVerb( verb )
 			else
 				self:CycleFocus( self.hovered_tile )
 			end
@@ -1012,7 +1010,7 @@ function GameScreen:KeyPressed( key )
 			aspect:ToggleIntent( INTENT.STEALTH )
 		end
 
-	elseif key == "d" then
+	elseif key == "y" then
 		if self.puppet then
 			local aspect = self.puppet:GetAspect( Aspect.Puppet )
 			aspect:ToggleIntent( INTENT.DIPLOMACY )
