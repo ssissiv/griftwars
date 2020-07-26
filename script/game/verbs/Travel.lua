@@ -38,7 +38,7 @@ function Travel:CanInteract( actor )
 	-- if actor:InCombat() then
 	-- 	return false, "In combat"
 	-- end
-	return true
+	return Verb.CanInteract( self, actor )
 end
 
 function Travel:FindDirToPath( actor, path )

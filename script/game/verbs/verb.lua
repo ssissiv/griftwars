@@ -182,6 +182,7 @@ function Verb:CheckDC( actor, target )
 	return success, result_str
 end
 
+-- CanInitiate
 function Verb:CanDo( actor, ... )
 	if self.coro then
 		return false, "Already executing"
@@ -212,9 +213,13 @@ function Verb:CanDo( actor, ... )
 	return true
 end
 
+-- CanInitiateOrContinue
 function Verb:CanInteract( actor, target )
 	if not actor:IsSpawned() or actor:IsDead() then
 		return false, "Despawned or dead actor"
+	end
+	if actor.world:IsPaused() and not actor.world:IsPaused( PAUSE_TYPE.IDLE ) then
+		return false, "Paused"
 	end
 
 	target = target or self.obj
