@@ -860,6 +860,10 @@ function GameScreen:CanFocus( obj )
 	return true
 end
 
+function GameScreen:GetCurrentFocus()
+	return self.current_focus
+end
+
 function GameScreen:SetCurrentFocus( focus )
 	if focus and not self:CanFocus( focus ) then
 		focus = nil

@@ -60,7 +60,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
 end
 
 function VerbMenu:KeyPressed( key, screen )
-    if key == "/" and Input.IsShift() then
+    if key == "/" then -- and Input.IsShift() then
         for i, verb in ipairs( self.shown_verbs ) do
             local ent = AccessEntity( verb:GetTarget() )
             if ent then

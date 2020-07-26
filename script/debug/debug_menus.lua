@@ -42,7 +42,16 @@ local SHARED_BINDINGS =
         Do = function( dbg )
             local dbg_env = dbg:GetDebugEnv()
             if dbg_env.console == nil then
-                dbg:TogglePanel()
+                if dbg_env.game and dbg_env.game:GetCurrentFocus() then
+                    local panel = dbg:FindPanel( dbg_env.game:GetCurrentFocus() )
+                    if panel then
+                        panel:Close()
+                    else
+                        DBG( dbg_env.game:GetCurrentFocus() )
+                    end
+                else
+                    dbg:TogglePanel()
+                end
             end
         end
     },

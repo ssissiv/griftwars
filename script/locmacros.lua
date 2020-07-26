@@ -77,6 +77,10 @@ return
 		return Calendar.FormatDateTime( datetime )
 	end,
 
+	time = function( datetime )
+		return Calendar.FormatDateTime( datetime, true )
+	end,
+
 	realtime = function( datetime )
 		return Calendar.FormatWallTime( datetime )
 	end,
