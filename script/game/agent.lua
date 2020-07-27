@@ -620,10 +620,6 @@ function Agent:WarpToTile( tile )
 	tile:AddEntity( self )
 
 	self:BroadcastEvent( ENTITY_EVENT.TILE_CHANGED, tile, prev_tile )
-
-	if self.behaviour then
-		self.behaviour:ScheduleNextTick(0)
-	end
 end
 
 function Agent:GetLocation()
@@ -766,10 +762,10 @@ function Agent:CalculateTimeElapsed( dt )
 	return dt
 end
 
-function Agent:CreateStat( stat, value, max_value )
+function Agent:CreateStat( stat, value, max_value, min_value )
 	assert( self:GetAspect( stat ) == nil )
 
-	local aspect = Aspect.StatValue( stat, value, max_value )
+	local aspect = Aspect.StatValue( stat, value, max_value, min_value )
 	self:GainAspect( aspect )
 
 	return aspect

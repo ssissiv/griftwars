@@ -362,9 +362,11 @@ function Verb:Cancel()
 	-- print ( "CANCEL", self, self.actor, debug.traceback())
 
 	if self.cancelled then
-		print( self, self.cancelled_frame, self.cancelled_trace )
+		print( self, self.cancelled_frame, self.cant_reason )
+		print( "Canelled at: " .. self.cancelled_trace )
 		print( GetFrame(), self.actor, self.actor:IsDead() )
-		error( "already cancelled: "..tostring(self)) 
+		-- error( "already cancelled: "..tostring(self)) 
+		self:ShowError( self.coro, "already cancelled" )
 	end
 
 	self.cancelled = true
@@ -467,6 +469,11 @@ function Verb:Resume( coro )
 		if not ok then
 			self.cant_reason = reason
 			self:Cancel()
+		end
+
+		-- Behaviour might also cancel.
+		if self.actor.behaviour then
+			self.actor.behaviour:OnTickBehaviour( tostring(self).. " finished" )
 		end
 	end
 
