@@ -30,6 +30,20 @@ function Faction:GetSuperiorsByRole( role )
 		local role = self.roles[ idx - 1 ]
 		return self.members[ role ]
 	end
+
+	return table.empty
+end
+
+function Faction:GetSubordinatesByRole( role )
+	local idx = table.find( self.roles, role )
+	if idx then
+		for i = idx + 1, #self.roles do
+			local role = self.roles[ i ]
+			return self.members[ role ] or table.empty
+		end
+	end
+
+	return table.empty
 end
 
 function Faction:HasTag( faction, tag )

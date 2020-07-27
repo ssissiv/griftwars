@@ -54,15 +54,27 @@ function Calendar.FormatWallTime( datetime )
 end
 
 function Calendar.FormatDuration( dt )
+	local past = dt < 0
+	dt = math.abs( dt )
 	local hours = math.floor( dt )
 	local minutes = math.floor( (dt - hours) * 60 )
 	local seconds = (dt - hours - (minutes / 60)) * 3600
-	if hours > 0 then
-		return loc.format( "{1} hours, {2} mins", hours, minutes )
-	elseif minutes > 0 then
-		return loc.format( "{1} minutes", minutes )
+	if past then
+		if hours > 0 then
+			return loc.format( "{1} hours, {2} mins ago", hours, minutes )
+		elseif minutes > 0 then
+			return loc.format( "{1} minutes ago", minutes )
+		else
+			return loc.format( "{1%.1f} seconds ago", seconds )
+		end
 	else
-		return loc.format( "{1%.1f} seconds", seconds )
+		if hours > 0 then
+			return loc.format( "{1} hours, {2} mins", hours, minutes )
+		elseif minutes > 0 then
+			return loc.format( "{1} minutes", minutes )
+		else
+			return loc.format( "{1%.1f} seconds", seconds )
+		end
 	end
 end
 

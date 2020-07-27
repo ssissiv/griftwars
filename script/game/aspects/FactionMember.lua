@@ -21,6 +21,16 @@ end
 function FactionMember:GetSuperiors()
 	if self.role then
 		return self.faction:GetSuperiorsByRole( self.role )
+	else
+		return table.empty
+	end
+end
+
+function FactionMember:GetSubordinates()
+	if self.role then
+		return self.faction:GetSubordinatesByRole( self.role )
+	else
+		return table.empty
 	end
 end
 
