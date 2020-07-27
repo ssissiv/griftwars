@@ -80,17 +80,23 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 				ok, reason = self:DoChildVerb( self.walk )
 			end
 			if not ok and dir then
-				-- Try a perpendicular direction.
-				dir = table.arraypick( ADJACENT_DIR[ dir ] )
-				self.walk:SetDirection( dir )
+				-- Try both perpendicular directions.
+				local adir = table.arraypick( ADJACENT_DIR[ dir ] )
+				self.walk:SetDirection( adir )
 				ok, reason = self:DoChildVerb( self.walk )
+
+				if not ok then
+					adir = ADJACENT_DIR[ dir ][1] == adir and ADJACENT_DIR[ dir ][2] or ADJACENT_DIR[ dir ][1]
+					self.walk:SetDirection( adir )
+					ok, reason = self:DoChildVerb( self.walk )
+				end
 			end
 		end
 
 		if not ok then				
 			-- Finally, we just fail.
 			self.block_count = (self.block_count or 0) + 1
-			print( actor, "couldn't walk:", reason, self.block_count )
+			print( actor, actor:GetTile(), dest, "couldn't walk:", reason, self.block_count )
 			print( "Path:", tostr(self.path) )
 			if self.block_count >= 3 then
 				pather:ResetPath()
