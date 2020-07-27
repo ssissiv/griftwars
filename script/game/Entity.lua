@@ -45,6 +45,10 @@ function Entity:OnSpawn( world )
 
 	self.world = world
 
+	if self.guid == nil then
+		self.guid = world:GenerateID()
+	end
+
 	if self.aspects then
 		for i, aspect in ipairs( self.aspects ) do
 			if aspect.OnSpawn then
@@ -151,7 +155,11 @@ end
 
 
 function Entity:__tostring()
-	return self._classname
+	if self.guid then
+		return string.format( "%d-%s", self.guid, self._classname )
+	else
+		return self._classname
+	end
 end
 
 

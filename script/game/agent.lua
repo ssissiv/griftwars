@@ -1079,11 +1079,12 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 end
 
 function Agent:__tostring()
-	return string.format( "%s%s%s%s",
+	return string.format( "%s%s%s%s-%d",
 		self:IsPlayer() and "@" or "",
 		self:GetShortDesc(),
 		self.location == nil and "*" or "",
-		self:IsDead() and "!" or "" )
+		self:IsDead() and "!" or "",
+		self.guid or -1 )
 end
 
 
