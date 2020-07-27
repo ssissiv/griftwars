@@ -72,7 +72,6 @@ function FleeFromCombat:Interact( actor )
 			-- Wait a little.  Fleeing, so need to be responsive.
 			self:YieldForTime( WALK_TIME )
 			actor.behaviour:ScheduleNextTick( 0 )
-			break
 		end
 	end
 
