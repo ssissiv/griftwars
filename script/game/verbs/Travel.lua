@@ -55,7 +55,7 @@ end
 function Travel:PathToTarget( actor, dest, approach_dist )
 	local pather = TilePathFinder( actor, actor, dest, approach_dist )
 
-	while not pather:AtGoal() do
+	while pather:GetEndRoom() and not pather:AtGoal() do
 
 		self.path = pather:GetPath()
 		self.pather = pather
@@ -96,7 +96,9 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 		if not ok then				
 			-- Finally, we just fail.
 			self.block_count = (self.block_count or 0) + 1
-			print( actor, actor:GetTile(), dest, "couldn't walk:", reason, self.block_count )
+			print( actor, "couldn't walk:", reason, "blocked:", self.block_count )
+			print( "At:", actor:GetTile(), actor:GetLocation() )
+			print( "Goal:", dest, pather:GetEndRoom() )
 			print( "Path:", tostr(self.path) )
 			if self.block_count >= 3 then
 				pather:ResetPath()
@@ -165,10 +167,12 @@ function Travel:Interact( actor, dest )
 	end
 
 	if is_instance( dest, Location ) then
+		-- TODO: maybe this is valid, but it can pick unreachable tiles.
+
 		-- Pick a random tile?
-		local tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
-		assert( tile_dest, tostring(dest))
-		self:PathToTarget( actor, tile_dest, self.approach_dist )
+		-- local tile_dest = dest:FindEmptyPassableTile( nil, nil, actor )
+		-- assert( tile_dest, tostring(dest))
+		-- self:PathToTarget( actor, tile_dest, self.approach_dist )
 	else
 		self:PathToTarget( actor, dest, self.approach_dist )
 	end
