@@ -274,6 +274,10 @@ function Location:IsDiscovered( viewer )
 		return true
 	end
 	
+	if DBGFLAG( DBG_FLAGS.GOD ) then
+		return true
+	end
+
 	return viewer:GetMemory():HasEngram( function( engram ) return is_instance( engram, Engram.Discovered ) and engram.target == self end )
 end
 

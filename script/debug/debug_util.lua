@@ -8,6 +8,10 @@ function PAUSE()
     end
 end
 
+function DBGFLAG( v )
+    return GetDbg():IsDebugFlagged( v )
+end
+
 function DBG( v )
     local panel = GetDbg():FindPanel( v )
     if not panel then

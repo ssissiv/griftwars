@@ -1,6 +1,6 @@
 DEV = true
 
-DBG_FLAGS = MakeBitField{ "RENDER" }
+DBG_FLAGS = MakeBitField{ "RENDER", "GOD", "UI" }
 
 IMGUI =
 {
