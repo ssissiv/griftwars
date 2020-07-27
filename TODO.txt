@@ -1,9 +1,7 @@
 TODO
 ====
 
-Msg:EchoTo -> to room
-Msg:EchoTo -> to agent
-	Sets loc.viewer_agent to target so that loc.format() will pass the correct viewer
+DBG view needs full knowledge when inspecting.
 
 Marks should not be an Engram.
 

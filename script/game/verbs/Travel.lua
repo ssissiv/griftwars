@@ -153,7 +153,9 @@ function Travel:Interact( actor, dest )
 			self:YieldForTime( ONE_MINUTE * self.fail_count )
 
 		elseif not self:PathToLocation( actor, self.path[2] ) then
-			print( actor, "Overworld path found, but can't find or access portal!", self.fail_count )
+			print( actor, "Overworld path found, but can't find or access portal to!", dest )
+			print( "At:", actor:GetTile() )
+			print( "Fail:", self.fail_count )
 			self.fail_count = (self.fail_count or 0) + 1
 			self:YieldForTime( ONE_MINUTE * self.fail_count )
 

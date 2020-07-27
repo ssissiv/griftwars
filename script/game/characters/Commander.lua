@@ -23,6 +23,9 @@ function Commander:init()
 	self:GainAspect( Verb.Strategize())
 	self:GainAspect( Skill.Fighting():SetSkillRank( 5 ))
 	self:GainAspect( Aspect.Intel())
+
+	self:EquipItem( Armour.ChainMail() )
+	self:EquipItem( Weapon.LongSword() )
 end
 
 function Commander:OnSpawn( world )

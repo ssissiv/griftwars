@@ -5,6 +5,9 @@ function FleeFromCombat:GetDesc( viewer )
 end
 
 function FleeFromCombat:CalculateUtility( actor )
+	if not actor:InCombat() then
+		return 0
+	end
 	if self:IsCornered() then
 		return UTILITY.COMBAT - 1
 	else
