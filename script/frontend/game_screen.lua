@@ -515,21 +515,31 @@ function GameScreen:RenderLocationDetails( ui, location, puppet )
 
 	local w, h = location.map:GetExtents()
 	local x, y = self.camera:WorldToScreen( 1, 0 )
+	local faction = location:GetAspect( Aspect.FactionMember )
 
 	love.graphics.setFont( assets.FONTS.TITLE )
 	love.graphics.print( location:GetTitle(), x, y )
 
-	if puppet then
-		if puppet:IsEnemy( location ) then
-			love.graphics.setFont( assets.FONTS.SUBTITLE )
-			self:SetColour( constants.colours.RED )
-			love.graphics.print( "ENEMY", x, y - 16 )
+	local subtitle = ""
+	if faction then
+		subtitle = faction:GetName()
+	end
 
-		elseif puppet:IsAlly( location ) then
-			love.graphics.setFont( assets.FONTS.SUBTITLE )
-			self:SetColour( constants.colours.CYAN )
-			love.graphics.print( "ALLY", x, y - 16 )
-		end
+	if puppet and puppet:IsEnemy( location ) then
+		self:SetColour( constants.colours.RED )
+		subtitle = subtitle .. "(ENEMY)"
+
+	elseif puppet and puppet:IsAlly( location ) then
+		self:SetColour( constants.colours.CYAN )
+		subtitle = subtitle .. "(ALLY)"
+
+	elseif #subtitle > 0 then
+		self:SetColour( constants.colours.LT_GRAY )
+	end
+
+	if #subtitle > 0 then
+		love.graphics.setFont( assets.FONTS.SUBTITLE )
+		love.graphics.print( subtitle, x, y - 16 )
 	end
 end
 

@@ -28,6 +28,7 @@ function Bandits:SpawnTents( room )
 		local tent = Object.Tent()
 		tent:WarpToLocation( room )
 		local interior = tent:SpawnInterior()
+		interior:GainAspect( Aspect.FactionMember( self ))
 		local home = interior:GetAspect( Feature.Home )
 
 		for j = i, i + 2 do
