@@ -1041,7 +1041,7 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
 	if self.image then
-		screen:SetColour( clr or 0xFFFFFFFF )
+		screen:SetColour( 0xFFFFFFFF )
 		screen:Image( self.image, x1, y1, x2 - x1, y2 - y1 )
 	else
 		love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))

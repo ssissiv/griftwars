@@ -82,6 +82,17 @@ function Entity:OnDespawn()
 	self.world = nil
 end
 
+function Entity:AddTag( tag )
+	if self.tags == nil then
+		self.tags = {}
+	end
+	table.insert( self.tags, tag )
+end
+
+function Entity:HasTag( tag )
+	return self.tags and table.contains( self.tags, tag )
+end
+
 function Entity:GainAspect( aspect )
 	assert( is_instance( aspect, Aspect ), "Not an aspect: "..tostring(aspect) )
 	

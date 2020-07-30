@@ -219,6 +219,11 @@ function Zone:RandomRoomOfClass( class )
 	return self.worldgen:ArrayPick( t )
 end
 
+function Zone:RandomUnusedRoom()
+	local t = table.arrayadd_if( {}, self.rooms, function( room ) return not room:HasTag( TAG.USED ) end )
+	return self.worldgen:ArrayPick( t )	
+end
+
 function Zone:GetRooms()
 	return self.rooms
 end

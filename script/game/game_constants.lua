@@ -87,13 +87,18 @@ INTENT_NAME =
 	DIPLOMACY = "[D]iplomacy",
 }
 
--- Entity flags
+-- Agent flags
 EF = MakeEnum
 {
 	"AGGRO_NONE", -- Aggro to nobody
 	"AGGRO_ALL", -- Aggro to everybody
 	"AGGRO_OTHER_CLASS", -- Aggro to other class instances
 	"AGGRO_OTHER_FACTION", -- Aggro to other factions
+}
+
+TAG = MakeEnum
+{
+	"USED", -- Used by worldgen.
 }
 
 PRIVACY = MakeBitField

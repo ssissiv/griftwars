@@ -11,6 +11,7 @@ function Door:init( worldgen_tag )
 end
 
 function Door:OnConnected( ent )
+	-- Close/Lock the matching entity on the other side.
 	if self:IsClosed() and ent.Close then
 		ent:Close()
 	end

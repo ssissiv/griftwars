@@ -190,6 +190,7 @@ function Location:AddEntity( entity )
 		self:PlaceEntity( entity )
 
 	elseif is_instance( entity, Agent ) and entity:IsPuppet() then
+		error( "don't think this happens anymore" )
 		self:GenerateTileMap()
 
 	else
@@ -314,7 +315,7 @@ end
 
 function Location:FindPortalWithTag( tag )
 	for i, portal in ipairs( self.portals ) do
-		if portal:HasWorldGenTag( tag ) and portal:GetDest() then
+		if portal:HasWorldGenTag( tag ) then -- and portal:GetDest() then
 			return portal
 		end
 	end
