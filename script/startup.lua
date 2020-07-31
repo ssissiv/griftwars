@@ -17,8 +17,7 @@ function WarpToWell()
 	puppet:WarpToLocation( obj.location )
 end
 
-local obj = table.arraypick( world:CreateBucketByClass( Object.Tent ))
-puppet:TeleportToLocation( obj.location )
+goto( "bandit cap" )
 
 han = world:GetPuppet()
 g = obj

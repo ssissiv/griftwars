@@ -82,6 +82,16 @@ function switch( agent )
 	world:SetPuppet( agent )
 end
 
+function goto( str )
+    local tags = str:split( " " )
+    for i, entity in ipairs( world.entities ) do
+    	if entity.GetLocation ~= nil and entity:GetLocation() and DebugUtil.FilterEntity( entity, str, tags ) then
+    		puppet:TeleportToLocation( entity:GetLocation() )
+    		break
+    	end
+	end
+end
+
 -----------------------------------------------------------------------------
 
 -- Shows all functions in the dbg_env.

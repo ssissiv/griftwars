@@ -13,20 +13,7 @@ function DebugRoot:init( game )
 end
 
 function DebugRoot:IsFiltered( obj )
-    local filter_str = self.filter_str
-    if filter_str == nil then
-        return true
-    end
-
-    if string.find( tostring(obj), filter_str ) then
-        return true
-    end
-
-    if obj.HasTags and self.filter_tags then
-        return obj:HasFuzzyTags( table.unpack( self.filter_tags ))
-    end
-
-    return false
+    return DebugUtil.FilterEntity( obj, self.filter_str, self.filter_tags )
 end
 
 function DebugRoot:RenderPanel( ui, panel, dbg )
