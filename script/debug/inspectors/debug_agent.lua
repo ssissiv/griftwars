@@ -26,6 +26,8 @@ end
 function DebugAgent:RenderPanel( ui, panel, dbg )
 	ui.Text( tostring(self.agent) )
 	
+	ui.TextColored( 0, 0.8, 0.8, 1, table.concat( self.agent.tags, " " ))
+
 	local faction = self.agent:GetAspect( Aspect.FactionMember )
 	if faction then
 		ui.Text( "Faction:" )

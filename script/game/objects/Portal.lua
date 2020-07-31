@@ -2,6 +2,7 @@ local Portal = class( "Object.Portal", Object )
 Portal.name = "Portal"
 
 function Portal:init( worldgen_tag )
+	Object.init( self )
 	assert( worldgen_tag )
 	self.portal = self:GainAspect( Aspect.Portal() )
 	self.portal:SetWorldGenTag( worldgen_tag )

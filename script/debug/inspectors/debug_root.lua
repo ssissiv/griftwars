@@ -12,6 +12,23 @@ function DebugRoot:init( game )
     self.frame_offset = 1
 end
 
+function DebugRoot:IsFiltered( obj )
+    local filter_str = self.filter_str
+    if filter_str == nil then
+        return true
+    end
+
+    if string.find( tostring(obj), filter_str ) then
+        return true
+    end
+
+    if obj.HasTags and self.filter_tags then
+        return obj:HasFuzzyTags( table.unpack( self.filter_tags ))
+    end
+
+    return false
+end
+
 function DebugRoot:RenderPanel( ui, panel, dbg )
     ui.Text( string.format( "%s", "BUILD_ID" ))
     ui.Text( string.format( 'Mem: %.2f MB', collectgarbage('count') / 1000))
@@ -44,6 +61,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
         local changed, filter_str = ui.InputText( "Filter", self.filter_str or "", 128 )
         if changed then
             self.filter_str = filter_str
+            self.filter_tags = filter_str:split( " " )
         end
 
         if ui.TreeNodeEx( "Zones" ) then
@@ -55,7 +73,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
             end
             for i, zone in ipairs( self.game.world:GetBucketByClass( Zone )) do
                 if zone ~= current_zone then
-                    if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
+                    if self:IsFiltered( zone ) then
                         panel:AppendTable( ui, zone )
                     end
                 end
@@ -68,7 +86,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
                 panel:AppendTable( ui, puppet:GetLocation(), string.format( "**%s", tostring(puppet:GetLocation())) )
             end
             for i, location in self.game.world:AllLocations() do
-                if self.filter_str == nil or string.find( tostring(location), self.filter_str ) then
+                if self:IsFiltered( location ) then
                     panel:AppendTable( ui, location )
                 end
             end
@@ -77,7 +95,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
 
         if ui.TreeNodeEx( "Agents", "DefaultOpen" ) then
             for i, agent in self.game.world:AllAgents() do
-                if self.filter_str == nil or string.find( tostring(agent), self.filter_str ) or string.find( agent._classname, self.filter_str ) then
+                if self:IsFiltered( agent ) then
                     panel:AppendTable( ui, agent )
                 end
             end
@@ -88,7 +106,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
             local objs = self.game.world:GetBucketByClass( Object )
             for i, ent in ipairs( objs ) do
                 if is_instance( ent, Object ) then
-                    if self.filter_str == nil or string.find( tostring(ent), self.filter_str ) or string.find( ent._classname, self.filter_str ) then
+                    if self:IsFiltered( ent ) then
                         panel:AppendTable( ui, ent )
                     end
                 end

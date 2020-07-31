@@ -1,6 +1,7 @@
 local Entity = class( "Entity" )
 
 function Entity:init()
+	self.tags = table.shallowcopy( self.entity_tags ) or {}
 end
 
 function Entity:ListenForAny( listener, fn, priority )
@@ -42,6 +43,7 @@ end
 
 function Entity:OnSpawn( world )
 	assert( self.world == nil or error( tostr(self) ))
+	assert( self.tags, tostring(self))
 
 	self.world = world
 
@@ -83,14 +85,41 @@ function Entity:OnDespawn()
 end
 
 function Entity:AddTag( tag )
-	if self.tags == nil then
-		self.tags = {}
-	end
 	table.insert( self.tags, tag )
 end
 
 function Entity:HasTag( tag )
-	return self.tags and table.contains( self.tags, tag )
+	return table.contains( self.tags, tag )
+end
+
+function Entity:HasTags( ... )
+	for i = 1, select( "#", ... ) do
+		local tag = select( i, ... )
+		if not table.contains( self.tags, tag ) then
+			return false
+		end
+	end
+
+	return true
+end
+
+-- do we have all the tags in ... ?
+function Entity:HasFuzzyTags( ... )
+	for i = 1, select( "#", ... ) do
+		local tag = select( i, ... )
+		local found = false
+		for j, itag in ipairs( self.tags ) do
+			if itag:find( tag ) == 1 then
+				found = true
+				break
+			end
+		end
+		if not found then
+			return false
+		end
+	end
+
+	return true
 end
 
 function Entity:GainAspect( aspect )
@@ -114,6 +143,10 @@ function Entity:GainAspect( aspect )
 		aspect:OnSpawn( self.world )
 	end
 
+	if aspect.entity_tags then
+		table.arrayadd( self.tags, aspect.entity_tags )
+	end
+
 	self:BroadcastEvent( ENTITY_EVENT.ASPECT_GAINED, aspect )
 
 	return aspect
@@ -125,6 +158,12 @@ function Entity:LoseAspect( arg )
 	assert( self.aspects_by_id[ id ] == aspect or error( string.format( "aspect %s found instead with id %s", tostring(self.aspects_by_id[ id ] ), tostring( id ))))
 	table.arrayremove( self.aspects, aspect )
 	self.aspects_by_id[ id ] = nil
+
+	if aspect.entity_tags then
+		for i, tag in ipairs( aspect.entity_tags ) do
+			table.arrayremove( self.tags, tag )
+		end
+	end
 
 	if self.world and aspect.OnDespawn then
 		aspect:OnDespawn()

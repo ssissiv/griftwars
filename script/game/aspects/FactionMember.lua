@@ -8,6 +8,9 @@ function FactionMember:init( faction, role )
 	assert( role == nil or IsEnum( role, FACTION_ROLE ))
 	self.faction = faction
 	self.role = role
+	if role then
+		self.entity_tags = { role:lower() }
+	end
 end
 
 function FactionMember:GetName()

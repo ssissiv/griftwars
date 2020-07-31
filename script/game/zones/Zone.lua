@@ -1,6 +1,7 @@
 local Zone = class( "Zone", Entity )
 
 function Zone:init( worldgen, max_depth, zone_depth, origin_portal )
+	Entity.init( self )
 	self.worldgen = worldgen
 	assert( max_depth )
 	self.max_depth = max_depth or 1

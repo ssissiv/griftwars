@@ -8,7 +8,6 @@ function World:init()
 	self.agents = {}
 	self.stats = {}
 	self.relationships = {}
-	self.factions = {}
 
 	self.rng = self:GainAspect( Aspect.Rng( 12345, 54321 ) )
 
@@ -40,10 +39,6 @@ end
 
 function World:GetWorldMap()
 	return self.map
-end
-
-function World:Factions()
-	return ipairs( self.factions )
 end
 
 function World:SpawnLocation( location )

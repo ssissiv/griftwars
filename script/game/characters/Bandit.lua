@@ -6,6 +6,7 @@ local Bandit = class( "Agent.Bandit", Agent )
 Bandit.unfamiliar_desc = "bandit"
 Bandit.image = assets.TILE_IMG.BANDIT
 Bandit.max_health = 14
+Bandit.entity_tags = { "bandit" }
 
 function Bandit:GetMapChar()
 	return "b", constants.colours.RED

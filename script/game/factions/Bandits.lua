@@ -2,6 +2,7 @@ local Bandits = class( "Faction.Bandits", Faction )
 
 function Bandits:init()
 	Faction.init( self, "Bandits" )
+	DBG(self)
 end
 
 function Bandits:OnSpawn( world )
@@ -31,9 +32,16 @@ function Bandits:SpawnTents( room )
 		interior:GainAspect( Aspect.FactionMember( self ))
 		local home = interior:GetAspect( Feature.Home )
 
+		-- Warp and set this tent as the home of these bandits.
 		for j = i, i + 2 do
 			bandits[j]:WarpToLocation( interior )
 			home:AddResident( bandits[j] )
+		end
+
+		-- Captain is the first tent.
+		if i == 1 then
+			self.captain:WarpToLocation( interior )
+			home:AddResident( self.captain )
 		end
 	end
 end

@@ -3,6 +3,7 @@ Tent.name = "Tent"
 Tent.image = assets.TILE_IMG.TENT
 
 function Tent:init()
+	Object.init( self )
 	self.portal = self:GainAspect( Aspect.Portal() )
 end
 
