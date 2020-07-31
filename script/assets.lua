@@ -52,7 +52,8 @@ local assets =
 		ABANDONED_WELL = "abandoned_well.png",
 
 		PLAYER = { "NEVANDA", 4 * 32, 1 * 32, 32, 32 },
-		BANDIT = { "NEVANDA", 5 * 32, 1 * 32, 32, 32 },
+		BANDIT = { "NEVANDA", 7 * 32, 1 * 32, 32, 32 },
+		BANDIT_CAPTAIN = { "NEVANDA", 5 * 32, 1 * 32, 32, 32 },
 		ORC = { "NEVANDA", 32 * 32, 1 * 32, 32, 32 },
 		CAPTAIN = { "NEVANDA", 3 * 32, 7 * 32, 32, 32 },
 		HILL_GIANT = { "NEVANDA", 16 * 32, 4 * 32, 32, 32 },

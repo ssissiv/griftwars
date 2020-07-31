@@ -1,8 +1,6 @@
 TODO
 ====
 
-change god-mode to toggle-able Omniscience
-
 Marks should not be an Engram.
 
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?

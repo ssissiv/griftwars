@@ -3,7 +3,7 @@ local FactionMember = class( "Aspect.FactionMember", Aspect )
 
 FactionMember.TABLE_KEY = "faction"
 
-function FactionMember:init( faction, role )
+function FactionMember:init( faction, role, role_title )
 	assert( is_instance( faction, Faction ))
 	assert( role == nil or IsEnum( role, FACTION_ROLE ))
 	self.faction = faction
@@ -11,10 +11,15 @@ function FactionMember:init( faction, role )
 	if role then
 		self.entity_tags = { role:lower() }
 	end
+	self.role_title = role_title
 end
 
 function FactionMember:GetName()
 	return self.faction:GetFactionName()
+end
+
+function FactionMember:GetRoleTitle()
+	return self.role_title
 end
 
 function FactionMember:GetRole()

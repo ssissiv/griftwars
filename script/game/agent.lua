@@ -1040,9 +1040,13 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	end
 
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
-	if self.image then
+	local image
+	if self.role_images and self.faction and self.faction.role then
+		image = self.role_images[ self.faction.role ]
+	end
+	if image or self.image then
 		screen:SetColour( 0xFFFFFFFF )
-		screen:Image( self.image, x1, y1, x2 - x1, y2 - y1 )
+		screen:Image( image or self.image, x1, y1, x2 - x1, y2 - y1 )
 	else
 		love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 		love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )

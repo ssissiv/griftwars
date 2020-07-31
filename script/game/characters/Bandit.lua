@@ -5,6 +5,11 @@ local Bandit = class( "Agent.Bandit", Agent )
 
 Bandit.unfamiliar_desc = "bandit"
 Bandit.image = assets.TILE_IMG.BANDIT
+Bandit.role_images =
+{
+	[ FACTION_ROLE.CAPTAIN ] = assets.TILE_IMG.BANDIT_CAPTAIN
+}
+
 Bandit.max_health = 14
 Bandit.entity_tags = { "bandit" }
 

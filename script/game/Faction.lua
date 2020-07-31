@@ -11,13 +11,13 @@ function Faction:GetFactionName()
 	return self.name
 end
 
-function Faction:AddFactionMember( agent, role )
+function Faction:AddFactionMember( agent, role, role_title )
 	table.insert_unique( self.roles, role )
 	if self.members[ role ] == nil then
 		self.members[ role ] = {}
 	end
 	table.insert( self.members[ role ], agent )
-	agent:GainAspect( Aspect.FactionMember( self, role ))
+	agent:GainAspect( Aspect.FactionMember( self, role, role_title ))
 end
 
 function Faction:GetAgentsByRole( role )

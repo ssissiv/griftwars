@@ -12,7 +12,7 @@ function CityMilitary:OnSpawn( world )
 
 	do
 		self.commander = world:SpawnEntity( Agent.Commander() )
-		self:AddFactionMember( self.commander, FACTION_ROLE.COMMANDER )
+		self:AddFactionMember( self.commander, FACTION_ROLE.COMMANDER, loc.format( "{1} high commander", self:GetFactionName() ))
 
 		local job = Job.Conquest( self.commander )
 		self.commander:GainAspect( job )
@@ -20,7 +20,7 @@ function CityMilitary:OnSpawn( world )
 
 	for i = 1, math.max( 1, math.floor( self.guard_count / 10 )) do
 		local captain = world:SpawnEntity( Agent.Captain() )
-		self:AddFactionMember( captain, FACTION_ROLE.CAPTAIN )
+		self:AddFactionMember( captain, FACTION_ROLE.CAPTAIN, "guard captain" )
 
 		local job = Job.Patrol( self.commander )
 		captain:GainAspect( job )

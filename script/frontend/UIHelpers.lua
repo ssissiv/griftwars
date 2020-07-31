@@ -11,6 +11,11 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
             ui.SameLine( 0, 10 )
             ui.TextColored( 1, 0, 0, 1, "(DEAD)" )
         end
+
+        local faction = ent:GetAspect( Aspect.FactionMember )
+        if faction and faction:GetRoleTitle() then
+            ui.TextColored( 0.8, 0.8, 0.8, 1, faction:GetRoleTitle() )
+        end
     end
 
     ui.SameLine( 0, 10 )

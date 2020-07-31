@@ -2,7 +2,6 @@ local Bandits = class( "Faction.Bandits", Faction )
 
 function Bandits:init()
 	Faction.init( self, "Bandits" )
-	DBG(self)
 end
 
 function Bandits:OnSpawn( world )
@@ -10,7 +9,7 @@ function Bandits:OnSpawn( world )
 
 	do
 		self.captain = world:SpawnEntity( Agent.Bandit() )
-		self:AddFactionMember( self.captain, FACTION_ROLE.CAPTAIN )
+		self:AddFactionMember( self.captain, FACTION_ROLE.CAPTAIN, "captain of the bandits" )
 
 		-- local job = Job.Conquest( self.commander )
 		-- self.commander:GainAspect( job )
