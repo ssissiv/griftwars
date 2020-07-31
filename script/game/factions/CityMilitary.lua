@@ -1,4 +1,5 @@
 local CityMilitary = class( "Faction.CityMilitary", Faction )
+CityMilitary.lawful = true
 
 function CityMilitary:init( name, guard_count )
 	Faction.init( self, name )
@@ -13,9 +14,6 @@ function CityMilitary:OnSpawn( world )
 	do
 		self.commander = world:SpawnEntity( Agent.Commander() )
 		self:AddFactionMember( self.commander, FACTION_ROLE.COMMANDER, loc.format( "{1} high commander", self:GetFactionName() ))
-
-		local job = Job.Conquest( self.commander )
-		self.commander:GainAspect( job )
 	end
 
 	for i = 1, math.max( 1, math.floor( self.guard_count / 10 )) do

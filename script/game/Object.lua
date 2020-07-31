@@ -169,8 +169,8 @@ end
 function Object:GetLocation()
 	if self.location then
 		return self.location
-	elseif self.carrier then
-		return self.carrier:GetLocation()
+	elseif self.carrier and self.carrier.owner then
+		return self.carrier.owner:GetLocation()
 	end
 end
 

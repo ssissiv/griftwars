@@ -44,17 +44,17 @@ end
 
 function FactionMember:IsEnemy( other )
 	assert( is_instance( other, FactionMember ))
-	return self.faction:HasTag( other.faction, FACTION_TAG.ENEMY )
+	return self.faction:HasTagForFaction( other.faction, FACTION_TAG.ENEMY )
 end
 
 function FactionMember:IsAlly( other )
 	assert( is_instance( other, FactionMember ))
-	return self.faction == other.faction or	self.faction:HasTag( other, FACTION_TAG.ALLY )
+	return self.faction == other.faction or	self.faction:HasTagForFaction( other, FACTION_TAG.ALLY )
 end
 
 function FactionMember:AddEnemy( other )
 	assert( is_instance( other, FactionMember ))
-	self.faction:AddTag( other.faction, FACTION_TAG.ENEMY )
+	self.faction:AddTagForFaction( other.faction, FACTION_TAG.ENEMY )
 end
 
 -- Assign our faction to agent's.

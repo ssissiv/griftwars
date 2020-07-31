@@ -42,7 +42,8 @@ end
 
 function Waypoint:AtWaypoint( entity )
 	local location, x, y = entity:GetLocation(), entity:GetCoordinate()
-	return self.location == location and (self.x == nil or self.x == x) and (self.y == nil or self.y == y)
+	local dest, destx, desty = self:GetDest()
+	return dest == location and (destx == nil or destx == x) and (desty == nil or desty == y)
 end
 
 function Waypoint:__tostring()

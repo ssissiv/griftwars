@@ -21,8 +21,12 @@ function Agent:IsEnemy( other )
 
 	local f1 = self:GetAspect( Aspect.FactionMember )
 	local f2 = other:GetAspect( Aspect.FactionMember )
-	if self:HasFlag( EF.AGGRO_OTHER_FACTION ) then
-		if (f1 and f1.faction) ~= (f2 and f2.faction) then
+	if f1 and f2 and (f1 and f1.faction) ~= (f2 and f2.faction) then
+		if f1:IsEnemy( f2 ) then
+			return true
+		end
+
+		if self:HasFlag( EF.AGGRO_OTHER_FACTION ) then
 			return true
 		end
 	end

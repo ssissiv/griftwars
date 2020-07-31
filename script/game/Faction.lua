@@ -7,6 +7,10 @@ function Faction:init( name )
 	self.members = {} -- Map of FACTION_ROLE -> { agent_list }
 end
 
+function Faction:IsLawful()
+	return self.lawful == true
+end
+
 function Faction:GetFactionName()
 	return self.name
 end
@@ -46,13 +50,13 @@ function Faction:GetSubordinatesByRole( role )
 	return table.empty
 end
 
-function Faction:HasTag( faction, tag )
+function Faction:HasTagForFaction( faction, tag )
 	assert( IsEnum( tag, FACTION_TAG ))
 	local t = self.tags[ faction ]
 	return t and table.contains( t, tag ) or false
 end
 
-function Faction:AddTag( faction, tag )
+function Faction:AddTagForFaction( faction, tag )
 	assert( IsEnum( tag, FACTION_TAG ))
 	local t = self:AffirmFaction( faction )
 	table.insert_unique( t, tag )

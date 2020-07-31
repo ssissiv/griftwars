@@ -48,6 +48,8 @@ function Patrol:DoJob()
 	-- Next waypoint.
 	table.remove( self.waypoints, 1 )
 	table.insert( self.waypoints, self.current_waypoint )
+
+	return true
 end
 
 function Patrol:GetName()

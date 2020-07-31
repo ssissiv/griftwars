@@ -11,13 +11,20 @@ function Bandits:OnSpawn( world )
 		self.captain = world:SpawnEntity( Agent.Bandit() )
 		self:AddFactionMember( self.captain, FACTION_ROLE.CAPTAIN, "captain of the bandits" )
 
-		-- local job = Job.Conquest( self.commander )
-		-- self.commander:GainAspect( job )
+		self.captain:GainAspect( Verb.Strategize() )
 	end
 
 	for i = 1, 3 do
 		local guard = world:SpawnEntity( Agent.Bandit() )
 		self:AddFactionMember( guard, FACTION_ROLE.GUARD )
+	end
+
+	-- Enemy of all lawful factions
+	for i, faction in pairs( world:GetBucketByClass( Faction )) do
+		if faction:IsLawful() then
+			faction:AddTagForFaction( self, FACTION_TAG.ENEMY )
+			self:AddTagForFaction( faction, FACTION_TAG.ENEMY )
+		end
 	end
 end
 

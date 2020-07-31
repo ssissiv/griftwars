@@ -179,9 +179,7 @@ function Job:Interact()
 		end
 
 		if waypoint and waypoint:AtWaypoint( actor ) then
-			if self.DoJob then
-				self:DoJob()
-			else
+			if not self.DoJob or not self:DoJob() then
 				self:Idle( actor, self:GetShiftDuration() )
 			end
 

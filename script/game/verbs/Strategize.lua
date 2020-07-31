@@ -1,11 +1,5 @@
 
-AppendEnum( AGENT_EVENT, "STRATEGIZE" )
-
 local Strategize = class( "Verb.Strategize", Verb.Plan )
-
-function Strategize:init( actor )
-	Strategize._base.init( self, actor )
-end
 
 function Strategize:GetDesc( viewer )
 	if self.target then
@@ -34,25 +28,25 @@ function Strategize:FindStrategicPoint( actor )
 
 	actor.location:Flood( IsStrategicPoint )
 
-	if #assault_pts > 0 and self:GetWorld():Random() > 0.0 then
+	if #assault_pts > 0 then
 		return self:GetWorld():ArrayPick( assault_pts )
 	else
 		return self:GetWorld():ArrayPick( defend_pts )
 	end
 end
 
-function Strategize:CanInteract( actor )
-	return false, "Disabled"
-end
+-- function Strategize:CanInteract( actor )
+-- 	return false, "Disabled"
+-- end
 
 function Strategize:Interact( actor )
 	while true do
-		self:YieldForTime( ONE_MINUTE )
-
-		Msg:Speak( actor, "Hmm... where should this brigade go..." )
+		self:YieldForTime( ONE_HOUR )
 
 		self.target = self:FindStrategicPoint( actor )
 		if self.target then
+			Msg:Speak( actor, "Hmm... where should this brigade go..." )
+	
 			if actor:IsEnemy( self.target ) then
 				Msg:Speak( actor, "We must assault {1}!", self.target )
 				Msg:Speak( actor, "{1} must be stopped.", self.target:GetAspect( Aspect.FactionMember ):GetName() )
@@ -61,13 +55,13 @@ function Strategize:Interact( actor )
 			else
 				Msg:Speak( actor, "We will occupy {1}.", self.target )
 			end
-		else
-			DBG( actor )
+
+			if not actor:HasAspect( Job.Conquest ) then
+				local job = Job.Conquest( actor )
+				actor:GainAspect( job )
+			end
 		end
 
-		actor:BroadcastEvent( AGENT_EVENT.STRATEGIZE, self.target )
-		-- actor:RecruitAll()
-
-		self:YieldForTime( HALF_DAY )
+		self:YieldForTime( ONE_DAY * 3 )
 	end
 end
