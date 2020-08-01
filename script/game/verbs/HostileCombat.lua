@@ -72,7 +72,9 @@ function HostileCombat:Interact( actor )
 		end
 
 		-- Atttaaack.
-		self:DoChildVerb( attack, attack:GetTarget() )
+		if not self:IsCancelled() then
+			self:DoChildVerb( attack, attack:GetTarget() )
+		end
 
 		if actor:GetAspect( Aspect.Combat ) then
 			actor:GetAspect( Aspect.Combat ):SetCurrentAttack( nil )

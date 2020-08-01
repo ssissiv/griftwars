@@ -11,6 +11,7 @@ function WorldBase:init()
 	self.scheduled_events = {}
 	self.events_triggered = 0
 	self.total_events_triggered = 0
+	self.event_peak = 0
 	self.event_times = {}
 	
 	self.buckets = {}
@@ -93,6 +94,7 @@ end
 
 function WorldBase:TriggerEvent( ev )
 	if type( ev[1] ) == "function" then
+		ev.trigger_time = self.datetime
 		local fn = ev[1]
 		fn( table.unpack( ev, 2 ))
 	else
@@ -108,16 +110,21 @@ function WorldBase:AdvanceTime( dt )
 	-- Broadcast any scheduled events.
 	local ev = self.scheduled_events[ 1 ]
 
+	self.event_peak = math.max( self.event_peak, #self.scheduled_events )
+	local ev_count = 0 -- TODO: wall time?
+
 	while ev and ev.when <= self.datetime + dt do
 		table.remove( self.scheduled_events, 1 ) -- TODO: this is terrible, rewrite as a linked list
 
 		dt = dt - (ev.when - self.datetime)
 		self.datetime = ev.when
-		
+		ev_count = ev_count + 1
+
 		if not ev.cancel then
 			self.events_triggered = self.events_triggered + 1
-			if self.events_triggered >= 500 then
-				self.events_triggered = self.events_triggered - 500
+			if self.events_triggered >= 1000 then
+				self.events_triggered = self.events_triggered - 1000
+				self.event_peak = 0
 				table.insert( self.event_times, self.datetime )
 			end
 			self.total_events_triggered = self.total_events_triggered + 1
@@ -127,6 +134,7 @@ function WorldBase:AdvanceTime( dt )
 		if not ev.cancel then
 			if ev.period then
 				ev.when = self.datetime + ev.period
+				ev.trigger_time = nil
 				table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
 			end
 		end
@@ -138,6 +146,10 @@ function WorldBase:AdvanceTime( dt )
 		end
 
 		ev = self.scheduled_events[1]
+		if false and ev_count > 100 then
+			print( "Processing >100 events, bailing", ev_count, dt )
+			return dt
+		end
 	end
 
 	self.datetime = self.datetime + dt
@@ -264,8 +276,15 @@ function WorldBase:UpdateWorld( dt )
 		dt = 0
 	end
 
-	local world_dt = self:CalculateTimeElapsed( dt )
-	self:AdvanceTime( world_dt )
+	local world_dt = self.time_debt or self:CalculateTimeElapsed( dt )
+	-- if world_dt > 0 then
+	-- 	if self.time_debt then
+	-- 		print( "TIME_DEBT:", dt, world_dt, Calendar.FormatDuration( world_dt ) )
+	-- 	else
+	-- 		print( dt, world_dt, Calendar.FormatDuration( world_dt ) )
+	-- 	end
+	-- end
+	self.time_debt = self:AdvanceTime( world_dt )
 
 	if self.OnUpdateWorld then
 		self:OnUpdateWorld( dt, world_dt )

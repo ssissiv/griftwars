@@ -6,7 +6,7 @@ Verb.event_handlers =
 		if agent:HasAspect( self ) then
 			agent:LoseAspect( self )
 		else
-			self:Cancel()
+			self:Cancel( "died" )
 		end
 	end,
 }
@@ -129,7 +129,7 @@ end
 
 function Verb:OnLoseAspect( owner )
 	Aspect.OnLoseAspect( self, owner )
-	self:Cancel()
+	self:Cancel( "lose aspect" )
 end
 
 function Verb:GetWorld()
@@ -311,9 +311,12 @@ function Verb:DoVerb( actor, ... )
 	self.actor = actor
 	self.world = actor.world
 
+	self.error = nil
 	self.cancelled = nil
 	self.cancelled_trace = nil
 	self.cancelled_frame = nil
+	self.cancelled_time = nil
+	self.cancelled_reason = nil
 
 	self.coro = coroutine.running()
 	assert( self.coro )
@@ -358,7 +361,7 @@ function Verb:IsCancelled()
 	return self.cancelled == true
 end
 
-function Verb:Cancel()
+function Verb:Cancel( reason )
 	if not self:IsDoing() then
 		return
 	end
@@ -366,21 +369,20 @@ function Verb:Cancel()
 	-- print ( "CANCEL", self, self.actor, self.coro and coroutine.status( self.coro ), debug.traceback())
 
 	if self.cancelled then
-		print( self, self.cancelled_frame, self.cant_reason )
-		print( "Canelled at: " .. self.cancelled_trace )
-		print( GetFrame(), self.actor, self.actor:IsDead() )
-		-- error( "already cancelled: "..tostring(self)) 
-		self:ShowError( self.coro, "already cancelled" )
+		local txt = loc.format( "Already Cancelled!\nFrame: {1} / Cancelled Frame: {2}\nCancelled Trace:\n{3}",
+			GetFrame(), self.cancelled_frame, self.cancelled_trace )
+		self:ShowError( self.coro, txt )
 	end
 
 	self.cancelled = true
 	self.cancelled_trace = debug.traceback()
 	self.cancelled_time = self.actor.world:GetDateTime()
 	self.cancelled_frame = GetFrame()
+	self.cancelled_reason = reason
 
 	if self.child then
 		assert( self.yield_ev == nil ) -- We cannot be the yielding Verb if a child is running.
-		self.child:Cancel()
+		self.child:Cancel( "parent cancelled: " ..tostring(reason) )
 
 	elseif self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
@@ -471,8 +473,7 @@ function Verb:Resume( coro )
 	if not self.cancelled then
 		local ok, reason = self:CanInteract( self.actor, self.obj )
 		if not ok then
-			self.cant_reason = reason
-			self:Cancel()
+			self:Cancel( reason )
 		end
 
 		-- Behaviour might also cancel.
@@ -496,15 +497,24 @@ function Verb:Resume( coro )
 		-- Done!
 		-- print( "DONE", self, coroutine.status(coro))
 	end
+
+	if self.cancelled and self.actor:IsDoing( self ) then
+		self:ShowError( coro, "verb did respect cancellation" )
+		-- What now? Forcibly remove from actor? etc.?
+	end
 end
 
 function Verb:ShowError( coro, msg )
 	self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
-	print( "Error resuming", self, "\n", msg )
-	print( debug.traceback( coro ))
+	print( "ShowError", self, coro and coroutine.status( coro ), "\n", msg )
+	local trace = debug.traceback()
+	self.error = msg
+
 	DBG( function( node, ui, panel )
 		if self.coro_dbg == nil then
 			self.coro_dbg = DebugCoroutine( coro )
+		else
+			self.coro_dbg:SetCoro( coro )
 		end
 
 		panel:AppendTable( ui, self )
@@ -513,6 +523,10 @@ function Verb:ShowError( coro, msg )
 		ui.Separator()
 
 		ui.TextColored( 1, 0, 0, 1, tostring(msg) )
+		if ui.TreeNode( "traceback" ) then
+			ui.Text( trace )
+			ui.TreePop()
+		end
 		ui.Spacing()
 
 		self.coro_dbg:RenderPanel( ui, panel )
@@ -525,6 +539,10 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 	ui.PushID( rawstring( self ))
 
 	panel:AppendTable( ui, self )
+
+	if self.error then
+		ui.TextColored( 1, 0, 0, 1, "Error: " ..tostring(self.error))
+	end
 
 	ui.Indent( 20 )
 	if self.time_started then
@@ -559,7 +577,7 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 	end
 
 	if self.cancelled then
-		ui.TextColored( 1, 0, 0, 1, "Cancelled" )
+		ui.TextColored( 1, 0, 0, 1, loc.format( "Cancelled ({1})", self.cancelled_reason or "?" ))
 		if self.cancelled_time then
 			ui.SameLine( 0, 10 )
 			Calendar.RenderDatetime( ui, self.cancelled_time, self:GetWorld() )
@@ -576,7 +594,7 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 			end
 
 		elseif ui.Button( "Cancel" ) then
-			self:Cancel()
+			self:Cancel( "debug" )
 		end
 
 	elseif self.actor == nil then

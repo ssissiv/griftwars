@@ -61,7 +61,7 @@ function Agent:OnDespawn()
 	if self.verbs then
 		for i = #self.verbs, 1, -1 do
 			local verb = self.verbs[i]
-			verb:Cancel()
+			verb:Cancel( "despawned" )
 			if self.verbs == nil then
 				break
 			end
@@ -744,8 +744,9 @@ function Agent:CancelInvalidVerbs()
 	if self.verbs then
 		for i = #self.verbs, 1, -1 do
 			local verb = self.verbs[i]
-			if not verb:CanInteract( self ) then
-				verb:Cancel()
+			local ok, reason = verb:CanInteract( self )
+			if not ok then
+				verb:Cancel( reason )
 			end
 			if self.verbs == nil then
 				break
@@ -1034,21 +1035,25 @@ end
 function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	local viewer = self.world:GetPuppet()
 	
-	love.graphics.setFont( assets.FONTS.MAP_TILE )
-	local ch, clr = self:GetMapChar()
-	if self:IsDead() then
-		clr = constants.colours.BLACK
-	end
-
 	local scale = DEFAULT_ZOOM / screen.camera:GetZoom()
 	local image
 	if self.role_images and self.faction and self.faction.role then
 		image = self.role_images[ self.faction.role ]
 	end
 	if image or self.image then
-		screen:SetColour( 0xFFFFFFFF )
+		if self:IsDead() then
+			screen:SetColour( constants.colours.BLACK )
+		else
+			screen:SetColour( 0xFFFFFFFF )
+		end
 		screen:Image( image or self.image, x1, y1, x2 - x1, y2 - y1 )
 	else
+		love.graphics.setFont( assets.FONTS.MAP_TILE )
+		local ch, clr = self:GetMapChar()
+		if self:IsDead() then
+			clr = constants.colours.BLACK
+		end
+
 		love.graphics.setColor( table.unpack( clr or constants.colours.WHITE ))
 		love.graphics.print( ch or "?", x1 + (x2-x1)/6, y1, 0, 1.4 * scale, 1 * scale )
 	end

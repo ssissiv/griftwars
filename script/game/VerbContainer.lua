@@ -108,13 +108,6 @@ function VerbContainer:CountVerbs()
 	return #self.verbs
 end
 
-function VerbContainer:CancelVerbs()
-	for i = #self.verbs, 1, -1 do
-		self.verbs[i]:Cancel()
-		table.remove( self.verbs, i )
-	end
-end
-
 function VerbContainer:SortByDistanceTo( x, y )
 	local function fn( v1, v2 )
 		local tx1, ty1

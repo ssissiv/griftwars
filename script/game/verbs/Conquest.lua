@@ -7,16 +7,16 @@ function Conquest:OnInit()
 	self:SetShiftHours( 0, 24 )
 end
 
-function Conquest:SetTarget( target )
-	self.target = target
-end
-
 function Conquest:RenderAgentDetails( ui, screen, viewer )
 	ui.TextColored( 1, 0, 0, 1, "WAR" )
 end
 
 function Conquest:SetWaypoint( wp )
 	self.waypoint = wp
+end
+
+function Conquest:GetWaypoint()
+	return self.waypoint
 end
 
 function Conquest:FindCaptain()
@@ -34,28 +34,27 @@ function Conquest:FindCaptain()
 	return self.owner.rng:ArrayPick( t )
 end
 
-function Conquest:DoJob()
-	if self.captain then
-		return false
-	end
-
-	if not self.target then
-		return false
-	end
-
-	local captain = self:FindCaptain()
-	if not captain then
-		self:SetWaypoint( Waypoint( self.target ))
-	else
-		self.captain = captain
+function Conquest:Interact()
+	local delegate = self:FindCaptain()
+	if delegate then
+		self.delegate = delegate
 
 		local job = Job.Conquest( self.owner )
-		captain:GainAspect( job )
-		job:SetTarget( self.target )
-	end
+		job:SetWaypoint( self.waypoint )
+		delegate:GainAspect( job )
 
-	-- Monitor jobs.
-	return true
+		while not self:IsCancelled() do
+			-- Monitor.
+			if not delegate:IsSpawned() then
+				return
+			end
+		end
+
+		delegate:LoseAspect( job )
+
+	else
+		return Job.Interact( self )
+	end
 end
 
 function Conquest:GetName()

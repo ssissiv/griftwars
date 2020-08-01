@@ -91,7 +91,7 @@ function Behaviour:ScheduleNextTick( delta, reason )
 			self.tick_reason = reason
 		end
 
-	elseif delta == nil and self.tick_ev == nil then
+	elseif delta == nil and (self.tick_ev == nil or self.tick_ev.trigger_time) then
 		delta = math.randomGauss( 0.1 * ONE_HOUR, 0.1 * ONE_HOUR, ONE_HOUR / 60 )
 		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self )
 		self.tick_reason = reason
@@ -133,7 +133,7 @@ function Behaviour:OnTickBehaviour( reason )
 			if self.owner:IsDoing( verb ) then
 				-- self:GetWorld():Log( "{1} aborts {2} (doing {3})", self.owner, verb, active_verb )
 				-- print( "CANCEL", self.owner, verb, ", now doing ", active_verb )
-				verb:Cancel()
+				verb:Cancel( "behaviour")
 			end
 		end
 	end
@@ -168,7 +168,7 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 	local world = self:GetWorld()
 
 	if self.last_tick then
-		ui.TextColored( 0.8, 0.8, 0.8, 1, loc.format( "Last scheduled: {1#duration}", self.last_tick - world:GetDateTime()))
+		ui.TextColored( 0.8, 0.8, 0.8, 1, loc.format( "Last tick: {1#duration}", self.last_tick - world:GetDateTime()))
 	end
 
 	if self.tick_reason then
@@ -178,7 +178,7 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 	end
 
 	if self.tick_ev then
-		ui.Text( "Scheduled:" )
+		ui.Text( "Tick in:" )
 		ui.SameLine( 0, 10 )
 		local txt = Calendar.FormatDuration( self.tick_ev.when - world:GetDateTime() )
 		ui.TextColored( 0, 1, 1, 1, txt )

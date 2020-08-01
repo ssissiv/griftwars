@@ -96,6 +96,10 @@ function DebugCoroutine:init( c )
     self.locals = {}
 end
 
+function DebugCoroutine:SetCoro( c )
+    self.c = c
+end
+
 function DebugCoroutine:GetName()
     return "coroutine"
 end

@@ -12,6 +12,10 @@ function Tent:SpawnInterior()
 
 	local interior = Location.TentInterior()
 	self.world:SpawnLocation( interior )
+	-- is this really necessary
+	local x, y, z = self.location:GetCoordinate()
+	interior:SetCoordinate( x, y, self.location.map:GetMaxDepth() )
+
 
 	local other_portal = interior:FindPortalWithTag( "tent" )
 	self.portal:ConnectPortal( other_portal )

@@ -344,7 +344,7 @@ function GameScreen:RenderScreen( gui )
     		ui.SameLine( 0, 10 )
     		if ui.Button( "Cancel" ) then
     			puppet:Echo( "Nah, forget that." )
-    			verb:Cancel()
+    			verb:Cancel( "player cancel" )
     		end
     	end
     end

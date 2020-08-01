@@ -50,15 +50,10 @@ end
 -- end
 
 function Scavenge:Interact( actor )
-	local i = 0
 	while not self.cancelled do
-		if math.random() < 0.4 then
-			self:DoChildVerb( self.scrounge )
-		elseif math.random() < 0.5 then
+		if math.random() >= 0.5 or not self:DoChildVerb( self.scrounge ) then
 			self:DoChildVerb( self.wander, nil, 10 * ONE_MINUTE )
 		end
-		i = i + 1
-		assert( i < 10000, " bad scavenge ")
 	end
 	Msg:Speak( actor, "Well, that's enough scavenging for now." )
 end

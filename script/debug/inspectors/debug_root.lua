@@ -21,9 +21,10 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
     ui.Text( string.format( 'Mem: %.2f MB, FPS: %.1f', collectgarbage('count') / 1000, love.timer.getFPS()))
     if ui.TreeNode( "Event Load" ) then
         ui.Text( string.format( "%d total events", self.game.world.total_events_triggered  ))
+        ui.Text( string.format( "%d scheduled (%d peak)", #self.game.world.scheduled_events, self.game.world.event_peak ))
 
-        local arr = { 5, 8, 10, 12, 15, 24, 20, 3, 3, 3, 3, 3 }
-        ui.PlotHistogram("Events", arr, #arr, 0 )
+        -- local arr = { 5, 8, 10, 12, 15, 24, 20, 3, 3, 3, 3, 3 }
+        -- ui.PlotHistogram("Events", arr, #arr, 0 )
 
         ui.TreePop()
     end

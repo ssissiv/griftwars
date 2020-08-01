@@ -13,6 +13,9 @@ function Befriend:CalculateUtility()
 end
 
 function Befriend:CanInteract( actor, target )
+	if not target then
+		return false
+	end
 	if not target:IsAlert() then
 		return false, "Not alert"
 	end

@@ -24,7 +24,7 @@ function Strategize:FindStrategicPoint( actor )
 			end
 		end
 
-		self:YieldForTime( ONE_MINUTE )
+		-- self:YieldForTime( ONE_MINUTE )
 
 		return depth < 12
 	end
@@ -43,10 +43,11 @@ end
 -- end
 
 function Strategize:Interact( actor )
-	while true do
-		self:YieldForTime( ONE_HOUR )
+	while not self:IsCancelled() do
+		self:YieldForTime( HALF_HOUR )
 
 		self.target = self:FindStrategicPoint( actor )
+
 		if self.target then
 			Msg:Speak( actor, "Hmm... where should this brigade go..." )
 	
@@ -61,6 +62,7 @@ function Strategize:Interact( actor )
 
 			if not actor:HasAspect( Job.Conquest ) then
 				local job = Job.Conquest( actor )
+				job:SetWaypoint( Waypoint( self.target ))
 				actor:GainAspect( job )
 			end
 		end
