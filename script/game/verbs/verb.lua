@@ -34,10 +34,15 @@ function Verb:CalculateTimeElapsed( dt )
 	if self.ACT_RATE then
 		if self.ACT_RATE == math.huge then
 			-- Instant
-			return self.ACT_DURATION / WALL_TO_GAME_TIME
+			local now = self.world:GetDateTime()
+			local duration = self.ACT_TIME - now
+			assert( duration >= 0 )
+			return duration / WALL_TO_GAME_TIME
 		elseif self.ACT_DURATION then
 			-- Walltime
-			return (dt / self.ACT_RATE) * self.ACT_DURATION / WALL_TO_GAME_TIME
+			local duration = self.ACT_TIME - now
+			assert( duration >= 0 )
+			return (dt / self.ACT_RATE) * duration / WALL_TO_GAME_TIME
 		else
 			-- Speedup factor
 			return dt * self.ACT_RATE
@@ -420,20 +425,20 @@ function Verb:YieldForTime( duration, how, act_rate )
 	if how == "rate" then
 		-- Time is sped up by a factor of ACT_RATE
 		self.ACT_RATE = act_rate
-		self.ACT_DURATION = nil
+		self.ACT_TIME = nil
 
 	elseif how == "wall" then
 		-- Time is sped up so that duration will pass in 'act_rate' wall time.
 		self.ACT_RATE = act_rate
-		self.ACT_DURATION = duration
+		self.ACT_TIME = self.world:GetDateTime() + duration
 
 	elseif how == "instant" then
 		-- Time will advance by duration, instantly.
 		self.ACT_RATE = math.huge
-		self.ACT_DURATION = duration
+		self.ACT_TIME = self.world:GetDateTime() + duration
 
 	else
-		self.ACT_RATE, self.ACT_DURATION = nil, nil
+		self.ACT_RATE, self.ACT_TIME = nil, nil
 	end
 
 	self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self, coroutine.running() )
