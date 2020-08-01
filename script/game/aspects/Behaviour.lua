@@ -110,7 +110,6 @@ function Behaviour:GetHighestPriorityVerb()
 end
 
 function Behaviour:OnTickBehaviour( reason )
-	self.tick_ev = nil
 
 	if self.owner:IsPuppet() then
 		return
