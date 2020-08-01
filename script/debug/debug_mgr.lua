@@ -246,7 +246,7 @@ function DebugManager:RenderDebugConsole()
     end
 
 
-    local show = ui.Begin( "DBG_CONSOLE", true, flags )
+    local visible, show = ui.Begin( "DBG_CONSOLE", true, flags )
     if not show then
     	self:ToggleDebugConsole()
 
@@ -352,9 +352,6 @@ function DebugManager:RenderDebugPanels()
 		local panel = self.debug_panels[i]
 
 		local ok, result = xpcall( panel.RenderPanel, generic_error, panel, self )
-		if ok and panel._wants_to_close then
-			result = false
-		end
 		if not ok or not result then
 			panel:OnClose()
 			table.remove( self.debug_panels, i )
@@ -403,7 +400,7 @@ end
 
 function DebugManager:TogglePanel()
 	if #self.debug_panels > 0 then
-		table.remove( self.debug_panels ):OnClose()
+		self.debug_panels[ #self.debug_panels ]:Close()
 
 	else
 		self:CreatePanel()

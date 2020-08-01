@@ -13,8 +13,8 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 		txt = txt .. " (YOU)"
 	end
 
-    local shown, close, c = ui.Begin( txt, false, flags )
-    if shown then
+    local visible, show = ui.Begin( txt, true, flags )
+    if visible and show then
     	local count = 0
 		for i, engram in self.agent:GetMemory():Engrams() do
 			ui.PushID( rawstring(engram) )
@@ -54,6 +54,9 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
 		end
+		
+	elseif not show then
+		screen:RemoveWindow( self )
 	end
 
     ui.End()

@@ -37,6 +37,7 @@ function DebugPanel:OnClose()
         end
     end
     table.clear( self.nodes )
+    self.last_node = nil
     self.idx = 0
 end
 
@@ -64,8 +65,8 @@ function DebugPanel:RenderPanel( dbg )
         ui.SetNextWindowSize( node.PANEL_WIDTH or DEFAULT_WIDTH, node.PANEL_HEIGHT or DEFAULT_HEIGHT, "Once" )
     end
 
-    local show = ui.Begin( title, true, flags )
-    if show then
+    local visible, show = ui.Begin( title, true, flags )
+    if visible and show then
         if ui.BeginMenuBar() then
             if node.can_reload and node._file then
                 if ui.Button( "*" ) then
@@ -159,7 +160,7 @@ function DebugPanel:RenderPanel( dbg )
         self.show_test_window = ui.ShowTestWindow( true )
     end
 
-    return show
+    return show and not self._wants_to_close
 end
 
 function DebugPanel:PushNode( node )

@@ -71,8 +71,8 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
     -- ui.SetNextWindowSize( 400, 150 )
     ui.SetNextWindowPos( (love.graphics.getWidth() - 400) / 2, (love.graphics.getHeight() - 150) / 2 )
 
-    local shown, close, c = ui.Begin( self.title or "Inventory", false, flags )
-    if shown then
+    local visible, show = ui.Begin( self.title or "Inventory", true, flags )
+    if visible and show then
         ui.Dummy( 400, 0 )
         self:RenderInventory( ui, screen )
 
@@ -86,6 +86,9 @@ function InventoryWindow:RenderImGuiWindow( ui, screen )
                 self:LootAll()
             end
         end
+        
+    elseif not show then
+        self:Close( screen )
     end
 
     ui.End()

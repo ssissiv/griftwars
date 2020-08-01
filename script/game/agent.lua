@@ -687,7 +687,8 @@ function Agent:DoVerbAsync( verb, ... )
 	local coro = coroutine.create( DoVerbCoroutine )
 	local ok, result = coroutine.resume( coro, self, verb, ... )
 	if not ok then
-		error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
+		verb:ShowError( coro, tostring(result))
+		-- error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
 	end
 
 	return true

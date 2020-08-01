@@ -218,7 +218,7 @@ function Verb:CanInteract( actor, target )
 	if not actor:IsSpawned() or actor:IsDead() then
 		return false, "Despawned or dead actor"
 	end
-	if actor.world:IsPaused() and not actor.world:IsPaused( PAUSE_TYPE.IDLE ) then
+	if actor.world:IsNotIdlePaused() then
 		return false, "Paused"
 	end
 
@@ -323,19 +323,23 @@ function Verb:DoVerb( actor, ... )
 
 	self:Interact( actor, ... )
 
+	self:Cleanup()
+
+	return true
+end
+
+function Verb:Cleanup()
 	assert( self.yield_ev == nil )
 	assert( self.yield_duration == nil )
 	assert( self.child == nil )
 
 	self.coro = nil
-	self.time_finished = actor.world:GetDateTime()
+	self.time_finished = self.actor.world:GetDateTime()
 
 	for i, actor in ipairs( self.actors ) do
 		actor:RemoveListener( self )
 	end
 	table.clear( self.actors )
-
-	return true
 end
 
 function Verb:IsDoing()
@@ -359,7 +363,7 @@ function Verb:Cancel()
 		return
 	end
 
-	-- print ( "CANCEL", self, self.actor, debug.traceback())
+	-- print ( "CANCEL", self, self.actor, self.coro and coroutine.status( self.coro ), debug.traceback())
 
 	if self.cancelled then
 		print( self, self.cancelled_frame, self.cant_reason )
@@ -381,6 +385,9 @@ function Verb:Cancel()
 	elseif self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.actor.world:TriggerEvent( self.yield_ev )
+
+	else
+		print( "What happens???", self, coroutine.status( self.coro ))
 	end
 end
 
@@ -512,11 +519,7 @@ function Verb:ShowError( coro, msg )
 		ui.Spacing()
 
 		self.coro_dbg:RenderPanel( ui, panel )
-
-		ui.NewLine()
-		if ui.Button( "Resume" ) then
-			self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
-		end
+		return true
 	end )
 end
 
@@ -570,9 +573,15 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 
 	
 	elseif self:IsDoing() then
-		if ui.Button( "Cancel" ) then
+		if coroutine.status( self.coro ) == "dead" then
+			if ui.Button( "Cleanup" ) then
+				self:Cleanup()
+			end
+
+		elseif ui.Button( "Cancel" ) then
 			self:Cancel()
 		end
+
 	elseif self.actor == nil then
 		ui.TextColored( 1, 0, 0, 1, "No Actor" )
 

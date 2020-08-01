@@ -20,8 +20,8 @@ function AffinityChangedWindow:RenderImGuiWindow( ui, screen )
 	ui.SetNextWindowSize( 400, 150 )
 	ui.SetNextWindowPos( (love.graphics.getWidth() - 400) / 2, (love.graphics.getHeight() - 150) / 2 )
 
-    local shown, close, c = ui.Begin( "New Affinity!", false, flags )
-    if shown then
+    local visible, show = ui.Begin( "New Affinity!", true, flags )
+    if visible and show then
     	local puppet = self.affinity.world:GetPuppet()
     	local other = self.affinity:GetOther( puppet )
     	local affinity = self.affinity:GetAffinity()
@@ -38,7 +38,7 @@ function AffinityChangedWindow:RenderImGuiWindow( ui, screen )
 
     ui.End()
 
-    if self.result then
+    if not show or self.result then
 		screen:RemoveWindow( self )
 		self:Resume()
 	end

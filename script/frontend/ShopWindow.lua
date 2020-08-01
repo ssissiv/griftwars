@@ -11,8 +11,8 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 	ui.SetNextWindowSize( 500,300 )
 
 	local txt = loc.format( "{1.Id}'s Shop", self.owner:LocTable())
-    local shown, close, c = ui.Begin( txt, false, flags )
-    if shown then
+    local visible, show = ui.Begin( txt, true, flags )
+    if visible and show then
     	local shopkeep = self.owner:GetAspect( Job.ManageShop )
     	local money = self.buyer:GetInventory():GetMoney()
 
@@ -37,11 +37,11 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 
 		ui.Text( loc.format( "You have {1#money}.", money ))
 		ui.Separator()
+	end
 
-		if ui.Button( "Close" ) then
-			screen:RemoveWindow( self )
-			self:Resume()
-		end
+	if not show or ui.Button( "Close" ) then
+		screen:RemoveWindow( self )
+		self:Resume()
 	end
 
     ui.End()

@@ -143,6 +143,7 @@ function love.load(arg)
     LoadAllScripts( "game/zones" )
     LoadAllScripts( "game/factions" )
     LoadAllScripts( "game/tilemaps" )
+    LoadAllScripts( "game/worldgen" )
 
     require "game/Tile"
 

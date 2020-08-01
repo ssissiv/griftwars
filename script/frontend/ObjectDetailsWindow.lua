@@ -13,8 +13,8 @@ end
 function ObjectDetailsWindow:RenderImGuiWindow( ui, screen )
     local flags = { "AlwaysAutoResize", "NoScrollBar" }
 	local txt = self.obj:GetName()
-    local shown, close, c = ui.Begin( txt, false, flags )
-    if shown then
+    local visible, show = ui.Begin( txt, true, flags )
+    if visible and show then
     	ui.Text( txt )
     	ui.Dummy( 300, 00 )
     	ui.Text( loc.format( "Value: {1}", self.obj:GetValue() ))
@@ -31,6 +31,9 @@ function ObjectDetailsWindow:RenderImGuiWindow( ui, screen )
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
 		end
+        
+    elseif not show then
+        screen:RemoveWindow( self )
 	end
 
     ui.End()

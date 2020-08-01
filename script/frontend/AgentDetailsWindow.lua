@@ -154,8 +154,8 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		txt = txt .. " (YOU)"
 	end
 
-    local shown, close, c = ui.Begin( txt, false, flags )
-    if shown then
+    local visible, show = ui.Begin( txt, true, flags )
+    if visible and show then
 		UIHelpers.RenderSelectedEntity( ui, screen, self.agent, self.viewer )
 		ui.Dummy( 400, 0 )
 
@@ -176,6 +176,9 @@ function AgentDetailsWindow:RenderImGuiWindow( ui, screen )
 		if ui.Button( "Close" ) then
 			screen:RemoveWindow( self )
 		end
+
+	elseif not show then
+		screen:RemoveWindow( self )
 	end
 
     ui.End()

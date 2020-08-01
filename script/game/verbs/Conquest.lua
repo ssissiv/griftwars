@@ -1,6 +1,7 @@
 -- Conquest means sending 1 or more fighty-type Agents to a specific location.
 
 local Conquest = class( "Job.Conquest", Job )
+Conquest.entity_tags = {"conquest"}
 
 function Conquest:OnInit()
 	self:SetShiftHours( 0, 24 )

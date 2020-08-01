@@ -10,7 +10,7 @@ function Strategize:GetDesc( viewer )
 end
 
 function Strategize:CalculateUtility( actor )
-	return UTILITY.DUTY
+	return UTILITY.DUTY - 1
 end
 
 function Strategize:FindStrategicPoint( actor )
@@ -23,6 +23,9 @@ function Strategize:FindStrategicPoint( actor )
 				table.insert( defend_pts, location )
 			end
 		end
+
+		self:YieldForTime( ONE_MINUTE )
+
 		return depth < 12
 	end
 

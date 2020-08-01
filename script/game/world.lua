@@ -65,6 +65,17 @@ function World:CollectIntel( quality )
 	return self.acc:CalculateValue( CALC_EVENT.COLLECT_INTEL, {}, quality )
 end
 
+function World:IsNotIdlePaused()
+	if self.pause then
+		for i, pause_type in ipairs( self.pause ) do
+			if pause_type ~= PAUSE_TYPE.IDLE then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 function World:GetLimbo()
 	return self.limbo
 end

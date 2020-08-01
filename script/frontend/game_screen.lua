@@ -4,7 +4,7 @@ function GameScreen:init( world )
 	RenderScreen.init( self )
 	
 	if world == nil then
-		local gen = WorldGen()
+		local gen = WorldGen.TinyWorld()
 		world = gen:GenerateWorld()
 		world:Start()
 	end
@@ -284,7 +284,15 @@ function GameScreen:RenderScreen( gui )
     if self.world:IsPaused() then
     	ui.SameLine( 0, 10 )
     	ui.Text( loc.format( "(PAUSED - {1})", table.concat( self.world.pause, " " ) ))
+
+    	if self.world:IsPaused( PAUSE_TYPE.ERROR ) then
+    		ui.SameLine( 0, 10 )
+    		if ui.Button( "Resume error" ) then
+				self.world:TogglePause( PAUSE_TYPE.ERROR )
+			end
+		end
     end
+
     local dt = self.world:CalculateTimeElapsed( 1.0 )
     if dt ~= WALL_TO_GAME_TIME then
     	ui.SameLine( 0, 10 )
@@ -902,7 +910,7 @@ function GameScreen:SetCurrentFocus( focus )
 
 	self:PanToCurrentInterest()
 
-	if self.current_focus and self.world:IsPaused( PAUSE_TYPE.DEBUG ) then
+	if self.current_focus and (self.world:IsPaused( PAUSE_TYPE.DEBUG ) or self.world:IsPaused( PAUSE_TYPE.ERROR )) then
 		if self.last_panel then
 			GetDbg():ClearPanel( self.last_panel )
 		end

@@ -35,8 +35,10 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		panel:AppendTable( ui, faction.faction )
 	end
 
+	local world = self.agent.world
+	
 	if not self.agent:IsPuppet() then
-		if self.agent:GetLocation() then
+		if self.agent:GetLocation() and world:GetPuppet() ~= self.agent:GetLocation() then
 			if ui.Button( loc.format( "Warp To {1}", self.agent:GetLocation()) ) then
 				self.agent.world:DoAsync( function( world )
 					world:GetPuppet():WarpToAgent( self.agent )

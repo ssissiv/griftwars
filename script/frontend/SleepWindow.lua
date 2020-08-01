@@ -13,8 +13,8 @@ function SleepWindow:RenderImGuiWindow( ui, screen )
 	ui.SetNextWindowSize( 500,300 )
 
 	local txt = loc.format( "Sleeping in {1#location}", self.agent:GetLocation() )
-    local shown, close, c = ui.Begin( txt, false, flags )
-    if shown then
+    local visible, show = ui.Begin( txt, true, flags )
+    if visible and show then
     	if self.xp then
 	    	ui.Text( loc.format( "XP: {1}", self.xp - self.xp_used ))
 	    	ui.Spacing()
@@ -44,6 +44,10 @@ function SleepWindow:RenderImGuiWindow( ui, screen )
 			screen:RemoveWindow( self )
 			coroutine.resume( self.coro, self.stat_xp )
 		end
+
+	elseif not show then
+		screen:RemoveWindow( self )
+		coroutine.resume( self.coro, self.stat_xp )		
 	end
 
     ui.End()
