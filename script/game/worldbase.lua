@@ -9,7 +9,10 @@ function WorldBase:init()
 	
 	self:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
-
+	self.events_triggered = 0
+	self.total_events_triggered = 0
+	self.event_times = {}
+	
 	self.buckets = {}
 	self.entities = {}
 	self.pause = {}
@@ -112,6 +115,12 @@ function WorldBase:AdvanceTime( dt )
 		self.datetime = ev.when
 		
 		if not ev.cancel then
+			self.events_triggered = self.events_triggered + 1
+			if self.events_triggered >= 500 then
+				self.events_triggered = self.events_triggered - 500
+				table.insert( self.event_times, self.datetime )
+			end
+			self.total_events_triggered = self.total_events_triggered + 1
 			self:TriggerEvent( ev )
 		end
 

@@ -385,9 +385,6 @@ function Verb:Cancel()
 	elseif self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.actor.world:TriggerEvent( self.yield_ev )
-
-	else
-		print( "What happens???", self, coroutine.status( self.coro ))
 	end
 end
 

@@ -18,7 +18,15 @@ end
 
 function DebugRoot:RenderPanel( ui, panel, dbg )
     ui.Text( string.format( "%s", "BUILD_ID" ))
-    ui.Text( string.format( 'Mem: %.2f MB', collectgarbage('count') / 1000))
+    ui.Text( string.format( 'Mem: %.2f MB, FPS: %.1f', collectgarbage('count') / 1000, love.timer.getFPS()))
+    if ui.TreeNode( "Event Load" ) then
+        ui.Text( string.format( "%d total events", self.game.world.total_events_triggered  ))
+
+        local arr = { 5, 8, 10, 12, 15, 24, 20, 3, 3, 3, 3, 3 }
+        ui.PlotHistogram("Events", arr, #arr, 0 )
+
+        ui.TreePop()
+    end
 
     ui.Separator()
 

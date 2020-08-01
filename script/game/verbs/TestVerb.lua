@@ -7,5 +7,4 @@ end
 function TestVerb:Interact( actor )
 	print( loc.format( "It is {1#time}", actor.world:GetDateTime() ))
 	-- self:YieldForTime( ONE_SECOND )
-	error( "oops" )
 end

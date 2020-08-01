@@ -374,16 +374,16 @@ function DebugPanel:AppendKeyValues( ui, t, offset )
     if more then
         ui.Separator()
         ui.TextColored( 1, 0, 1, 1, string.format( "%d more entries", n - more ))
-        ui.SameLine( nil, 10 )
+        ui.SameLine( 0, 10 )
         
         if offset > 0 then
-            ui.SameLine( nil, 10 )
+            ui.SameLine( 0, 10 )
             if ui.Button( "Prev..." ) then
                 self:PushNode( DebugTable( t, nil, math.max( 0, offset - MAX_ENTRIES )))
             end
         end
 
-        ui.SameLine( nil, 10 )
+        ui.SameLine( 0, 10 )
         if ui.Button( "Next..." ) then
             self:PushNode( DebugTable( t, nil, more ))
         end
