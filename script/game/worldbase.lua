@@ -147,7 +147,7 @@ function WorldBase:AdvanceTime( dt )
 
 		ev = self.scheduled_events[1]
 		if ev_count > 100 then
-			print( "Processing >100 events, bailing", ev_count, dt, #self.scheduled_events )
+			-- print( "Processing >100 events, bailing", ev_count, dt, #self.scheduled_events )
 			return dt
 		end
 	end
