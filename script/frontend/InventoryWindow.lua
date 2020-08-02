@@ -34,7 +34,7 @@ end
 
 function InventoryWindow:LootAll()
     -- FIXME: need to loot all the objects.
-    self.viewer:DoVerbAsync( Verb.LootAll( self.inventory ), self.inventory )
+    print( self.viewer:DoVerbAsync( Verb.LootAll( self.inventory ), self.inventory ))
 end
 
 function InventoryWindow:RenderInventory( ui, screen )

@@ -68,7 +68,7 @@ end
 function World:IsNotIdlePaused()
 	if self.pause then
 		for i, pause_type in ipairs( self.pause ) do
-			if pause_type ~= PAUSE_TYPE.IDLE then
+			if pause_type ~= PAUSE_TYPE.IDLE and pause_type ~= PAUSE_TYPE.NEXUS then
 				return true
 			end
 		end
