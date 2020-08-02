@@ -146,8 +146,8 @@ function WorldBase:AdvanceTime( dt )
 		end
 
 		ev = self.scheduled_events[1]
-		if false and ev_count > 100 then
-			print( "Processing >100 events, bailing", ev_count, dt )
+		if ev_count > 100 then
+			print( "Processing >100 events, bailing", ev_count, dt, #self.scheduled_events )
 			return dt
 		end
 	end
@@ -277,8 +277,8 @@ function WorldBase:UpdateWorld( dt )
 	end
 
 	local world_dt = self.time_debt or self:CalculateTimeElapsed( dt )
-	-- if world_dt > 0 then
-	-- 	if self.time_debt then
+	assert( world_dt <= ONE_DAY and world_dt >= 0, tostring(world_dt))
+
 	-- 		print( "TIME_DEBT:", dt, world_dt, Calendar.FormatDuration( world_dt ) )
 	-- 	else
 	-- 		print( dt, world_dt, Calendar.FormatDuration( world_dt ) )

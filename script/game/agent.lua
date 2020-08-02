@@ -689,6 +689,7 @@ function Agent:DoVerbAsync( verb, ... )
 	if not ok then
 		verb:ShowError( coro, tostring(result))
 		-- error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
+		return false, reason
 	end
 
 	return true
