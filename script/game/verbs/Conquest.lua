@@ -48,6 +48,8 @@ function Conquest:Interact()
 			if not delegate:IsSpawned() then
 				return
 			end
+
+			self:YieldForTime( ONE_HOUR )
 		end
 
 		delegate:LoseAspect( job )

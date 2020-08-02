@@ -31,22 +31,19 @@ function Verb.SortByUtility( a, b )
 end
 
 function Verb:CalculateTimeElapsed( dt )
-	if self.ACT_RATE then
-		if self.ACT_RATE == math.huge then
-			-- Instant
-			local now = self.world:GetDateTime()
-			local duration = self.ACT_TIME - now
-			assert( duration >= 0 )
-			return duration / WALL_TO_GAME_TIME
-		elseif self.ACT_DURATION then
-			-- Walltime
-			local duration = self.ACT_TIME - now
-			assert( duration >= 0 )
-			return (dt / self.ACT_RATE) * duration / WALL_TO_GAME_TIME
-		else
-			-- Speedup factor
-			return dt * self.ACT_RATE
-		end
+	if self.yield_type == "instant" then
+		-- Instant
+		local now = self.world:GetDateTime()
+		local duration = self.yield_value - now
+		assert( duration >= 0 )
+		return duration / WALL_TO_GAME_TIME
+
+	elseif self.yield_type == "wall" then
+		return dt * self.yield_value
+
+	elseif self.yield_type == "rate" then
+		return dt * self.yield_value
+
 	else
 		return dt
 	end
@@ -422,31 +419,32 @@ function Verb:YieldForTime( duration, how, act_rate )
 		return
 	end
 
+	self.yield_type = how
+
 	if how == "rate" then
 		-- Time is sped up by a factor of ACT_RATE
-		self.ACT_RATE = act_rate
-		self.ACT_TIME = nil
+		self.yield_value = act_rate
 
 	elseif how == "wall" then
 		-- Time is sped up so that duration will pass in 'act_rate' wall time.
-		self.ACT_RATE = act_rate
-		self.ACT_TIME = self.world:GetDateTime() + duration
+		-- (dt / self.ACT_RATE) * self.ACT_DURATION / WALL_TO_GAME_TIME
+		self.yield_value = duration / (act_rate * WALL_TO_GAME_TIME)
 
 	elseif how == "instant" then
 		-- Time will advance by duration, instantly.
-		self.ACT_RATE = math.huge
-		self.ACT_TIME = self.world:GetDateTime() + duration
+		self.yield_value = self.world:GetDateTime() + duration
 
 	else
-		self.ACT_RATE, self.ACT_TIME = nil, nil
+		self.yield_value = nil
 	end
 
 	self.yield_ev = self.actor.world:ScheduleFunction( duration, self.Resume, self, coroutine.running() )
 	self.yield_duration = duration
 	local result = coroutine.yield()
 
-	self.ACT_RATE = nil
-	
+	self.yield_value = nil
+	self.yield_type = nil
+
 	return result
 end
 
