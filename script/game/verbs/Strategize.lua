@@ -4,8 +4,6 @@ local Strategize = class( "Verb.Strategize", Verb.Plan )
 function Strategize:GetDesc( viewer )
 	if self.target then
 		return loc.format( "Strategizing to capture {1}", self.target )
-	else
-		return "Making military plans"
 	end
 end
 

@@ -70,9 +70,7 @@ function loc.format( format, ... )
 				substr = tostring(option)
             elseif fn == '.' then
                 -- v is a table, options is the field-name.
-                if is_instance( v, Object ) then
-                	v = v:LocTable()
-            	elseif is_instance( v, Agent ) then
+                if v.LocTable then
             		v = v:LocTable()
                 end
                 substr = tostring( v[ options ] )

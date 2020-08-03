@@ -58,9 +58,38 @@ function Location:OnDespawn()
 	Entity.OnDespawn( self )
 end
 
+function Location:GenerateLocTable( viewer )
+	local t = { viewer = viewer }
 
-function Location:LocTable()
-	return self
+	t.title = self:GetTitle()
+	
+	t.udesc = self.title .. "(Unexplored)"
+	t.Udesc = loc.cap( t.udesc )
+
+	if self:IsDiscovered( viewer ) then
+		t.desc = t.title
+	else
+		t.desc = t.udesc
+	end
+
+	t.Desc = loc.cap( t.desc )
+
+	t.id = t.desc
+	t.Id = t.Desc
+
+	return t
+end
+
+
+function Location:LocTable( viewer )
+	if viewer == nil and self.world then
+		viewer = self.world:GetPuppet()
+	end
+
+	if self.loc_table == nil or self.loc_table.viewer ~= viewer then
+		self.loc_table = self:GenerateLocTable( viewer )
+	end
+	return self.loc_table
 end
 
 function Location:AssignZone( zone, depth )
