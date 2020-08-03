@@ -48,7 +48,7 @@ function Walk:Interact( actor )
 		actor:DeltaStat( STAT.FATIGUE, 1 )
 		self:YieldForTime( RUN_TIME * move_speed, "instant" )
 	else
-		actor:DeltaStat( STAT.FATIGUE, 0.5 )
+		actor:DeltaStat( STAT.FATIGUE, 0.1 )
 		self:YieldForTime( WALK_TIME * move_speed, "instant" )
 	end
 end
