@@ -61,8 +61,8 @@ function World:UnregisterStatValue( stat )
 	table.arrayremove( self.stats, stat )
 end
 
-function World:CollectIntel( quality )
-	return self.acc:CalculateValue( CALC_EVENT.COLLECT_INTEL, {}, quality )
+function World:CollectIntel( agent, quality )
+	return self.acc:CalculateValue( CALC_EVENT.COLLECT_INTEL, {}, agent, quality )
 end
 
 function World:IsNotIdlePaused()

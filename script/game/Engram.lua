@@ -132,6 +132,19 @@ function Befriended:GetDesc()
 end
 
 -----------------------------------------------------------------------------
+-- Diplomacy bonus when dealing with this faction.
+
+local InsideInfo = class( "Engram.InsideInfo", Engram )
+
+function InsideInfo:init( faction )
+	self.faction = faction
+end
+
+function InsideInfo:GetDesc()
+	return loc.format( "You have insider information about {1}.", self.faction:GetFactionName() )
+end
+
+-----------------------------------------------------------------------------
 -- You know the location of something
 
 local Discovered = class( "Engram.Discovered", Engram )

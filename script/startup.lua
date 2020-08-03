@@ -17,7 +17,7 @@ function WarpToWell()
 	puppet:WarpToLocation( obj.location )
 end
 
-goto( "bandit cap" )
+goto( "scavenger" )
 
 han = world:GetPuppet()
 g = obj

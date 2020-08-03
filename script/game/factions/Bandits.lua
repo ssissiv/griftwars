@@ -26,9 +26,21 @@ function Bandits:OnSpawn( world )
 			self:AddTagForFaction( faction, FACTION_TAG.ENEMY )
 		end
 	end
+
+	-- self:AddAspect( Aspect.Intel( Engram.Discovered( exit:GetDesc() )))
+	world:ListenForEvent( CALC_EVENT.COLLECT_INTEL, self, self.OnCollectIntel )
+end
+
+function Bandits:OnCollectIntel( event_name, world, acc )
+
+	acc:AppendValue( Engram.Discovered( self.tent_location, loc.format( "You learned the location of the {1} camp!", self:GetFactionName() )))
+
+	acc:AppendValue( Engram.InsideInfo( self ))
 end
 
 function Bandits:SpawnTents( room )
+	self.tent_location = room
+
 	local bandits = self:GetAgentsByRole( FACTION_ROLE.GUARD )
 	local tent_count = math.ceil( #bandits / 3 )
 	for i = 1, #bandits, 3 do

@@ -52,6 +52,19 @@ function Befriend:CalculateDC()
 		acc:AddValue( count, self, loc.format( "{1} attempts within the last day", count ))
 	end
 
+	-- Faction Role Modiifer
+	local faction = self.obj:GetAspect( Aspect.FactionMember )
+	if faction and faction:GetRole() then
+		local tier = FACTION_TIERS[ faction:GetRole() ]
+		acc:AddValue( tier * 5, self, loc.format( "Faction Tier: {1} ({2})", tier, faction:GetRole() ))
+	end
+
+	-- InsideInfo.
+	if faction then
+		local count = self.actor:GetMemory():CountEngrams( function( e ) return is_instance( e, Engram.InsideInfo ) and e.faction == faction.faction end )
+		acc:AddValue( count * -5, self, loc.format( "Inside Info (x{1})", count ))
+	end
+
 	local dc, details = acc:GetValue()
 	local fail_str = count > 0 and "Lose 1 Trust"
 	return dc, details, fail_str

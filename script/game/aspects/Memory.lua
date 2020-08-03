@@ -58,7 +58,11 @@ function Memory:Engrams()
 end
 
 function Memory:HasEngram( pred, ... )
-	return self:FindEngram( pred, ... ) ~= nil
+	if is_instance( pred, Engram ) then
+		return table.contains( self.engrams, pred )
+	else
+		return self:FindEngram( pred, ... ) ~= nil
+	end
 end
 
 function Memory:FindEngram( pred, ... )

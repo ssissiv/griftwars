@@ -195,12 +195,22 @@ function LearnIntel:GetName()
 end
 
 function LearnIntel:OnUseFavour( agent )
-	-- Search intel
-	local intels = agent.world:CollectIntel()
-	-- Gain Engram.
-	local engram = table.arraypick( intels )
-	Msg:EchoTo( agent, "Learned: {1}", engram:GetDesc() )
-	agent:GetMemory():AddEngram( engram )
+	if self.engram then
+		if agent:GetMemory():HasEngram( self.engram ) then
+			Msg:EchoTo( agent, "Already learned: {1}", self.engram:GetDesc() )
+		else
+			Msg:EchoTo( agent, "Relearned: {1}", self.engram:GetDesc() )
+			agent:GetMemory():AddEngram( self.engram )
+		end
+
+	else
+		-- Search intel
+		local intels = agent.world:CollectIntel( agent )
+		-- Gain Engram.
+		self.engram = table.arraypick( intels )
+		Msg:EchoTo( agent, "Learned: {1}", self.engram:GetDesc() )
+		agent:GetMemory():AddEngram( self.engram )
+	end
 end
 
 
