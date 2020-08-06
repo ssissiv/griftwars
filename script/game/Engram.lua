@@ -154,6 +154,15 @@ function Discovered:init( target, desc )
 	self.desc = desc
 end
 
+function Discovered:MergeEngram( other )
+	if is_instance( other, Discovered ) and self.target == other.target then
+		self.when = other.when
+		return true
+	end
+
+	return false
+end
+
 function Discovered:CheckPrivacy( target, pr_flags )
 	if target == self.target then
 		return SetBits( pr_flags, PRIVACY_ALL )

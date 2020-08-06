@@ -9,6 +9,7 @@ end
 function AffinityChangedWindow:KeyPressed( key, screen )
 	if key == "return" or key == "escape" then
 		self.result = true
+		return true
 	end
 
 	return false

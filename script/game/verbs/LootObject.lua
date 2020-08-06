@@ -52,17 +52,15 @@ function LootAll:Interact( actor, inventory )
 	inventory = inventory or self.inventory
 
 	self.loot = self.loot or Verb.LootObject()
-	print( "LOOT ALL??", inventory )
 
 	local items = table.shallowcopy( inventory:GetItems() )
 	for i, obj in ipairs( items ) do
-		print( items )
 		local wearable = obj:GetAspect( Aspect.Wearable )
 		if wearable and wearable:IsEquipped() then
 			Msg:EchoTo( actor, "You remove {1} from {2.desc}.", obj:GetName(), inventory.owner:LocTable( actor ))
 			wearable:Unequip()
 		end
 
-		print( self:DoChildVerb( self.loot, obj ))
+		print( "LootAll", self:DoChildVerb( self.loot, obj ))
 	end
 end

@@ -62,7 +62,9 @@ function Befriend:CalculateDC()
 	-- InsideInfo.
 	if faction then
 		local count = self.actor:GetMemory():CountEngrams( function( e ) return is_instance( e, Engram.InsideInfo ) and e.faction == faction.faction end )
-		acc:AddValue( count * -5, self, loc.format( "Inside Info (x{1})", count ))
+		if count > 0 then
+			acc:AddValue( count * -5, self, loc.format( "Inside Info (x{1})", count ))
+		end
 	end
 
 	local dc, details = acc:GetValue()
@@ -83,7 +85,7 @@ function Befriend:Interact( actor, target )
 
 	local ok, result_str = self:CheckDC()
 	if ok then
-		local trust = math.max( 1, math.random( 0, actor:GetStatValue( CORE_STAT.CHARISMA )))
+		local trust = actor:GetStatValue( CORE_STAT.CHARISMA )
 
 		Msg:EchoTo( actor, "You befriend {1.Id}. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( trust )

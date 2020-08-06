@@ -16,6 +16,17 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
         if faction and faction:GetRoleTitle() then
             ui.TextColored( 0.8, 0.8, 0.8, 1, faction:GetRoleTitle() )
         end
+
+        local aff = ent:GetAffinities()[ viewer ]
+        if aff and (aff:GetTrust() ~= 0 or aff:GetAffinity() ~= AFFINITY.STRANGER) then
+            ui.TextColored( 1, 1, 0, 1, "*" )
+            ui.SameLine( 0, 10 )
+            ui.Text( tostring(aff:GetAffinity() ))
+            if not ent:IsDead() then
+                ui.SameLine( 0, 20 )
+                ui.Text( loc.format( "Trust: {1}", aff:GetTrust() ))
+            end
+        end
     end
 
     ui.SameLine( 0, 10 )
@@ -62,18 +73,6 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
                 end
                 verb = verb.child
             end
-        end
-    end
-
-    -- If has trust, show it.
-    if is_instance( ent, Agent ) then
-        local aff = ent:GetAffinities()[ viewer ]
-        if aff and (aff:GetTrust() ~= 0 or aff:GetAffinity() ~= AFFINITY.STRANGER) then
-            ui.TextColored( 1, 1, 0, 1, "*" )
-            ui.SameLine( 0, 10 )
-            ui.Text( tostring(aff:GetAffinity() ))
-            ui.SameLine( 0, 20 )
-            ui.Text( loc.format( "Trust: {1}", aff:GetTrust() ))
         end
     end
 end

@@ -92,7 +92,7 @@ function Interaction:SatisfyReqs( actor )
 end
 
 function Interaction:CollectVerbs( verbs, actor, obj )
-	if actor ~= self.owner and obj == self.owner then
+	if actor ~= self.owner and obj == self.owner and not self.owner:IsDead() then
 		local ok, reason = self:CanInteract( actor )
 		if ok or reason then
 			verbs:AddVerb( Verb.Interact( self ))
