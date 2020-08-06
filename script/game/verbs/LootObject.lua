@@ -20,7 +20,7 @@ function LootObject:CanInteract( actor, obj )
 	end
 
 	if not obj:GetAspect( Aspect.Carryable ) then
-		return false -- Not even carryable
+		return false, "Not carrayble" -- Not even carryable
 	end
 	return true
 end

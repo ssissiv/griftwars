@@ -90,3 +90,15 @@ GiftScavenger.loot =
 }
 LOOT_GIFT_SCAVENGER = GiftScavenger()
 
+
+local FineHide = class( "LootTable.FineHide", LootTable )
+FineHide.loot =
+{
+	function()
+		return Object.FineHide()
+	end, 1,
+}
+FINE_HIDE = FineHide()
+
+
+

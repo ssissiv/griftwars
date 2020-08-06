@@ -723,6 +723,16 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 
 		ui.Separator()
 
+		for i, obj in tile:Contents() do
+			if is_instance( obj, Agent ) and not obj:IsDead() then
+				if ui.MenuItem( loc.format( "Kill {1}", obj )) then
+					obj:Kill()
+				end
+			end
+		end
+
+		ui.Separator()
+		
 		if ui.MenuItem( "Gen-Cursor here" ) then
 			DBSET( "curs", self.puppet:GetLocation().map:CreateCursor( tile:GetCoordinate() ))
 		end

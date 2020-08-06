@@ -477,10 +477,10 @@ function Verb:Resume( coro )
 		local ok, reason = self:CanInteract( self.actor, self.obj )
 		if not ok then
 			self:Cancel( reason )
-		end
+
 
 		-- Behaviour might also cancel.
-		if self.actor.behaviour then
+		elseif self.actor.behaviour then
 			self.actor.behaviour:OnTickBehaviour( tostring(self).. " finished" )
 		end
 	end
@@ -501,8 +501,8 @@ function Verb:Resume( coro )
 		-- print( "DONE", self, coroutine.status(coro))
 	end
 
-	if self.cancelled and self.actor:IsDoing( self ) then
-		self:ShowError( coro, "verb did respect cancellation" )
+	if self.cancelled and self.actor:IsDoing( self ) and not self.error then
+		self:ShowError( coro, "verb didnt respect cancellation" )
 		-- What now? Forcibly remove from actor? etc.?
 	end
 end
