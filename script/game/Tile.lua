@@ -57,12 +57,14 @@ function Tile:IsPassable( what, impassables )
 	end
 	if self.contents then
 		for i, obj in ipairs( self.contents ) do
-			local impass = obj:GetAspect( Aspect.Impass )
-			if impass and not impass:IsPassable( what ) then
-				if impassables then
-					table.insert( impassables, obj )
-				else
-					return false, tostring(obj).." is impassable"
+			if obj ~= what then
+				local impass = obj:GetAspect( Aspect.Impass )
+				if impass and not impass:IsPassable( what ) then
+					if impassables then
+						table.insert( impassables, obj )
+					else
+						return false, tostring(obj).." is impassable"
+					end
 				end
 			end
 		end

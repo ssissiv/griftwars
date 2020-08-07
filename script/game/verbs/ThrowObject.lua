@@ -40,50 +40,14 @@ function ThrowObject:Interact( actor, target )
 	self.proj:GetAspect( Aspect.Wearable ):Unequip()
 	actor:GetInventory():RemoveItem( self.proj )
 	self.proj:WarpToLocation( actor:GetLocation(), actor:GetCoordinate() )
-
-	local function RaycastProjectile( start_room, end_room, plot )
-		local x0, y0 = start_room:GetCoordinate()
-		local x1, y1 = end_room:GetCoordinate()
-	    local dx = math.abs( x1 - x0 )
-	   	local sx = x0 < x1 and 1 or -1
-		local dy = -math.abs( y1 - y0 )
-	    local sy = y0 < y1 and 1 or -1
-	    local err = dx + dy
-	    local path = {}
-	    while true do
-			local tile = actor.location:LookupTile( x0, y0 )
-			if not tile then --or not tile:IsConditionallyPassable( self.actor ) then
-				return
-			else
-				table.insert( path, tile )
-			end
-
-			self.proj:WarpToTile( tile )
-			-- self:YieldForInterrupt( target, "incoming!" )
-			self:YieldForTime( 0.5 * ONE_SECOND )
-
-			if x0 == x1 and y0 == y1 then
-				break
-			end
-
-	        local e2 = 2*err
-	        if e2 >= dy then
-	            err = err + dy
-	            x0 = x0 + sx
-			end
-	        if e2 <= dx then
-	        	err = err + dx
-	        	y0 = y0 + sy
-	        end
-	    end
-
-	    return path
-	end
+	self.proj:LoseAspect( Aspect.Carryable )
 
 	local target_tile = target:GetTile()
-	RaycastProjectile( actor:GetTile(), target:GetTile() )
+	Raycast.Projectile( actor:GetLocation(), actor:GetTile(), target:GetTile(), self.proj )
 
-	if target:GetTile() == target_tile then
+	self.proj:GainAspect( Aspect.Carryable() )
+
+	if target:GetTile() == self.proj:GetTile() then
 		Verb.RangeAttack.Interact( self, actor, target )
 	end
 end

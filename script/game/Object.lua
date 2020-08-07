@@ -5,6 +5,8 @@ Object.mass = 0
 function Object:init()
 	Entity.init( self )
 	self.value = self.value or 0
+
+	self:GainAspect( Aspect.Impass( IMPASS.OBJECT ) )
 end
 
 function Object:OnDespawn()

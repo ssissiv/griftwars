@@ -100,7 +100,7 @@ function RangeAttack:Interact( actor, target )
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
 
 	if actor:IsDead() or target:IsDead() or self:IsCancelled() then
-		self:OnCancel()
+		-- self:OnCancel()
 		return
 	end
 

@@ -54,4 +54,6 @@ function GrabNearbyBoulders:Interact( actor )
 			self:DoChildVerb( equip )
 		end
 	end
+
+	self:YieldForTime( RUN_TIME )
 end

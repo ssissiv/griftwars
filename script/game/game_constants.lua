@@ -407,6 +407,7 @@ IMPASS = MakeBitField
 {
 	"STATIC", -- Static obstruction
 	"DYNAMIC", -- Dynamic obstruction (agent, etc.)
+	"OBJECT", -- Objects.
 	"LOS", -- Blocks LOS
 }
 

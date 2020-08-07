@@ -86,7 +86,7 @@ function Behaviour:ScheduleNextTick( delta, reason )
 	end
 
 	if delta and self.tick_ev then
-		if delta < self.owner.world:GetEventTimeLeft( self.tick_ev ) then
+		if self.tick_ev.trigger_time or delta < self.owner.world:GetEventTimeLeft( self.tick_ev ) then
 			self.owner.world:RescheduleEvent( self.tick_ev, delta )
 			self.tick_reason = reason
 		end
@@ -144,7 +144,8 @@ function Behaviour:OnTickBehaviour( reason )
 		local ok, reason = self.owner:DoVerbAsync( active_verb )
 		if not self.owner:IsDoing( active_verb ) then
 			-- Verb was valid, but is either an insta-complete or perhaps something was not right during processing.
-			print( "Not doing", self.owner, active_verb, ok, reason, active_verb:IsCancelled() )
+			print( "Failed doing", self.owner, active_verb, ok, reason, active_verb:IsCancelled() )
+			print( "\t", self.tick_reason )
 		end
 	end
 
