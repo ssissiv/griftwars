@@ -3,7 +3,7 @@ local Jerky = class( "Object.Jerky", Object )
 function Jerky:init()
 	Object.init( self )
 	self:GainAspect( Aspect.Carryable() )
-	self:GainAspect( Aspect.Edible() ):SetEnergyGain( 8 )
+	self:GainAspect( Aspect.Edible() ):SetEnergyGain( 12 )
 end
 
 function Jerky:GetName()

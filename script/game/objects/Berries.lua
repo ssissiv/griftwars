@@ -3,7 +3,7 @@ local Berries = class( "Object.Berries", Object )
 function Berries:init()
 	Object.init( self )
 	self:GainAspect( Aspect.Carryable() )
-	self:GainAspect( Aspect.Edible() )
+	self:GainAspect( Aspect.Edible():SetEnergyGain( 4 ) )
 end
 
 function Berries:GetName()

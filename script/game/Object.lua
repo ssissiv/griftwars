@@ -6,7 +6,7 @@ function Object:init()
 	Entity.init( self )
 	self.value = self.value or 0
 
-	self:GainAspect( Aspect.Impass( IMPASS.OBJECT ) )
+	self:GainAspect( Aspect.Impass( self.PASS_TYPE or IMPASS.OBJECT ) )
 end
 
 function Object:OnDespawn()

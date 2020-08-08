@@ -8,8 +8,9 @@ end
 
 function Edible:SetEnergyGain( energy )
 	self.energy = energy
+	return self
 end
 
 function Edible:GetEnergyGain()
-	return self.energy
+	return self.energy or 0
 end

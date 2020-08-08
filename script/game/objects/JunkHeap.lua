@@ -1,6 +1,7 @@
 local JunkHeap = class( "Object.JunkHeap", Object )
 
 JunkHeap.MAP_CHAR = "%"
+JunkHeap.PASS_TYPE = IMPASS.ALL
 
 function JunkHeap:OnSpawn( world )
 	JunkHeap._base.OnSpawn( self, world )
@@ -8,7 +9,6 @@ function JunkHeap:OnSpawn( world )
 	self.rng = self:GainAspect( Aspect.Rng())
 	self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.ScroungeTarget())
-	self:GainAspect( Aspect.Impass( IMPASS.ALL ) )
 
 	self:RefreshJunk()
 

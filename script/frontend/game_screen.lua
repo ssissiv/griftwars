@@ -4,7 +4,7 @@ function GameScreen:init( world )
 	RenderScreen.init( self )
 	
 	if world == nil then
-		local gen = WorldGen.TinyWorld()
+		local gen = WorldGen()
 		world = gen:GenerateWorld()
 		world:Start()
 	end
