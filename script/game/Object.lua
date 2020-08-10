@@ -180,6 +180,11 @@ function Object:CollectVerbs( verbs, actor, target )
 	if target == self and self:GetCarrier() == actor:GetInventory() then
 		verbs:AddVerb( Verb.HoldObject( actor, target ))
 	end
+	if target == self and self:GetCarrier() == actor:GetInventory() then
+		if not self:GetAspect( Aspect.Currency ) then
+			verbs:AddVerb( Verb.SellToShop( actor, nil, target ))
+		end
+	end
 end
 
 function Object:RenderTooltip( ui, screen, viewer )

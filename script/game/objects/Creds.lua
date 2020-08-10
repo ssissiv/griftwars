@@ -6,6 +6,7 @@ function Creds:init( value )
 	self.value = value
 
 	self:GainAspect( Aspect.Carryable() )
+	self:GainAspect( Aspect.Currency() )
 end
 
 function Creds:GetName()

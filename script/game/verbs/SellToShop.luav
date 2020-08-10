@@ -1,0 +1,30 @@
+
+local SellToShop = class( "Verb.SellToShop", Verb )
+
+function SellToShop:init( actor, target, obj )
+	Verb.init( self, actor )
+	self.target = target
+	self.obj = obj
+end
+
+function SellToShop:GetDesc( viewer )
+	return loc.format( "Sell to {1.Id}", self.owner:LocTable( viewer ))
+end
+
+function SellToShop:CanInteract()
+	local job = self.owner:GetAspect( Job.ManageShop )
+	if not job:IsDoing() then
+		local ok, reason = job:ShouldDo()
+		if not ok then
+			return false, reason
+		else
+			return false, "Not on the job"
+		end
+	end
+
+	return Verb.CanInteract( self )
+end
+
+function SellToShop:Interact()
+	self.target:GetAspect( Job.ManageShop ):BuyFromSeller( self.obj, self.actor )
+end

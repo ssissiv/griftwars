@@ -111,9 +111,15 @@ function ManageShop:GetBuyCost( item, buyer )
 	return item:GetValue()
 end
 
+function ManageShop:GetSellCost( item, seller )
+	return math.floor( item:GetValue() * 0.8 )
+end
+
 function ManageShop:BuyFromSeller( item, seller )
 	seller:GetInventory():TransferItem( item, self.owner:GetInventory() )
 	Msg:EchoTo( self.owner, "You bought a {1} from {2}.", item:GetName(), seller )
 	Msg:EchoTo( seller, "You sell a {1} to {2}.", item, self.owner )
+	local cost = self:GetSellCost( item, seller )
+	self.owner:GetInventory():TransferMoney( cost, seller )
 end
 
