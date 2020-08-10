@@ -3,9 +3,15 @@ local MeleeAttack = class( "Verb.MeleeAttack", Verb )
 MeleeAttack.INTENT_FLAGS = INTENT.HOSTILE
 MeleeAttack.act_desc = "Attack"
 
-function MeleeAttack:init( target )
-	Verb.init( self, nil, target )
+function MeleeAttack:init( actor, target )
+	Verb.init( self, actor )
+	assert( target )
+	self.target = target
 	self.fatigue_cost = 5
+end
+
+function MeleeAttack:GetTarget()
+	return self.target
 end
 
 function MeleeAttack:GetAttackRange()
@@ -25,8 +31,8 @@ function MeleeAttack:InAttackRange( actor, target )
 	return true
 end
 
-function MeleeAttack:CalculateUtility( actor )
-	if self:InAttackRange( actor, self.obj ) then
+function MeleeAttack:CalculateUtility()
+	if self:InAttackRange( self.actor, self.target ) then
 		return 50
 	end
 
@@ -43,38 +49,37 @@ function MeleeAttack:GetDesc( viewer )
 end
 
 function MeleeAttack:GetActDesc( actor )
-	if self.obj then
-		return loc.format( "{1} for {2} damage", self.act_desc, self:CalculateDamage( self.obj ))
+	if self.target then
+		return loc.format( "{1} for {2} damage", self.act_desc, self:CalculateDamage( self.target ))
 	else
 		return "Attack"
 	end
 end	
 
 function MeleeAttack:OnCancel()
-	if self.obj and self.obj:IsDead() then
+	if self.target and self.target:IsDead() then
 		return
 	end
 
 	-- TODO: should only be certain reasons really, like out of range.
 	Msg:EchoTo( self.actor, "You mutter as your attack is foiled." )
-	if self.obj then
-		Msg:EchoTo( self.obj, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.obj ))
+	if self.target then
+		Msg:EchoTo( self.target, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.target ))
 	end
 end
 
-function MeleeAttack:CanInteract( actor, target )
-	target = target or self.obj
-
-	local ok, reason = Verb.CanInteract( self, actor, target )
+function MeleeAttack:CanInteract()
+	assert( self.actor )
+	local ok, reason = Verb.CanInteract( self )
 	if not ok then
 		return false, reason
 	end
 
-	if not actor:HasEnergy( self.fatigue_cost ) then
+	if not self.actor:HasEnergy( self.fatigue_cost ) then
 		return false, "Too tired"
 	end
 
-	if not self:InAttackRange( actor, target ) then
+	if not self:InAttackRange( self.actor, self.target ) then
 		return false, "Out of range"
 	end
 
@@ -108,9 +113,8 @@ function MeleeAttack:CalculateDC()
 	return 5
 end
 
-function MeleeAttack:Interact( actor, target )
-	target = target or self.obj
-
+function MeleeAttack:Interact()
+	local actor, target = self.actor, self.target
 	local damage = self:CalculateDamage( target )
 	local ok, result_str = self:CheckDC( actor, target )
 
@@ -153,6 +157,6 @@ function MeleeAttack:Interact( actor, target )
 end
 
 function MeleeAttack:RenderTooltip( ui, viewer )
-	local damage, details = self:CalculateDamage( self.obj )
+	local damage, details = self:CalculateDamage( self.target )
 	ui.Text( tostring(details) )
 end

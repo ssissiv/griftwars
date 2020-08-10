@@ -45,14 +45,14 @@ end
 
 function Puppet:CollectVerbs( verbs, actor, obj )
 	if self.owner == actor and obj == actor then
-		verbs:AddVerb( Verb.Wait())
+		verbs:AddVerb( Verb.Wait( actor ))
 
 		if self.owner:GetStat( STAT.FATIGUE ):GetThreshold() >= FATIGUE.TIRED then
-			verbs:AddVerb( Verb.Sleep() )
+			verbs:AddVerb( Verb.Sleep( actor ) )
 		end
 
 	elseif is_instance( obj, Agent ) then
-		verbs:AddVerb( Verb.Follow( obj, 4 ))
+		verbs:AddVerb( Verb.Follow( actor, obj, 4 ))
 	end
 end
 

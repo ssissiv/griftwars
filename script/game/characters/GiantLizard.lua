@@ -10,9 +10,9 @@ function GiantLizard:init()
 	self:GetStat( STAT.HEALTH ):DeltaValue( 6, 6 )
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 1 )
 
-	self:GainAspect( Skill.ScalyHide() )
+	-- self:GainAspect( Skill.ScalyHide() )
 	self:GainAspect( Aspect.DeathLoot( FINE_HIDE ))
-	self:GainAspect( Verb.FleeFromCombat() )
+	self:GainAspect( Verb.FleeFromCombat( self ) )
 end
 
 function GiantLizard:GetMapChar()

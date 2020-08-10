@@ -207,7 +207,7 @@ function Discovered:RenderImGuiWindow( ui, screen, viewer )
 
 	elseif is_instance( self.target, Location ) then
 		if ui.Button( "Travel To" ) then
-			viewer:DoVerbAsync( Verb.Travel( self.target ))
+			viewer:DoVerbAsync( Verb.Travel( viewer, self.target ))
 		end
 	end
 end

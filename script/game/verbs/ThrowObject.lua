@@ -3,8 +3,9 @@ local ThrowObject = class( "Verb.ThrowObject", Verb.RangeAttack )
 ThrowObject.INTENT_FLAGS = INTENT.HOSTILE
 ThrowObject.act_desc = "Throw"
 
-function ThrowObject:CanInteract( actor, target )
-	return Verb.RangeAttack.CanInteract( self, actor, target )
+function ThrowObject:init( actor, target, proj )
+	Verb.RangeAttack.init( self, actor, target )
+	self.proj = proj
 end
 
 function ThrowObject:SetProjectile( proj )
@@ -20,21 +21,12 @@ function ThrowObject:GetActDesc( actor )
 	return loc.format( "Throw {1.desc} for {2} damage", self.proj, self:CalculateDamage( self.obj ))
 end	
 
-function ThrowObject:CalculateUtility( actor )
-	return 20
-end
-
-function ThrowObject:CollectVerbs( verbs, actor, target )
-	if verbs.id == "attacks" and actor:GetHeldObject() then
-		verbs:AddVerb( Verb.ThrowObject():SetProjectile( actor:GetHeldObject() ):SetTarget( target ) )
-	end
-end
-
 function ThrowObject:CalculateDC()
 	return 2
 end
 
-function ThrowObject:Interact( actor, target )
+function ThrowObject:Interact()
+	local actor, target = self.actor, self.target
 	assert( self.proj == actor:GetHeldObject() )
 	
 	self.proj:GetAspect( Aspect.Wearable ):Unequip()

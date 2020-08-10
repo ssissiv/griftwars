@@ -29,10 +29,10 @@ end
 function Chest:CollectVerbs( verbs, actor, target )
 	if target == self then
 		if self.opened then
-			verbs:AddVerb( Verb.LootInventory( self.inv ))
-			verbs:AddVerb( Verb.CloseObject( self ))
+			verbs:AddVerb( Verb.LootInventory( actor, self.inv ))
+			verbs:AddVerb( Verb.CloseObject( actor, self ))
 		else
-			verbs:AddVerb( Verb.OpenObject( self ))
+			verbs:AddVerb( Verb.OpenObject( actor, self ))
 		end
 	end
 end

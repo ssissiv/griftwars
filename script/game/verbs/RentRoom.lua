@@ -1,11 +1,10 @@
 
 local RentRoom = class( "Verb.RentRoom", Verb )
 
-RentRoom.can_repeat = true -- This interaction can take place multiple times.
-
-function RentRoom:init( target, cost )
+function RentRoom:init( actor, target, cost )
 	assert( cost )
-	Verb.init( self, nil, target )
+	Verb.init( self, actor )
+	self.target = target
 	self.cost = cost
 end
 
@@ -17,25 +16,26 @@ function RentRoom:CalculateUtility()
 	return UTILITY.FUN
 end
 
-function RentRoom:CanInteract( actor, target )
-	if not target:IsAlert() then
+function RentRoom:CanInteract()
+	if not self.target:IsAlert() then
 		return false, "Not alert"
 	end
-	if actor:GetInventory():GetMoney() < self.cost then
+	if self.actor:GetInventory():GetMoney() < self.cost then
 		return false, "Can't afford"
 	end
 
-	return Verb.CanInteract( actor, target )
+	return Verb.CanInteract( self )
 end
 
 function RentRoom:CollectVerbs( verbs, actor, obj )
 	if actor == self.owner and obj ~= actor and is_instance( obj, Agent ) then
-		self.obj = obj
+		self.target = obj
 		verbs:AddVerb( self )
 	end
 end
 
-function RentRoom:Interact( actor, target )
+function RentRoom:Interact()
+	local actor, target = self.actor, self.target
 	local door = actor:GetLocation():FindInscribedEntity( "ROOM" )
 	if door then
 		door:Unlock()

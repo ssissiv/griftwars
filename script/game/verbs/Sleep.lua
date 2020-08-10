@@ -27,7 +27,8 @@ function Sleep:GetDesc()
 	end
 end
 
-function Sleep:CanInteract( actor )
+function Sleep:CanInteract()
+	local actor = self.actor
 	if not self:IsDoing() then
 		if not actor:IsAlert() then
 			return false, "Not Alert"
@@ -46,7 +47,8 @@ function Sleep:CanInteract( actor )
 	return true
 end
 
-function Sleep:Interact( actor )
+function Sleep:Interact()
+	local actor = self.actor
 	Msg:EchoAround( actor, "{1.Id} goes to sleep.", actor )
 	if self.obj then
 		Msg:EchoTo( actor, "You go to sleep on {1}.", self.obj )

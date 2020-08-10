@@ -100,7 +100,7 @@ function DebugPanel:RenderPanel( dbg )
                     self:GoForward()
                 end
                 if ui.MenuItem( "View Root" ) then
-                    self:PushNode( DebugRoot( self.dbg ) )
+                    self:PushNode( DebugRoot( self.dbg.game ) )
                 end
                 if ui.MenuItem( "Init stack" ) then                
                 end

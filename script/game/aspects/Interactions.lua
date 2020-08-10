@@ -1,17 +1,7 @@
 
-function Agent:GainTrustedInteractions( t )
-	self.world:Shuffle( t )
-	for i, v in ipairs( t ) do
-		assert( is_instance( v, Aspect.Interaction ))
-
-		v:ReqTrust( self, i * math.floor( 100 / #t ))
-		self:GainAspect( v )
-	end
-end
-
 local Interaction = class( "Aspect.Interaction", Aspect )
 
-function Interaction:init()
+function Interaction:init( actor )
 	self.reqs = {}
 end
 
@@ -95,7 +85,7 @@ function Interaction:CollectVerbs( verbs, actor, obj )
 	if actor ~= self.owner and obj == self.owner and not self.owner:IsDead() then
 		local ok, reason = self:CanInteract( actor )
 		if ok or reason then
-			verbs:AddVerb( Verb.Interact( self ))
+			verbs:AddVerb( Verb.Interact( actor, self ))
 		end
 	end
 end
@@ -146,98 +136,7 @@ function Interaction:RenderTooltip( ui, viewer )
 		end
 	end
 end
-
------------------------------------------------------------------------------------
-
-local Befriend = class( "Interaction.Befriend", Interaction )
-
-Befriend.can_repeat = true -- This interaction can take place multiple times.
-
-function Befriend:init()
-	Befriend._base.init( self )
-	-- self:ReqFace( DIE_FACE.DIPLOMACY, math.random( 1, cr ) )
-end
-
-function Befriend:CanInteract( actor )
-	local affinity = self.owner:GetAffinity( actor )
-	if affinity == AFFINITY.FRIEND then
-		return false
-	end
-	if affinity == AFFINITY.UNFRIEND or affinity == AFFINITY.ENEMY then
-		return false, "Doesn't like you"
-	end
-	if actor:GetMaxFriends() <= actor:CountAffinities( AFFINITY.FRIEND ) then
-		return false, "Max friends reached"
-	end
-
-	return Interaction.CanInteract( self, actor )
-end
-
-function Befriend:Interact( actor )
-
-	local challenge = self.challenge
-	if challenge == nil then
-		challenge = Verb.Challenge( actor ):SetDuration( 1.0 ):SetAttempts( 3 )
-		local t1, t2 = math.random(), math.random()
-		challenge:AddResult( t1, t1 + 0.1 * math.random( 1, 3 ), "success" )
-		challenge:AddResult( t2, t2 + 0.1 * math.random( 1, 3 ), "success" )
-		self.challenge = challenge
-	else
-		challenge:Reset()
-	end
-
-	local result = actor.world.nexus:DoChallenge( challenge )
-	if result == "cancel" then
-
-	elseif result == "success" then
-		if actor:Befriend( self.owner ) then
-			Msg:SpeakTo( self.owner, actor, "Yo, I'm {1.name}", self.owner:LocTable( actor ))
-		end
-		if self.OnSuccess then
-			self:OnSuccess( actor, challenge )
-		end
-	else
-		Msg:EchoTo( actor, "{1.Id} seems indifferent.", self.owner:LocTable( actor ))
-	end
-end
-
------------------------------------------------------------------------------------
-
-local IntroduceAgent = class( "Interaction.IntroduceAgent", Befriend )
-
-function IntroduceAgent:init( friend )
-	Befriend.init( self )
-	if is_instance( friend, Agent ) then
-		self.friend = friend
-	elseif is_class( friend ) then
-		self.friend_class = friend
-	end
-end
-
-function IntroduceAgent:OnSuccess( actor )
-	if self.friend == nil and self.friend_class then
-		self.friend = actor.world:ArrayPick( actor.world:CreateBucketByClass( self.friend_class ) )
-	end
-
-	if self.friend then
-		actor:Acquaint( self.friend )
-		Msg:Speak( self.owner, "Listen, {1.Id} is a friend of mine. {1.HeShe} can help you out.", self.friend:LocTable( actor ) )
-
-		local work = self.friend:GetAspect( Job )
-		if work and work:GetLocation() then
-			Msg:Speak( self.owner, "Works over at the {1}.", work:GetLocation():GetTitle() )
-		else
-			if self.friend:GetHome() then
-				Msg:Speak( self.owner, "Lives over at {1}.", self.friend:GetHome():GetLocation():GetTitle() )
-			end
-		end
-	else
-		Msg:Speak( self.owner, "Fraid I don't really know anybody." )
-	end
-end
-
-
------------------------------------------------------------------------------------
+------------------------------------------
 
 local RevealObject = class( "Interaction.RevealObject", Interaction )
 
@@ -434,34 +333,5 @@ function BuyFromShop:Interact( actor )
 			break
 		end
 	end
-end
-
--------------------------------------------------------------------------
-
-local WantMoney = class( "Interaction.WantMoney", Interaction )
-
-function WantMoney:GetDesc()
-	return loc.format( "Give {1.Id} money", self.owner:LocTable() )
-end
-
-function WantMoney:CanInteract( actor )
-	if actor:GetInventory():GetMoney() < 5 then
-		return false, "Not enough credits"
-	end
-
-	return WantMoney._base.CanInteract( self, actor )
-end
-
-function WantMoney:Interact( actor )
-	-- Give money.
-	Verb.GiveMoney.Interact( nil, actor, self.owner, 5 )
-
-	-- You've earned Trust!
-	local tokens = actor:GetAspect( Aspect.TokenHolder )
-	if tokens then
-		
-	end
-
-	self:StartCooldown( 3 * ONE_HOUR )
 end
 

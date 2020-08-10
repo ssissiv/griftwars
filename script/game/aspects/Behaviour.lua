@@ -125,7 +125,7 @@ function Behaviour:OnTickBehaviour( reason )
 			if self.owner:IsDoing( verb ) then
 				active_verb = verb
 
-			elseif verb:CanInteract( self.owner ) then
+			elseif verb:CanInteract() then
 				active_verb = verb
 			end
 
@@ -158,7 +158,7 @@ function Behaviour:UpdatePriorities()
 
 	for i, verb in ipairs( self.verbs ) do
 		if verb.CalculateUtility then
-			verb:SetUtility( verb:CalculateUtility( self.owner ))
+			verb:SetUtility( verb:CalculateUtility())
 		end
 	end
 

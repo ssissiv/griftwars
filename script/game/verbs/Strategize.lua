@@ -7,7 +7,7 @@ function Strategize:GetDesc( viewer )
 	end
 end
 
-function Strategize:CalculateUtility( actor )
+function Strategize:CalculateUtility()
 	return UTILITY.DUTY - 1
 end
 
@@ -36,11 +36,12 @@ function Strategize:FindStrategicPoint( actor )
 	end
 end
 
--- function Strategize:CanInteract( actor )
+-- function Strategize:CanInteract()
 -- 	return false, "Disabled"
 -- end
 
-function Strategize:Interact( actor )
+function Strategize:Interact()
+	local actor = self.actor
 	while not self:IsCancelled() do
 		self:YieldForTime( HALF_HOUR )
 

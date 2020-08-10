@@ -19,7 +19,7 @@ end
 
 function Barkeep:CollectVerbs( verbs, actor, target )
 	if target == self.owner then
-		verbs:AddVerb( Verb.RentRoom( target, 10 ) )
+		verbs:AddVerb( Verb.RentRoom( actor, target, 10 ) )
 	end
 end
 

@@ -18,17 +18,18 @@ function ShortRest:GetDesc( viewer )
 	return "Resting"
 end
 
-function ShortRest:CanInteract( actor )
-	if not actor:IsAlert() then
+function ShortRest:CanInteract()
+	if not self.actor:IsAlert() then
 		return false, "Not Alert"
 	end
-	if actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
+	if self.actor:IsBusy( VERB_FLAGS.MOVEMENT ) then
 		return false, "Busy"
 	end
 	return true
 end
 
-function ShortRest:Interact( actor )
+function ShortRest:Interact()
+	local actor = self.actor
 	Msg:EchoAround( actor, "{1.Id} sits down and rests.", actor )
 	Msg:EchoTo( actor, "You sit down and take a load off." )
 	

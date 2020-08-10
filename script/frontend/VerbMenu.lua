@@ -52,7 +52,7 @@ function VerbMenu:RenderImGuiWindow( ui, screen )
                 end
             end
 
-            UIHelpers.RenderPotentialVerb( ui, verb, i, self.actor, verb:GetTarget() )
+            UIHelpers.RenderPotentialVerb( ui, verb, i, self.actor )
         end
     end
 
@@ -73,7 +73,7 @@ function VerbMenu:KeyPressed( key, screen )
         local idx = tonumber(key)
         local verb = self.shown_verbs[ idx ]
         if verb then
-            self.actor:DoVerbAsync( verb, verb:GetTarget() )
+            self.actor:DoVerbAsync( verb )
             return true
         end
     end

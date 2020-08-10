@@ -181,7 +181,7 @@ end
 
 function Gift:OnUseFavour( agent )
 	self.owner:GetInventory():AddItems( self.gifts )
-	self.owner:DoVerbAsync( Verb.GiveAll(), agent )
+	self.owner:DoVerbAsync( Verb.GiveAll( self.owner, agent ))
 end
 
 

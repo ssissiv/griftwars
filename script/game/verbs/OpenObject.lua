@@ -2,24 +2,25 @@ local OpenObject = class( "Verb.OpenObject", Verb )
 
 OpenObject.act_desc = "Open"
 
-function OpenObject:init( target )
+function OpenObject:init( actor, target )
+	Verb.init( self, actor )
 	assert( target )
-	Verb.init( self, nil, target )
+	self.target = target
 end
 
-function OpenObject:CanInteract( actor, target )
-	if not actor:CanReach( target ) then
+function OpenObject:CanInteract()
+	if not self.actor:CanReach( self.target ) then
 		return false, "Not adjacent"
 	end
-	local lock = target:GetAspect( Aspect.Lock )
+	local lock = self.target:GetAspect( Aspect.Lock )
 	if lock and lock:IsLocked() then
 		return false, "Locked"
 	end
 	return true
 end
 
-function OpenObject:Interact( actor, target )
-	Msg:EchoTo( actor, "You open the {1.Id}.", target:LocTable( actor ))
-	target:Open()
+function OpenObject:Interact()
+	Msg:EchoTo( self.actor, "You open the {1.Id}.", self.target:LocTable( self.actor ))
+	self.target:Open()
 end
 

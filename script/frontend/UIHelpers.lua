@@ -78,8 +78,8 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
 end
 
 
-function UIHelpers.RenderPotentialVerb( ui, verb, i, agent, ... )
-    local ok, details = verb:CanDo( agent, ... )
+function UIHelpers.RenderPotentialVerb( ui, verb, i, agent )
+    local ok, details = verb:CanDo()
 
     local desc = verb:GetActDesc( agent )
     local txt = loc.format( "{1}] {2}", i, desc )
@@ -95,7 +95,7 @@ function UIHelpers.RenderPotentialVerb( ui, verb, i, agent, ... )
         end
 
         if ui.Selectable( txt ) then
-            agent:DoVerbAsync( verb, ... )
+            agent:DoVerbAsync( verb )
         end
 
         ui.Indent( 20 )

@@ -33,7 +33,7 @@ function ManageShop:OnSpawn( world )
 	Job.OnSpawn( self, world )
 
 	-- People can buy from us.
-	self.owner:GainAspect( Interaction.BuyFromShop() )
+	self.owner:GainAspect( Interaction.BuyFromShop( self ) )
 
 	-- Sometimes we have assistants.
 	if world:Random() < 0.5 then

@@ -15,8 +15,13 @@ function HillGiant:init()
 
 	self:SetFlags( EF.AGGRO_ALL )
 
-	self:GainAspect( Verb.GrabNearbyBoulders() )
-	self:GainAspect( Verb.ThrowObject() )
+	self:GainAspect( Verb.GrabNearbyBoulders( self ) )
+end
+
+function HillGiant:CollectVerbs( verbs, actor, target )
+	if verbs.id == "attacks" and self == actor and actor:GetHeldObject() then
+		verbs:AddVerb( Verb.ThrowObject( actor, target, actor:GetHeldObject() ) )
+	end
 end
 
 function HillGiant:GetMapChar()

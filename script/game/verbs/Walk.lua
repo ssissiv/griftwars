@@ -1,7 +1,7 @@
 local Walk = class( "Verb.Walk", Verb )
 
-function Walk:init( dir )
-	Verb.init( self )
+function Walk:init( actor, dir )
+	Verb.init( self, actor )
 	self.dir = dir
 end
 
@@ -21,7 +21,8 @@ function Walk:SetDirection( dir )
 	self.dir = dir
 end
 
-function Walk:CanInteract( actor )
+function Walk:CanInteract()
+	local actor = self.actor
 	if not actor:HasEnergy( 2 ) then
 		return false, "Too tired"
 	end
@@ -33,10 +34,11 @@ function Walk:CanInteract( actor )
 		return false, "Not passable"
 	end
 
-	return Verb.CanInteract( self, actor )
+	return Verb.CanInteract( self )
 end
 
-function Walk:Interact( actor )
+function Walk:Interact()
+	local actor = self.actor
 	self.running = actor:InCombat()
 
 	if not actor:MoveDirection( self.dir ) then

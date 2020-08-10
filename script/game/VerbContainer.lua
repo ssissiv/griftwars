@@ -80,8 +80,11 @@ function VerbContainer:AddVerb( v )
 		end
 	end
 
-	table.insert( self.verbs, v )
-	v.actor = self.actor
+	local ok, reason = v:CanDo( self.actor )
+	if ok or reason then
+		table.insert( self.verbs, v )
+		v.actor = self.actor
+	end
 end
 
 function VerbContainer:VerbAt( idx )

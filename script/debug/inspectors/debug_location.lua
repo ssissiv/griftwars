@@ -24,7 +24,7 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
         
         ui.SameLine( 0, 10 )
         if ui.Button( "Travel To" ) then
-            puppet:DoVerbAsync( Verb.Travel(), self.location )
+            puppet:DoVerbAsync( Verb.Travel( puppet, self.location ))
         end
     end
     ui.Separator()

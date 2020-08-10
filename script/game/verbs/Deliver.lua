@@ -11,14 +11,12 @@ Deliver.ACT_DESC =
 }
 
 
-function Deliver:init( giver, receiver )
+function Deliver:init( actor, receiver )
 	Deliver._base.init( self, giver )
-	self.giver = giver
 	self.receiver = receiver
-	self.travel = Verb.Travel( self.giver, self.receiver )
 end
 
-function Deliver:CalculateUtility( actor )
+function Deliver:CalculateUtility()
 	if self:DidWithinTime( actor, ONE_DAY ) then
 		return -1
 	end
@@ -26,17 +24,17 @@ function Deliver:CalculateUtility( actor )
 	return self.utility + 1
 end
 
-function Deliver:CanInteract( actor )
+function Deliver:CanInteract()
 	-- if actor:GetInventory():CalculateValue() < 5 then
 	-- 	return false, "Nothing to deliver"
 	-- end
 	return true
 end
 
-function Deliver:Interact( actor )
-	self:DoChildVerb( self.travel )
+function Deliver:Interact()
+	self:DoChildVerb( Verb.Travel( self.actor, self.receiver ))
 
-	Verb.GiveAll.Interact( nil, actor, self.receiver )
+	self:DoChildVerb( Verb.GiveAll( self.actor, self.receiver ))
 
-	actor:LoseAspect( self )
+	self.actor:LoseAspect( self )
 end

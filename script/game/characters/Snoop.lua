@@ -1,22 +1,23 @@
 
 local FindInformation = class( "Verb.FindInformation", Verb.Plan )
 
-function FindInformation:init()
-	FindInformation._base.init( self )
-	self.travel = Verb.Travel()
-	self.idle = Verb.Idle()
-	self.wander = Verb.Wander()
+function FindInformation:init( actor )
+	FindInformation._base.init( self, actor )
+	self.travel = Verb.Travel( actor )
+	self.idle = Verb.Idle( actor )
+	self.wander = Verb.Wander( actor )
 end
 
 function FindInformation:GetDesc( ui, screen, viewer )
 	return "Looking for information"
 end
 
-function FindInformation:CalculateUtility( actor )
+function FindInformation:CalculateUtility()
 	return UTILITY.HABIT
 end
 
-function FindInformation:Interact( actor )
+function FindInformation:Interact()
+	local actor = self.actor
 	-- Look for a place to snoop.
 	local dest
 	local function IsTavern( x, depth )
@@ -28,7 +29,8 @@ function FindInformation:Interact( actor )
 
 	actor.location:Flood( IsTavern )
 	if dest then
-		self:DoChildVerb( self.travel, dest )
+		self.travel:SetDest( dest )
+		self:DoChildVerb( self.travel )
 	end
 
 	if not self:IsCancelled() then

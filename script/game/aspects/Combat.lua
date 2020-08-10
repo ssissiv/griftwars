@@ -28,7 +28,7 @@ end
 
 function Combat:CollectVerbs( verbs, actor, target )
 	if self.owner == actor and target ~= actor and is_instance( target, Agent ) and not target:IsDead() then --and self:IsTarget( target ) then
-		verbs:AddVerb( Verb.MeleeAttack( target ) )
+		verbs:AddVerb( Verb.MeleeAttack( actor, target ) )
 	end
 end
 
@@ -159,7 +159,7 @@ function Combat:AddTarget( target )
 
 	if not self.attack then
 		assert( not self.owner:HasAspect( Verb.HostileCombat ))
-		self.attack = self.owner:GainAspect( Verb.HostileCombat( target ))
+		self.attack = self.owner:GainAspect( Verb.HostileCombat( self.owner ))
 	end
 
 	self.owner:RegenVerbs()

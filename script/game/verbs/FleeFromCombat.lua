@@ -4,8 +4,8 @@ function FleeFromCombat:GetDesc( viewer )
 	return "Fleeing!"
 end
 
-function FleeFromCombat:CalculateUtility( actor )
-	if not actor:InCombat() then
+function FleeFromCombat:CalculateUtility()
+	if not self.actor:InCombat() then
 		return 0
 	end
 	if self:IsCornered() then
@@ -19,11 +19,11 @@ function FleeFromCombat:IsCornered()
 	return (self.cornered or 0) > 1
 end
 
-function FleeFromCombat:CanInteract( actor )
-	if not actor:InCombat() then
+function FleeFromCombat:CanInteract()
+	if not self.actor:InCombat() then
 		return false, "Not in combat"
 	end
-	if not actor.combat:HasTargets() then
+	if not self.actor.combat:HasTargets() then
 		return false, "No targets"
 	end
 
@@ -35,7 +35,8 @@ function FleeFromCombat:ClearCornered()
 	print ("CLEARED CORNERED" )
 end
 
-function FleeFromCombat:Interact( actor )
+function FleeFromCombat:Interact()
+	local actor = self.actor
 	-- Move away from the 2 closest targets.
 	while not self:IsCancelled() do
 		local targets = actor.combat:GetTargetsByDistance()
@@ -57,11 +58,11 @@ function FleeFromCombat:Interact( actor )
 			dir = VectorToDir( dx, dy )
 		end
 
-		local ok, reason = self:DoChildVerb( Verb.Walk( dir ))
+		local ok, reason = self:DoChildVerb( Verb.Walk( actor, dir ))
 		if not ok then
 			-- Try an adjacent direction.
 			dir = table.arraypick( ADJACENT_DIR[ dir ] )
-			ok, reason = self:DoChildVerb( Verb.Walk( dir ))
+			ok, reason = self:DoChildVerb( Verb.Walk( actor, dir ))
 
 			if not ok then
 				if target_dist <= 1.5 then

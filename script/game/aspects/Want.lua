@@ -17,17 +17,17 @@ function WantMoney:GetActDesc()
 	return loc.format( "Offer {1#money}", self.amount )
 end
 
-function WantMoney:CanInteract( actor )
-	if actor:GetInventory():GetMoney() < self.amount then
+function WantMoney:CanInteract()
+	if self.actor:GetInventory():GetMoney() < self.amount then
 		return false, "Not enough money"
 	end
 
-	return Verb.CanInteract( self, actor )
+	return Verb.CanInteract( self )
 end
 
-function WantMoney:Interact( actor )
-	self:DoChildVerb( Verb.GiveMoney(), self.owner, self.amount )
-	self.owner:DeltaTrust( 10, actor )
+function WantMoney:Interact()
+	self:DoChildVerb( Verb.GiveMoney( self.actor, self.owner, self.amount ))
+	self.owner:DeltaTrust( 10, self.actor )
 end
 
 -------------------------------------------------------

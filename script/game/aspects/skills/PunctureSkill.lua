@@ -11,6 +11,6 @@ end
 
 function PunctureSkill:CollectVerbs( verbs, actor, target )
 	if actor == self.owner and target and target ~= actor and target:HasAspect( Aspect.Combat ) then
-		verbs:AddVerb( Verb.Puncture( target ))
+		verbs:AddVerb( Verb.Puncture( actor,target ))
 	end
 end

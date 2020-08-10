@@ -3,17 +3,18 @@ local Follow = class( "Verb.Follow", Verb )
 Follow.INTENT_FLAGS = INTENT.STEALTH
 Follow.act_desc = "Follow"
 
-function Follow:init( other, approach_dist )
-	Verb.init( self, nil, other )
+function Follow:init( actor, other, approach_dist )
+	Verb.init( self, actor )
+	self.target = other
 	self.approach_dist = approach_dist or 4
-	self.travel = Verb.Travel()
+	self.travel = Verb.Travel( actor )
 end
 
-function Follow:CanInteract( actor, other )
+function Follow:CanInteract()
 	-- if other:GetLocation() ~= actor:GetLocation() then
 	-- 	return false, "Not here"
 	-- end
-	if (other or self.obj):IsDead() then
+	if self.target:IsDead() then
 		return false
 	end
 	
@@ -32,7 +33,8 @@ function Follow:OnActorEvent( event_name, ... )
 	end
 end
 
-function Follow:Interact( actor, other )
+function Follow:Interact()
+	local actor, other = self.actor, self.target
 	other:ListenForAny( self, self.OnOtherEvent )
 	actor:ListenForAny( self, self.OnActorEvent )
 	actor:Mark( other, "following" )
@@ -41,7 +43,8 @@ function Follow:Interact( actor, other )
 	while not self:IsCancelled() do
 		if actor:GetLocation() ~= other:GetLocation() or EntityDistance( actor, other ) > self.approach_dist then
 			self.travel:SetApproachDistance( self.approach_dist )
-			self:DoChildVerb( self.travel, other )
+			self.travel:SetDest( self.dest )
+			self:DoChildVerb( self.travel )
 			-- self.travel:DoVerb( actor, other )
 		end
 

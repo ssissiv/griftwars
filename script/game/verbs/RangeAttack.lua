@@ -3,6 +3,12 @@ local RangeAttack = class( "Verb.RangeAttack", Verb )
 RangeAttack.INTENT_FLAGS = INTENT.HOSTILE
 RangeAttack.act_desc = "Attack"
 
+function RangeAttack:init( actor, target )
+	Verb.init( self, actor )
+	assert( target )
+	self.target = target
+end
+
 function RangeAttack:SetProjectile( proj )
 	self.proj = proj
 	return self
@@ -32,18 +38,18 @@ function RangeAttack:GetDesc( viewer )
 	end
 end
 
-function RangeAttack:GetActDesc( actor )
-	if self.obj then
-		return loc.format( "{1} for {2} damage", self.act_desc, self:CalculateDamage( self.obj ))
+function RangeAttack:GetActDesc()
+	if self.tarfget then
+		return loc.format( "{1} for {2} damage", self.act_desc, self:CalculateDamage( self.target ))
 	else
 		return "Attack"
 	end
 end	
 
-function RangeAttack:CanInteract( actor, target )
-	target = target or self.obj
+function RangeAttack:CanInteract()
+	local actor, target = self.actor, self.target
 
-	local ok, reason = Verb.CanInteract( self, actor, target )
+	local ok, reason = Verb.CanInteract( self )
 	if not ok then
 		return false, reason
 	end
@@ -90,9 +96,8 @@ function RangeAttack:CalculateDC()
 	return 10
 end
 
-function RangeAttack:Interact( actor, target )
-	target = target or self.obj
-
+function RangeAttack:Interact()
+	local actor, target = self.actor, self.target
 	local damage = self:CalculateDamage( target )
 	local ok, result_str = self:CheckDC( actor, target )
 
@@ -142,6 +147,6 @@ function RangeAttack:Interact( actor, target )
 end
 
 function RangeAttack:RenderTooltip( ui, viewer )
-	local damage, details = self:CalculateDamage( self.obj )
+	local damage, details = self:CalculateDamage( self.target )
 	ui.Text( tostring(details) )
 end

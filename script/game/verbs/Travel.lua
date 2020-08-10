@@ -1,8 +1,13 @@
 local Travel = class( "Verb.Travel", Verb )
 
-function Travel:init( dest )
-	Verb.init( self, nil, dest )
-	self.walk = Verb.Walk()
+function Travel:init( actor, dest )
+	Verb.init( self, actor )
+	self.dest = dest
+	self.walk = Verb.Walk( actor )
+end
+
+function Travel:SetDest( dest )
+	self.dest = dest
 end
 
 function Travel:SetApproachDistance( dist )
@@ -28,7 +33,8 @@ function Travel:GetDesc( viewer )
 	return "Traveling"
 end
 
-function Travel:CanInteract( actor )
+function Travel:CanInteract()
+	local actor = self.actor
 	if not actor:IsAlert() then
 		return false, "Not Alert"
 	end
@@ -134,11 +140,8 @@ function Travel:PathToLocation( actor, location )
 	return actor:GetLocation() == location
 end
 
-function Travel:Interact( actor, dest )
-	self:SetTarget( dest or self.obj )
-	dest = self.obj
-	assert( dest )
-
+function Travel:Interact()
+	local actor, dest = self.actor, self.dest
 	local pather = PathFinder( actor, actor, dest )
 	while actor:GetLocation() ~= pather:GetEndRoom() do
 

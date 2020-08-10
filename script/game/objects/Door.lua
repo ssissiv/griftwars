@@ -106,7 +106,7 @@ function Door:OnActivatePortal( portal, verb )
 
 	local was_closed = self:IsClosed()
 	if was_closed then
-		if not verb:DoChildVerb( Verb.OpenObject( self ), self ) then
+		if not verb:DoChildVerb( Verb.OpenObject( verb:GetActor(), self ) ) then
 			return true
 		end
 	end
@@ -130,9 +130,9 @@ end
 function Door:CollectVerbs( verbs, actor, target )
 	if target == self then
 		if self:IsClosed() then
-			verbs:AddVerb( Verb.OpenObject( self ))
+			verbs:AddVerb( Verb.OpenObject( actor, self ))
 		else
-			verbs:AddVerb( Verb.CloseObject( self ))
+			verbs:AddVerb( Verb.CloseObject( actor, self ))
 		end
 	end
 end

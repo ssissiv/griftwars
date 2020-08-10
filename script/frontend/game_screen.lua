@@ -679,8 +679,10 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 				self.debug_filter = filter_str
 			end
 			recurse_subclasses( Agent, function( class )
-				if ui.MenuItem( class._classname ) then
-					class():WarpToLocation( self.puppet:GetLocation(), tile:GetCoordinate() )
+				if self.debug_filter == nil or class._classname:lower():find( self.debug_filter ) then
+					if ui.MenuItem( class._classname ) then
+						class():WarpToLocation( self.puppet:GetLocation(), tile:GetCoordinate() )
+					end
 				end
 			end )
 			ui.EndMenu()			
@@ -692,8 +694,10 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 				self.debug_filter = filter_str
 			end
 			recurse_subclasses( Object, function( class )
-				if ui.MenuItem( class._classname ) then
-					class():WarpToLocation( self.puppet:GetLocation(), tile:GetCoordinate() )
+				if self.debug_filter == nil or class._classname:lower():find( self.debug_filter ) then
+					if ui.MenuItem( class._classname ) then
+						class():WarpToLocation( self.puppet:GetLocation(), tile:GetCoordinate() )
+					end
 				end
 			end )
 			ui.EndMenu()
@@ -930,22 +934,6 @@ function GameScreen:SetCurrentFocus( focus )
 	-- print( "CURRENT FOCUS:", self.current_focus )
 end
 
-function GameScreen:GetVerbAt( mx, my )
-	local x, y = self:ScreenToCell( mx, my )
-	local verbs = self.puppet:GetPotentialVerbs()
-	for i, verb in verbs:Verbs() do
-        local tx, ty
-        if verb:GetTarget() then
-			tx, ty = AccessCoordinate( verb:GetTarget() )
-		else
-			tx, ty = self.puppet:GetCoordinate()
-		end
-        if tx == x and ty == y then
-        	return verb
-        end
-    end
-end
-
 function GameScreen:MouseMoved( mx, my )
 	if love.keyboard.isDown( "space" ) then
 		if self.is_panning then
@@ -971,7 +959,8 @@ function GameScreen:MousePressed( mx, my, btn )
 
 		elseif self.puppet and not self.puppet:IsDead() then
 			if self.hovered_tile and self.hovered_tile:IsPassable( self.puppet ) then
-				local verb = Verb.Travel( Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() ))
+				local wp = Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() )
+				local verb = Verb.Travel( self.puppet, wp )
 				self.puppet:AttemptVerb( verb )
 			else
 				self:CycleFocus( self.hovered_tile )
@@ -1053,25 +1042,25 @@ function GameScreen:KeyPressed( key )
 
 	elseif key == "left" or key == "a" then
 		if self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not self.puppet:IsBusy() and self.puppet:IsSpawned() then
-			self.puppet:AttemptVerb( Verb.Walk( DIR.W ))
+			self.puppet:AttemptVerb( Verb.Walk( self.puppet, DIR.W ))
 		end
 
 	elseif key == "right" or key == "d" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			self.puppet:AttemptVerb( Verb.Walk( DIR.E ))
+			self.puppet:AttemptVerb( Verb.Walk( self.puppet, DIR.E ))
 		end
 
 	elseif key == "up" or key == "w" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			self.puppet:AttemptVerb( Verb.Walk( DIR.S ))
+			self.puppet:AttemptVerb( Verb.Walk( self.puppet, DIR.S ))
 		end
 
 	elseif key == "down" or key == "s" then
 		local puppet = self.world:GetPuppet()
 		if puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not puppet:IsBusy() and puppet:IsSpawned() then
-			self.puppet:AttemptVerb( Verb.Walk( DIR.N ))
+			self.puppet:AttemptVerb( Verb.Walk( self.puppet, DIR.N ))
 		end
 
 	elseif key == "." then
@@ -1085,7 +1074,7 @@ function GameScreen:KeyPressed( key )
 			for i, obj in self.puppet:GetTile():Contents() do
 				local portal = obj:GetAspect( Aspect.Portal )
 				if portal and portal:GetDest() then
-					local ok, reason = self.puppet:DoVerbAsync( Verb.UsePortal( portal ), portal )
+					local ok, reason = self.puppet:DoVerbAsync( Verb.UsePortal( self.puppet, portal ))
 					if not ok then
 						Msg:EchoTo( self.puppet, reason )
 					end

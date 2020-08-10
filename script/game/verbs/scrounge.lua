@@ -16,7 +16,7 @@ end
 function ScroungeTarget:CollectVerbs( verbs, actor, obj )
 	local scrounge = true --actor:GetAspect( Verb.Scrounge )
 	if scrounge and obj == self.owner then
-		verbs:AddVerb( Verb.Scrounge( nil, self.owner ) )
+		verbs:AddVerb( Verb.Scrounge( actor, self.owner ) )
 	end
 end
 
@@ -48,23 +48,29 @@ Scrounge.ACT_DESC =
 Scrounge.FLAGS = VERB_FLAGS.HANDS
 Scrounge.act_desc = "Scrounge"
 
+function Scrounge:init( actor, target )
+	Verb.init( self, actor )
+	self.target = target
+end
+
 function Scrounge:GetDesc( viewer )
-	if self.obj then
-		return loc.format( "Scrounging {1.Id}", self.obj:LocTable( viewer ))
+	if self.target then
+		return loc.format( "Scrounging {1.Id}", self.target:LocTable( viewer ))
 	end
 end
 
 function Scrounge:FindTarget( actor )
 	local targets = {}
 	for i, obj in actor:GetLocation():Contents() do
-		if self:CanInteract( actor, obj ) then
+		if obj:GetAspect( Aspect.ScroungeTarget ) then
 			table.insert( targets, obj )
 		end
 	end
 	return table.arraypick( targets )
 end
 
-function Scrounge:CanInteract( actor, target )
+function Scrounge:CanInteract()
+	local actor, target = self.actor, self.target or self:FindTarget( self.actor )
 	if not self:IsDoing() then
 		if actor:IsBusy( self.FLAGS ) then
 			return false, "Busy"
@@ -72,19 +78,17 @@ function Scrounge:CanInteract( actor, target )
 	end
 
 	if target == nil then
-		target = self:FindTarget( actor )
+		return false, "No targets"
 	end
 
-	if target == nil then
-		return false, "No targets"
-
-	elseif not target:GetAspect( Aspect.ScroungeTarget ) then
+	if not target:GetAspect( Aspect.ScroungeTarget ) then
 		return false, "Can't scrounge " ..tostring(target)
+	end
 
-	elseif not actor:CanReach( target ) then
+	if not actor:CanReach( target ) then
 		return false, "Can't reach"
 	end
-	
+
 	return self._base.CanInteract( self, actor )
 end
 
@@ -92,9 +96,8 @@ function Scrounge:CalculateDC()
 	return 10
 end
 
-function Scrounge:Interact( actor, target )
-	self:SetTarget( target or self:FindTarget( actor ))
-	target = self.obj
+function Scrounge:Interact()
+	local actor, target = self.actor, self.target or self:FindTarget( actor )
 
 	Msg:EchoAround( actor, "{1.Id} begins rummaging around in {2.Id}.", actor, target )
 	Msg:EchoTo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )

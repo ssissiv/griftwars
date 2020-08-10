@@ -12,10 +12,10 @@ Verb.event_handlers =
 }
 
 function Verb:init( actor, obj )
-	assert( actor == nil, tostring(self) )
-	self.obj = obj
+	assert( actor == nil or is_instance( actor, Agent ))
+	assert( not obj )
+	self.actor = actor
 	self.utility = 0
-	self.actors = {}
 end
 
 function Verb:SetUtility( utility )
@@ -109,16 +109,19 @@ function Verb:GetActor()
 end
 
 function Verb:GetTarget()
-	return self.obj
-end
-
-function Verb:SetTarget( target )
-	self.obj = target
-	return self
+	return self.target or self.obj -- Eew, override?
 end
 
 function Verb:EqualVerb( verb )
-	return verb._class == self._class and self.actor == verb.actor and self.obj == verb.obj
+	if verb._class ~= self._class then
+		return false
+	end
+	for k, v in pairs( self ) do
+		if v ~= verb[k] then
+			return false
+		end
+	end
+	return true
 end
 
 function Verb:GetOwner()
@@ -130,8 +133,8 @@ function Verb:GetOwner()
 end
 
 function Verb:OnLoseAspect( owner )
-	Aspect.OnLoseAspect( self, owner )
 	self:Cancel( "lose aspect" )
+	Aspect.OnLoseAspect( self, owner )
 end
 
 function Verb:GetWorld()
@@ -185,16 +188,19 @@ function Verb:CheckDC( actor, target )
 end
 
 -- CanInitiate
-function Verb:CanDo( actor, ... )
+function Verb:CanDo()
+	local actor = self.actor
+	assert( is_instance( actor, Agent ), tostring(actor))
+
 	if self.coro then
 		return false, "Already executing"
 	end
 
-	for i, verb in actor:Verbs() do
-		if verb:EqualVerb( self ) then
-			return false, "Already executing copy"
-		end
-	end
+	-- for i, verb in actor:Verbs() do
+	-- 	if verb:EqualVerb( self ) then
+	-- 		return false, "Already executing copy"
+	-- 	end
+	-- end
 
 	if not actor:GetLocation() then
 		return false, "In limbo"
@@ -207,7 +213,7 @@ function Verb:CanDo( actor, ... )
 		end
 	end
 
-	local ok, reason = self:CanInteract( actor, ... )
+	local ok, reason = self:CanInteract()
 	if not ok then
 		return false, reason
 	end
@@ -216,26 +222,19 @@ function Verb:CanDo( actor, ... )
 end
 
 -- CanInitiateOrContinue
-function Verb:CanInteract( actor, target )
-	if not actor:IsSpawned() or actor:IsDead() then
+function Verb:CanInteract()
+	if not self.actor then
+		return false, "No actor"
+	end
+	if not self.actor:IsSpawned() or self.actor:IsDead() then
 		return false, "Despawned or dead actor"
 	end
-	if actor.world:IsNotIdlePaused() then
+	if self.actor.world:IsNotIdlePaused() then
 		return false, "Paused"
 	end
 
-	target = target or self.obj
-	if is_instance( target, Agent ) then
-		if not target:IsSpawned() then
-			return false, "Despawned target"
-		end
-		if target:IsDead() then
-			return false, "Dead target"
-		end
-	end
-
 	if self.reqs then
-		local ok, reason = self.reqs:IsSatisfied( actor )
+		local ok, reason = self.reqs:IsSatisfied( self.actor )
 		if not ok then
 			return false, reason
 		end
@@ -272,7 +271,7 @@ function Verb:FindVerb( verb )
 	end
 end
 
-function Verb:DoChildVerb( verb, ... )
+function Verb:DoChildVerb( verb )
 	assert( self:IsRunning() )
 
 	if self.cancelled then
@@ -281,7 +280,7 @@ function Verb:DoChildVerb( verb, ... )
 		return
 	end
 
-	local ok, reason = verb:CanDo( self.actor, ... )
+	local ok, reason = verb:CanDo()
 	if not ok then
 		return false, reason
 	end
@@ -292,7 +291,7 @@ function Verb:DoChildVerb( verb, ... )
 	assert( verb.parent == nil )
 	verb.parent = self
 
-	local result = verb:DoVerb( self.actor, ... )
+	local result = verb:DoVerb()
 
 	self.child = nil
 	verb.parent = nil
@@ -300,7 +299,9 @@ function Verb:DoChildVerb( verb, ... )
 	return result
 end
 
-function Verb:DoVerb( actor, ... )
+function Verb:DoVerb()
+	local actor = self.actor
+	assert( actor )
 	assert( actor:IsDoing( self ), "not doing" )
 
 	if self.event_handlers then
@@ -309,8 +310,6 @@ function Verb:DoVerb( actor, ... )
 		end
 	end
 
-	table.insert( self.actors, actor )
-	self.actor = actor
 	self.world = actor.world
 
 	self.error = nil
@@ -326,7 +325,7 @@ function Verb:DoVerb( actor, ... )
 
 	-- actor.world:Log( "{1} begins {2} at {3}", actor, self, actor.location )`
 
-	self:Interact( actor, ... )
+	self:Interact()
 
 	self:Cleanup()
 
@@ -341,10 +340,7 @@ function Verb:Cleanup()
 	self.coro = nil
 	self.time_finished = self.actor.world:GetDateTime()
 
-	for i, actor in ipairs( self.actors ) do
-		actor:RemoveListener( self )
-	end
-	table.clear( self.actors )
+	self.actor:RemoveListener( self )
 end
 
 function Verb:IsDoing()
@@ -474,7 +470,7 @@ function Verb:Resume( coro )
 	self.yield_duration = nil
 
 	if not self.cancelled then
-		local ok, reason = self:CanInteract( self.actor, self.obj )
+		local ok, reason = self:CanInteract()
 		if not ok then
 			self:Cancel( reason )
 
@@ -522,7 +518,6 @@ function Verb:ShowError( coro, msg )
 
 		panel:AppendTable( ui, self )
 		panel:AppendTable( ui, self.actor )
-		panel:AppendTable( ui, self.obj )
 		ui.Separator()
 
 		ui.TextColored( 1, 0, 0, 1, tostring(msg) )
@@ -621,9 +616,7 @@ function Verb:RenderDebugPanel( ui, panel, dbg )
 end
 
 function Verb:__tostring()
-	if self.obj and self.actor then
-		return string.format( "<%s:%s-%s>", self._classname, tostring(self.actor), tostring(self.obj))
-	elseif self.actor then
+	if self.actor then
 		return string.format( "<%s:%s>", self._classname, tostring(self.actor))
 	else
 		return string.format( "<%s>", self._classname )

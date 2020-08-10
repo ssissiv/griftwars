@@ -4,9 +4,15 @@ function Wander:GetDesc( viewer )
 	return "Wandering"
 end
 
-function Wander:Interact( actor, target, duration )
+function Wander:SetDuration( duration )
+	self.duration = duration
+	return self
+end
+
+function Wander:Interact()
+	local actor = self.actor
 	-- Idling.
-	local time = self.world:GetDateTime() + (duration or 0)
+	local time = self.world:GetDateTime() + (self.duration or 0)
 	repeat
 		-- Msg:Speak( actor, "Just idling!" )
 		self:YieldForTime( ONE_MINUTE )

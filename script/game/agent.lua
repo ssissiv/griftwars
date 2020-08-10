@@ -669,23 +669,23 @@ function Agent:AttemptVerb( verb, obj )
 	end
 end
 
-local function DoVerbCoroutine( self, verb, ... )
+local function DoVerbCoroutine( self, verb )
 	self:_AddVerb( verb )
 
-	verb:DoVerb( self, ... )
+	verb:DoVerb( self )
 
 	self:_RemoveVerb( verb )
 end
 
-function Agent:DoVerbAsync( verb, ... )
-	local ok, reason = verb:CanDo( self, ... )
+function Agent:DoVerbAsync( verb )
+	local ok, reason = verb:CanDo()
 	if not ok then
-		print( "No can do!", self, verb, reason, ... )
+		print( "No can do!", self, verb, reason )
 		return false, reason
 	end
 
 	local coro = coroutine.create( DoVerbCoroutine )
-	local ok, result = coroutine.resume( coro, self, verb, ... )
+	local ok, result = coroutine.resume( coro, self, verb )
 	if not ok then
 		verb:ShowError( coro, tostring(result))
 		-- error( tostring(result) .. "\n" .. tostring(debug.traceback( coro )))
@@ -745,7 +745,7 @@ function Agent:CancelInvalidVerbs()
 	if self.verbs then
 		for i = #self.verbs, 1, -1 do
 			local verb = self.verbs[i]
-			local ok, reason = verb:CanInteract( self )
+			local ok, reason = verb:CanInteract()
 			if not ok then
 				verb:Cancel( reason )
 			end

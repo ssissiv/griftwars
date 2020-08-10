@@ -3,9 +3,9 @@
 
 local Interact = class( "Verb.Interact", Verb )
 
-function Interact:init( aspect )
+function Interact:init( actor, aspect )
 	assert( is_instance( aspect, Aspect.Interaction ))
-	Verb.init( self )
+	Verb.init( self, actor )
 	self.interaction = aspect
 end
 
@@ -25,17 +25,17 @@ function Interact:RenderTooltip( ui, viewer )
 	self.interaction:RenderTooltip( ui, viewer )
 end
 
-function Interact:CanInteract( actor, ... )
-	local ok, reason = self.interaction:CanInteract( actor )
+function Interact:CanInteract()
+	local ok, reason = self.interaction:CanInteract( self.actor )
 	if not ok then
 		return false, reason
 	end
 
-	return Verb.CanInteract( self, actor, ... )
+	return Verb.CanInteract( self )
 end
 
-function Interact:Interact( actor )
-	self.interaction:Interact( actor )
+function Interact:Interact()
+	self.interaction:Interact( self.actor )
 end
 
 function Interact:__tostring()

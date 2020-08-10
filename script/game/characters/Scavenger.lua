@@ -21,20 +21,13 @@
 
 local Scavenge = class( "Verb.Scavenge", Verb.Plan )
 
-function Scavenge:init()
-	Scavenge._base.init( self )
-
-	self.scrounge = Verb.Scrounge()
-	self.wander = Verb.Wander()
-end
-
 function Scavenge:GetDesc( viewer )
 	return "Scavenging for valuables"
 end
 
-function Scavenge:CalculateUtility( actor )
+function Scavenge:CalculateUtility()
 	-- How broke am I?
-	local value = actor:GetInventory():CalculateValue()
+	local value = self.actor:GetInventory():CalculateValue()
 	if value <= WEALTH.DESTITUTE then
 		return UTILITY.DUTY
 	else
@@ -49,13 +42,13 @@ end
 -- 	end
 -- end
 
-function Scavenge:Interact( actor )
+function Scavenge:Interact()
 	while not self.cancelled do
-		if math.random() >= 0.5 or not self:DoChildVerb( self.scrounge ) then
-			self:DoChildVerb( self.wander, nil, 10 * ONE_MINUTE )
+		if math.random() >= 0.5 or not self:DoChildVerb( Verb.Scrounge( self.actor )) then
+			self:DoChildVerb( Verb.Wander( self.actor ):SetDuration( 10 * ONE_MINUTE ))
 		end
 	end
-	Msg:Speak( actor, "Well, that's enough scavenging for now." )
+	Msg:Speak( self.actor, "Well, that's enough scavenging for now." )
 end
 
 ---------------------------------------------------------------------
@@ -77,13 +70,6 @@ function Scavenger:OnSpawn( world )
 	Agent.OnSpawn( self, world )
 	self:SetDetails( nil, "Here's a guy.", GENDER.MALE )
 
-	-- local interactions =
-	-- {
-	-- 	Interaction.IntroduceAgent( Agent.Shopkeeper ),
-	-- 	Interaction.RevealObject( Object.JunkHeap, 3 ),
-	-- 	Interaction.GiftObject( Object.Jerky() ),
-	-- }
-	-- self:GainTrustedInteractions( interactions )
 	Aspect.Favour.GainFavours( self,
 	{
 		{ Favour.Acquaint(), 10 },

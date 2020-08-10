@@ -4,15 +4,16 @@ local Befriend = class( "Verb.Befriend", Verb )
 Befriend.INTENT_FLAGS = INTENT.DIPLOMACY
 Befriend.can_repeat = true -- This interaction can take place multiple times.
 
-function Befriend:GetActDesc( actor )
-	return loc.format( "Befriend {1.Id}", self.obj and self.obj:LocTable( actor ))
+function Befriend:GetActDesc()
+	return loc.format( "Befriend {1}", self.target:LocTable( self.actor ))
 end
 
 function Befriend:CalculateUtility()
 	return UTILITY.FUN
 end
 
-function Befriend:CanInteract( actor, target )
+function Befriend:CanInteract()
+	local actor, target = self.actor, self.target
 	if not target then
 		return false
 	end
@@ -21,6 +22,9 @@ function Befriend:CanInteract( actor, target )
 	end
 	local affinity = target:GetAffinity( actor )
 	if affinity == AFFINITY.FRIEND then
+		return false
+	end
+	if not target:CanSpeak() then
 		return false
 	end
 	if affinity == AFFINITY.UNFRIEND or affinity == AFFINITY.ENEMY then
@@ -33,12 +37,12 @@ function Befriend:CanInteract( actor, target )
 		return false, "In combat"
 	end
 
-	return Verb.CanInteract( self, actor, target )
+	return Verb.CanInteract( self )
 end
 
 function Befriend:CollectVerbs( verbs, actor, obj )
 	if actor == self.owner and obj ~= actor and is_instance( obj, Agent ) and not obj:IsDead() then
-		self.obj = obj
+		self.actor, self.target = actor, obj
 		verbs:AddVerb( self )
 	end
 end
@@ -47,13 +51,13 @@ function Befriend:CalculateDC()
 	local acc = self.actor:GetAspect( Aspect.ScalarCalculator )
 	acc:CalculateValue( CALC_EVENT.BEFRIEND, 10 )
 	
-	local count = self.obj:GetMemory():CountEngrams( Engram.Befriended.Find, self.actor )
+	local count = self.target:GetMemory():CountEngrams( Engram.Befriended.Find, self.actor )
 	if count > 0 then
 		acc:AddValue( count, self, loc.format( "{1} attempts within the last day", count ))
 	end
 
 	-- Faction Role Modiifer
-	local faction = self.obj:GetAspect( Aspect.FactionMember )
+	local faction = self.target:GetAspect( Aspect.FactionMember )
 	if faction and faction:GetRole() then
 		local tier = FACTION_TIERS[ faction:GetRole() ]
 		acc:AddValue( tier * 5, self, loc.format( "Faction Tier: {1} ({2})", tier, faction:GetRole() ))
@@ -73,6 +77,7 @@ function Befriend:CalculateDC()
 end
 
 function Befriend:Interact( actor, target )
+	local actor, target = self.actor, self.target
 
 	-- self:AttachActor( target )
 
@@ -90,7 +95,7 @@ function Befriend:Interact( actor, target )
 		Msg:EchoTo( actor, "You befriend {1.Id}. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( trust )
 		actor:GainXP( trust )
-	elseif self.obj:GetMemory():FindEngram( Engram.Befriended.Find, self.actor ) then
+	elseif target:GetMemory():FindEngram( Engram.Befriended.Find, self.actor ) then
 		Msg:EchoTo( actor, "You try to befriend {1.Id}, but {1.heshe} seems rather annoyed. ({2})", target:LocTable( actor ), result_str )
 		target:DeltaTrust( -1 )
 	else

@@ -11,6 +11,6 @@ end
 
 function HamstringSkill:CollectVerbs( verbs, actor, target )
 	if actor == self.owner and target and target ~= actor and target:HasAspect( Aspect.Combat ) then
-		verbs:AddVerb( Verb.Hamstring( target ))
+		verbs:AddVerb( Verb.Hamstring( actor, target ))
 	end
 end

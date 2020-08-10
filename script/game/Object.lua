@@ -178,7 +178,7 @@ end
 
 function Object:CollectVerbs( verbs, actor, target )
 	if target == self and self:GetCarrier() == actor:GetInventory() then
-		verbs:AddVerb( Verb.HoldObject():SetTarget( target ))
+		verbs:AddVerb( Verb.HoldObject( actor, target ))
 	end
 end
 

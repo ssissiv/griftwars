@@ -34,7 +34,7 @@ end
 
 function InventoryWindow:LootAll()
     -- FIXME: need to loot all the objects.
-    print( self.viewer:DoVerbAsync( Verb.LootAll( self.inventory ), self.inventory ))
+    print( self.viewer:DoVerbAsync( Verb.LootAll( self.viewer, self.inventory )))
 end
 
 function InventoryWindow:RenderInventory( ui, screen )
@@ -60,7 +60,7 @@ function InventoryWindow:RenderInventory( ui, screen )
         if self.selected_obj == obj then
             self.shown_verbs = self.viewer:GetPotentialVerbs( "object", obj)
             for i, verb in self.shown_verbs:Verbs() do
-                UIHelpers.RenderPotentialVerb( ui, verb, i, self.viewer, obj )
+                UIHelpers.RenderPotentialVerb( ui, verb, i, self.viewer )
             end
         end
     end

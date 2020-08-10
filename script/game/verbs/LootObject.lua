@@ -1,10 +1,17 @@
 local LootObject = class( "Verb.LootObject", Verb )
 
-function LootObject:GetActDesc( actor )
+function LootObject:init( actor, obj )
+	Verb.init( self, actor )
+	assert( is_instance( obj, Object ))
+	self.obj = obj
+end
+
+function LootObject:GetActDesc()
 	return loc.format( "Get {1}", tostring(self.obj))
 end
 
-function LootObject:CanInteract( actor, obj )
+function LootObject:CanInteract()
+	local actor, obj = self.actor, self.obj
 	if obj:GetCarrier() then
 		if is_instance( obj:GetCarrier().owner, Agent ) and not obj:GetCarrier().owner:IsDead() then
 			return false, "Already carried"
@@ -25,8 +32,8 @@ function LootObject:CanInteract( actor, obj )
 	return true
 end
 
-function LootObject:Interact( actor, obj )
-
+function LootObject:Interact()
+	local actor, obj = self.actor, self.obj
 	Msg:EchoTo( actor, "You pick up {1}.", obj:GetName( actor ))
 	Msg:EchoAround( actor, "{1.desc} picks up {2.desc}.", actor, obj )
 
@@ -43,15 +50,13 @@ end
 local LootAll = class( "Verb.LootAll", Verb )
 LootAll.act_desc = "Loot all"
 
-function LootAll:init( inventory )
-	Verb.init( self, nil, inventory )
+function LootAll:init( actor, inventory )
+	Verb.init( self, actor )
 	self.inventory = inventory
 end
 
-function LootAll:Interact( actor, inventory )
-	inventory = inventory or self.inventory
-
-	self.loot = self.loot or Verb.LootObject()
+function LootAll:Interact()
+	local actor, inventory = self.actor, self.inventory
 
 	local items = table.shallowcopy( inventory:GetItems() )
 	for i, obj in ipairs( items ) do
@@ -61,6 +66,6 @@ function LootAll:Interact( actor, inventory )
 			wearable:Unequip()
 		end
 
-		print( "LootAll", self:DoChildVerb( self.loot, obj ))
+		print( "LootAll", self:DoChildVerb( Verb.LootObject( actor,obj )))
 	end
 end

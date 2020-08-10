@@ -25,7 +25,8 @@ function GrabNearbyBoulders:FindNearbyBoulder( actor )
 	end
 end
 
-function GrabNearbyBoulders:CalculateUtility( actor )
+function GrabNearbyBoulders:CalculateUtility()
+	local actor = self.actor
 	if not actor:InCombat() then
 		return 0
 	end
@@ -44,13 +45,14 @@ function GrabNearbyBoulders:CalculateUtility( actor )
 	return UTILITY.COMBAT + 1
 end
 
-function GrabNearbyBoulders:Interact( actor )
+function GrabNearbyBoulders:Interact()
+	local actor = self.actor
 	local boulder = self:FindNearbyBoulder( actor )
-	local travel = Verb.Travel( boulder )
+	local travel = Verb.Travel( actor, boulder )
 	if self:DoChildVerb( travel ) then
-		local loot = Verb.LootObject()
-		if self:DoChildVerb( loot, boulder ) then
-			local equip = Verb.HoldObject():SetTarget( boulder )
+		local loot = Verb.LootObject( actor, boulder )
+		if self:DoChildVerb( loot ) then
+			local equip = Verb.HoldObject( actor, boulder )
 			self:DoChildVerb( equip )
 		end
 	end
