@@ -7,8 +7,8 @@ function SellToShop:init( actor, target, obj )
 	self.obj = obj
 end
 
-function SellToShop:GetDesc( viewer )
-	return loc.format( "Buy goods from {1.Id}", self.actor:LocTable( viewer ))
+function SellToShop:GetActDesc()
+	return loc.format( "Sell {1} for {2#money}", self.obj, self:GetSellPrice() )
 end
 
 function SellToShop:FindTarget( actor )
@@ -40,6 +40,13 @@ function SellToShop:CanInteract()
 	end
 
 	return Verb.CanInteract( self )
+end
+
+function SellToShop:GetSellPrice()
+	local target = self.target or self:FindTarget( self.actor )
+	if target then
+		return target:GetAspect( Job.ManageShop ):GetSellCost( self.obj, self.actor )
+	end
 end
 
 function SellToShop:Interact()
