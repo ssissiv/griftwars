@@ -571,7 +571,10 @@ function Location:RenderLocationOnMap( screen, x1, y1, x2, y2, viewer )
 			local x, y = x1 + 4 + margin , y1 + 4 + margin
 			for i, obj in ipairs( self.contents ) do
 				local skip = false
-				if is_instance( obj, Agent ) then
+
+				if screen:IsFiltering( obj ) then
+					skip = true
+				elseif is_instance( obj, Agent ) then
 					love.graphics.setColor( 255, 0, 255 )
 				elseif obj:HasAspect( Aspect.Portal ) then
 					if obj:GetAspect( Aspect.Portal ):GetExitFromTag() then

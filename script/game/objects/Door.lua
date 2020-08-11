@@ -27,7 +27,7 @@ function Door:GetName()
 	if self.portal == nil or self.portal:GetDest() == nil then
 		name = "Door"
 	else
-		name = loc.format( "Door to {1}", self.portal:GetDest() )
+		name = self.portal:GetDest():GetTitle() --loc.format( "Door to {1}", self.portal:GetDest() )
 	end
 
 	if self:IsClosed() then

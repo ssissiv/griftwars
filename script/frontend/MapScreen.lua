@@ -131,7 +131,12 @@ function MapScreen:RenderHeader( gui )
 	end
     ui.Unindent( 20 )
 
-    ui.Separator()
+	local changed, filter = ui.InputText( "Filter", self.filter_txt or "", 32 )
+	if changed and filter and filter ~= self.filter_txt then
+		self.filter_txt = filter
+	end
+
+	ui.Separator()
     for i, marker in ipairs( self.markers ) do
     	ui.PushID( tostring(marker) )
     	local hilite = self.current_marker == marker
@@ -193,7 +198,11 @@ function MapScreen:RenderHoveredLocation( gui )
 	    		else
 		    		local txt = obj:GetShortDesc( self.viewer )
 		    		if txt then
-			    		ui.Text( txt )
+			    		if self:IsFiltering( obj ) then
+			    			ui.TextColored( 0.5, 0.5, 0.5, 1, txt )
+			    		else
+				    		ui.Text( txt )
+				    	end
 			    	end
 			    end
 	    	end
@@ -203,6 +212,14 @@ function MapScreen:RenderHoveredLocation( gui )
     end
 
     ui.End()
+end
+
+function MapScreen:IsFiltering( obj )
+	if self.filter_txt then
+		return not string.find( tostring(obj):lower(), self.filter_txt )
+	end
+
+	return false
 end
 
 function MapScreen:RenderMapTiles( gui, wx0, wy0, wx1, wy1 )
