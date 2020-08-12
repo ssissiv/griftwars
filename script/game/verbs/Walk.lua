@@ -45,12 +45,18 @@ function Walk:Interact()
 		assert_warning( false, "Oops?" )
 	end
 
-	local move_speed = actor:CalculateMoveSpeed()
+	local move_time
 	if self.running then
 		actor:DeltaStat( STAT.FATIGUE, 1 )
-		self:YieldForTime( RUN_TIME * move_speed, "instant" )
+		move_time = RUN_TIME * actor:CalculateMoveSpeed()
 	else
 		actor:DeltaStat( STAT.FATIGUE, 0.1 )
-		self:YieldForTime( WALK_TIME * move_speed, "instant" )
+		move_time = WALK_TIME * actor:CalculateMoveSpeed()
+	end
+
+	if actor:InCombat() then
+		self:YieldForTime( move_time, "rate", 0.1 )
+	else
+		self:YieldForTime( move_time, "instant" )
 	end
 end

@@ -15,7 +15,8 @@ function HostileCombat:CalculateUtility()
 	return UTILITY.COMBAT + attack_utility
 end
 
-function HostileCombat:CanInteract( actor )
+function HostileCombat:CanInteract()
+	local actor = self.actor
 	if not actor:IsSpawned() then
 		return false
 	elseif not actor:GetAspect( Aspect.Combat ):HasTargets() then
@@ -50,14 +51,8 @@ function HostileCombat:GetCurrentAttack()
 	return self.current_attack
 end
 
-function HostileCombat:Interact( actor )
-	-- self:YieldForTime( ONE_MINUTE )
-
-	if self:IsCancelled() then
-		return
-	end
-
-
+function HostileCombat:Interact()
+	local actor = self.actor
 	self.attacks = self:CollectAttacks( actor )
 	local attack = self.attacks[1]
 	if attack then

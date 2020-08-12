@@ -5,6 +5,7 @@ WORLD_EVENT = MakeEnum{
 	"VERB_FINISH",
 	"PUPPET_CHANGED",
 	"PAUSED", -- Pause status changed
+	"TILE_FLOATER",
 }
 
 ENTITY_EVENT = MakeEnum{

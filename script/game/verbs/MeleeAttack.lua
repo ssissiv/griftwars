@@ -62,10 +62,10 @@ function MeleeAttack:OnCancel()
 	end
 
 	-- TODO: should only be certain reasons really, like out of range.
-	Msg:EchoTo( self.actor, "You mutter as your attack is foiled." )
-	if self.target then
-		Msg:EchoTo( self.target, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.target ))
-	end
+	-- Msg:EchoTo( self.actor, "You mutter as your attack is foiled." )
+	-- if self.target then
+	-- 	Msg:EchoTo( self.target, "{1.Id} mutters as their attack is cancelled.", self.actor:LocTable( self.target ))
+	-- end
 end
 
 function MeleeAttack:CanInteract()
@@ -115,6 +115,11 @@ end
 
 function MeleeAttack:Interact()
 	local actor, target = self.actor, self.target
+	local tile = target:GetTile()
+	local aji = tile:GainAspect( Aspect.Aji( self ))
+
+	self:YieldForTime( self:GetDuration() )
+
 	local damage = self:CalculateDamage( target )
 	local ok, result_str = self:CheckDC( actor, target )
 
@@ -122,6 +127,14 @@ function MeleeAttack:Interact()
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
 
 	if actor:IsDead() or target:IsDead() or self:IsCancelled() then
+		tile:LoseAspect( aji )
+		self:OnCancel()
+		return
+	end
+
+	if target:GetTile() ~= tile then
+		tile:LoseAspect( aji )
+		actor.world.nexus:AddTileFloater( "Miss!", tile )
 		self:OnCancel()
 		return
 	end
@@ -152,8 +165,7 @@ function MeleeAttack:Interact()
 	end
 
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )
-
-	self:YieldForTime( self:GetDuration() )
+	tile:LoseAspect( aji )
 end
 
 function MeleeAttack:RenderTooltip( ui, viewer )

@@ -456,6 +456,13 @@ function GameScreen:AddFloater( floater )
 	table.insert( self.floaters, floater )
 end
 
+function GameScreen:AddTileFloater( txt, tile )
+	local floater = Floater( txt )
+	floater:SetCoordinate( tile:GetCoordinate() )
+	floater:SetColour( 0xFFFFFFFF )
+	self:AddFloater( floater )
+end
+
 function GameScreen:AddDamageFloater( damage, agent )
 	local floater = Floater( tostring(damage) )
 	floater:SetCoordinate( agent:GetCoordinate() )

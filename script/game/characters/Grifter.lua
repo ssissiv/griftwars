@@ -2,8 +2,8 @@ local Grifter = class( "Agent.Grifter", Agent )
 Grifter.unfamiliar_desc = "grifter"
 Grifter.image = assets.TILE_IMG.PLAYER
 
-Grifter.charisma = 5
-Grifter.strength = 4
+Grifter.charisma = 2
+Grifter.strength = 2
 
 function Grifter:init()
 	Agent.init( self )
@@ -17,10 +17,10 @@ function Grifter:init()
 
 	-- Equipment
 	self:GetInventory():DeltaMoney( 2 )
-	self:EquipItem( Weapon.JaggedDirk() )
+	self:EquipItem( Weapon.Dirk() )
 
-	self:GainAspect( Skill.Hamstring() )
-	self:GainAspect( Skill.Puncture() )
+	-- self:GainAspect( Skill.Hamstring() )
+	-- self:GainAspect( Skill.Puncture() )
 	
 	self:GainAspect( Verb.Befriend() )
 end
