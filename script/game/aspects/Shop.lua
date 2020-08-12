@@ -41,6 +41,7 @@ function Shop:SpawnShopOwner()
 
 	else
 		table.insert( stock, Object.ShoddyRope() )
+		table.insert( stock, Object.TradeGoods() )
 	end
 
 	local shopkeep = Agent.Shopkeeper()

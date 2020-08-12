@@ -1,8 +1,9 @@
 local World = class( "World", WorldBase )
 
-function World:init()
+function World:init( worldgen )
 	WorldBase.init( self )
 
+	self.worldgen = worldgen
 	self.datetime = DATETIME_START
 	self.locations = {}
 	self.agents = {}

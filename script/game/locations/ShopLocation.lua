@@ -17,6 +17,10 @@ function ShopLocation:OnSpawn( world )
 		name = loc.format( "{1} {2}'s' Equipment", adj, noun )
 	else
 		name = loc.format( "The {1} {2} General Store", adj, noun )
+		local class = world.worldgen:ConsumeTradeGood()
+		if class then
+			self:GainAspect( Aspect.ResourceGenerator( class ) )
+		end
 	end
 
 	self:SetDetails( name )

@@ -29,8 +29,9 @@ function WorldGen.MatchWorldGenTag( match_tag, tagstr )
 	return true
 end
 
-function WorldGen:init( world )
-	self.world = world
+function WorldGen:ConsumeTradeGood()
+	local idx = self:Random( #self.trade_goods )
+	return table.remove( self.trade_goods, idx )
 end
 
 function WorldGen:Random( a, b )
@@ -48,11 +49,12 @@ end
 function WorldGen:GenerateWorld()
 	assert( self.world == nil )
 
-	local world = World()
+	local world = World( self )
 	self.world = world
 
 	Msg:SetWorld( world )
 
+	self.trade_goods = { Object.TradeGoods }
 
 	local city = Zone.City( self, 3, 0 )
 	world:SpawnEntity( city )

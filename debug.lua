@@ -1,26 +1,16 @@
+local dist = 16
+local zone_dist = nil
+local function IsSource( x, depth )
+	local gen = x:GetAspect( Aspect.ResourceGenerator )
+	if gen and gen:IsGenerator( Object.TradeGoods ) then
+		dist = depth
+		zone_dist = math.abs( x:GetZone():GetZoneDepth() - location:GetZone():GetZoneDepth() )
 
--- print( "Nearest to", player:GetCoordinate() )
--- local x, y = player:GetCoordinate()
--- print( player.location:FindPassableTile( x, y, player ))
-
-for i, v in puppet:Relationships() do
-	print( v )
-	for k, vv in v:Agents() do
-		if vv ~= puppet then
-			print( "\t", k, vv, vv:GetLocation() )
-			local x0, y0, z0 = vv:GetLocation():GetCoordinate()
-			if z0 ~= 1 then
-				vv:GetLocation():Flood( function( location, depth )
-					local x, y, z = location:GetCoordinate()
-					local continue = z == z0
-					local stop = z == 1
-					print( x, y, z )
-					if stop then
-						print( location, x, y, z, z0 )
-					end
-					return continue, stop
-				end )
-			end
-		end
+		return false, true
 	end
+
+	return depth < dist
 end
+location:Flood( IsSource )
+
+print( dist, zone_dist )

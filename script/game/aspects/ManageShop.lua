@@ -107,12 +107,18 @@ function ManageShop:SellToBuyer( item, buyer )
 	Msg:EchoTo( self.owner, "You sell a {1} to {2}.", item, buyer )
 end
 
+-- Buying FROM us.
 function ManageShop:GetBuyCost( item, buyer )
-	return item:GetValue()
+	if item.GetModifiedValue then
+		return item:GetModifiedValue()
+	else
+		return item:GetValue()
+	end
 end
 
+-- Selling TO us.
 function ManageShop:GetSellCost( item, seller )
-	return math.floor( item:GetValue() * 0.8 )
+	return math.floor( self:GetBuyCost( item, seller ) * 0.8 )
 end
 
 function ManageShop:BuyFromSeller( item, seller )

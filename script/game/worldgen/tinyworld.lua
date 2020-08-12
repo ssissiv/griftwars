@@ -1,7 +1,7 @@
 local TinyWorld = class( "WorldGen.TinyWorld", WorldGen )
 
 function TinyWorld:GenerateWorld()
-	local world = World()
+	local world = World( self )
 	self.world = world
 
 	Msg:SetWorld( world )

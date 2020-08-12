@@ -39,7 +39,7 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 		ui.Separator()
 	end
 
-	if not show or ui.Button( "Close" ) then
+	if not show or ui.Button( "Close" ) or self.close then
 		screen:RemoveWindow( self )
 		self:Resume()
 	end
@@ -57,4 +57,15 @@ function ShopWindow:ChooseBuyItem( world )
 
 	return obj
 end
+
+function ShopWindow:KeyPressed( key, screen )
+	if key == "return" or key == "escape" then
+		self.close = true
+		return true
+	end
+
+	return true
+end
+
+
 

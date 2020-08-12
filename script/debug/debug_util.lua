@@ -110,7 +110,7 @@ function DebugUtil.FilterEntity( obj, filter_str, filter_tags )
         return true
     end
 
-    if string.find( tostring(obj), filter_str ) then
+    if string.find( tostring(obj):lower(), filter_str:lower() ) then
         return true
     end
 
