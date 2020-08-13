@@ -9,10 +9,10 @@ function WorldNexus:init( world, screen )
 	self.screen = screen
 end
 
-function WorldNexus:ChooseBuyItem( owner, buyer )
+function WorldNexus:ChooseBuyItem( owner, buyer, shop )
 	assert( is_instance( owner, Agent ), tostring(owner))
 	assert( is_instance( buyer, Agent ), tostring(buyer))
-	local window = ShopWindow( owner, buyer )
+	local window = ShopWindow( owner, buyer, shop )
 	assert( window.owner )
 	self.screen:AddWindow( window )
 

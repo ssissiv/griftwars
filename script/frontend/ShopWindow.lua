@@ -1,9 +1,10 @@
 local ShopWindow = class( "ShopWindow", NexusWindow )
 
-function ShopWindow:init( owner, buyer )
+function ShopWindow:init( owner, buyer, shop )
 	assert( owner and buyer )
 	self.owner = owner
 	self.buyer = buyer
+	self.shop = shop
 end
 
 function ShopWindow:RenderImGuiWindow( ui, screen )
@@ -17,7 +18,7 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
     	local money = self.buyer:GetInventory():GetMoney()
 
 		ui.Columns( 2 )
-		for i, obj in self.owner:GetInventory():Items() do
+		for i, obj in self.shop:ShopItems() do
 			local cost = shopkeep:GetBuyCost( obj, self.buyer )
 			if cost < money then
 				if ui.Selectable( tostring(obj), nil, "SpanAllColumns") then

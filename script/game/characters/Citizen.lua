@@ -9,7 +9,4 @@ function Citizen:init()
 	Agent.init( self )
 
 	self:MakeHuman()
-
-	self:GainAspect( Interaction.Befriend( CR1 ) )
-	self:GainAspect( Interaction.Chat() )
 end

@@ -12,28 +12,25 @@ function ManageShop:OnInit()
 end
 
 function ManageShop:GetName()
-	return loc.format( "Shopkeeper at the {1}", self.shop:GetTitle() )
+	return loc.format( "Shopkeeper at the {1}", self.shop:GetLocation():GetTitle() )
 end
 
 function ManageShop:GetWaypoint()
-	return self.shop:GetWaypoint( WAYPOINT.KEEPER )
+	return self.shop:GetLocation():GetWaypoint( WAYPOINT.KEEPER )
 end
 
 function ManageShop:AssignShop( shop )
-	assert( shop == nil or is_instance( shop, Location ))
+	assert( shop == nil or is_instance( shop, Feature.Shop ))
 	if shop ~= self.shop then
 		self.shop = shop
 		if shop then
-			shop:GetAspect( Feature.Shop ):AssignShopOwner( self.owner )
+			shop:AssignShopOwner( self.owner )
 		end
 	end
 end
 
 function ManageShop:OnSpawn( world )
 	Job.OnSpawn( self, world )
-
-	-- People can buy from us.
-	self.owner:GainAspect( Interaction.BuyFromShop( self ) )
 
 	-- Sometimes we have assistants.
 	if world:Random() < 0.5 then
@@ -78,7 +75,7 @@ function ManageShop:IsCustomer( agent )
 end
 
 function ManageShop:OnLocationEvent( event_name, location, ... )
-	if event_name == LOCATION_EVENT.AGENT_ADDED and location == self.owner:GetLocation() and location == self.shop then
+	if event_name == LOCATION_EVENT.AGENT_ADDED and location == self.owner:GetLocation() and location == self.shop:GetLocation() then
 		local agent = ...
 		if self:IsCustomer( agent ) then
 			if agent:Acquaint( self.owner ) then
@@ -90,8 +87,11 @@ function ManageShop:OnLocationEvent( event_name, location, ... )
 	end
 end
 
-function ManageShop:AddShopItem( item )
-	self.owner:GetInventory():AddItem( item )
+function ManageShop:CollectVerbs( verbs, actor, obj )
+	if actor ~= self.owner and self.owner == obj then
+		verbs:AddVerb( Verb.BuyFromShop( actor, self.owner, self.shop ) )
+	end
+	Job.CollectVerbs( self, verbs, actor, obj )
 end
 
 --------------------------------------------------------------

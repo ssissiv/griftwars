@@ -5,7 +5,7 @@ Befriend.INTENT_FLAGS = INTENT.DIPLOMACY
 Befriend.can_repeat = true -- This interaction can take place multiple times.
 
 function Befriend:GetActDesc()
-	return loc.format( "Befriend {1}", self.target:LocTable( self.actor ))
+	return loc.format( "Befriend {1}", self.target )
 end
 
 function Befriend:CalculateUtility()
