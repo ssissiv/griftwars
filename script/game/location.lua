@@ -574,8 +574,13 @@ function Location:RenderLocationOnMap( screen, x1, y1, x2, y2, viewer )
 
 				if screen:IsFiltering( obj ) then
 					skip = true
+				
+				elseif obj.hide_on_map then
+					skip = true
+					
 				elseif is_instance( obj, Agent ) then
 					love.graphics.setColor( 255, 0, 255 )
+
 				elseif obj:HasAspect( Aspect.Portal ) then
 					if obj:GetAspect( Aspect.Portal ):GetExitFromTag() then
 						skip = true

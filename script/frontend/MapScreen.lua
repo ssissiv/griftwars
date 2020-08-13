@@ -195,6 +195,8 @@ function MapScreen:RenderHoveredLocation( gui )
 	    		local portal = obj:GetAspect( Aspect.Portal )
 	    		if portal and portal:GetExitFromTag() then
 	    			-- dont show
+	    		elseif obj.hide_on_map then
+	    			-- dont show
 	    		else
 		    		local txt = obj:GetShortDesc( self.viewer )
 		    		if txt then

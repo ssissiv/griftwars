@@ -3,6 +3,7 @@ Boulder.MAP_CHAR = "B"
 Boulder.image = assets.TILE_IMG.BOULDER
 Boulder.mass = 12
 Boulder.range_attack_power = 10
+Boulder.hide_on_map = true
 
 function Boulder:GetName()
 	return "Boulder"
