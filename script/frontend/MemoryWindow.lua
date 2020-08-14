@@ -3,6 +3,9 @@ local MemoryWindow = class( "MemoryWindow" )
 function MemoryWindow:init( agent )
 	assert( agent )
 	self.agent = agent
+
+	-- Hm, mutator on world state.
+	agent.memory:RefreshEngrams()
 end
 
 function MemoryWindow:RenderImGuiWindow( ui, screen )
@@ -24,7 +27,7 @@ function MemoryWindow:RenderImGuiWindow( ui, screen )
 				ui.PushID( rawstring(engram) )
 				ui.TextColored( 0.8, 0.8, 0.8, 1.0, loc.format( "({1} ago)", Calendar.FormatDuration( engram:GetAge( self.agent ))))
 
-				local duration = engram:GetDuration()
+				local duration = engram:GetLifetime()
 				if duration then
 					local time_left = duration - engram:GetAge( self.agent )
 					ui.Text( loc.format( "Expires in: {1}", Calendar.FormatDuration( time_left )))

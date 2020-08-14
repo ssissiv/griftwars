@@ -18,6 +18,11 @@ function Verb:init( actor, obj )
 	self.utility = 0
 end
 
+function Verb:Clone()
+	local clone = setmetatable( table.shallowcopy( self ), self._class )
+	return clone
+end
+
 function Verb:SetUtility( utility )
 	self.utility = clamp( utility, 0, 100 )
 end

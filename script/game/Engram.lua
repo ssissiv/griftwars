@@ -1,6 +1,6 @@
 local Engram = class( "Engram" )
 
-Engram.duration = ONE_DAY
+Engram.lifetime = ONE_DAY
 
 function Engram:MergeEngram( other )
 	return false
@@ -14,8 +14,17 @@ function Engram:GetAge( owner )
 	return owner.world:GetDateTime() - self.when
 end
 
-function Engram:GetDuration()
-	return self.duration
+function Engram:IsValidEngram( owner )
+	local lifetime = self:GetLifetime()
+	if lifetime and lifetime < self:GetAge( owner ) then
+		return false
+	end
+
+	return true
+end
+
+function Engram:GetLifetime()
+	return self.lifetime
 end
 
 function Engram:StampTime( owner )
@@ -42,6 +51,13 @@ end
 
 function Marked:GetDesc()
 	return loc.format( "You marked {1} ({2})", self.obj, self.why )
+end
+
+function Marked:IsValidEngram()
+	if not self.obj:IsSpawned() then
+		return false
+	end
+	return Engram.IsValidEngram( self )
 end
 
 function Marked:MergeEngram( other )
@@ -86,11 +102,41 @@ end
 
 
 -----------------------------------------------------------------------------
+-- You know certain details about an Agent
+
+local KnowAspect = class( "Engram.KnowAspect", Engram )
+
+function KnowAspect:init( aspect )
+	assert( is_instance( aspect, Aspect ))
+	self.aspect = aspect
+end
+
+function KnowAspect:IsValidEngram()
+	if not self.aspect:IsSpawned() then
+		return false
+	end
+	return Engram.IsValidEngram( self )
+end
+
+function KnowAspect:GetDesc()
+	return loc.format( "You learned about {1}'s {2}.", self.aspect.owner, self.aspect )
+end
+
+function KnowAspect:MergeEngram( other )
+	if is_instance( other, KnowAspect ) and self.aspect == other.aspect then
+		self.when = other.when
+		return true
+	end
+
+	return false
+end
+
+-----------------------------------------------------------------------------
 -- The agent has attacked you or an ally.
 
 local HasAttacked = class( "Engram.HasAttacked", Engram )
 
-HasAttacked.duration = ONE_WEEK
+HasAttacked.lifetime = ONE_WEEK
 
 function HasAttacked:init( agent )
 	assert( is_instance( agent, Agent ))
@@ -116,7 +162,7 @@ end
 
 local Befriended = class( "Engram.Befriended", Engram )
 
-Befriended.duration = ONE_DAY
+Befriended.lifetime = ONE_DAY
 
 function Befriended.Find( e, by )
 	return is_instance( e, Befriended ) and e.by == by

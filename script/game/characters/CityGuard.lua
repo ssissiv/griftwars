@@ -17,8 +17,8 @@ function CityGuard:init()
 	self:EquipItem( Weapon.LongSword() )
 
 	if math.random() < 0.2 then
-		local want = self:GainAspect( Want.Money( 500 ))
-		want:AddReq( Req.Trust( self, 20 ))
+		local want = self:GainAspect( Want.Money( 100 ))
+		-- want:AddReq( Req.Trust( self, 20 ))
 	end
 
 	Aspect.Favour.GainFavours( self,

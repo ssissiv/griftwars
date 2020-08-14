@@ -1,7 +1,11 @@
 local Want = class( "Verb.Want", Verb )
 
-function Want:CollectVerbs( verbs, actor )
-	verbs:AddVerb( self )
+function Want:CollectVerbs( verbs, actor, obj )
+	if obj == self.owner and actor:KnowsAspect( self ) then
+		local v = self:Clone()
+		v.actor = actor
+		verbs:AddVerb( v )
+	end
 end
 
 -------------------------------------------------------

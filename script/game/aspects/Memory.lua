@@ -1,21 +1,10 @@
 
 local Memory = class( "Aspect.Memory", Aspect )
 
+Memory.TABLE_KEY = "memory"
+
 function Memory:init()
 	self.engrams = {}
-end
-
-function Memory:OnGainAspect( owner )
-	Aspect.OnGainAspect( self, owner )
-	assert( owner.memory == nil )
-	owner.memory = self
-end
-
-function Memory:OnLoseAspect()
-	Aspect.OnLoseAspect( self )
-
-	assert( self.owner.memory == self )
-	self.owner.memory = nil
 end
 
 function Memory:OnSpawn( world )
@@ -30,8 +19,7 @@ end
 function Memory:RefreshEngrams()
 	for i = #self.engrams, 1, -1 do
 		local engram = self.engrams[ i ]
-		local duration = engram:GetDuration()
-		if duration and duration < engram:GetAge( self.owner ) then
+		if not engram:IsValidEngram( self.owner ) then
 			table.remove( self.engrams, i )
 		end
 	end
@@ -105,3 +93,9 @@ function Memory:CheckPrivacy( target, flag )
 	end
 end
 
+---------------------------------------------------------------------------------
+-- Agent helpers.
+
+function Agent:KnowsAspect( aspect )
+	return self.memory and self.memory:HasEngram( function( e ) return is_instance( e, Engram.KnowAspect ) and e.aspect == aspect end )
+end
