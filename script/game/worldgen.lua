@@ -54,7 +54,7 @@ function WorldGen:GenerateWorld()
 
 	Msg:SetWorld( world )
 
-	self.trade_goods = { Object.TradeGoods }
+	self.trade_goods = { Object.LuxuryGoods, Object.Ore, Object.Spices }
 
 	local city = Zone.City( self, 3, 0 )
 	world:SpawnEntity( city )

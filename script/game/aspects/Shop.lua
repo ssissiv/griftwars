@@ -44,8 +44,11 @@ function Shop:SpawnStock()
 
 	else
 		table.insert( self.stock, Object.ShoddyRope() )
-		table.insert( self.stock, Object.TradeGoods() )
 	end
+end
+
+function Shop:AddStock( obj )
+	table.insert( self.stock, obj )
 end
 
 function Shop:SpawnShopOwner()

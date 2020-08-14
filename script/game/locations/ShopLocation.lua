@@ -20,6 +20,7 @@ function ShopLocation:OnSpawn( world )
 		local class = world.worldgen:ConsumeTradeGood()
 		if class then
 			self:GainAspect( Aspect.ResourceGenerator( class ) )
+			self.shop:AddStock( class() )
 		end
 	end
 
