@@ -1,6 +1,6 @@
 local Object = class( "Object", Entity )
 Object.MAP_CHAR = "."
-Object.mass = 0
+Object.mass = 1
 
 function Object:init()
 	Entity.init( self )

@@ -134,6 +134,20 @@ function Agent:IsCarrying( obj )
 	return obj:GetCarrier() == self.inventory
 end
 
+function Agent:CanCarry( obj )
+	if not obj:GetAspect( Aspect.Carryable ) then
+		return false, "Not carrayble" -- Not even carryable
+	end
+	if obj.mass + self:GetInventory():GetMass() > self:GetInventory():GetMassCapacity() then
+		return false, "Carrying too much"
+	end
+	if obj.mass > self:CalculateStat( CORE_STAT.STRENGTH ) then
+		return false, loc.format( "Too heavy (Need {1} {2})", obj.mass, CORE_STAT.STRENGTH )
+	end
+
+	return true
+end
+
 function Agent:IsEmployed()
 	return self:HasAspect( Job )
 end

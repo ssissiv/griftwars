@@ -1,4 +1,5 @@
 local Weapon = class( "Object.Weapon", Object )
+Weapon.mass = 1
 
 function Weapon:init()
 	Object.init( self )

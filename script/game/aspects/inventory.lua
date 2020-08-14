@@ -25,6 +25,22 @@ function Inventory:ClearItems()
 	table.clear( self.items )	
 end
 
+function Inventory:GetMass()
+	local mass = 0
+	for i, obj in ipairs( self.items ) do
+		mass = mass + obj.mass
+	end
+	return mass
+end
+
+function Inventory:GetMassCapacity()
+	if is_instance( self.owner, Agent ) then
+		return self.owner:GetStatValue( CORE_STAT.STRENGTH ) * 5
+	else
+		return math.huge
+	end
+end
+
 function Inventory:IsEmpty()
 	return #self.items == 0
 end

@@ -1,6 +1,7 @@
 local TradeGoods = class( "Object.TradeGoods", Object )
 TradeGoods.name = "trade goods"
 TradeGoods.value = 30
+TradeGoods.mass = 2
 
 function TradeGoods:init()
 	Object.init( self )

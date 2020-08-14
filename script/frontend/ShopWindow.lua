@@ -19,14 +19,18 @@ function ShopWindow:RenderImGuiWindow( ui, screen )
 
 		ui.Columns( 2 )
 		for i, obj in self.shop:ShopItems() do
+			local can_buy, reason = shopkeep:CanBuy( obj, self.buyer )
 			local cost = shopkeep:GetBuyCost( obj, self.buyer )
-			if cost < money then
+			if can_buy then
 				if ui.Selectable( tostring(obj), nil, "SpanAllColumns") then
 					screen:RemoveWindow( self )
 					self:Resume( obj )
 				end
 			else
 				ui.TextColored( 0.5, 0.5, 0.5, 1, tostring(obj) )
+				if reason and ui.IsItemHovered() then
+					ui.SetTooltip( reason )
+				end
 			end
 			ui.NextColumn()
 

@@ -38,6 +38,12 @@ function InventoryWindow:LootAll()
 end
 
 function InventoryWindow:RenderInventory( ui, screen )
+    ui.Text( "Mass/Max:" )
+    local txt = loc.format( "{1}/{2}", self.inventory:GetMass(), self.inventory:GetMassCapacity() )
+    ui.SameLine( 0, 5 )
+    ui.TextColored( 0, 1, 1, 1, txt )
+    ui.Separator()
+    
     for i, obj in self.inventory:Items() do 
         local txt = GetObjectDesc( obj )
 

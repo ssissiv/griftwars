@@ -107,6 +107,20 @@ function ManageShop:SellToBuyer( item, buyer )
 	Msg:EchoTo( self.owner, "You sell a {1} to {2}.", item, buyer )
 end
 
+function ManageShop:CanBuy( obj, buyer )
+	local cost = self:GetBuyCost( obj, buyer )
+	if cost > buyer:GetInventory():GetMoney() then
+		return false, "Can't afford"
+	end
+
+	local ok, reason = buyer:CanCarry( obj )
+	if not ok then
+		return false, reason
+	end
+
+	return true
+end
+
 -- Buying FROM us.
 function ManageShop:GetBuyCost( item, buyer )
 	if item.GetModifiedValue then
