@@ -132,9 +132,7 @@ function Zone:GeneratePortalDest( portal, depth )
 
 		if not portal:GetDest() and portal:GetWorldGenTag() then
 			if portal.one_way then
-				local w, h = new_location.map:GetExtents()
-				local x, y = self.world:Random( w ), self.world:Random( h )
-				local tile = new_location:FindPassableTile( x, y )
+				local tile = new_location:FindPassableTile()
 				portal:Connect( new_location, tile:GetCoordinate() )
 			else
 				print( string.format( "Could not connect portal %s (%s -> %s) %s",

@@ -13,8 +13,8 @@ end
 
 function MilitaryHQ:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 8, 8 ))
-		self.map:FillTiles( function( x, y )
+		self.map = self:GainAspect( Aspect.TileMap())
+		self.map:FillTiles( 8, 8, function( x, y )
 			if x == 1 or x == 8 or y == 1 or y == 8 then
 				return Tile.StoneWall( x, y )
 			else

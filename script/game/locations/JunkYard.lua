@@ -8,8 +8,8 @@ end
 
 function JunkYard:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 24, 24 ))
-		self.map:FillTiles( function( x, y )
+		self.map = self:GainAspect( Aspect.TileMap())
+		self.map:FillTiles( 24, 24, function( x, y )
 			return Tile.DirtFloor( x, y )
 		end )
 

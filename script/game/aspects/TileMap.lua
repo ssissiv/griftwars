@@ -1,20 +1,15 @@
 local TileMap = class( "Aspect.TileMap", Aspect )
 
-function TileMap:init( w, h )
-	self.w, self.h = w or 10, h or 10
+function TileMap:init()
 	self:ClearTileMap()
 end
 
-function TileMap:GetExtents()
-	return self.w, self.h
-end
-
-function TileMap:GetTightExtents( z )
+function TileMap:GetExtents( z )
 	local ymin, ymax, xmin, xmax = math.huge, -math.huge, math.huge, -math.huge
 
 	if z == nil then
 		for z, layer in pairs( self.layers ) do
-			local xmin_layer, ymin_layers, xmax_layer, ymax_layer = self:GetTightExtents( z )
+			local xmin_layer, ymin_layer, xmax_layer, ymax_layer = self:GetExtents( z )
 			ymin, ymax = math.min( ymin, ymin_layer ), math.max( ymax, ymax_layer )
 			xmin, xmax = math.min( xmin, xmin_layer ), math.max( xmax, xmax_layer )
 		end
@@ -22,10 +17,11 @@ function TileMap:GetTightExtents( z )
 	else
 		local layer = self.layers[ z ]
 		if layer then
-			local ymin, ymax, xmin, xmax = math.huge, -math.huge, math.huge, -math.huge
 			for y, row in pairs( layer ) do
 				ymin, ymax = math.min( ymin, y ), math.max( ymax, y )
-				xmin, xmax = math.min( xmin, x ), math.max( xmax, x )
+				for x, tile in pairs( row ) do
+					xmin, xmax = math.min( xmin, x ), math.max( xmax, x )
+				end
 			end
 		end
 	end
@@ -87,10 +83,10 @@ function TileMap:FindTiles( fn )
 	return tiles
 end
 
-function TileMap:FillTiles( fn )
-	for y = 1, self.h do
-		for x = 1, self.w do
-			local tile = fn( x, y )
+function TileMap:FillTiles( w, h, fn )
+	for y = 1, h do
+		for x = 1, w do
+			local tile = fn( x, y, w, h )
 			assert( tile )
 			self:AssignToGrid( tile )
 		end
@@ -257,8 +253,10 @@ function TileMap:__serialize()
 	{
 		_classname = self._classname,
 		owner = self.owner,
-		w = self.w,
-		h = self.h,
+		xmin = self.xmin,
+		ymin = self.ymin,
+		xmax = self.xmax,
+		ymax = self.ymax,
 		tiles = tiles,
 		dense_tiles = dense_tiles,
 	}

@@ -19,8 +19,8 @@ end
 
 function OpenFields:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 12, 12 ))
-		self.map:FillTiles( function( x, y )
+		self.map = self:GainAspect( Aspect.TileMap() )
+		self.map:FillTiles( 12, 12, function( x, y )
 			return Tile.Grass( x, y )
 		end )
 	end

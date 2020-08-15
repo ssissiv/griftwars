@@ -21,22 +21,26 @@ end
 
 function OpenHills:GenerateTileMap()
 	if self.map == nil then
-		local w, h = 12, 12
-		self.map = self:GainAspect( Aspect.TileMap( w, h ))
-		self.map:FillTiles( function( x, y )
-			if self.world:Random() < 0.05 then
-				return Tile.Tree( x, y )
-			else
-				return Tile.Grass( x, y )
-			end
-		end )
+		self.map = self:GainAspect( Aspect.TileMap())
 
-		for i = 3, 10 do
-			local x, y = self.world:Random( w ), self.world:Random( h )
-			if self.map:LookupTile( x, y ):IsEmpty() then
-				Object.Boulder():WarpToLocation( self, x, y )
-			end
-		end
+		local curs = self.map:CreateCursor( 0, 0 )
+		curs:SetTile( Tile.Grass )
+
+		curs:Box( 13, 13 )
+		-- self.map:FillTiles( function( x, y )
+		-- 	if self.world:Random() < 0.05 then
+		-- 		return Tile.Tree( x, y )
+		-- 	else
+		-- 		return Tile.Grass( x, y )
+		-- 	end
+		-- end )
+
+		-- for i = 3, 10 do
+		-- 	local x, y = self.world:Random( w ), self.world:Random( h )
+		-- 	if self.map:LookupTile( x, y ):IsEmpty() then
+		-- 		Object.Boulder():WarpToLocation( self, x, y )
+		-- 	end
+		-- end
 	end
 end
 

@@ -145,15 +145,15 @@ end
 -- Spawns a portal on the perimter of this Location's TileMap with the given 'tag'.
 function Location:SpawnPerimeterPortal( tag, exit_tag )
 	local portal = Object.Portal( tag .. " " .. exit_tag )
-	local w, h = self.map:GetExtents()
+	local x1, y1, x2, y2 = self.map:GetExtents()
 	if exit_tag == "east" then
-		portal:WarpToLocation( self, w, math.floor(h/2) )
+		portal:WarpToLocation( self, x2, math.floor((y1 + y2)/2) )
 	elseif exit_tag == "west" then
-		portal:WarpToLocation( self, 1, math.floor(h/2) )
+		portal:WarpToLocation( self, x1, math.floor((y1 + y2)/2) )
 	elseif exit_tag == "south" then
-		portal:WarpToLocation( self, math.floor(w/2), 1 )
+		portal:WarpToLocation( self, math.floor((x1 + x2)/2), y1 )
 	elseif exit_tag == "north" then
-		portal:WarpToLocation( self, math.floor(w/2), h )
+		portal:WarpToLocation( self, math.floor((x1 + x2)/2), y2 )
 	else
 		error( exit_tag )
 	end
@@ -163,7 +163,6 @@ end
 -- If there is a 'gen_portal' assigned, there is guaranteed to be a perimeter
 -- portal that matches it for future connectivity.
 function Location:SpawnPerimeterPortals( tag )
-	local w, h = self.map:GetExtents()
 	local exits = self.world:Shuffle{ EXIT.EAST, EXIT.WEST, EXIT.NORTH, EXIT.SOUTH }
 	local n = self.rng:Random( 1, 4 )
 	for i = 1, 4 do
@@ -460,6 +459,11 @@ function Location:FindPassableTile( x, y, obj )
 		return true
 	end
 
+	if x == nil or y == nil then
+		local tile = self.map:GetRandomTile()
+		x, y = tile:GetCoordinate()
+	end
+
 	local origin = self:LookupTile( x, y )
 	assert( origin, tostring(x)..","..tostring(y) )
 
@@ -510,10 +514,9 @@ function Location:GenerateTileMap()
 	if self.map == nil then
 		self.map = self:GetAspect( Aspect.TileMap )
 		if self.map == nil then
-			self.map = self:GainAspect( Aspect.TileMap( 8, 8 ))
+			self.map = self:GainAspect( Aspect.TileMap())
 		end
 		self.map:GenerateTileMap()
-
 	end
 
 	return self.map
@@ -521,11 +524,6 @@ end
 
 function Location:PlaceEntity( obj )
 	local x, y = obj:GetCoordinate()
-	if not x then
-		-- print( "Place", obj, self, x, y )
-		local w, h = self.map:GetExtents()
-		x, y = self.rng:Random( w ), self.rng:Random( h )
-	end
 	local tile = self:FindPassableTile( x, y, obj )
 	if not tile then
 		assert_warning( tile, string.format( "No tile at: %d, %d", x, y ))

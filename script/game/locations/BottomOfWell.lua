@@ -24,8 +24,8 @@ end
 
 function BottomOfWell:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 6, 6 ))
-		self.map:FillTiles( function( x, y )
+		self.map = self:GainAspect( Aspect.TileMap())
+		self.map:FillTiles( 6, 6, function( x, y )
 			if x == 1 or x == 6 or y == 1 or y == 6 then
 				return Tile.StoneWall( x, y )
 			else

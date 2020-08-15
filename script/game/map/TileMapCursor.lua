@@ -3,7 +3,6 @@ local TileMapCursor = class( "TileMapCursor" )
 function TileMapCursor:init( map )
 	assert( is_instance( map, Aspect.TileMap ))
 	self.map = map
-	self.w, self.h = map:GetExtents()
 end
 
 function TileMapCursor:SetTile( tile_class )

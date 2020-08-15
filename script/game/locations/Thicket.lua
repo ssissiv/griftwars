@@ -13,8 +13,8 @@ end
 
 function Thicket:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( 12, 12 ))
-		self.map:FillTiles( function( x, y )
+		self.map = self:GainAspect( Aspect.TileMap() )
+		self.map:FillTiles( 12, 12, function( x, y )
 			if self.world:Random() < 0.2 then
 				return Tile.Tree( x, y )
 			else

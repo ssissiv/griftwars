@@ -16,7 +16,7 @@ function District:OnGeneratePortals()
 end
 
 function District:SpawnCityWalls()
-	local w, h = self.map:GetExtents()
+	local x1, y1, x2, y2 = self.map:GetExtents()
 	local count = 0
 
 	local portal = self:GetBoundaryPortal( EXIT.WEST )
@@ -24,8 +24,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):MoveTo( x, 0 )
-			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, h )
+			:SetTile( Tile.StoneWall ):MoveTo( x, y1 )
+			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, y2 )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.EAST )
@@ -33,8 +33,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):MoveTo( x, 0 )
-			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, h )
+			:SetTile( Tile.StoneWall ):MoveTo( x, y1 )
+			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, y2 )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.SOUTH )
@@ -42,8 +42,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):MoveTo( 0, y )
-			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( w, y )
+			:SetTile( Tile.StoneWall ):MoveTo( x1, y )
+			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( x2, y )
 	end
 
 	local portal = self:GetBoundaryPortal( EXIT.NORTH )
@@ -51,8 +51,8 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor( 1, 1 )
-			:SetTile( Tile.StoneWall ):MoveTo( 0, y )
-			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( w, y )
+			:SetTile( Tile.StoneWall ):MoveTo( x1, y )
+			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( x2, y )
 	end
 
 	return count
@@ -60,16 +60,17 @@ end
 
 function District:SpawnDoor( tags )
 	local door = Object.Door( tags )
-	local w, h = self.map:GetExtents()
-	local tile = self:FindPassableTile( self.world:Random( 2, w - 1 ), self.world:Random( 2, h - 1 ), door )
+	local x1, y1, x2, y2 = self.map:GetExtents()
+	local tile = self:FindPassableTile( self.world:Random( x1 + 1, x2 - 1 ), self.world:Random( y1 + 1, y2 - 1 ), door )
 	door:WarpToLocation( self, tile:GetCoordinate() )
 end
 
 
 function District:GenerateTileMap()
 	if self.map == nil then
-		self.map = self:GainAspect( Aspect.TileMap( self.world:Random( 10, 12 ), self.world:Random( 6, 12 ) ))
-		self.map:FillTiles( function( x, y )
+		self.map = self:GainAspect( Aspect.TileMap())
+		local w, h = self.world:Random( 10, 12 ), self.world:Random( 6, 12 ) 
+		self.map:FillTiles( w, h, function( x, y )
 			return Tile.StoneFloor( x, y )
 		end )
 	end

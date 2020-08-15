@@ -2,7 +2,7 @@
 local ResidenceTileMap = class( "Aspect.ResidenceTileMap", Aspect.TileMap )
 
 function ResidenceTileMap:GenerateTileMap()
-	self:FillTiles( function( x, y )
+	self:FillTiles( 8, 8, function( x, y )
 		if x == 1 or y == 1 or x == self.w or y == self.h then
 			return Tile.StoneWall( x, y )
 		else
@@ -21,7 +21,7 @@ Residence.WORLDGEN_TAGS = { "residence exit" }
 function Residence:init()
 	Location.init( self )
 	self:SetDetails( "Residence", "This is somebody's residence." )
-	self:GainAspect( Aspect.ResidenceTileMap( 8, 8 ))
+	self:GainAspect( Aspect.ResidenceTileMap())
 
 	self:GainAspect( Feature.Home() )
 

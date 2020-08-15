@@ -529,8 +529,8 @@ end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
 
-	local w, h = location.map:GetExtents()
-	local x, y = self.camera:WorldToScreen( 1, 0 )
+	local x1, y1, x2, y2 = location.map:GetExtents()
+	local x, y = self.camera:WorldToScreen( x1, y1 - 1 )
 	local faction = location:GetAspect( Aspect.FactionMember )
 
 	love.graphics.setFont( assets.FONTS.TITLE )
