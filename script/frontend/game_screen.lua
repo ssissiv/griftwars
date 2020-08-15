@@ -312,27 +312,6 @@ function GameScreen:RenderScreen( gui )
     	end
     end
 
-    -- Intent buttons.
-	local aspect = puppet:GetAspect( Aspect.Puppet )
-    for i, bitname in pairs( INTENT_ARRAY ) do
-    	local bits = aspect:GetIntent()
-    	if CheckBits( bits, INTENT[ bitname ] ) then
-    		ui.PushStyleColor( "Button", 1, 0, 0, 1 )
-    	end
-
-    	if i > 1 then
-    		ui.SameLine( 0, 10 )
-    	end
-    	if ui.Button( INTENT_NAME[ bitname ] ) then
-    		aspect:SetIntent( ToggleBits( bits, INTENT[ bitname ] ))
-    	end
-
-    	if CheckBits( bits, INTENT[ bitname ] ) then
-    		ui.PopStyleColor()
-    	end
-    end
-
-
     -- Render what the player is doing...
     for i, verb in puppet:Verbs() do
 		ui.SameLine( 0, 10 )
@@ -356,7 +335,9 @@ function GameScreen:RenderScreen( gui )
 	    ui.Text( loc.format( "({1} took {2#duration})", last_verb:GetActDesc( puppet ), last_verb:GetDurationTook() ))
 	end
 
-    self:RenderAgentDetails( ui, puppet )
+	ui.Separator()
+
+  	self:RenderAgentDetails( ui, puppet )
 
     -- Render Combat targets
     self:RenderCombatDetails( ui, puppet )
@@ -492,7 +473,7 @@ function GameScreen:RenderFloaters()
 end
 
 function GameScreen:RenderAgentDetails( ui, puppet )
-    ui.TextColored( 0.5, 1.0, 1.0, 1.0, puppet:GetDesc() )
+    ui.TextColored( 0.5, 1.0, 1.0, 1.0, loc.format( "{1}", puppet ))
     ui.SameLine( 0, 5 )
     if ui.SmallButton( "?" ) then
 		self.nexus:Inspect( puppet, puppet )
@@ -524,6 +505,26 @@ function GameScreen:RenderAgentDetails( ui, puppet )
 	end
 
 	self:RenderStatusEffects( ui, puppet )
+
+    -- Intent buttons.
+	local aspect = puppet:GetAspect( Aspect.Puppet )
+    for i, bitname in pairs( INTENT_ARRAY ) do
+    	local bits = aspect:GetIntent()
+    	if CheckBits( bits, INTENT[ bitname ] ) then
+    		ui.PushStyleColor( "Button", 1, 0, 0, 1 )
+    	end
+
+    	if i > 1 then
+    		ui.SameLine( 0, 10 )
+    	end
+    	if ui.Button( INTENT_NAME[ bitname ] ) then
+    		aspect:SetIntent( ToggleBits( bits, INTENT[ bitname ] ))
+    	end
+
+    	if CheckBits( bits, INTENT[ bitname ] ) then
+    		ui.PopStyleColor()
+    	end
+    end
 end
 
 function GameScreen:RenderLocationDetails( ui, location, puppet )
