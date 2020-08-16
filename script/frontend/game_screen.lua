@@ -950,7 +950,7 @@ function GameScreen:MouseMoved( mx, my )
 	end
 end
 
-function GameScreen:MousePressed( mx, my, btn )
+function GameScreen:MousePressed( mx, my, btn, double_click )
 	for i = #self.windows, 1, -1 do
 		local window = self.windows[i]
 		if window.MousePressed and window:MousePressed( mx, my, btn ) then
@@ -964,7 +964,7 @@ function GameScreen:MousePressed( mx, my, btn )
 			return true
 
 		elseif self.puppet and not self.puppet:IsDead() then
-			if self.hovered_tile and self.hovered_tile:IsPassable( self.puppet ) then
+			if double_click and self.hovered_tile and self.hovered_tile:IsPassable( self.puppet ) then
 				local wp = Waypoint( self.puppet:GetLocation(), self.hovered_tile:GetCoordinate() )
 				local verb = Verb.Travel( self.puppet, wp )
 				self.puppet:AttemptVerb( verb )

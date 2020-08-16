@@ -3,7 +3,7 @@
 local ui = class( "UI" )
 
 function ui:init()
-	self.input = { keys_pressed = {}, btns = {} }
+	self.input = { keys_pressed = {}, btns = {}, time_pressed = {} }
 	self.screens = {}
 	self.log = {}
 
@@ -63,11 +63,14 @@ end
 function ui:MousePressed( x, y, btn )
 	self.input.clickx, self.input.clicky = x, y
 	self.input.btns[ btn ] = true
-	self:Log( "MousePressed %d, %d, %s", x, y, btn )
+	local now = love.timer.getTime()
+	local double_click = self.input.time_pressed[ btn ] and now - self.input.time_pressed[ btn ] < 0.5
+	self.input.time_pressed[ btn ] = now
+	self:Log( "MousePressed %d, %d, %s", x, y, btn, double_click )
 
 	for i = #self.screens, 1, -1 do
 		local screen = self.screens[i]
-		if screen.MousePressed == nil or screen:MousePressed( x, y, btn ) then
+		if screen.MousePressed == nil or screen:MousePressed( x, y, btn, double_click ) then
 			break
 		end
 	end
