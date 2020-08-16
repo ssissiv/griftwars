@@ -26,7 +26,10 @@ function OpenHills:GenerateTileMap()
 		local curs = self.map:CreateCursor( 0, 0 )
 		curs:SetTile( Tile.Grass )
 
-		curs:Box( 13, 13 )
+		for i = 4, 8 do
+			local dx, dy = math.random( 6, 10 ) * (math.random( 3 ) - 2), math.random( 6, 10 ) * (math.random( 3 ) - 2)
+			curs:ThickLine( 3, dx, dy )
+		end
 		-- self.map:FillTiles( function( x, y )
 		-- 	if self.world:Random() < 0.05 then
 		-- 		return Tile.Tree( x, y )

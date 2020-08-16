@@ -3,12 +3,8 @@ local GameScreen = class( "GameScreen", RenderScreen )
 function GameScreen:init( world )
 	RenderScreen.init( self )
 	
-	if world == nil then
-		local gen = WorldGen()
-		world = gen:GenerateWorld()
-		world:Start()
-	end
 	self.world = world
+    world:Start()
 	self.nexus = WorldNexus( self.world, self )
 	self.world:SetNexus( self.nexus )
 	self.world:ListenForAny( self, self.OnWorldEvent )
@@ -273,11 +269,11 @@ function GameScreen:RenderScreen( gui )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "ROOM", true, flags )
-    local puppet = self.world:GetPuppet()
 
     ui.Dummy( love.graphics.getWidth(), 0 )
 
     -- Render details about the player.
+    local puppet = self.world:GetPuppet()
     local use_seconds = self.world:CalculateTimeElapsed( 1.0 ) < 1/60 or (puppet and puppet:InCombat())
     local timestr = Calendar.FormatDateTime( self.world:GetDateTime(), use_seconds )
     ui.Text( timestr )
@@ -313,37 +309,39 @@ function GameScreen:RenderScreen( gui )
     end
 
     -- Render what the player is doing...
-    for i, verb in puppet:Verbs() do
-		ui.SameLine( 0, 10 )
-    	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
-    	ui.SameLine( 0, 10 )
-    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc( puppet ) or tostring(verb), verb:GetActingProgress() or 1.0 ))
+    if puppet then
+	    for i, verb in puppet:Verbs() do
+			ui.SameLine( 0, 10 )
+	    	ui.TextColored( 0.8, 0.8, 0, 1.0, "ACTING:" )
+	    	ui.SameLine( 0, 10 )
+	    	ui.Text( loc.format( "{1} ({2#percent})", verb:GetDesc( puppet ) or tostring(verb), verb:GetActingProgress() or 1.0 ))
 
-    	if verb:CanCancel() then
-    		ui.SameLine( 0, 10 )
-    		if ui.Button( "Cancel" ) then
-    			puppet:Echo( "Nah, forget that." )
-    			verb:Cancel( "player cancel" )
-    		end
-    	end
-    end
+	    	if verb:CanCancel() then
+	    		ui.SameLine( 0, 10 )
+	    		if ui.Button( "Cancel" ) then
+	    			puppet:Echo( "Nah, forget that." )
+	    			verb:Cancel( "player cancel" )
+	    		end
+	    	end
+	    end
 
-    -- Show last verb executed
-    local last_verb = puppet:GetLastVerb()
-    if last_verb and last_verb:GetDurationTook() then
-	    ui.SameLine( 0, 15 )
-	    ui.Text( loc.format( "({1} took {2#duration})", last_verb:GetActDesc( puppet ), last_verb:GetDurationTook() ))
+	    -- Show last verb executed
+	    local last_verb = puppet:GetLastVerb()
+	    if last_verb and last_verb:GetDurationTook() then
+		    ui.SameLine( 0, 15 )
+		    ui.Text( loc.format( "({1} took {2#duration})", last_verb:GetActDesc( puppet ), last_verb:GetDurationTook() ))
+		end
+
+		ui.Separator()
+
+	  	self:RenderAgentDetails( ui, puppet )
+
+	    -- Render Combat targets
+	    self:RenderCombatDetails( ui, puppet )
+	    ui.Separator()
+
+	    self:RenderSenses( ui, puppet )		
 	end
-
-	ui.Separator()
-
-  	self:RenderAgentDetails( ui, puppet )
-
-    -- Render Combat targets
-    self:RenderCombatDetails( ui, puppet )
-    ui.Separator()
-
-    self:RenderSenses( ui, puppet )
 	ui.SetScrollHere()
 
 	self.top_height = ui.GetWindowHeight() 

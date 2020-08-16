@@ -24,10 +24,9 @@ end
 function ui:RenderUI()
 	love.graphics.setColor( 255, 255, 255 )
 
-	for i = #self.screens, 1, -1 do
+	for i = 1, #self.screens do
 		local screen = self.screens[i]
 		screen:RenderScreen( self )
-		break
 	end
 	table.clear( self.input.keys_pressed )
 end
@@ -124,8 +123,8 @@ function ui:Screens()
 	return ipairs( self.screens )
 end
 
-function ui:AddScreen( screen )
-	table.insert( self.screens, screen )
+function ui:AddScreen( screen, idx )
+	table.insert( self.screens, idx or #self.screens + 1, screen )
 end
 
 function ui:RemoveScreen( screen )

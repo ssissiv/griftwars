@@ -19,6 +19,7 @@ require "render/AtlasedImage"
 
 require "frontend/RenderScreen"
 require "frontend/game_screen"
+require "frontend/LoadScreen"
 require "frontend/MapScreen"
 require "frontend/Nexus"
 require "frontend/NexusWindow"
@@ -154,8 +155,8 @@ function love.load(arg)
     debug_mgr:LoadDebugInspectors()
     debug_mgr:ExecuteDebugFile( "script/debug/consolecommands.lua" )
 
-    local game = GameScreen()
-    gui:AddScreen( game )
+    local screen = LoadScreen()
+    gui:AddScreen( screen )
 
     debug_mgr:TryExecuteDebugFile( "script/startup.lua" )
 

@@ -4,6 +4,10 @@ function RenderScreen:init()
 	self.render_bounds = {}
 end
 
+function RenderScreen:GetScreenSize()
+	return love.graphics.getWidth(), love.graphics.getHeight()
+end
+
 function RenderScreen:Rectangle( x, y, w, h )
 	love.graphics.rectangle( "fill", x, y, w, h )
 	self.render_bounds[1] = x

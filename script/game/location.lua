@@ -147,13 +147,37 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 	local portal = Object.Portal( tag .. " " .. exit_tag )
 	local x1, y1, x2, y2 = self.map:GetExtents()
 	if exit_tag == "east" then
-		portal:WarpToLocation( self, x2, math.floor((y1 + y2)/2) )
+		local tiles = self.map:AccumulateColumn( x2 )
+		for i, tile in pairs(tiles) do
+			if i >= #tiles / 2 then
+				portal:WarpToLocation( self, tile:GetCoordinate() )
+				break
+			end
+		end
 	elseif exit_tag == "west" then
-		portal:WarpToLocation( self, x1, math.floor((y1 + y2)/2) )
+		local tiles = self.map:AccumulateColumn( x1 )
+		for i, tile in pairs(tiles) do
+			if i >= #tiles / 2 then
+				portal:WarpToLocation( self, tile:GetCoordinate() )
+				break
+			end
+		end
 	elseif exit_tag == "south" then
-		portal:WarpToLocation( self, math.floor((x1 + x2)/2), y1 )
+		local tiles = self.map:AccumulateRow( y1 )
+		for i, tile in pairs(tiles) do
+			if i >= #tiles / 2 then
+				portal:WarpToLocation( self, tile:GetCoordinate() )
+				break
+			end
+		end
 	elseif exit_tag == "north" then
-		portal:WarpToLocation( self, math.floor((x1 + x2)/2), y2 )
+		local tiles = self.map:AccumulateRow( y2 )
+		for i, tile in pairs(tiles) do
+			if i >= #tiles / 2 then
+				portal:WarpToLocation( self, tile:GetCoordinate() )
+				break
+			end
+		end
 	else
 		error( exit_tag )
 	end
@@ -462,10 +486,11 @@ function Location:FindPassableTile( x, y, obj )
 	if x == nil or y == nil then
 		local tile = self.map:GetRandomTile()
 		x, y = tile:GetCoordinate()
+		assert( self:LookupTile( x, y ) == tile , tostring(tile))
 	end
 
 	local origin = self:LookupTile( x, y )
-	assert( origin, tostring(x)..","..tostring(y) )
+	assert( origin, tostring(self)..tostring(x)..","..tostring(y) )
 
 	self.map:Flood( origin, IsPassable, obj )
 
@@ -526,7 +551,7 @@ function Location:PlaceEntity( obj )
 	local x, y = obj:GetCoordinate()
 	local tile = self:FindPassableTile( x, y, obj )
 	if not tile then
-		assert_warning( tile, string.format( "No tile at: %d, %d", x, y ))
+		assert_warning( tile, string.format( "No tile at: %d, %d", x or math.huge, y or math.huge ))
 	else
 		obj:SetCoordinate( tile.x, tile.y )
 		tile:AddEntity( obj )

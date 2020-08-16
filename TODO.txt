@@ -1,6 +1,63 @@
 TODO
 ====
 
+Cut Scene: Fade out, warp somewhere, time passes, for story structure.
+
+OpenHills:
+1 - Gnoll Valleys.
+ * They sleep in nooks. Stealth lets you get their ore.
+ * Use Diplomacy to demand parlay. Follow to Chief. Choose: Friend or Foe.
+ * (II) More Gnolls, better equipped
+
+
+- Old Quarry
+ * Access to ore.
+ * Is StrategicPoint: adds command that acquires pickaxes, orders laborers to mine the ore.
+ 	** pick axe order is just a progress bar, during which trade price increases, smiths make the axe to speed it up, etc.
+ * (II) Hi quality ore? More ore? 
+ * Spirits @ night.
+
+ - Training Grounds
+ * Off-duty guards come here during the day
+ * You can train here to increase STR.
+
+- Roaming Herdsman
+ * Gives you awesome enegy bars.
+ * Animals - sick/ill
+   ** If they die, he goes to live in a shed for the rest of his days.
+
+- Forward Encampment.
+ * If a faction is engaging in war, this gets created.
+ * (II) - depends on Faction?
+
+- Lake
+ * Diving wold be fun :p
+ * Shaman: casts clairvoyance
+   ** Wants mushrooms, weird plant things
+   ** Casts invisibility, wanders around, then shapeshifts back.
+
+- Plains
+ * GIant Lizard.
+
+- Abandoned Well
+ * Has weapon and journal
+ * Needs rope or climbing to scale
+
+- Village
+ * Smith
+ * Allies
+   ** Will come with you for 20/day.
+
+- Orc Encampment
+ * Starts at I.
+  ** Grows like any other faction...
+  ** Wants: Ore -> Will create Orc blacksmith for gearing.
+  ** 
+
+
+
+
+
 Marks should not be an Engram.
 
 Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?

@@ -159,6 +159,7 @@ end
 
 function TileMap:GetRandomTile()
 	local n = math.random( 1, self.tile_count )
+	assert( self.tile_count > 1 )
 	local i = n
 	for z, layer in pairs( self.layers ) do
 		for y, row in pairs( layer ) do
@@ -171,6 +172,33 @@ function TileMap:GetRandomTile()
 			end
 		end
 	end
+end
+
+function TileMap:AccumulateColumn( x, z )
+	local tiles = {}
+	local layer = self.layers[ z or 0 ]
+	for y, row in pairs( layer ) do
+		for x2, tile in pairs( row ) do
+			if x2 == x then
+				table.insert( tiles, tile )
+			end
+		end
+	end
+	return tiles
+end
+
+function TileMap:AccumulateRow( y, z )
+	local tiles = {}
+	local layer = self.layers[ z or 0 ]
+	for y2, row in pairs( layer ) do
+		if y2 == y then
+			for x, tile in pairs( row ) do
+				table.insert( tiles, tile )
+			end
+			break
+		end
+	end
+	return tiles or table.empty
 end
 
 function TileMap:LookupTile( x, y, z )

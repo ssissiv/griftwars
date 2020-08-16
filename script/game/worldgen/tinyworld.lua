@@ -6,18 +6,22 @@ function TinyWorld:GenerateWorld()
 
 	Msg:SetWorld( world )
 
-	local origin = Location.JunkYard()
+	local zone = Zone.Hills( self, 1, 1 )
+	world:SpawnEntity( zone )
+
+	local origin = Location.OpenHills()
 	origin:SetDetails( "Tiny World", "Not much here." )
 	origin:SetCoordinate( 0, 0 )
+	origin:AssignZone( zone, 1 )
 	world:SpawnLocation( origin )
 
-	for i = 1, 1 do
-		local npc = Agent.HillGiant()
-		npc:WarpToLocation( origin, 8, 13 )
-	end
-	for i = 1, 4 do
-		Object.Boulder():WarpToLocation( origin, math.random( 10 ), math.random( 10 ))
-	end
+	-- for i = 1, 1 do
+	-- 	local npc = Agent.HillGiant()
+	-- 	npc:WarpToLocation( origin, 8, 13 )
+	-- end
+	-- for i = 1, 4 do
+	-- 	Object.Boulder():WarpToLocation( origin, math.random( 10 ), math.random( 10 ))
+	-- end
 	
 	local player = Agent.Grifter()
 	player:SetFlags( Agent.FLAGS.PLAYER )
