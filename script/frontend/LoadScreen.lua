@@ -15,7 +15,7 @@ function LoadScreen:init( worldgen )
 end
 
 function LoadScreen:CloseScreen()
-	-- GetGUI():RemoveScreen( self )
+	GetGUI():RemoveScreen( self )
 end
 
 function LoadScreen:GenerateWorld()
@@ -151,32 +151,32 @@ end
 
 function LoadScreen:RenderScreen( gui )
 
-	local ui = imgui
-    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
-	-- ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
-	ui.SetNextWindowPos( 0, 0 )
+	if self.error_trace then
+		local ui = imgui
+	    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
+		-- ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
+		ui.SetNextWindowPos( 0, 0 )
 
-    ui.Begin( "ROOM", true, flags )
+	    ui.Begin( "ROOM", true, flags )
 
-    ui.Dummy( love.graphics.getWidth(), 0 )
-    if self.worldgen_coro and ui.SmallButton( "?" ) then
-    	DBG( self.worldgen_coro )
-    end
-    ui.TextColored( 1, 0, 0, 1, tostring(self.error_trace) )
-	self.top_height = ui.GetWindowHeight() 
-    ui.End()
+	    ui.Dummy( love.graphics.getWidth(), 0 )
+	    if self.worldgen_coro and ui.SmallButton( "?" ) then
+	    	DBG( self.worldgen_coro )
+	    end
+	    ui.TextColored( 1, 0, 0, 1, tostring(self.error_trace) )
+		self.top_height = ui.GetWindowHeight() 
+	    ui.End()
 
-   	if self.location then
-    	-- Render the things at the player's location.
-	    self:RenderLocationTiles( self.location )
 
-	    -- self:RenderLocationDetails( ui, self.location )
-	end
+	   	if self.location then
+		    self:RenderLocationTiles( self.location )
+		end
 
-    if self.hovered_tile then
-	    self:RenderHoveredLocation( gui )
-	else
-		ui.SetTooltip( string.format( "(%.1f, %.1f)", self:ScreenToCell( love.mouse.getPosition() )))
+	    if self.hovered_tile then
+		    self:RenderHoveredLocation( gui )
+		else
+			ui.SetTooltip( string.format( "(%.1f, %.1f)", self:ScreenToCell( love.mouse.getPosition() )))
+		end
 	end
 
    	-- render map --

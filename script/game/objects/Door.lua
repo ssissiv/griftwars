@@ -1,6 +1,7 @@
 local Door = class( "Object.Door", Object )
 
 Door.image = assets.TILE_IMG.DOOR
+Door.PASS_TYPE = IMPASS.ALL
 
 function Door:init( worldgen_tag )
 	Object.init( self )
