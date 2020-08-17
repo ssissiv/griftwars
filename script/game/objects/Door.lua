@@ -1,7 +1,6 @@
 local Door = class( "Object.Door", Object )
 
 Door.image = assets.TILE_IMG.DOOR
-Door.PASS_TYPE = IMPASS.ALL
 
 function Door:init( worldgen_tag )
 	Object.init( self )
@@ -45,6 +44,8 @@ function Door:Lock()
 	if lock then
 		lock:Lock()
 
+		self:GetAspect( Aspect.Impass ):SetPassType( IMPASS.ALL )
+
 		local ent = self.portal and self.portal:GetDestEntity()
 		if ent and ent.Lock then
 			ent:Lock()
@@ -57,6 +58,7 @@ function Door:Unlock()
 	local lock = self:GetAspect( Aspect.Lock )
 	if lock then
 		lock:Unlock()
+		self:GetAspect( Aspect.Impass ):SetPassType( IMPASS.OBJECT )
 	end
 end
 
@@ -80,7 +82,7 @@ end
 
 function Door:Close()
 	if not self:IsClosed() then
-		self:GainAspect( Aspect.Impass( IMPASS.STATIC ) )
+		self:GainAspect( Aspect.Impass( IMPASS.OBJECT ) )
 		self.image = nil
 
 		local ent = self.portal and self.portal:GetDestEntity()

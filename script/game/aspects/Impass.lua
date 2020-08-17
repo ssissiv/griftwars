@@ -5,6 +5,10 @@ function Impass:init( pass_type )
 	self.pass_type = pass_type
 end
 
+function Impass:SetPassType( pass_type )
+	self.pass_type = pass_type
+end
+
 function Impass:IsPassable( what )
 	if is_instance( what, Entity ) then
 		local impass = what:GetAspect( Impass )
