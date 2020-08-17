@@ -114,8 +114,8 @@ function DebugUtil.FilterEntity( obj, filter_str, filter_tags )
         return true
     end
 
-    if obj.HasTags and filter_tags then
-        return obj:HasFuzzyTags( table.unpack( filter_tags ))
+    if obj.HasTags and filter_tags and obj:HasFuzzyTags( table.unpack( filter_tags )) then
+        return true
     end
 
     return false

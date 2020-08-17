@@ -84,11 +84,21 @@ end
 
 function goto( str )
     local tags = str:split( " " )
+    local candidate
     for i, entity in ipairs( world.entities ) do
-    	if entity.GetLocation ~= nil and entity:GetLocation() and DebugUtil.FilterEntity( entity, str, tags ) then
-    		puppet:TeleportToLocation( entity:GetLocation() )
-    		break
-    	end
+		if DebugUtil.FilterEntity( entity, str, tags ) then
+	    	if is_instance( entity, Location ) then
+	    		puppet:TeleportToLocation( entity )
+	    		return
+
+	    	elseif entity.GetLocation ~= nil and entity:GetLocation() then
+	    		candidate = entity:GetLocation()
+	    	end
+	    end
+	end
+
+	if candidate then
+		puppet:TeleportToLocation( candidate )
 	end
 end
 

@@ -55,35 +55,6 @@ function TileMapCursor:LineTo( x, y )
 	return self
 end
 
-function TileMapCursor:ThickLine( w, dx, dy )
-	local x, y = self.x + dx, self.y + dy
-	while self.x ~= x or self.y ~= y do
-		if self.x < x then
-			self:MoveTo( self.x + 1, self.y )
-		elseif self.x > x then
-			self:MoveTo( self.x - 1, self.y )
-		end
-
-		if self.y < y then
-			self:MoveTo( self.x, self.y + 1 )
-		elseif self.y > y then
-			self:MoveTo( self.x, self.y - 1 )
-		end
-
-		self:Paint()
-
-		local a = 1 - math.floor(w/2)
-		local b = a + w
-		local x0, y0 = self.x, self.y
-		for i = a, b do
-			self:Move( 1, 0 )
-			self:Paint()
-		end
-		self:MoveTo( x0, y0 )
-	end
-	return self
-end
-
 local function TileIntersects( x, y, xa, ya, xb, yb, xc, yc, xd, yd )
 	-- 𝑀  of coordinates (𝑥,𝑦) is inside the rectangle iff
 	-- (0<𝐀𝐌⋅𝐀𝐁<𝐀𝐁⋅𝐀𝐁)∧(0<𝐀𝐌⋅𝐀𝐃<𝐀𝐃⋅𝐀𝐃)

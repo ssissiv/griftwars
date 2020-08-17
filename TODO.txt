@@ -1,6 +1,9 @@
 TODO
 ====
 
+Wolf:
+	Lunge: ranged leap, knock prone
+
 Cut Scene: Fade out, warp somewhere, time passes, for story structure.
 
 OpenHills:

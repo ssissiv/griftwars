@@ -158,8 +158,6 @@ function love.load(arg)
     local screen = LoadScreen()
     gui:AddScreen( screen )
 
-    debug_mgr:TryExecuteDebugFile( "script/startup.lua" )
-
     print( "Load done, took:", love.timer.getTime() - START_TIME, " secs" )
 end
  

@@ -66,6 +66,7 @@ function LoadScreen:UpdateScreen( dt )
 	    local ok, result = coroutine.resume( self.worldgen_coro )
 	    if not ok then
 	        self.error_trace = "Failed worldgen: " ..tostring(result) .. "\n".. debug.traceback( self.worldgen_coro )
+	        print( self.error_trace )
 	        -- go through the coro stack.
 	        local i = 1
 	        while true do
@@ -97,6 +98,8 @@ function LoadScreen:UpdateScreen( dt )
 
 	        local game = GameScreen( result )
 	        GetGUI():AddScreen( game, 1 )
+
+   	 		GetDbg():TryExecuteDebugFile( "script/startup.lua" )
 	    end
 	end
 

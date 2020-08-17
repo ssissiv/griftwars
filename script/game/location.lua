@@ -24,7 +24,7 @@ function Location:OnSpawn( world )
 
 	self.rng = self:GainAspect( Aspect.Rng() )
 
-	self:GenerateTileMap()
+	self:GenerateTileMap( world )
 
 	if self.contents then
 		for i, obj in ipairs( self.contents ) do		
