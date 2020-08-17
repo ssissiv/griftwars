@@ -41,7 +41,8 @@ function ManageFatigue:CalculateUtility()
 	return utility
 end
 
-function ManageFatigue:Interact( actor )
+function ManageFatigue:Interact()
+	local actor = self.actor
 	if Calendar.IsNight( actor.world:GetDateTime() ) then
 		Msg:Speak( actor, "I'm sleepy..." )
 		local home = actor:GetHome()

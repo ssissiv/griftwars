@@ -144,7 +144,7 @@ function Behaviour:OnTickBehaviour( reason )
 		local ok, reason = self.owner:DoVerbAsync( active_verb )
 		if not self.owner:IsDoing( active_verb ) then
 			-- Verb was valid, but is either an insta-complete or perhaps something was not right during processing.
-			print( "Failed doing", self.owner, active_verb, ok, reason, active_verb:IsCancelled() )
+			print( "Failed doing", self.owner, active_verb, active_verb:IsCancelled(), "ok:", ok, reason )
 			print( "\t", self.tick_reason )
 		end
 	end

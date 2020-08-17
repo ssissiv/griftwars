@@ -11,6 +11,10 @@ function TileMapCursor:SetTile( tile_class )
 	return self
 end
 
+function TileMapCursor:GetCoordinate()
+	return self.x, self.y
+end
+
 -- Move an offset, without painting.
 function TileMapCursor:Move( dx, dy )
 	self.x, self.y = self.x + dx, self.y + dy

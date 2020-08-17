@@ -17,6 +17,7 @@ local colours =
 	BLUE = { 0, 0, 255 },
 	CYAN = { 0, 255, 255 },
 	BROWN = { 100, 70, 0 },
+	ORANGE = { 200, 100, 0 },
 	YELLOW = { 255, 255, 0 },
 	MAGENTA = { 255, 0, 255 },
 	DK_GRAY = { 60, 60, 60 },

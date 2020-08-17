@@ -116,7 +116,8 @@ end
 function MeleeAttack:Interact()
 	local actor, target = self.actor, self.target
 	local tile = target:GetTile()
-	local aji = tile:GainAspect( Aspect.Aji( self ))
+	local aji = tile:GetAspect( Aspect.Aji ) or tile:GainAspect( Aspect.Aji( self ))
+	aji:TallyUp()
 
 	self:YieldForTime( self:GetDuration() )
 
@@ -127,13 +128,13 @@ function MeleeAttack:Interact()
 	target:BroadcastEvent( AGENT_EVENT.ATTACKED, actor, self, ok )
 
 	if actor:IsDead() or target:IsDead() or self:IsCancelled() then
-		tile:LoseAspect( aji )
+		aji:TallyDown()
 		self:OnCancel()
 		return
 	end
 
 	if target:GetTile() ~= tile then
-		tile:LoseAspect( aji )
+		aji:TallyDown()
 		actor.world.nexus:AddTileFloater( "Miss!", tile )
 		self:OnCancel()
 		return
@@ -165,7 +166,7 @@ function MeleeAttack:Interact()
 	end
 
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )
-	tile:LoseAspect( aji )
+	aji:TallyDown()
 end
 
 function MeleeAttack:RenderTooltip( ui, viewer )

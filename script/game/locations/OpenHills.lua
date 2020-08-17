@@ -19,17 +19,27 @@ function OpenHills:OnSpawn( world )
 	end
 end
 
-function OpenHills:GenerateTileMap()
+function OpenHills:GenerateTileMap( world )
 	if self.map == nil then
 		self.map = self:GainAspect( Aspect.TileMap())
 
 		local curs = self.map:CreateCursor( 0, 0 )
 		curs:SetTile( Tile.Grass )
 
+		curs:Box( world:Random( 2, 4 ), world:Random( 2, 4 ))
+
+		local home = self:GainAspect( Feature.Home() )
 		for i = 4, 8 do
 			local dx, dy = math.random( 6, 10 ) * (math.random( 3 ) - 2), math.random( 6, 10 ) * (math.random( 3 ) - 2)
 			curs:ThickLine( 3, dx, dy )
+
+			curs:SpawnEntity( Object.Bed() )
+
+			local gnoll = Agent.Gnoll()
+			gnoll:WarpToLocation( self, curs:GetCoordinate() )
+			home:AddResident( gnoll )
 		end
+
 		-- self.map:FillTiles( function( x, y )
 		-- 	if self.world:Random() < 0.05 then
 		-- 		return Tile.Tree( x, y )

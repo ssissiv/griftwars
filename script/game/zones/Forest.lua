@@ -20,7 +20,6 @@ function Forest:OnWorldGenPass( pass )
 
 	if pass == 0 then
 		local n = self.world:Random( 3 )
-		print( self, n )
 		if n == 1 then
 			self:PopulateOrcs()
 		elseif n == 3 then
