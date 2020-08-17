@@ -91,7 +91,7 @@ function LoadScreen:UpdateScreen( dt )
 		        self:PanTo( 0, 0 )
 		    end
 
-	    else
+	    elseif coroutine.status( self.worldgen_coro ) ~= "suspended" then
 	        assert( is_instance( result, World ))
 	        self.fade = 1.0
 

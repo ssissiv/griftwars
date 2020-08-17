@@ -29,6 +29,9 @@ function Puppet:OnSpawn( world )
 	if self.owner:InCombat() then
 		self:SetIntent( SetBits( self.intent, INTENT.HOSTILE ))
 	end
+	if self.owner:GetLocation() then
+		self.owner:GetLocation():Discover( self.owner )
+	end
 end
 
 function Puppet:SetIntent( intent )

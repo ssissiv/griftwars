@@ -24,10 +24,18 @@ end
 function ui:RenderUI()
 	love.graphics.setColor( 255, 255, 255 )
 
-	for i = 1, #self.screens do
+	local opaque_idx
+	for i = #self.screens, 1, -1 do
+		if self.screens[i]:IsOpaque() then
+			opaque_idx = i
+		end
+	end
+
+	for i = opaque_idx or 1, #self.screens do
 		local screen = self.screens[i]
 		screen:RenderScreen( self )
 	end
+
 	table.clear( self.input.keys_pressed )
 end
 

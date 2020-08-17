@@ -447,12 +447,12 @@ end
 function DebugManager:ToggleDebugFlags( flags )
     self.debug_flags = bit.bxor( self.debug_flags, flags )
 	
-	local is_debugrender = bit.band( self.debug_flags, bit.bor( DBG_FLAGS.RENDER, DBG_FLAGS.UI )) ~= 0
-	self.game:FE():SetDebugRender( is_debugrender )
+	-- local is_debugrender = bit.band( self.debug_flags, bit.bor( DBG_FLAGS.RENDER, DBG_FLAGS.UI )) ~= 0
+	-- self.game:FE():SetDebugRender( is_debugrender )
 
-	if bit.band(flags, DBG_FLAGS.UI) ~= 0 then
-        self.game:FE():SetDebugMode( bit.band( self.debug_flags, DBG_FLAGS.UI ) ~= 0 )
-	end
+	-- if bit.band(flags, DBG_FLAGS.UI) ~= 0 then
+        -- self.game:FE():SetDebugMode( bit.band( self.debug_flags, DBG_FLAGS.UI ) ~= 0 )
+	-- end
 end
 
 function DebugManager:IsDebugFlagged( flag )

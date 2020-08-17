@@ -4,6 +4,10 @@ function RenderScreen:init()
 	self.render_bounds = {}
 end
 
+function RenderScreen:IsOpaque()
+	return self.opaque == true
+end
+
 function RenderScreen:GetScreenSize()
 	return love.graphics.getWidth(), love.graphics.getHeight()
 end

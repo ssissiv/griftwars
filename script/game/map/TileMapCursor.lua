@@ -84,6 +84,43 @@ function TileMapCursor:ThickLine( w, dx, dy )
 	return self
 end
 
+local function TileIntersects( x, y, xa, ya, xb, yb, xc, yc, xd, yd )
+	-- 𝑀  of coordinates (𝑥,𝑦) is inside the rectangle iff
+	-- (0<𝐀𝐌⋅𝐀𝐁<𝐀𝐁⋅𝐀𝐁)∧(0<𝐀𝐌⋅𝐀𝐃<𝐀𝐃⋅𝐀𝐃)
+
+	local amx, amy = x - xa, y - ya
+	local abx, aby = xb - xa, yb - ya
+	local adx, ady = xd - xa, yd - ya
+	local amab = (amx * abx + amy * aby)
+	local abab = (abx * abx + aby * aby)
+	local amad = (amx * adx + amy * ady)
+	local adad = (adx * adx + ady * ady)
+	return 0 < amab and amab < abab and 0 < amad and amad < adad
+end
+
+function TileMapCursor:ThickLine( w, dx, dy )
+	local nx, ny = normalizeVec2( -dy, dx )
+	local xa, ya = self.x + nx * w/2, self.y + ny * w/2
+	local xb, yb = xa + dx, ya + dy
+	local xd, yd = self.x - nx * w/2, self.y - ny * w/2
+	local xc, yc = xd + dx, yd + dy
+
+	-- Iterate over the AABB.
+	local x1 = math.floor( math.min( xa, xb, xc, xd ) )
+	local x2 = math.ceil( math.max( xa, xb, xc, xd ) )
+	local y1 = math.floor( math.min( ya, yb, yc, yd ) )
+	local y2 = math.ceil( math.max( ya, yb, yc, yd ) )
+	for y = y1, y2 do
+		for x = x1, x2 do
+			if TileIntersects( x, y, xa, ya, xb, yb, xc, yc, xd, yd ) then
+				self:MoveTo( x, y )
+				self:Paint()
+			end
+		end
+	end
+	return self
+end
+
 function TileMapCursor:LinePattern( dx, dy, pattern )
 	local n = #pattern
 	for i = 1, n do

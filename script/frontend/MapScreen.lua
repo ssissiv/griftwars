@@ -1,4 +1,5 @@
 local MapScreen = class( "MapScreen", RenderScreen )
+MapScreen.opaque = true
 
 function MapScreen:init( world, viewer )
 	assert( is_instance( viewer, Agent ))
