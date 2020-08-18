@@ -48,7 +48,7 @@ local assets =
 		TENT = "tent.png",
 		BOULDER = { "NEVANDA", 0 * 32, 21 * 32, 32, 32 },
 		CAVE_ENTRANCE = "cave_entrance.png",
-		CHEST = "chest.png",
+		CHEST = { "NEVANDA", 25 * 32, 14 * 32, 32, 32 },
 		ABANDONED_WELL = "abandoned_well.png",
 
 		PLAYER = { "NEVANDA", 4 * 32, 1 * 32, 32, 32 },
