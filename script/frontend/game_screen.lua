@@ -171,8 +171,8 @@ function GameScreen:RenderCombatTargetDetails( ui, puppet, target )
 	-- Name, health
 	local hp, max_hp = target:GetHealth()
 	local txt = loc.format( "{1.Id} - {2}/{3}", target:LocTable( self.puppet ), hp, max_hp )
-	if self.current_focus == target:GetTile() then
-		ui.TextColored( 1.0, 0, 0, 1.0, ">>" ..txt )
+	if self.current_focus == target then
+		ui.TextColored( 1.0, 0.1, 0.1, 1.0, txt )
 	else
 		ui.TextColored( 0.5, 0, 0, 1.0, txt )
 	end
