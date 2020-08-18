@@ -136,7 +136,8 @@ function TilePathFinder:CalculatePath()
 	end
 
 	if self.path then
-		for i = 1, self:GetApproachDist() do
+		local dist = self:GetApproachDist()
+		while #self.path > 0 and end_room:GetDistance( self.path[ #self.path - 1 ] ) <= dist do
 			table.remove( self.path )
 		end
 	end

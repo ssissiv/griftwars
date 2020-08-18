@@ -60,6 +60,7 @@ end
 
 function Travel:PathToTarget( actor, dest, approach_dist )
 	local pather = TilePathFinder( actor, actor, dest, approach_dist )
+	self.block_count = 0
 
 	while pather:GetEndRoom() and not pather:AtGoal() do
 
@@ -104,7 +105,7 @@ function Travel:PathToTarget( actor, dest, approach_dist )
 			self.block_count = (self.block_count or 0) + 1
 			print( actor, "couldn't walk:", reason, "blocked:", self.block_count )
 			print( "At:", actor:GetTile(), actor:GetLocation() )
-			print( "Goal:", dest, pather:GetEndRoom() )
+			print( "Goal:", dest, pather:GetEndRoom(), pather:AtGoal() )
 			print( "Path:", tostr(self.path) )
 			if self.block_count >= 3 then
 				pather:ResetPath()

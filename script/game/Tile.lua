@@ -17,6 +17,10 @@ function Tile:SetCoordinate( x, y )
 	self.x, self.y = x, y
 end
 
+function Tile:GetDistance( tile )
+	return distance( self.x, self.y, tile.x, tile.y )
+end
+
 function Tile:Neighbours( map )
 	return map:Neighbours( self )
 end
