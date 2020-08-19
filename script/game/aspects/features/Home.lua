@@ -17,7 +17,6 @@ end
 function Home:OnSpawn( world )
 	Aspect.OnSpawn( self, world )
 	world:RegisterToBucket( self._classname, self )
-	self.owner.map_colour = constants.colours.HOME_TILE
 end
 
 function Home:OnDespawn()
