@@ -19,15 +19,15 @@ function Travel:GetActDesc()
 end
 
 function Travel:GetDesc( viewer )
-	if self.obj == viewer then
+	if self.dest == viewer then
 		return loc.format( "Approaching you!" )
-	elseif is_instance( self.obj, Location ) then
-		return loc.format( "Traveling to {1}", self.obj )
-	elseif self.obj and self.obj.GetLocation then
-		if viewer and self.obj:GetLocation() == viewer:GetLocation() then
-			return loc.format( "Approaching {1}", tostring(self.obj) )
+	elseif is_instance( self.dest, Location ) then
+		return loc.format( "Traveling to {1}", self.dest )
+	elseif self.dest and self.dest.GetLocation then
+		if viewer and self.dest:GetLocation() == viewer:GetLocation() then
+			return loc.format( "Approaching {1}", tostring(self.dest) )
 		else
-			return loc.format( "Traveling to {1}", self.obj:GetLocation() )
+			return loc.format( "Traveling to {1}", self.dest:GetLocation() )
 		end
 	end
 	return "Traveling"
