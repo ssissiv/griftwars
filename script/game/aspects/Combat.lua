@@ -122,6 +122,9 @@ function Combat:EvaluateTarget( target )
 	if not combat then
 		return false, "no combat"
 	end
+	if not self.owner:CanSee( target ) then
+		return false, "not visible"
+	end
 	if not combat:IsTarget( self.owner ) then
 		-- TEMP. orcs attacksssss
 		if not self.owner:IsEnemy( target ) then

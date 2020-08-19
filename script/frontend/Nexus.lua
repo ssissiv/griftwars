@@ -97,6 +97,9 @@ function WorldNexus:ConfirmChoice( title, body )
 	return window:Show( self.world )
 end
 
-function WorldNexus:AddTileFloater( txt, tile )
-	self.screen:AddTileFloater( txt, tile )
+function WorldNexus:AddTileFloater( txt, location, tile )
+	if self.world:GetPuppet() and self.world:GetPuppet():GetLocation() == location then
+		self.screen:AddTileFloater( txt, tile )
+	end
 end
+

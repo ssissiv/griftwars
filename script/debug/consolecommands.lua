@@ -88,17 +88,23 @@ function goto( str )
     for i, entity in ipairs( world.entities ) do
 		if DebugUtil.FilterEntity( entity, str, tags ) then
 	    	if is_instance( entity, Location ) then
-	    		puppet:TeleportToLocation( entity )
-	    		return
+	    		candidate = entity
+	    		break
 
 	    	elseif entity.GetLocation ~= nil and entity:GetLocation() then
-	    		candidate = entity:GetLocation()
+	    		candidate = entity
 	    	end
 	    end
 	end
 
-	if candidate then
+	if is_instance( candidate, Location ) then
+		print( "goto:", candidate )
 		puppet:TeleportToLocation( candidate )
+	elseif candidate then
+		print( "goto:", candidate )
+		puppet:TeleportToLocation( candidate:GetLocation() )
+	else
+		print( "No goto target found." )
 	end
 end
 

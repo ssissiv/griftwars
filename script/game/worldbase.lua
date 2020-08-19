@@ -106,7 +106,7 @@ function WorldBase:GetEventTimeLeft( ev )
 	return math.max( 0, ev.when - self.datetime )
 end
 
-function WorldBase:AdvanceTime( dt )
+function WorldBase:AdvanceTime( dt, max_events )
 	-- Broadcast any scheduled events.
 	local ev = self.scheduled_events[ 1 ]
 
@@ -146,10 +146,14 @@ function WorldBase:AdvanceTime( dt )
 		end
 
 		ev = self.scheduled_events[1]
-		if ev_count > 100 then
+		if max_events and ev_count > max_events then
 			-- print( "Processing >100 events, bailing", ev_count, dt, #self.scheduled_events )
 			return dt
 		end
+	end
+
+	if not max_events then
+		print( "Processed ", ev_count, " events" )
 	end
 
 	self.datetime = self.datetime + dt
@@ -284,7 +288,7 @@ function WorldBase:UpdateWorld( dt )
 	-- 		print( dt, world_dt, Calendar.FormatDuration( world_dt ) )
 	-- 	end
 	-- end
-	self.time_debt = self:AdvanceTime( world_dt )
+	self.time_debt = self:AdvanceTime( world_dt, 100 )
 
 	if self.OnUpdateWorld then
 		self:OnUpdateWorld( dt, world_dt )

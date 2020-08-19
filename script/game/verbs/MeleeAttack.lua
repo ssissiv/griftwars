@@ -135,7 +135,7 @@ function MeleeAttack:Interact()
 
 	if target:GetTile() ~= tile then
 		aji:TallyDown()
-		actor.world.nexus:AddTileFloater( "Miss!", tile )
+		actor.world.nexus:AddTileFloater( "Miss!", actor.location, tile )
 		self:OnCancel()
 		return
 	end

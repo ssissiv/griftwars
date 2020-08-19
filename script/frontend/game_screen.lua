@@ -709,6 +709,20 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 			ui.EndMenu()
 		end
 
+		ui.Separator()
+
+		for i, obj in tile:Contents() do
+			if is_instance( obj, Agent ) and not obj:IsDead() then
+				if ui.MenuItem( loc.format( "Kill {1}", obj )) then
+					obj:Kill()
+				end
+			end
+		end
+		
+		if ui.MenuItem( "Gen-Cursor here" ) then
+			DBSET( "curs", self.puppet:GetLocation().map:CreateCursor( tile:GetCoordinate() ))
+		end
+		
 		if ui.BeginMenu( "Advance Time..." ) then
 			if ui.MenuItem( "15 mins" ) then
 				self.world:AdvanceTime( 0.5 * HALF_HOUR )
@@ -731,21 +745,6 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 			ui.EndMenu()
 		end
 
-		ui.Separator()
-
-		for i, obj in tile:Contents() do
-			if is_instance( obj, Agent ) and not obj:IsDead() then
-				if ui.MenuItem( loc.format( "Kill {1}", obj )) then
-					obj:Kill()
-				end
-			end
-		end
-
-		ui.Separator()
-		
-		if ui.MenuItem( "Gen-Cursor here" ) then
-			DBSET( "curs", self.puppet:GetLocation().map:CreateCursor( tile:GetCoordinate() ))
-		end
 	end
 end
 

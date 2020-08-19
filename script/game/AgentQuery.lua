@@ -103,6 +103,10 @@ function Agent:CanSee( obj )
 		return false
 	end
 
+	if not self:IsAlert() then
+		return false
+	end
+
 	if not obj:GetCoordinate() or not self:GetCoordinate() then
 		return false
 	end
