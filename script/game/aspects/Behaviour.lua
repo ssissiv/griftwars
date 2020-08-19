@@ -77,7 +77,7 @@ function Behaviour:OnAspectsChanged( event_name, owner, aspect )
 end
 
 function Behaviour:OnVerbUnassigned( event_name, owner, verb )
-	self:ScheduleNextTick( 0, "verb removed" )
+	self:ScheduleNextTick( 0, tostring(verb).." unassigned" )
 end
 
 function Behaviour:ScheduleNextTick( delta, reason )

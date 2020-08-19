@@ -731,7 +731,7 @@ function GameScreen:RenderDebugContextPanel( ui, panel, mx, my )
 				self.world:AdvanceTime( HALF_HOUR )
 			end
 			if ui.MenuItem( "One Hour" ) then
-				self.world:AdvanceTime( HALF_HOUR )
+				self.world:AdvanceTime( ONE_HOUR )
 			end
 			if ui.MenuItem( "6 Hours" ) then
 				self.world:AdvanceTime( 6 * ONE_HOUR )

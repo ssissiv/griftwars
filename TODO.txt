@@ -21,6 +21,7 @@ HillGiant:
 Bandit:
 	Fights to posted locations, otherwise sits around camp.
 	Friend: Bandit intel?
+	Ambition: 
 
 Levels I think. Needed for NPCs.
 That's ok. player can have levels too.

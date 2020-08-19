@@ -97,7 +97,7 @@ function Scrounge:CalculateDC()
 end
 
 function Scrounge:Interact()
-	local actor, target = self.actor, self.target or self:FindTarget( actor )
+	local actor, target = self.actor, self.target or self:FindTarget( self.actor )
 
 	Msg:EchoAround( actor, "{1.Id} begins rummaging around in {2.Id}.", actor, target )
 	Msg:EchoTo( actor, "You begin to rummage around in {1.Id}", target:LocTable( actor ) )
