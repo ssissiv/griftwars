@@ -14,7 +14,7 @@ function Nocturnal:CalculateUtility()
 end
 
 function Nocturnal:CanInteract()
-	if Calendar.IsDay( self.actor.world:GetDateTime() ) then
+	if not Calendar.IsDay( self.actor.world:GetDateTime() ) then
 		return false, "Not day"
 	end
 	return Verb.CanInteract( self )
