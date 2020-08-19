@@ -749,10 +749,15 @@ function Agent:CancelInvalidVerbs()
 	if self.verbs then
 		for i = #self.verbs, 1, -1 do
 			local verb = self.verbs[i]
-			local ok, reason = verb:CanInteract()
-			if not ok then
-				verb:Cancel( reason )
+			-- It is possible that while Cancelling, a verb alters state which will call this function.
+			-- So it is fine if a verb is undergoing cancelling already -- just don't bother with it.
+			if not verb:IsCancelled() then
+				local ok, reason = verb:CanInteract()
+				if not ok then
+					verb:Cancel( reason )
+				end
 			end
+			-- If cancelling removes the final verb, there will be nothing left to iterate over.
 			if self.verbs == nil then
 				break
 			end

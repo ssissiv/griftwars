@@ -9,15 +9,15 @@ function Nocturnal:CalculateUtility()
 	if Calendar.IsDay( self.actor.world:GetDateTime() ) then
 		return UTILITY.HABIT
 	else
-		return 0
+		return -1
 	end
 end
 
 function Nocturnal:CanInteract()
-	if not Calendar.IsDay( self.actor.world:GetDateTime() ) then
+	if Calendar.IsDay( self.actor.world:GetDateTime() ) then
 		return false, "Not day"
 	end
-	return true
+	return Verb.CanInteract( self )
 end
 
 function Nocturnal:Interact()

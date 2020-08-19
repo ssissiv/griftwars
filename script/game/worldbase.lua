@@ -173,6 +173,15 @@ function WorldBase:TogglePause( pause_type )
 	self:BroadcastEvent( WORLD_EVENT.PAUSED, pause_type )
 end
 
+function WorldBase:SetPause( pause_type )
+	pause_type = pause_type or PAUSE_TYPE.DEBUG
+	assert( IsEnum( pause_type, PAUSE_TYPE ))
+	if not table.contains( self.pause, pause_type ) then
+		table.insert( self.pause, pause_type )
+		self:BroadcastEvent( WORLD_EVENT.PAUSED, pause_type )
+	end
+end
+
 function WorldBase:IsPaused( pause_type )
 	if pause_type then
 		return table.arraycontains( self.pause, pause_type )

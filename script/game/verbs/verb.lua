@@ -509,7 +509,7 @@ function Verb:Resume( coro )
 end
 
 function Verb:ShowError( coro, msg )
-	self:GetWorld():TogglePause( PAUSE_TYPE.ERROR )
+	self:GetWorld():SetPause( PAUSE_TYPE.ERROR )
 	print( "ShowError", self, coro and coroutine.status( coro ), "\n", msg )
 	local trace = debug.traceback()
 	self.error = msg
