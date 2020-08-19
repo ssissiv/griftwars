@@ -34,7 +34,7 @@ function Location:OnSpawn( world )
 				if tile then
 					tile:AddEntity( obj )
 				else
-					self:PlaceEntity( obj )
+					self:PlaceEntity( obj, x, y )
 				end
 			end
 			if not obj:IsSpawned() then
@@ -209,7 +209,7 @@ function Location:SpawnPerimeterPortals( tag )
 end
 
 
-function Location:AddEntity( entity )
+function Location:AddEntity( entity, x, y, region_id )
 	assert( is_instance( entity, Entity ))
 	assert( self.contents == nil or table.arrayfind( self.contents, entity ) == nil )
 	assert( entity.location == self )
@@ -239,7 +239,7 @@ function Location:AddEntity( entity )
 	end
 
 	if self.map then
-		self:PlaceEntity( entity )
+		self:PlaceEntity( entity, x, y, region_id )
 
 	elseif is_instance( entity, Agent ) and entity:IsPuppet() then
 		error( "don't think this happens anymore" )
@@ -273,9 +273,9 @@ function Location:RemoveEntity( entity )
 	entity:SetCoordinate( nil, nil )
 end
 
-function Location:AddAgent( agent )
+function Location:AddAgent( agent, x, y, region_id )
 	assert( is_instance( agent, Agent ))
-	self:AddEntity( agent )
+	self:AddEntity( agent, x, y, region_id )
 end
 
 function Location:RemoveAgent( agent )
@@ -381,6 +381,17 @@ function Location:GetBoundaryPortal( exit )
 	end
 end
 
+function Location:AssignRegionID( region_id, pass_type, tile )
+	self.map:Flood( tile, function( x, depth )
+		if x:GetRegionID() or not x:IsPassable( pass_type ) then
+			return false
+		else
+			x:AssignRegionID( region_id )
+			return true
+		end
+	end )
+end
+
 -- Breadth-first traversal applying fn().
 -- fn( location, depth ) returns two booleans:
 --		continue: if false, do not flood from this location
@@ -469,6 +480,16 @@ function Location:FindEmptyPassableTile( x, y, obj )
 	return found_tile
 end
 
+function Location:FindPassableRegionTile( region_id, obj )
+	local tiles = self.map:FindTiles( function( x ) return x:GetRegionID() == region_id end )
+	while #tiles > 0 do
+		local tile = self.rng:ArrayRemove( tiles )
+		if tile:IsPassable( obj ) then
+			return tile
+		end
+	end
+end
+
 function Location:FindPassableTile( x, y, obj )
 	local found_tile
 	local function IsPassable( tile, depth, obj )
@@ -547,12 +568,25 @@ function Location:GenerateTileMap()
 	return self.map
 end
 
-function Location:PlaceEntity( obj )
-	local x, y = obj:GetCoordinate()
-	local tile = self:FindPassableTile( x, y, obj )
-	if not tile then
-		assert_warning( tile, string.format( "No tile at: %d, %d", x or math.huge, y or math.huge ))
+function Location:PlaceEntity( obj, x, y, region_id )
+	local tile
+	if x and y then
+		tile = self:FindPassableTile( x, y, obj )
+		if not tile then
+			assert_warning( tile, string.format( "No tile at: %d, %d", x or math.huge, y or math.huge ))
+		elseif region_id and tile:GetRegionID() ~= region_id then
+			assert_warning( tile, string.format( "Tile at: %d, %d does not have region id %d (%s)", x, y, region_id, tostring(tile:GetRegionID())))
+		end
+
+	elseif region_id then
+		-- Find a tile with a specific region id
+		tile = self:FindPassableRegionTile( region_id, obj )
 	else
+		-- Just any old passable tile will do.
+		tile = self:FindPassableTile( nil, nil, obj )		
+	end
+
+	if tile then
 		obj:SetCoordinate( tile.x, tile.y )
 		tile:AddEntity( obj )
 	end

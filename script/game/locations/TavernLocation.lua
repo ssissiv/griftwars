@@ -19,6 +19,8 @@ function TavernLocation:OnSpawn( world )
 	self:SetDetails( name )
 
 	Object.Door( "tavern exit" ):WarpToLocation( self, 6, 7 )
+	self:AssignRegionID( RGN_SERVING_AREA, IMPASS.STATIC, self:LookupTile( 6, 7 ))
+
 	local barkeep = self:GetAspect( Feature.Tavern ):SpawnBarkeep()
 	-- local home = self:SpawnHome( barkeep )
 end

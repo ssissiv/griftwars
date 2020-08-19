@@ -17,6 +17,14 @@ function Tile:SetCoordinate( x, y )
 	self.x, self.y = x, y
 end
 
+function Tile:AssignRegionID( region_id )
+	self.region_id = region_id
+end
+
+function Tile:GetRegionID()
+	return self.region_id
+end
+
 function Tile:GetDistance( tile )
 	return distance( self.x, self.y, tile.x, tile.y )
 end
@@ -138,7 +146,11 @@ function Tile:RenderDebugPanel( ui, panel )
 end
 
 function Tile:__tostring()
-	return string.format( "[%s:%d,%d]", self._classname, tostring(self.x), tostring(self.y))
+	if self.region_id then
+		return string.format( "[%s:%d:%d,%d]", self._classname, self.region_id, tostring(self.x), tostring(self.y))
+	else
+		return string.format( "[%s:%d,%d]", self._classname, tostring(self.x), tostring(self.y))
+	end
 end
 
 -----------------------------------------------------------------

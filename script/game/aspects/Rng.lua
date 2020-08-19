@@ -46,6 +46,12 @@ function Rng:ArrayPick( t )
 	return t[ self:Random( #t ) ]
 end
 
+function Rng:ArrayRemove( t )
+	local idx = self:Random( #t )
+	local v = t[ idx ]
+	return table.remove( t, idx )
+end
+
 function Rng:WeightedPick( options )
     local total = 0
     for i = 2, #options, 2 do

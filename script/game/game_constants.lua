@@ -120,7 +120,7 @@ AFFINITY = MakeEnum
 	"ENEMY", -- Enemy!
 }
 
-SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC", "GIANT", "MAMMAL" }
+SPECIES = MakeEnum{ "NONE", "HUMAN", "ORC", "GIANT", "MAMMAL", "GNOLL" }
 SPECIES_ARRAY = MakeArrayFromEnum( SPECIES )
 
 table.arrayremove( SPECIES_ARRAY, SPECIES.NONE )
@@ -143,6 +143,10 @@ SPECIES_PROPS =
 	{
 		name = "orc",
 		can_speak = true,
+	},
+	GNOLL =
+	{
+		name = "gnoll",
 	},
 	GIANT =
 	{
@@ -303,6 +307,9 @@ FATIGUE_THRESHOLDS =
 	{ value = 90, id = FATIGUE.EXHAUSTED, name = FATIGUE_STRINGS[ FATIGUE.EXHAUSTED ] },
 }
 
+
+-- Region numbers.
+RGN_SERVING_AREA = 1 -- Bar serving areas
 
 -- Challenge ratings
 CR0 = 0

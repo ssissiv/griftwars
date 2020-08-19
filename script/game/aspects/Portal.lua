@@ -123,7 +123,7 @@ end
 function Portal:ConnectPortal( portal )
 	local location = portal:GetLocation()
 	local x, y = portal.owner:GetCoordinate()
-	assert( location and x and y )
+	assert( location and x and y, tostring(portal.owner))
 
 	self:Connect( location, x, y, portal )
 

@@ -17,8 +17,8 @@ function WarpToWell()
 	puppet:WarpToLocation( obj.location )
 end
 
-local obj = table.arraypick( world:CreateBucketByClass( Location.OpenHills ))
-puppet:WarpToLocation( obj )
+-- local obj = table.arraypick( world:CreateBucketByClass( Location.OpenHills ))
+-- puppet:WarpToLocation( obj )
 
 --goto( "hills" )
 

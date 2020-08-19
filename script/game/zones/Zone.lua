@@ -136,7 +136,7 @@ function Zone:GeneratePortalDest( portal, depth )
 				portal:Connect( new_location, tile:GetCoordinate() )
 			else
 				print( string.format( "Could not connect portal %s (%s -> %s) %s",
-					portal.owner, location ,new_location,portal:GetWorldGenTag() ))
+					portal.owner, location, new_location,portal:GetWorldGenTag() ))
 
 				for i, portal in new_location:Portals() do
 					print( i, portal, portal:GetWorldGenTag() )

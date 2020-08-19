@@ -20,7 +20,8 @@ function Tavern:SpawnBarkeep()
 	local world = self:GetWorld()
 	
 	local barkeep = Agent.Barkeep()
-	barkeep:WarpToLocation( self.location )
+	barkeep:WarpToLocationRegion( self.location, RGN_SERVING_AREA )
+	assert( barkeep:GetTile():GetRegionID() == RGN_SERVING_AREA )
 
 	self:AssignBarkeep( barkeep )
 	return barkeep

@@ -14,6 +14,15 @@ function Agent:MakeOrc()
 	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
 end
 
+function Agent:MakeGnoll()
+	self.species = SPECIES.GNOLL
+
+	self:MakeGendered()
+	self:MakeBiological()
+	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
+	self:GainAspect( Verb.Nocturnal() )
+end
+
 function Agent:MakeHillGiant()
 	self.species = SPECIES.GIANT
 

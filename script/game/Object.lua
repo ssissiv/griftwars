@@ -71,7 +71,7 @@ function Object:IsInscribed( txt )
 	return self.scribe_txt:find( txt )
 end
 
-local function WarpToLocation( self, location, x, y )
+local function WarpToLocation( self, location, x, y, region_id )
 	local prev_location = self.location
 	if self.location then
 		self.location:RemoveEntity( self )
@@ -80,8 +80,7 @@ local function WarpToLocation( self, location, x, y )
 	self.location = location
 
 	if location then
-		self:SetCoordinate( x, y )
-		location:AddEntity( self )
+		location:AddEntity( self, x, y, region_id )
 	end
 
 	if self.OnLocationChanged then
@@ -96,6 +95,12 @@ end
 
 function Object:WarpToNowhere()
 	WarpToLocation( self )
+end
+
+
+function Object:WarpToLocationRegion( location, region_id )
+	assert( is_instance( location, Location ), tostring(location))
+	WarpToLocation( self, location, nil, nil, region_id )
 end
 
 function Object:WarpToLocation( location, x, y )

@@ -9,7 +9,7 @@ Gnoll.max_health = 25
 function Gnoll:init()
 	Agent.init( self )
 
-	Agent.MakeOrc( self )
+	Agent.MakeGnoll( self )
 
 	self:SetFlags( EF.AGGRO_OTHER_CLASS )
 end

@@ -569,7 +569,7 @@ function Agent:MoveDirection( dir )
 	return true
 end
 
-local function WarpToLocation( self, location, x, y )
+local function WarpToLocation( self, location, x, y, region_id )
 	local prev_location = self.location
 	if self.location then
 		self:SetFocus( nil )
@@ -583,8 +583,7 @@ local function WarpToLocation( self, location, x, y )
 	self.location = location
 
 	if location then
-		self:SetCoordinate( x, y )
-		location:AddAgent( self )
+		location:AddAgent( self, x, y, region_id )
 	end
 
 	for i, aspect in self:Aspects() do
@@ -598,6 +597,11 @@ end
 
 function Agent:WarpToNowhere()
 	WarpToLocation( self )
+end
+
+function Agent:WarpToLocationRegion( location, region_id )
+	assert( is_instance( location, Location ), tostring(location))
+	WarpToLocation( self, location, nil, nil, region_id )
 end
 
 function Agent:WarpToLocation( location, x, y )
@@ -1067,12 +1071,12 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	end
 
 	-- Show as someone familiar.
-	if viewer:GetAffinity( self ) ~= AFFINITY.STRANGER or self:GetTrust( viewer ) > 0 then
+	if viewer == nil or viewer:GetAffinity( self ) ~= AFFINITY.STRANGER or self:GetTrust( viewer ) > 0 then
 		screen:SetColour( constants.colours.YELLOW )
 		love.graphics.print( "*", x1, (y1), 0, scale, 0.6 * scale )		
 	end
 	-- Show someone who is marked.
-	if viewer:IsMarked( self ) then
+	if viewer and viewer:IsMarked( self ) then
 		screen:SetColour( constants.colours.RED )
 		love.graphics.print( "*", x1+(x2-x1)*0.2, (y1), 0, scale, 0.6 * scale )		
 	end

@@ -4,6 +4,28 @@ TODO
 Wolf:
 	Lunge: ranged leap, knock prone
 
+Gnoll:
+	Sleep during day.
+	Shove you against wall and Stun.
+	Have poisoned meat.
+	Friend: Will attack your enemies.
+	Enemy: Not much they already hate everythign :p
+
+HillGiant:
+	Sleeps a lot.
+	Throws boulders, very powerful.
+	Likes large quantities of food.
+	Friend: Wont smush you.
+	Enemy: ...
+
+Bandit:
+	Fights to posted locations, otherwise sits around camp.
+	Friend: Bandit intel?
+
+Levels I think. Needed for NPCs.
+That's ok. player can have levels too.
+
+
 Cut Scene: Fade out, warp somewhere, time passes, for story structure.
 
 OpenHills:
