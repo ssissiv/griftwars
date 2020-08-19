@@ -337,15 +337,6 @@ function Agent:Interrupt( msg )
 	end
 end
 
-
-function Agent:CanSee( obj )
-	if self.location and self.location == obj:GetLocation() then
-		return true
-	end
-
-	return false
-end
-
 function Agent:GetMarks( why )
 	local t = {}
 	for i, v in self.memory:Engrams() do
@@ -865,10 +856,6 @@ end
 
 function Agent:Stats()
 	return pairs( self.stats )
-end
-
-function Agent:CanSee( obj )
-	return true
 end
 
 function Agent:Sense( txt )

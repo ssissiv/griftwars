@@ -283,10 +283,10 @@ function WorldBase:CalculateTimeElapsed( dt )
 end
 
 function WorldBase:UpdateWorld( dt )
-	if self:IsPaused( PAUSE_TYPE.DEBUG ) then
-		return
-	elseif self:IsPaused() then
+	if self:IsPaused( PAUSE_TYPE.IDLE ) then
 		dt = 0
+	elseif self:IsPaused() then
+		return
 	end
 
 	local world_dt = self.time_debt or self:CalculateTimeElapsed( dt )

@@ -96,19 +96,19 @@ end
 
 function Agent:CanSee( obj )
 	if obj.location ~= self.location then
-		return false
+		return false, "location differs"
 	end
 
 	if is_instance( obj, Object.Portal ) and obj:GetDest() == nil then
-		return false
+		return false, "is a portal to nowhere"
 	end
 
 	if not self:IsAlert() then
-		return false
+		return false, "cant see: not alert"
 	end
 
 	if not obj:GetCoordinate() or not self:GetCoordinate() then
-		return false
+		return false, "no coordinate"
 	end
 
 	return true

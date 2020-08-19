@@ -230,13 +230,6 @@ function Location:AddEntity( entity, x, y, region_id )
 	
 	entity:ListenForAny( self, self.OnEntityEvent )
 
-	if is_instance( entity, Agent ) then
-		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
-
-		if not entity:IsPuppet() and table.contains( self.contents, self.world:GetPuppet() ) then
-			-- self.world:ScheduleInterrupt( 0, loc.format( "{1.Id} appears ({2})", entity:LocTable(), rawstring(entity)) )
-		end
-	end
 
 	if self.map then
 		self:PlaceEntity( entity, x, y, region_id )
@@ -247,6 +240,14 @@ function Location:AddEntity( entity, x, y, region_id )
 
 	else
 		assert( entity:GetCoordinate() == nil )
+	end
+
+	if is_instance( entity, Agent ) then
+		self:BroadcastEvent( LOCATION_EVENT.AGENT_ADDED, entity )
+
+		if not entity:IsPuppet() and table.contains( self.contents, self.world:GetPuppet() ) then
+			-- self.world:ScheduleInterrupt( 0, loc.format( "{1.Id} appears ({2})", entity:LocTable(), rawstring(entity)) )
+		end
 	end
 end
 

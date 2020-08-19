@@ -207,6 +207,10 @@ function Verb:CanDo()
 	-- 	end
 	-- end
 
+	if self.actor.world:IsNotIdlePaused() then
+		return false, "Paused"
+	end
+
 	if not actor:GetLocation() then
 		return false, "In limbo"
 	end
@@ -233,9 +237,6 @@ function Verb:CanInteract()
 	end
 	if not self.actor:IsSpawned() or self.actor:IsDead() then
 		return false, "Despawned or dead actor"
-	end
-	if self.actor.world:IsNotIdlePaused() then
-		return false, "Paused"
 	end
 
 	if self.reqs then
