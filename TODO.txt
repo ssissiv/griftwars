@@ -1,7 +1,7 @@
 TODO
 ====
 
-Fix HillGiants populating w/ gnolls.
+Fix HillGiants populating w/ gnollls.
 I think Locations want to determine what spawns in them...
 
 

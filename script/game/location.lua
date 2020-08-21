@@ -148,6 +148,7 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 	local x1, y1, x2, y2 = self.map:GetExtents()
 	if exit_tag == "east" then
 		local tiles = self.map:AccumulateColumn( x2 )
+		assert( #tiles > 0 )
 		for i, tile in pairs(tiles) do
 			if i >= #tiles / 2 then
 				portal:WarpToLocation( self, tile:GetCoordinate() )
@@ -156,6 +157,7 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 		end
 	elseif exit_tag == "west" then
 		local tiles = self.map:AccumulateColumn( x1 )
+		assert( #tiles > 0 )
 		for i, tile in pairs(tiles) do
 			if i >= #tiles / 2 then
 				portal:WarpToLocation( self, tile:GetCoordinate() )
@@ -164,6 +166,7 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 		end
 	elseif exit_tag == "south" then
 		local tiles = self.map:AccumulateRow( y1 )
+		assert( #tiles > 0 )
 		for i, tile in pairs(tiles) do
 			if i >= #tiles / 2 then
 				portal:WarpToLocation( self, tile:GetCoordinate() )
@@ -172,6 +175,7 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 		end
 	elseif exit_tag == "north" then
 		local tiles = self.map:AccumulateRow( y2 )
+		assert( #tiles > 0 )
 		for i, tile in pairs(tiles) do
 			if i >= #tiles / 2 then
 				portal:WarpToLocation( self, tile:GetCoordinate() )
@@ -181,6 +185,7 @@ function Location:SpawnPerimeterPortal( tag, exit_tag )
 	else
 		error( exit_tag )
 	end
+	assert( portal:GetLocation(), string.format("%s, tag: %s, exit: %s", tostring(portal), tag, exit_tag ))
 end
 
 -- Randomly spawns portals on the perimeter, one for each cardinal direction.
@@ -188,6 +193,7 @@ end
 -- portal that matches it for future connectivity.
 function Location:SpawnPerimeterPortals( tag )
 	local exits = self.world:Shuffle{ EXIT.EAST, EXIT.WEST, EXIT.NORTH, EXIT.SOUTH }
+	assert( self.map and self.map:GetTileCount() > 0, tostring(self))
 	local n = self.rng:Random( 1, 4 )
 	for i = 1, 4 do
 		local exit = exits[i]

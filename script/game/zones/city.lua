@@ -28,12 +28,13 @@ function City:OnWorldGenPass( pass )
 	end
 
 	if pass == 0 then
-		-- Spawn city walls at boundary locations
-		for i, room in ipairs( self.rooms ) do
-			if room.SpawnCityWalls and room:SpawnCityWalls() > 0 then
-				self.faction:AddPatrolLocation( room, 3 )
-			end
-		end
+		Zone.OnWorldGenPass( self, pass )
+	-- 	-- Spawn city walls at boundary locations
+	-- 	for i, room in ipairs( self.rooms ) do
+	-- 		if room.SpawnCityWalls and room:SpawnCityWalls() > 0 then
+	-- 			self.faction:AddPatrolLocation( room, 3 )
+	-- 		end
+	-- 	end
 		return true
 
 	elseif pass == 1 then

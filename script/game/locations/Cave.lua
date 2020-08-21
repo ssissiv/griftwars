@@ -25,6 +25,14 @@ function Cave:OnSpawn( world )
 	world:ListenForEvent( CALC_EVENT.COLLECT_INTEL, self, self.OnCollectIntel )
 end
 
+function Cave:OnWorldGenPass( pass )
+	if pass == 0 then
+		local bear = Agent.BrownBear()
+		bear:WarpToLocation( self )
+		self:GetAspect( Feature.Home ):AddResident( bear )
+	end
+end
+
 function Cave:OnCollectIntel( event_name, world, acc )
 	local exit = self:FindPortalWithTag( "exit" )
 	if exit:GetDest() then

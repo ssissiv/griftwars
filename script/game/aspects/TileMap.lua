@@ -51,6 +51,10 @@ function TileMap:GetMaxDepth()
 	return self.max_depth
 end
 
+function TileMap:GetTileCount()
+	return self.tile_count
+end
+
 local function IterateNeighbours( state, i )
 	local tile
 	local exit = EXIT_ARRAY[ state.exit_idx ]

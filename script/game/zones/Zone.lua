@@ -71,6 +71,15 @@ function Zone:GenerateZone()
 	end
 end
 
+function Zone:OnWorldGenPass( pass )
+	local rooms = table.shallowcopy( self.rooms )
+	for i, room in ipairs( rooms ) do
+		if room.OnWorldGenPass then
+			room:OnWorldGenPass( pass )
+		end
+	end
+end
+
 function Zone:GetBounds()
 	local x1, y1, x2, y2 = math.huge, math.huge, -math.huge, -math.huge
 	for i, room in ipairs( self.rooms ) do
@@ -141,7 +150,7 @@ function Zone:GeneratePortalDest( portal, depth )
 				for i, portal in new_location:Portals() do
 					print( i, portal, portal:GetWorldGenTag() )
 				end
-				error( "couldn't connect portal"..tostring(portal) )
+				error( "couldn't connect portal: "..tostring(portal) )
 			end
 		end
 

@@ -85,7 +85,7 @@ function WorldGen:GenerateWorld()
 	while passes < 99 do
 		local changed = 0
 		for i, zone in ipairs( zones ) do
-			if zone.OnWorldGenPass and zone:OnWorldGenPass( passes ) then
+			if zone:OnWorldGenPass( passes ) then
 				changed = changed + 1
 			end
 		end

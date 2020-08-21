@@ -5,13 +5,21 @@ function District:OnSpawn( world )
 
 	self:SetDetails( loc.format( "District {1}", world:Random(1,9999)),
 		"These dilapidated streets are home to all manner of detritus. Some of it walks on two legs.")
-
-	self:SpawnPerimeterPortals( "district" )
 end
 
 function District:OnGeneratePortals()
 	if not self.zone:FindRoomByClass( Location.MilitaryHQ ) then
 		self:SpawnDoor( "hq entry" )
+	end
+end
+
+function District:OnWorldGenPass( pass )
+	-- Spawn city walls.
+	if pass == 0 then
+		if self:SpawnCityWalls() > 0 then
+			self.zone.faction:AddPatrolLocation( self, 3 )
+		end
+		return true
 	end
 end
 
@@ -24,7 +32,7 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):MoveTo( x, y1 )
+			:SetTile( Tile.StoneWall ):MoveTo( x, y1 ):Paint()
 			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, y2 )
 	end
 
@@ -33,7 +41,7 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):MoveTo( x, y1 )
+			:SetTile( Tile.StoneWall ):MoveTo( x, y1 ):Paint()
 			:LineTo( x, y - 1 ):MoveTo( x, y ):LineTo( x, y2 )
 	end
 
@@ -42,7 +50,7 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor()
-			:SetTile( Tile.StoneWall ):MoveTo( x1, y )
+			:SetTile( Tile.StoneWall ):MoveTo( x1, y ):Paint()
 			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( x2, y )
 	end
 
@@ -51,7 +59,7 @@ function District:SpawnCityWalls()
 		count = count + 1
 		local x, y = portal.owner:GetCoordinate()
 		self.map:CreateCursor( 1, 1 )
-			:SetTile( Tile.StoneWall ):MoveTo( x1, y )
+			:SetTile( Tile.StoneWall ):MoveTo( x1, y ):Paint()
 			:LineTo( x - 1, y ):MoveTo( x, y ):LineTo( x2, y )
 	end
 
@@ -74,6 +82,8 @@ function District:GenerateTileMap()
 			return Tile.StoneFloor( x, y )
 		end )
 	end
+
+	self:SpawnPerimeterPortals( "district" )
 end
 
 ---------------------------------------------------

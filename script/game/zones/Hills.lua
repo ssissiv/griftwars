@@ -22,27 +22,5 @@ function Hills:OnWorldGenPass( pass )
 		self.name = loc.format( "The {1} Hills", adj )
 	end
 
-	if pass == 0 then
-		self:PopulateCaves()
-		self:PopulateHillGiant()
-		return true
-	end
-end
-
-function Hills:PopulateCaves()
-	for i, room in ipairs( self.rooms ) do
-		if is_instance( room, Location.Cave ) then
-			local bear = Agent.BrownBear()
-			bear:WarpToLocation( room )
-			room:GetAspect( Feature.Home ):AddResident( bear )
-		end
-	end
-end
-
-function Hills:PopulateHillGiant()
-	local room = self:RandomRoomOfClass( Location.OpenHills )
-	if room then
-		local giant = Agent.HillGiant()
-		giant:WarpToLocation( room )
-	end
+	Zone.OnWorldGenPass( self, pass )
 end
