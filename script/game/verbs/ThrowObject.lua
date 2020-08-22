@@ -5,11 +5,12 @@ ThrowObject.act_desc = "Throw"
 
 function ThrowObject:init( actor, target, proj )
 	Verb.RangeAttack.init( self, actor, target )
-	self.proj = proj
+	self:SetProjectile( proj )
 end
 
 function ThrowObject:SetProjectile( proj )
 	self.fatigue_cost = proj and proj.mass
+	self.proj = proj
 	return Verb.RangeAttack.SetProjectile( self, proj )
 end
 

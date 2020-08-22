@@ -17,8 +17,10 @@ end
 
 function HoldObject:CanInteract()
 	local wearable = self.obj:GetAspect( Aspect.Wearable )
-	if not wearable or (wearable:IsEquipped() and not wearable:IsEquipped( EQ_SLOT.HELD )) then
-		return false --, already held
+	if wearable then
+		if (wearable:IsEquipped() and not wearable:IsEquipped( EQ_SLOT.HELD )) then
+			return false --, "already held"
+		end
 	end
 	return Verb.CanInteract( self )
 end
