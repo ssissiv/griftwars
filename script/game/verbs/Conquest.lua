@@ -61,7 +61,7 @@ end
 
 function Conquest:GetDesc()
 	local desc = loc.format( "Conquest: {1.Id}", self.waypoint:GetDest() )
-	if self.employer then
+	if self.employer and self.employer ~= self.owner then
 		desc = desc .. loc.format( "\nEmployed by: {1.Id}", self.employer )
 	end
 	if self.delegate then
