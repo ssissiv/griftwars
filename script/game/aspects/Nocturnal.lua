@@ -6,17 +6,17 @@ function Nocturnal:OnSpawn( world )
 end
 
 function Nocturnal:CalculateUtility()
-	if Calendar.IsDay( self.actor.world:GetDateTime() ) then
-		return UTILITY.HABIT
-	else
-		return -1
-	end
+	return UTILITY.HABIT
 end
 
 function Nocturnal:CanInteract()
 	if not Calendar.IsDay( self.actor.world:GetDateTime() ) then
 		return false, "Not day"
 	end
+	if self.actor:InCombat() then
+		return false, "In combat"
+	end
+
 	return Verb.CanInteract( self )
 end
 

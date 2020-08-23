@@ -195,7 +195,7 @@ end
 -- CanInitiate
 function Verb:CanDo()
 	local actor = self.actor
-	assert( is_instance( actor, Agent ), tostring(actor))
+	assert( is_instance( actor, Agent ), tostring(actor)..":"..tostring(self))
 
 	if self.coro then
 		return false, "Already executing"
@@ -207,9 +207,10 @@ function Verb:CanDo()
 	-- 	end
 	-- end
 
-	if self.actor.world:IsNotIdlePaused() then
-		return false, "Paused"
-	end
+	-- Not sure if this is necessary, it was put in so the player couldn't move while paused.
+	-- if self.actor.world:IsNotIdlePaused() then
+	-- 	return false, "Paused"
+	-- end
 
 	if not actor:GetLocation() then
 		return false, "In limbo"

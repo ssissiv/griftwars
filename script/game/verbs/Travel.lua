@@ -129,6 +129,9 @@ function Travel:PathToLocation( actor, location )
 		if portal:GetDest() == location and portal.owner:GetTile() then
 			-- Path tiles to dest.
 			local ok = self:PathToTarget( actor, portal )
+			if not ok then
+				print( actor, " could not path to ", portal )
+			end
 			if self:IsCancelled() then
 				break
 			elseif ok then
@@ -157,11 +160,13 @@ function Travel:Interact()
 			self:YieldForTime( ONE_MINUTE * self.fail_count )
 
 		elseif not self:PathToLocation( actor, self.path[2] ) then
-			print( actor, "Overworld path found, but can't find or access portal to!", dest )
-			print( "At:", actor:GetTile() )
-			print( "Fail:", self.fail_count )
-			self.fail_count = (self.fail_count or 0) + 1
-			self:YieldForTime( ONE_MINUTE * self.fail_count )
+			if not self:IsCancelled() then
+				print( actor, "Overworld path found, but can't find or access portal to!", dest )
+				print( "At:", actor:GetTile() )
+				print( "Fail:", self.fail_count )
+				self.fail_count = (self.fail_count or 0) + 1
+				self:YieldForTime( ONE_MINUTE * self.fail_count )
+			end
 
 		else
 			self.fail_count = nil

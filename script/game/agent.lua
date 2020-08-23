@@ -651,6 +651,10 @@ function Agent:IsDoing( verb )
 end
 
 function Agent:AttemptVerb( verb, obj )
+	if self.world:IsNotIdlePaused() then
+		return false, "Paused"
+	end
+
 	if is_class( verb ) then
 		self:RegenVerbs( "room" )
 		local verbs = self:GetPotentialVerbs( "room", obj )
@@ -662,8 +666,11 @@ function Agent:AttemptVerb( verb, obj )
 		local ok, reason = self:DoVerbAsync( verb )
 		if not ok and reason then
 			Msg:EchoTo( self, reason )
+			return false, reason
 		end
 	end
+
+	return true
 end
 
 local function DoVerbCoroutine( self, verb )

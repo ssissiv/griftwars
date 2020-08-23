@@ -158,7 +158,11 @@ function Behaviour:UpdatePriorities()
 
 	for i, verb in ipairs( self.verbs ) do
 		if verb.CalculateUtility then
-			verb:SetUtility( verb:CalculateUtility())
+			if not verb:IsDoing() and not verb:CanDo() then
+				verb:SetUtility( -1 )
+			else
+				verb:SetUtility( verb:CalculateUtility())
+			end
 		end
 	end
 
