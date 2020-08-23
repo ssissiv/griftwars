@@ -20,7 +20,6 @@ function Agent:MakeGnoll()
 	self:MakeGendered()
 	self:MakeBiological()
 	self:GainAspect( Aspect.Impass( IMPASS.DYNAMIC ) )
-	self:GainAspect( Verb.Nocturnal() )
 end
 
 function Agent:MakeHillGiant()

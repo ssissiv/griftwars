@@ -147,6 +147,7 @@ SPECIES_PROPS =
 	GNOLL =
 	{
 		name = "gnoll",
+		nocturnal = true,
 	},
 	GIANT =
 	{

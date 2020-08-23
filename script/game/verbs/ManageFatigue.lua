@@ -9,36 +9,31 @@ end
 
 function ManageFatigue:CalculateUtility()
 	local actor = self.actor
-	local utility
-	if self.sleep:IsDoing() or self.rest:IsDoing() then
-		utility = UTILITY.EMERGENCY - 10
+	local fatigue =	actor:GetStat( STAT.FATIGUE ):GetPercent()
+
+	if fatigue > 0.9 then
+		return UTILITY.EMERGENCY
+
+	elseif actor:GetSpeciesProps().nocturnal then
+		if not Calendar.IsDay( actor.world:GetDateTime() ) then
+			return 0, "Not day"
+		end
+		if actor:InCombat() then
+			return 0, "In combat"
+		end
+		return UTILITY.HABIT
 
 	else
-		local night_t = Calendar.GetNormalizedTimeOfDay( actor.world:GetDateTime(), 1 * ONE_HOUR )
-		if actor:GetSpeciesProps().nocturnal then
-			if night_t > 0.7 then
-				utility = UTILITY.HABIT
-				return utility
-			else
-				utility = UTILITY.FUN
-			end
-		else
-			if night_t > 0.8 then
-				utility = UTILITY.HABIT
-				return utility
-			else
-				utility = UTILITY.FUN
-			end
+		if not Calendar.IsNight( actor.world:GetDateTime() ) then
+			return 0, "Not night"
 		end
-
-		local t = actor:GetStat( STAT.FATIGUE ):GetPercent()
-		if t < 0.5 then
-			utility = 0
-		else
-			utility = utility + Easing.inQuad( t, 0, UTILITY.EMERGENCY - utility, 1.0 )
+		if actor:InCombat() then
+			return 0, "In combat"
 		end
+		return UTILITY.HABIT
 	end
-	return utility
+
+	return 0
 end
 
 function ManageFatigue:Interact()
