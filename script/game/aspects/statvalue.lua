@@ -59,6 +59,10 @@ function StatValue:GetValue()
 	return self.value, self.max_value
 end
 
+function StatValue:GetMaxValue()
+	return self.max_value
+end
+
 function StatValue:SetValue( value, max_value )
 	if max_value then
 		self.max_value = max_value

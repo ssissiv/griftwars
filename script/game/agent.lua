@@ -82,6 +82,8 @@ function Agent:SetMentalState( state )
 	if state ~= self.mental_state then
 		assert( IsEnum( state, MSTATE ))
 		self.mental_state = state
+
+		self:LoseStat( STAT.WAKEFUL )
 		self:CancelInvalidVerbs()
 	end
 end
@@ -774,6 +776,14 @@ function Agent:CreateStat( stat, value, max_value, min_value )
 	return aspect
 end
 
+function Agent:LoseStat( stat )
+	local aspect = self:GetStat( stat )
+	if aspect then
+		self:LoseAspect( aspect )
+	end
+end
+
+
 function Agent:DeltaStat( stat, delta )
 	local aspect = self.stats[ stat ]
 	if aspect then
@@ -856,6 +866,19 @@ end
 
 function Agent:Stats()
 	return pairs( self.stats )
+end
+
+function Agent:OnNoise( source, magnitude )
+	if self.mental_state == MSTATE.SLEEPING then
+		if not self.stats[ STAT.WAKEFUL ] then
+			self:CreateStat( STAT.WAKEFUL, 0, 100, 0 )
+		end
+		self:DeltaStat( STAT.WAKEFUL, magnitude )
+		if self:GetStatValue( STAT.WAKEFUL ) >= self.stats[ STAT.WAKEFUL ]:GetMaxValue() then
+			Msg:Echo( self.location, "{1} awakens with a start!", self )
+			self:SetMentalState( MSTATE.ALERT )
+		end
+	end
 end
 
 function Agent:Sense( txt )

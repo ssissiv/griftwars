@@ -612,6 +612,14 @@ function Location:LookupTile( tx, ty )
 	end
 end
 
+function Location:EmitNoise( source, magnitude )
+	for i, obj in ipairs( self.contents or table.empty ) do
+		if obj.OnNoise then
+			obj:OnNoise( source, magnitude )
+		end
+	end
+end
+
 function Location:RenderLocationOnMap( screen, x1, y1, x2, y2, viewer )
 	if not self:IsDiscovered( viewer ) then
 		for i, portal in ipairs( self.portals ) do

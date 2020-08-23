@@ -54,6 +54,8 @@ function Walk:Interact()
 		move_time = WALK_TIME * actor:CalculateMoveSpeed()
 	end
 
+	actor.location:EmitNoise( actor, 10 )
+
 	if actor:InCombat() then
 		self:YieldForTime( move_time, "rate", 0.1 )
 	else

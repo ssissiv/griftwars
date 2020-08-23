@@ -285,6 +285,7 @@ STAT = MakeEnum
 
 	-- Transient stats
 	"PATIENCE",
+	"WAKEFUL",
 }
 
 SKILL = MakeEnum

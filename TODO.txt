@@ -1,10 +1,6 @@
 TODO
 ====
 
-Fix HillGiants populating w/ gnollls.
-I think Locations want to determine what spawns in them...
-
-
 Wolf:
 	Lunge: ranged leap, knock prone
 

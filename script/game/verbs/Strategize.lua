@@ -7,6 +7,11 @@ function Strategize:GetDesc( viewer )
 	end
 end
 
+function Strategize:OnSpawn( world )
+	Strategize._base.OnSpawn( self, world )
+	self.actor = self.owner
+end
+
 function Strategize:CalculateUtility()
 	return UTILITY.DUTY - 1
 end
