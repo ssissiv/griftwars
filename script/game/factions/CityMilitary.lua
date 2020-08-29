@@ -6,6 +6,8 @@ function CityMilitary:init( name, guard_count )
 	self.patrol_locations = {}
 	self.jobs = {}
 	self.guard_count = guard_count
+	self:GainAspect( Aspect.Resource( RESOURCE.METAL, 12 )):SetTargetValue( 10 )
+	self:GainAspect( Aspect.Resource( RESOURCE.FOOD, 10 )):SetTargetValue( 10 )
 end
 
 function CityMilitary:OnSpawn( world )
@@ -14,6 +16,10 @@ function CityMilitary:OnSpawn( world )
 	do
 		self.commander = world:SpawnEntity( Agent.Commander() )
 		self:AddFactionMember( self.commander, FACTION_ROLE.COMMANDER, loc.format( "{1} high commander", self:GetFactionName() ))
+
+		local job = Job.ManageResources( self.commander )
+		job:SetResourceOwner( self )
+		self.commander:GainAspect( job )
 	end
 
 	for i = 1, math.max( 1, math.floor( self.guard_count / 10 )) do

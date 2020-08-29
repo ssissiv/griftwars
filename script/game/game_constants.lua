@@ -280,6 +280,11 @@ CORE_STAT = MakeEnum
 	"CHARISMA", "STRENGTH"
 }
 
+RESOURCE = MakeEnum
+{
+	"METAL", "FOOD", "WOOD", "WEALTH",
+}
+
 STAT = MakeEnum
 {	
 	-- Core stats

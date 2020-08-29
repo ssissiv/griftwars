@@ -22,14 +22,18 @@ end
 
 function StatValue:OnGainAspect( owner )
 	Aspect.OnGainAspect( self, owner )
-	assert( owner.stats[ self.stat ] == nil )
-	owner.stats[ self.stat ] = self
+	if owner.stats then
+		assert( owner.stats[ self.stat ] == nil )
+		owner.stats[ self.stat ] = self
+	end
 end
 
 function StatValue:OnLoseAspect( owner )
 	Aspect.OnLoseAspect( self, owner )
-	assert( owner.stats[ self.stat ] == self )
-	owner.stats[ self.stat ] = nil
+	if owner.stats then
+		assert( owner.stats[ self.stat ] == self )
+		owner.stats[ self.stat ] = nil
+	end
 end
 
 function StatValue:SetThresholds( thresholds )
