@@ -7,6 +7,12 @@ function ManageFatigue:init( actor )
 	self.travel = Verb.Travel( actor )
 end
 
+function ManageFatigue:CollectVerbs( verbs, actor, obj )
+	if actor == self.owner and obj == actor then
+		verbs:AddVerb( Verb.ShortRest( actor ))
+	end
+end
+
 function ManageFatigue:CalculateUtility()
 	local actor = self.actor
 	local fatigue =	actor:GetStat( STAT.FATIGUE ):GetPercent()
@@ -14,23 +20,19 @@ function ManageFatigue:CalculateUtility()
 	if fatigue > 0.9 then
 		return UTILITY.EMERGENCY
 
-	elseif actor:GetSpeciesProps().nocturnal then
-		if not Calendar.IsDay( actor.world:GetDateTime() ) then
-			return 0, "Not day"
-		end
-		if actor:InCombat() then
-			return 0, "In combat"
-		end
-		return UTILITY.HABIT
+	elseif not actor:InCombat() then
+		if actor:GetSpeciesProps().nocturnal then
+			if not Calendar.IsDay( actor.world:GetDateTime() ) then
+				return 0, "Not day"
+			end
+			return UTILITY.HABIT
 
-	else
-		if not Calendar.IsNight( actor.world:GetDateTime() ) then
-			return 0, "Not night"
+		else
+			if not Calendar.IsNight( actor.world:GetDateTime() ) then
+				return 0, "Not night"
+			end
+			return UTILITY.HABIT
 		end
-		if actor:InCombat() then
-			return 0, "In combat"
-		end
-		return UTILITY.HABIT
 	end
 
 	return 0
@@ -38,7 +40,12 @@ end
 
 function ManageFatigue:Interact()
 	local actor = self.actor
-	if Calendar.IsNight( actor.world:GetDateTime() ) then
+	local fatigue =	actor:GetStat( STAT.FATIGUE ):GetPercent()
+	local nocturnal = actor:GetSpeciesProps().nocturnal
+		
+	if (nocturnal and Calendar.IsDay( actor.world:GetDateTime())) or
+			(not nocturnal and Calendar.IsNight( actor.world:GetDateTime())) then
+		--
 		Msg:Speak( actor, "I'm sleepy..." )
 		local home = actor:GetHome()
 		if home then
@@ -47,18 +54,15 @@ function ManageFatigue:Interact()
 			self:DoChildVerb( self.travel )
 		end
 
-		if home and actor:GetLocation() == home then
-			self:GetWorld():Log( "{1} is sleeping at home.", actor )
-		end
-
+		-- NOTE: if actor gets too tired on the way, they'll just sleep where they are for now.
 		self:DoChildVerb( self.sleep )
 
 	else
-		Msg:Speak( actor, "Maybe I'll rest for a bit." )
 		self:DoChildVerb( self.rest )
 	end
 
-	if not self:IsCancelled() then
-		self:YieldForTime( ONE_MINUTE )
-	end
+	-- failsafe?
+	-- if not self:IsCancelled() then
+	-- 	self:YieldForTime( ONE_MINUTE )
+	-- end
 end

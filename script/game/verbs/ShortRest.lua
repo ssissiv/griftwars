@@ -30,15 +30,15 @@ end
 
 function ShortRest:Interact()
 	local actor = self.actor
-	Msg:EchoAround( actor, "{1.Id} sits down and rests.", actor )
-	Msg:EchoTo( actor, "You sit down and take a load off." )
+
+	Msg:EchoAround( actor, "{1} huffs and puffs.", actor )
+	Msg:EchoTo( actor, "You huff and puff." )
 	
-	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -40 )
+	actor:GetStat( STAT.FATIGUE ):DeltaRegen( -30 * PER_SHORT_REST )
+	actor:GetStat( STAT.HEALTH ):DeltaRegen( -2 * PER_SHORT_REST )
 
-   	self:YieldForTime( ONE_HOUR )
+   	self:YieldForTime( SHORT_REST_TIME )
 
-	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 40 )
-
-	Msg:EchoTo( actor, "You stop resting." )
-	Msg:EchoAround( actor, "{1.Id} stops resting.", actor )
+	actor:GetStat( STAT.FATIGUE ):DeltaRegen( 30 * PER_SHORT_REST )
+	actor:GetStat( STAT.HEALTH ):DeltaRegen( 2 * PER_SHORT_REST )
 end
