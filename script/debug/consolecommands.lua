@@ -82,17 +82,24 @@ function switch( agent )
 	world:SetPuppet( agent )
 end
 
-function goto( str )
+function goto( str, idx )
+	local location_idx, other_idx = idx or 1, idx or 1
     local tags = str:split( " " )
     local candidate
     for i, entity in ipairs( world.entities ) do
 		if DebugUtil.FilterEntity( entity, str, tags ) then
 	    	if is_instance( entity, Location ) then
-	    		candidate = entity
-	    		break
+	    		location_idx = location_idx - 1
+	    		if location_idx <= 0 then
+		    		candidate = entity
+		    		break
+		    	end
 
-	    	elseif entity.GetLocation ~= nil and entity:GetLocation() then
-	    		candidate = entity
+	    	elseif not candidate and entity.GetLocation ~= nil and entity:GetLocation() then
+	    		other_idx = other_idx - 1
+	    		if other_idx <= 0 then
+		    		candidate = entity
+		    	end
 	    	end
 	    end
 	end
