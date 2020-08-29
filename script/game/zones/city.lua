@@ -45,7 +45,7 @@ function City:OnWorldGenPass( pass )
 		for i = 1, 3 do
 			local room = self:RandomRoomOfClass( Location.Tavern )
 			if room then
-				Agent.Snoop():WarpToLocation( room )
+				Agent.Snoop():WarpToLocationRegion( room, RGN_SERVING_AREA )
 			end
 		end
 
