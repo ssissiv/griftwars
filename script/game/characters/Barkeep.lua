@@ -13,4 +13,5 @@ function Barkeep:init()
 	self:MakeHuman()
 
 	self.job = self:GainAspect( Job.Barkeep( self ) )
+	self:DeltaLevel( math.random( 3, 8 ))
 end

@@ -12,6 +12,7 @@ function Shopkeeper:init()
 	self:MakeHuman()
 
 	self.job = self:GainAspect( Job.ManageShop( self ) )
+	self:DeltaLevel( math.random( 2, 6 ) )
 end
 
 function Shopkeeper:OnSpawn( world )

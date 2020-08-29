@@ -27,6 +27,11 @@ function Sleep:GetDesc()
 	end
 end
 
+function Sleep:SetSleepTarget( obj )
+	self.obj = obj
+	return self
+end
+
 function Sleep:CanInteract()
 	local actor = self.actor
 	if not self:IsDoing() then

@@ -27,6 +27,8 @@ function Captain:init()
 	
 	self:EquipItem( Armour.ChainMail() )
 	self:EquipItem( Weapon.LongSword() )
+
+	self:DeltaLevel( 8 )
 end
 
 function Captain:OnSpawn( world )

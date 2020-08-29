@@ -25,6 +25,8 @@ function Commander:init()
 
 	self:EquipItem( Armour.ChainMail() )
 	self:EquipItem( Weapon.LongSword() )
+
+	self:DeltaLevel( 12 )
 end
 
 function Commander:OnSpawn( world )

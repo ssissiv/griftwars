@@ -9,6 +9,6 @@ end
 
 function Bed:CollectVerbs( verbs, actor, obj )
 	if obj == self then
-		verbs:AddVerb( Verb.Sleep( actor, self ) )
+		verbs:AddVerb( Verb.Sleep( actor ):SetSleepTarget( self ) )
 	end
 end

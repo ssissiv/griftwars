@@ -5,6 +5,7 @@ local Orc = class( "Agent.Orc", Agent )
 Orc.unfamiliar_desc = "wild orc"
 Orc.image = assets.TILE_IMG.ORC
 Orc.max_health = 16
+Orc.level = 2
 
 function Orc:init()
 	Agent.init( self )
@@ -12,6 +13,7 @@ function Orc:init()
 	Agent.MakeOrc( self )
 
 	self:SetFlags( EF.AGGRO_OTHER_CLASS )
+	self:DeltaLevel( 4 )
 end
 
 function Orc:GetMapChar()

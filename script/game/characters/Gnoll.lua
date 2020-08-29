@@ -12,6 +12,7 @@ function Gnoll:init()
 	Agent.MakeGnoll( self )
 
 	self:SetFlags( EF.AGGRO_OTHER_CLASS )
+	self:DeltaLevel( 2 )
 end
 
 function Gnoll:GetMapChar()

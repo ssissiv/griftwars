@@ -13,6 +13,7 @@ function BrownBear:init()
 	self:GainAspect( Skill.RendingClaws() )
 
 	self:SetFlags( EF.AGGRO_ALL )
+	self:DeltaLevel( 8 )
 end
 
 function BrownBear:GetMapChar()

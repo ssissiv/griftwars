@@ -57,6 +57,7 @@ function Snoop:init()
 	self:MakeHuman()
 
 	self:GainAspect( Verb.FindInformation( self ))
+	self:DeltaLevel( math.random( 1, 3 ))
 end
 
 function Snoop:OnSpawn( world )

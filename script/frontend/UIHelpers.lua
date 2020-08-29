@@ -6,6 +6,9 @@ function UIHelpers.RenderSelectedEntity( ui, screen, ent, viewer )
 
     if is_instance( ent, Agent ) then
         ui.SameLine( 0, 10 )
+        ui.TextColored( 0, 1, 1, 1, loc.format( "LVL {1}", ent:GetLevel() ))
+
+        ui.SameLine( 0, 10 )
         ui.Text( loc.format( "{1} {2}", ent.species, ent.gender ))
         if ent:IsDead() then
             ui.SameLine( 0, 10 )

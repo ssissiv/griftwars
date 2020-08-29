@@ -31,4 +31,6 @@ function Bandit:init()
 	-- 	{ Favour.NonAggression( 100 ), 20 },
 	-- 	{ Favour.JoinParty(), 80 },
 	-- })
+
+	self:DeltaLevel( 3 )
 end

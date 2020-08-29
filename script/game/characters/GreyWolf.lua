@@ -12,6 +12,7 @@ function GreyWolf:init()
 	self:GetStat( CORE_STAT.STRENGTH ):DeltaValue( 2 )
 
 	self:SetFlags( EF.AGGRO_OTHER_CLASS )
+	self:DeltaLevel( 1 )
 end
 
 function GreyWolf:GetMapChar()

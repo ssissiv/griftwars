@@ -13,6 +13,7 @@ function GiantLizard:init()
 	-- self:GainAspect( Skill.ScalyHide() )
 	self:GainAspect( Aspect.DeathLoot( FINE_HIDE ))
 	self:GainAspect( Verb.FleeFromCombat( self ) )
+	self:DeltaLevel( 2 )
 end
 
 function GiantLizard:GetMapChar()

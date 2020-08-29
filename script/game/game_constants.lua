@@ -277,7 +277,7 @@ UTILITY =
 
 CORE_STAT = MakeEnum
 {
-	"CHARISMA", "STRENGTH"
+	"LEVEL", "CHARISMA", "STRENGTH"
 }
 
 RESOURCE = MakeEnum
@@ -286,7 +286,7 @@ RESOURCE = MakeEnum
 }
 
 STAT = MakeEnum
-{	
+{
 	-- Core stats
 	"FATIGUE",
 	"HEALTH",

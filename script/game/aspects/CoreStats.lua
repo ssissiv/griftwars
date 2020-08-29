@@ -1,5 +1,14 @@
 require "game/aspects/statvalue"
 
+local Level = class( "Aspect.Level", Aspect.StatValue )
+
+function Level:init( value )
+	Level._base.init( self, CORE_STAT.LEVEL, value )
+end
+
+--------------------------------------------------------------------------
+
+
 local Strength = class( "Aspect.Strength", Aspect.StatValue )
 
 Strength.event_handlers =

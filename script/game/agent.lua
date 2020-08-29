@@ -15,6 +15,8 @@ function Agent:init()
 	self.potential_verbs = {}
 	self.inventory = self:GainAspect( Aspect.Inventory() )
 	self:GainAspect( Aspect.Memory() )
+	self:GainAspect( Aspect.Level( self.level or 1 ))
+
 	self.acc = self:GainAspect( Aspect.ScalarCalculator() )
 
 	self.viz = AgentViz()
@@ -797,6 +799,14 @@ function Agent:DeltaStat( stat, delta )
 		aspect:DeltaValue( delta )
 		-- Msg:EchoTo( self, "You gain {1} {2}!", delta, stat )
 	end
+end
+
+function Agent:GetLevel()
+	return self:GetStatValue( CORE_STAT.LEVEL )
+end
+
+function Agent:DeltaLevel( delta )
+	self:DeltaStat( CORE_STAT.LEVEL, delta )
 end
 
 function Agent:DeltaHealth( delta )

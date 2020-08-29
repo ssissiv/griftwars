@@ -16,6 +16,7 @@ function HillGiant:init()
 	self:SetFlags( EF.AGGRO_ALL )
 
 	self:GainAspect( Verb.GrabNearbyBoulders( self ) )
+	self:DeltaLevel( 9 )
 end
 
 function HillGiant:CollectVerbs( verbs, actor, target )
