@@ -19,6 +19,7 @@ end
 
 function Tile:AssignRegionID( region_id )
 	self.region_id = region_id
+	return self
 end
 
 function Tile:GetRegionID()
@@ -27,10 +28,6 @@ end
 
 function Tile:GetDistance( tile )
 	return distance( self.x, self.y, tile.x, tile.y )
-end
-
-function Tile:Neighbours( map )
-	return map:Neighbours( self )
 end
 
 function Tile:IsEmpty()
@@ -147,7 +144,7 @@ end
 
 function Tile:__tostring()
 	if self.region_id then
-		return string.format( "[%s:%d:%d,%d]", self._classname, self.region_id, tostring(self.x), tostring(self.y))
+		return string.format( "[%s:r%d:%d,%d]", self._classname, self.region_id, tostring(self.x), tostring(self.y))
 	else
 		return string.format( "[%s:%d,%d]", self._classname, tostring(self.x), tostring(self.y))
 	end

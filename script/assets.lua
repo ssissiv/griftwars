@@ -42,6 +42,7 @@ local assets =
 		WOODEN_FLOOR = "wooden_floor.png",
 		DIRT_FLOOR = "dirt_floor.png",
 
+		WOOD_TABLE = "table.png",
 		DOOR = "door.png",
 		DOOR_OPEN = "door_open.png",
 		BED = "bed.png",

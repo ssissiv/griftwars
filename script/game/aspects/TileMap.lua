@@ -73,6 +73,30 @@ function TileMap:Neighbours( tile )
 	return IterateNeighbours, { map = self, tile = tile, exit_idx = 1 }
 end
 
+function TileMap:GetNeighbours( tile, pred )
+	local tiles = {}
+	for i, exit in ipairs( EXIT_ARRAY ) do
+		local x, y = OffsetExit( tile.x, tile.y, exit )
+		local neighbour = self:LookupTile( x, y )
+		if neighbour and (pred == nil or pred(neighbour)) then
+			table.insert( tiles, neighbour )
+		end
+	end
+	return tiles
+end
+
+function TileMap:GetPassableNeighbours( tile, obj )
+	local tiles = {}
+	for i, exit in ipairs( EXIT_ARRAY ) do
+		local x, y = OffsetExit( tile.x, tile.y, exit )
+		local neighbour = self:LookupTile( x, y )
+		if neighbour and neighbour:IsPassable( obj ) then
+			table.insert( tiles, neighbour )
+		end
+	end
+	return tiles
+end
+
 function TileMap:FindTiles( fn )
 	local tiles = {}
 	for z, layer in pairs( self.layers ) do

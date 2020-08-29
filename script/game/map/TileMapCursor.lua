@@ -11,6 +11,10 @@ function TileMapCursor:SetTile( tile_class )
 	return self
 end
 
+function TileMapCursor:SetRegionID( region_id )
+	self.region_id = region_id
+end
+
 function TileMapCursor:GetCoordinate()
 	return self.x, self.y
 end
@@ -31,6 +35,7 @@ function TileMapCursor:Paint( x, y )
 	if self.tile_class then
 		local tile = self.tile_class()
 		tile:SetCoordinate( x or self.x, y or self.y )
+		tile:AssignRegionID( self.region_id )
 		self.map:ReassignToGrid( tile )
 	end
 	return self

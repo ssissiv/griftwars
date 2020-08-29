@@ -16,7 +16,6 @@ function Location:init( zone, gen_portal )
 	self.zone = zone
 	self.gen_portal = gen_portal
 	self.portals = {}
-	self.waypoints = {}
 end
 
 function Location:OnSpawn( world )
@@ -125,12 +124,35 @@ function Location:SetCoordinate( x, y, z )
 	end		
 end
 
-function Location:GetWaypoint( id )
-	return self.waypoints[ id ]
+function Location:Waypoints()
+	return ipairs( self.waypoints or table.empty )
 end
 
-function Location:SetWaypoint( id, waypoint )
-	self.waypoints[ id ] = waypoint
+function Location:AddWaypoint( waypoint )
+	if self.waypoints == nil then
+		self.waypoints = {}
+	end
+	table.insert( self.waypoints, waypoint )
+end
+
+function Location:GetWaypointByTag( tag )
+	if self.waypoints then
+		for i, wp in ipairs( self.waypoints ) do
+			if wp:MatchTag( tag ) then
+				return wp
+			end
+		end
+	end
+end
+
+function Location:GetWaypointByCoordinate( x, y )
+	if self.waypoints then
+		for i, wp in ipairs( self.waypoints ) do
+			if wp:Match( self, x, y ) then
+				return wp
+			end
+		end
+	end
 end
 
 function Location:SetDetails( title, desc )
@@ -588,6 +610,7 @@ function Location:PlaceEntity( obj, x, y, region_id )
 	elseif region_id then
 		-- Find a tile with a specific region id
 		tile = self:FindPassableRegionTile( region_id, obj )
+		assert( tile:GetRegionID() == region_id )
 	else
 		-- Just any old passable tile will do.
 		tile = self:FindPassableTile( nil, nil, obj )		

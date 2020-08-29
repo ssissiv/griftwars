@@ -19,7 +19,24 @@ function TavernLocation:OnSpawn( world )
 	self:SetDetails( name )
 
 	Object.Door( "tavern exit" ):WarpToLocation( self, 6, 7 )
-	self:AssignRegionID( RGN_SERVING_AREA, IMPASS.STATIC, self:LookupTile( 6, 7 ))
+
+	local function IsPatronSpot( tile )
+		return tile:IsPassable( IMPASS.DYNAMIC ) and
+				tile:GetRegionID() == RGN_SERVING_AREA and
+				self:GetWaypointByCoordinate( tile.x, tile.y ) == nil
+	end
+
+	-- Spawn some tables.
+	for i = 1, 3 do
+		local table = Object.WoodTable()
+		table:WarpToLocationRegion( self, RGN_SERVING_AREA )
+		assert( table:GetTile():GetRegionID() == RGN_SERVING_AREA )
+		local neighbours = self.map:GetNeighbours( table:GetTile(), IsPatronSpot )
+		local tile = world:ArrayPick( neighbours )
+		if tile then
+			self:AddWaypoint( Waypoint( self, tile.x, tile.y ):SetTag( WAYPOINT_PATRON ))
+		end
+	end
 
 	local barkeep = self:GetAspect( Feature.Tavern ):SpawnBarkeep()
 	-- local home = self:SpawnHome( barkeep )
@@ -32,7 +49,7 @@ function TavernLocation:GenerateTileMap()
 			if x == 1 or y == 1 or x == w or y == h then
 				return Tile.StoneWall( x, y )
 			else
-				return Tile.WoodenFloor( x, y )
+				return Tile.WoodenFloor( x, y ):AssignRegionID( RGN_SERVING_AREA )
 			end
 		end )
 
@@ -48,7 +65,7 @@ function TavernLocation:GenerateTileMap()
 		cursor:Line( 2, 0 ):SpawnEntity( Object.Door():Inscribe( "ROOM2" ):Close():Lock() ):Move( 1, 1 )
 		cursor:Box( 5, -3 ):SpawnEntity( Object.Bed() ):Move( -1, -1 )
 
-		self:SetWaypoint( WAYPOINT.KEEPER, Waypoint( self, 5, 2 ))
+		self:AddWaypoint( Waypoint( self, 5, 2 ):SetTag( WAYPOINT.KEEPER ))
 	end
 end
 

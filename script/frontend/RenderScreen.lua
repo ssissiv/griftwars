@@ -12,6 +12,14 @@ function RenderScreen:GetScreenSize()
 	return love.graphics.getWidth(), love.graphics.getHeight()
 end
 
+function RenderScreen:DebugText( x, y, txt, clr )
+	if clr then
+		self:SetColour( clr )
+	end
+	love.graphics.setFont( assets.FONTS.TITLE )
+	love.graphics.print( txt, x, y )
+end
+
 function RenderScreen:Rectangle( x, y, w, h )
 	love.graphics.rectangle( "fill", x, y, w, h )
 	self.render_bounds[1] = x

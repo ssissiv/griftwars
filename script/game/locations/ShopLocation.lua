@@ -43,6 +43,6 @@ function ShopLocation:GenerateTileMap()
 			end
 		end )
 
-		self:SetWaypoint( WAYPOINT.KEEPER, Waypoint( self, 4, 2 ))
+		self:AddWaypoint( Waypoint( self, 4, 2 ):SetTag( WAYPOINT.KEEPER ))
 	end
 end

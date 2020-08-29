@@ -321,6 +321,9 @@ FATIGUE_THRESHOLDS =
 -- Region numbers.
 RGN_SERVING_AREA = 1 -- Bar serving areas
 
+-- Waypoint tags
+WAYPOINT_PATRON = "patron" -- Spot for a patron in an establishment
+
 -- Challenge ratings
 CR0 = 0
 CR1 = 1

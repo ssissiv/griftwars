@@ -20,7 +20,7 @@ end
 -- local obj = table.arraypick( world:CreateBucketByClass( Location.OpenHills ))
 -- puppet:WarpToLocation( obj )
 
--- goto( "gnoll" )
+goto( "tavern" )
 
 han = world:GetPuppet()
 g = obj

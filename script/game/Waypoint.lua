@@ -11,12 +11,22 @@ function Waypoint:init( a, b, c )
 	end
 end
 
-function Waypoint:TrackLocation( location, x, y )
-	self.location, self.x, self.y = location, x, y
+function Waypoint:SetTag( tag )
+	self.tag = tag
+	return self
 end
 
 function Waypoint:TrackEntity( ent )
 	self.entity = ent
+end
+
+function Waypoint:MatchTag( tag )
+	return self.tag == tag
+end
+
+function Waypoint:Match( location, tx, ty )
+	local location, x, y = self:GetLocation(), self:GetCoordinate()
+	return location == self:GetLocation() and x == tx and y == ty
 end
 
 function Waypoint:GetCoordinate()

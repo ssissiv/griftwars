@@ -6,6 +6,20 @@ function DebugLocation:init( location )
     self.location = location
 end
 
+function DebugLocation:RenderScreen()
+    local screen = GetGUI():GetTopScreen()
+    if is_instance( screen, GameScreen ) then
+        screen:SetColour( 0xFFFFFFFF )
+        for i, wp in self.location:Waypoints() do
+            local x, y = wp:GetCoordinate()
+            local x1, y1 = screen.camera:WorldToScreen( x, y )
+            local x2, y2 = screen.camera:WorldToScreen( x + 1, y + 1 )
+            screen:Box( x1, y1, x2 - x1, y2 - y1 )
+            screen:DebugText( x1, y1, wp.tag or "Waypoint" )
+        end
+    end
+end
+
 function DebugLocation:RenderPanel( ui, panel, dbg )
     ui.Text( self.location:GetTitle() )
     
@@ -44,8 +58,10 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
     end
 
     ui.NewLine()
-    
+
     DebugTable.RenderPanel( self, ui, panel, dbg )
+
+    self:RenderScreen()
 end
 
  
