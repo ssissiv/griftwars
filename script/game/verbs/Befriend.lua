@@ -56,12 +56,14 @@ function Befriend:CalculateDC()
 		acc:AddValue( count, self, loc.format( "{1} attempts within the last day", count ))
 	end
 
+	acc:AddValue( self.target:GetLevel() - self.actor:GetLevel(), self, "Level differential" )
+
 	-- Faction Role Modiifer
 	local faction = self.target:GetAspect( Aspect.FactionMember )
-	if faction and faction:GetRole() then
-		local tier = FACTION_TIERS[ faction:GetRole() ]
-		acc:AddValue( tier * 5, self, loc.format( "Faction Tier: {1} ({2})", tier, faction:GetRole() ))
-	end
+	-- if faction and faction:GetRole() then
+	-- 	local tier = FACTION_TIERS[ faction:GetRole() ]
+	-- 	acc:AddValue( tier * 5, self, loc.format( "Faction Tier: {1} ({2})", tier, faction:GetRole() ))
+	-- end
 
 	-- InsideInfo.
 	if faction then
