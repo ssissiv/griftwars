@@ -87,10 +87,12 @@ function Behaviour:ScheduleNextTick( delta, reason )
 		return
 	end
 
+	local world = self:GetWorld()
 	if delta and self.tick_ev then
 		-- Reschedule: but only if we're rescheduling to an earlier time.
-		if self.tick_ev.trigger_time or delta < self.owner.world:GetEventTimeLeft( self.tick_ev ) then
-			self.owner.world:RescheduleEvent( self.tick_ev, delta )
+		if self.tick_ev.trigger_time or delta < world:GetEventTimeLeft( self.tick_ev ) then
+			world:UnscheduleEvent( self.tick_ev )
+			self.tick_ev = world:ScheduleFunction( delta, self.OnTickBehaviour, self, "explicit schedule:"..tostring(delta)..":"..tostring(reason))
 			self.tick_reason = reason
 		end
 
@@ -98,7 +100,7 @@ function Behaviour:ScheduleNextTick( delta, reason )
 		-- Reschedule for default processing 'some' time in the next hour.
 		-- NOTE: this shouldn't really happen unless verbs are failing for some reason.. probably..
 		delta = math.randomGauss( 0.1 * ONE_HOUR, 0.1 * ONE_HOUR, ONE_HOUR / 60 )
-		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self, "default scheduled:"..tostring(reason) )
+		self.tick_ev = world:ScheduleFunction( delta, self.OnTickBehaviour, self, "default scheduled:"..tostring(reason) )
 		self.tick_reason = reason
 
 	elseif delta == nil and self.tick_ev then
@@ -106,7 +108,7 @@ function Behaviour:ScheduleNextTick( delta, reason )
 
 	else
 		-- Nothing scheduled yet, go.
-		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self, "explicit schedule:"..tostring(delta)..":"..tostring(reason))
+		self.tick_ev = world:ScheduleFunction( delta, self.OnTickBehaviour, self, "explicit schedule:"..tostring(delta)..":"..tostring(reason))
 		self.tick_reason = reason
 	end
 end
@@ -122,6 +124,18 @@ function Behaviour:OnTickBehaviour( reason )
 	end
 	
 	local now = self:Now()
+
+	-- TODO: why does this assert trigger?  is something awry?  wanna check loops of behaviour ticking.
+	-- So: A verb resumes after a yield, this triggers OnTickBehaviour to see if the verb should actually
+	-- continue or if something else should take priority.
+	-- As long as the verb continues, then all is good.. but then it finishes same tick, causing VERB_UNASSIGNED which
+	-- in the same frame obviously requires a re-tick.
+	-- assert( self.last_tick == nil or self.last_tick < now,
+	-- 	string.format( "%s, active_verb=%s, reason=%s, last_reason=%s, now=%s, tick_ev=%s",
+	-- 	tostring(self.owner), tostring(self.active_verb), reason ,self.last_reason,
+	-- 	now, --Calendar.FormatTime( now, true ),
+	-- 	tostr(self.tick_ev)))
+
 	self.last_tick = now
 	self.last_reason = reason
 	self.ticking = true

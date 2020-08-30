@@ -37,6 +37,8 @@ function DebugWorld:RenderPanel( ui, panel, dbg )
     end
 
     if ui.TreeNode( "Scheduled Events" ) then
+        ui.Text( string.format( "%d events", #self.world.scheduled_events ))
+        
     	for i, ev in ipairs( self.world.scheduled_events ) do
     		local txt = string.format( "%.3f - %s", ev.when - self.world.datetime, tostring(ev[1]))
             if ev.when <= self.world.datetime then

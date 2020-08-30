@@ -18,14 +18,18 @@ end
 
 function FindInformation:Interact()
 	local actor = self.actor
-	local dest = actor.location:FloodFindLocalTavern()
-	if dest then
-		self.travel:SetDest( dest )
-		self:DoChildVerb( self.travel )
-	end
+	while true do
+		local dest = actor.location:FloodFindLocalTavern()
+		if dest and not actor:GetLocation() == dest then
+			self.travel:SetDest( dest )
+			self:DoChildVerb( self.travel )
+		end
 
-	if not self:IsCancelled() then
-		if actor:GetLocation() and actor:GetLocation():HasAspect( Feature.Tavern ) then
+		if self:IsCancelled() then
+			break
+		end
+
+		if actor:GetLocation() == dest then
 			Msg:Speak( actor, "Psst. Hear anything interesting?" )
 			self:DoChildVerb( self.idle )
 		else
