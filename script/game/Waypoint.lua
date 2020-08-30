@@ -20,6 +20,24 @@ function Waypoint:TrackEntity( ent )
 	self.entity = ent
 end
 
+function Waypoint:OccupyWaypoint( occupant )
+	assert( occupant )
+	self.occupant = occupant
+end
+
+function Waypoint:UnoccupyWaypoint( occupant )
+	assert( occupant == self.occupant )
+	self.occupant = nil
+end
+
+function Waypoint:IsOccupied()
+	return self.occupant ~= nil
+end
+
+function Waypoint:GetOccupied()
+	return self.occupant
+end
+
 function Waypoint:MatchTag( tag )
 	return self.tag == tag
 end

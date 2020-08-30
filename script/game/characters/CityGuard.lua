@@ -13,6 +13,7 @@ function CityGuard:init()
 	self:MakeHuman()
 
 	self:GainAspect( Skill.Fighting() )
+	self:GainAspect( Verb.FindActivity( self, Location.Tavern ))
 
 	self:EquipItem( Weapon.LongSword() )
 

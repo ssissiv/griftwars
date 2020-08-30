@@ -18,8 +18,9 @@ function Verb:init( actor, obj )
 	self.utility = 0
 end
 
-function Verb:Clone()
+function Verb:Clone( actor )
 	local clone = setmetatable( table.shallowcopy( self ), self._class )
+	clone.actor = actor
 	return clone
 end
 
@@ -482,9 +483,9 @@ function Verb:Resume( coro )
 			self:Cancel( reason )
 
 
-		-- Behaviour might also cancel.
+		-- Behaviour might also cancel by choosing a new priority verb.
 		elseif self.actor.behaviour then
-			self.actor.behaviour:OnTickBehaviour( tostring(self).. " finished" )
+			self.actor.behaviour:OnTickBehaviour( tostring(self).. " resuming" )
 		end
 	end
 

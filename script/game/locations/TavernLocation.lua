@@ -7,6 +7,8 @@ TavernLocation.WORLDGEN_TAGS = { "tavern exit" }
 function TavernLocation:init()
 	Location.init( self )
 	local tavern = self:GainAspect( Feature.Tavern())
+
+	self:GainAspect( Activity.PatronTavern() )
 end
 
 

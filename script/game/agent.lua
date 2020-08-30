@@ -572,9 +572,6 @@ local function WarpToLocation( self, location, x, y, region_id )
 		self.location = nil
 	end
 
-	self:CancelInvalidVerbs()
-	self:RegenVerbs()
-
 	self.location = location
 
 	if location then
@@ -588,6 +585,9 @@ local function WarpToLocation( self, location, x, y, region_id )
 	end
 
 	self:BroadcastEvent( AGENT_EVENT.LOCATION_CHANGED, location, prev_location )
+
+	self:CancelInvalidVerbs()
+	self:RegenVerbs()
 end
 
 function Agent:WarpToNowhere()

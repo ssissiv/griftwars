@@ -8,6 +8,7 @@ end
 
 function Travel:SetDest( dest )
 	self.dest = dest
+	return self
 end
 
 function Travel:SetApproachDistance( dist )
@@ -146,6 +147,8 @@ end
 
 function Travel:Interact()
 	local actor, dest = self.actor, self.dest
+	assert( actor and dest )
+	
 	local pather = PathFinder( actor, actor, dest )
 	while actor:GetLocation() ~= pather:GetEndRoom() do
 

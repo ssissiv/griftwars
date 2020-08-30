@@ -21,6 +21,10 @@ function Aspect:GetWorld()
 	end
 end
 
+function Aspect:Now()
+	return self:GetWorld():GetDateTime()
+end
+
 function Aspect:OnGainAspect( owner )
 	assert( owner )
 	assert( self.owner == nil, "Aspect already has owner: " .. self._classname )

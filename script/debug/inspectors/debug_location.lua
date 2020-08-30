@@ -15,7 +15,11 @@ function DebugLocation:RenderScreen()
             local x1, y1 = screen.camera:WorldToScreen( x, y )
             local x2, y2 = screen.camera:WorldToScreen( x + 1, y + 1 )
             screen:Box( x1, y1, x2 - x1, y2 - y1 )
-            screen:DebugText( x1, y1, wp.tag or "Waypoint" )
+            local txt = wp.tag or "Waypoint"
+            if wp:IsOccupied() then
+                txt = txt .. string.format( "(%s)", tostring(wp:GetOccupied()))
+            end
+            screen:DebugText( x1, y1, txt )
         end
     end
 end

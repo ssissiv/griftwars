@@ -33,6 +33,10 @@ function Entity:GetEvents()
 	return self.events
 end
 
+function Entity:Now()
+	return self.world:GetDateTime()
+end
+
 function Entity:IsSpawned()
 	return self.world ~= nil
 end

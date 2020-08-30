@@ -26,7 +26,7 @@ end
 function Behaviour:OnSpawn( world )
 	Aspect.OnSpawn( self, world )
 
-	self:ScheduleNextTick( 0, "debug" )
+	self:ScheduleNextTick( 0, "on-spawn" )
 
 	self:RegenerateVerbs()
 end
@@ -77,7 +77,9 @@ function Behaviour:OnAspectsChanged( event_name, owner, aspect )
 end
 
 function Behaviour:OnVerbUnassigned( event_name, owner, verb )
-	self:ScheduleNextTick( 0, tostring(verb).." unassigned" )
+	if not self.ticking then
+		self:ScheduleNextTick( 0, tostring(verb).." unassigned" )
+	end
 end
 
 function Behaviour:ScheduleNextTick( delta, reason )
@@ -86,21 +88,25 @@ function Behaviour:ScheduleNextTick( delta, reason )
 	end
 
 	if delta and self.tick_ev then
+		-- Reschedule: but only if we're rescheduling to an earlier time.
 		if self.tick_ev.trigger_time or delta < self.owner.world:GetEventTimeLeft( self.tick_ev ) then
 			self.owner.world:RescheduleEvent( self.tick_ev, delta )
 			self.tick_reason = reason
 		end
 
 	elseif delta == nil and (self.tick_ev == nil or self.tick_ev.trigger_time) then
+		-- Reschedule for default processing 'some' time in the next hour.
+		-- NOTE: this shouldn't really happen unless verbs are failing for some reason.. probably..
 		delta = math.randomGauss( 0.1 * ONE_HOUR, 0.1 * ONE_HOUR, ONE_HOUR / 60 )
-		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self )
+		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self, "default scheduled:"..tostring(reason) )
 		self.tick_reason = reason
 
 	elseif delta == nil and self.tick_ev then
-		-- Nothing to do.
+		-- Nothing to do, alrealdy scheduled.
 
 	else
-		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self )
+		-- Nothing scheduled yet, go.
+		self.tick_ev = self.owner.world:ScheduleFunction( delta, self.OnTickBehaviour, self, "explicit schedule:"..tostring(delta)..":"..tostring(reason))
 		self.tick_reason = reason
 	end
 end
@@ -115,7 +121,10 @@ function Behaviour:OnTickBehaviour( reason )
 		return
 	end
 	
-	self.last_tick = self:GetWorld():GetDateTime()
+	local now = self:Now()
+	self.last_tick = now
+	self.last_reason = reason
+	self.ticking = true
 
 	self:UpdatePriorities()
 
@@ -140,16 +149,24 @@ function Behaviour:OnTickBehaviour( reason )
 
 	self.active_verb = active_verb
 	
-	if active_verb and not self.owner:IsDoing( active_verb ) then
+	if not active_verb then
+		-- no verb found, so I guess chill until maybe there is one.
+		self:ScheduleNextTick( nil, reason )
+
+	elseif active_verb and not self.owner:IsDoing( active_verb ) then
 		local ok, reason = self.owner:DoVerbAsync( active_verb )
 		if not self.owner:IsDoing( active_verb ) then
 			-- Verb was valid, but is either an insta-complete or perhaps something was not right during processing.
-			print( "Failed doing", self.owner, active_verb, active_verb:IsCancelled(), "ok:", ok, reason )
+			-- Insta-complete verbs are considered illegal (just call a damn function) and they're more a sign that
+			-- a verb's conditions weren't properly validated.
+			-- assert( active_verb:IsCancelled() ) -- An insta-complete verb is bad, just make a function.
+			print( "Complete immediately", self.owner, active_verb, active_verb:IsCancelled(), "ok:", ok, reason )
 			print( "\t", self.tick_reason )
+			self:ScheduleNextTick( nil, reason )
 		end
 	end
 
-	self:ScheduleNextTick( nil, reason )
+	self.ticking = nil
 end
 
 function Behaviour:UpdatePriorities()

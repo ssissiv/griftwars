@@ -18,16 +18,7 @@ end
 
 function FindInformation:Interact()
 	local actor = self.actor
-	-- Look for a place to snoop.
-	local dest
-	local function IsTavern( x, depth )
-		if x:HasAspect( Feature.Tavern ) then
-			dest = x
-		end
-		return depth < 6, dest ~= nil
-	end
-
-	actor.location:Flood( IsTavern )
+	local dest = actor.location:FloodFindLocalTavern()
 	if dest then
 		self.travel:SetDest( dest )
 		self:DoChildVerb( self.travel )
