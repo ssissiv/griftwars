@@ -1,6 +1,7 @@
 local GameScreen = class( "GameScreen", RenderScreen )
 
 function GameScreen:init( world )
+	assert( is_instance( world, World ))
 	RenderScreen.init( self )
 	
 	self.world = world

@@ -3,12 +3,18 @@ local TileMapCursor = class( "TileMapCursor" )
 function TileMapCursor:init( map )
 	assert( is_instance( map, Aspect.TileMap ))
 	self.map = map
+	self.yield_duration = 0.0001
+	self.yield_count = 0
 end
 
 function TileMapCursor:SetTile( tile_class )
 	assert( is_class( tile_class, Tile ))
 	self.tile_class = tile_class
 	return self
+end
+
+function TileMapCursor:SetYield( duration )
+	self.yield_duration = duration
 end
 
 function TileMapCursor:SetRegionID( region_id )
@@ -30,6 +36,28 @@ function TileMapCursor:MoveTo( x, y, z )
 	return self
 end
 
+
+function TileMapCursor:FillTiles( w, h, fn )
+	for y = 1, h do
+		for x = 1, w do
+			local tile = fn( x, y, w, h )
+			assert( tile )
+			self.map:ReassignToGrid( tile )
+			self:YieldForTile( tile )
+		end
+	end
+end
+
+function TileMapCursor:YieldForTile( tile )
+	if self.yield_duration then
+		if self.yield_count == 0 then
+			coroutine.yield( YIELD_CMD.LOCATION, self.map.owner )
+		end
+		self.yield_count = self.yield_count + 1
+		coroutine.yield( YIELD_CMD.PAN_TILE, tile, self.yield_duration )
+	end
+end
+
 -- Paint the current or provided location.
 function TileMapCursor:Paint( x, y )
 	if self.tile_class then
@@ -37,6 +65,7 @@ function TileMapCursor:Paint( x, y )
 		tile:SetCoordinate( x or self.x, y or self.y )
 		tile:AssignRegionID( self.region_id )
 		self.map:ReassignToGrid( tile )
+		self:YieldForTile( tile )
 	end
 	return self
 end

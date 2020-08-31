@@ -6,7 +6,6 @@ local DebugRoot = class( "DebugRoot", DebugNode )
 DebugRoot.MENU_BINDINGS = { debug_menus.DEBUG_TOGGLES }
 
 function DebugRoot:init( game )
-    assert( game )
     self.game = game
     self.frame_times = {}
     self.frame_offset = 1
@@ -19,6 +18,11 @@ end
 function DebugRoot:RenderPanel( ui, panel, dbg )
     ui.Text( string.format( "%s", "BUILD_ID" ))
     ui.Text( string.format( 'Mem: %.2f MB, FPS: %.1f', collectgarbage('count') / 1000, love.timer.getFPS()))
+
+    if self.game == nil then
+        return
+    end
+
     if ui.TreeNode( "Event Load" ) then
         ui.Text( string.format( "%d total events", self.game.world.total_events_triggered  ))
         ui.Text( string.format( "%d scheduled (%d peak)", #self.game.world.scheduled_events, self.game.world.event_peak ))

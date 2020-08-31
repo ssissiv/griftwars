@@ -47,7 +47,9 @@ end
 function TavernLocation:GenerateTileMap()
 	if self.map == nil then
 		self.map = self:GainAspect( Aspect.TileMap())
-		self.map:FillTiles( 10, 8, function( x, y, w, h )
+
+		local cursor = self.map:CreateCursor( 0, 0 )
+		cursor:FillTiles( 10, 8, function( x, y, w, h )
 			if x == 1 or y == 1 or x == w or y == h then
 				return Tile.StoneWall( x, y )
 			else
@@ -56,7 +58,7 @@ function TavernLocation:GenerateTileMap()
 		end )
 
 		-- Hallway w/ rooms
-		local cursor = self.map:CreateCursor( 2, 1 )
+		cursor:MoveTo( 2, 1 )
 		cursor:SetTile( Tile.WoodenFloor ):Paint()
 		cursor:Line( 0, -5 )
 		-- Room West

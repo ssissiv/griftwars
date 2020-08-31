@@ -1,13 +1,21 @@
+YIELD_CMD = MakeEnum{
+	"WAIT",
+	"LOCATION",
+	"PAN_TILE",
+}
+
 local LoadScreen = class( "LoadScreen", RenderScreen )
 
 function LoadScreen:init( worldgen )
 	RenderScreen.init( self )
 	
 	self.worldgen = worldgen
-	self.zoom_level = 0.5
+	self.zoom_level = 1.0
 	self.camera = Camera()
 	self.camera:SetViewPort( 0, 0, GetGUI():GetSize() )
 	self.camera:ZoomToLevel( self.zoom_level )
+
+	self.yield_cmds = {}
 
 	self:GenerateWorld()
 
@@ -61,46 +69,61 @@ function LoadScreen:PanTo( x, y )
 	self.camera:PanTo( x - (x2 - x1 - 1)/2, y - (y2 - y1 - 1)/2 )
 end
 
+function LoadScreen:FindLocationInCoro()
+        -- go through the coro stack.
+    local i = 1
+    while true do
+    	local db = debug.getinfo( self.worldgen_coro, i )
+    	if not db then
+    		break
+    	end
+    	local j = 1
+    	while true do
+    		local k, v = debug.getlocal( self.worldgen_coro, i, j)
+    		if k == "self" and is_instance( v, Location ) and self.location == nil then
+    			return v
+    		end
+    		if k == nil or v == nil then
+    			break
+    		end
+    		j = j + 1
+    	end
+    	i = i + 1
+    end
+end
+
+
 function LoadScreen:UpdateScreen( dt )
-	if self.worldgen_coro and coroutine.status( self.worldgen_coro ) == "suspended" then
-	    local ok, result = coroutine.resume( self.worldgen_coro )
-	    if not ok then
-	        self.error_trace = "Failed worldgen: " ..tostring(result) .. "\n".. debug.traceback( self.worldgen_coro )
-	        print( self.error_trace )
-	        -- go through the coro stack.
-	        local i = 1
-	        while true do
-	        	local db = debug.getinfo( self.worldgen_coro, i )
-	        	if not db then
-	        		break
-	        	end
-	        	local j = 1
-	        	while true do
-	        		local k, v = debug.getlocal( self.worldgen_coro, i, j)
-	        		if k == "self" and is_instance( v, Location ) and self.location == nil then
-	        			self.location = v
-	        		end
-	        		if k == nil or v == nil then
-	        			break
-	        		end
-	        		j = j + 1
-	        	end
-	        	i = i + 1
-	        end
-	        DBG(self.worldgen_coro)
-	        if self.location then
-		        self:PanTo( 0, 0 )
+	if self:ProcessYield( dt ) then
+		-- processing yield
+	else
+		if self.worldgen_coro and coroutine.status( self.worldgen_coro ) == "suspended" then
+		    local result = { coroutine.resume( self.worldgen_coro ) }
+		    local ok = table.remove( result, 1 )
+		    if not ok then
+		        self.error_trace = "Failed worldgen: " ..tostring(result) .. "\n".. debug.traceback( self.worldgen_coro )
+		        print( self.error_trace )
+		        self.location = self:FindLocationInCoro()
+
+		        DBG(self.worldgen_coro)
+		        if self.location then
+			        self:PanTo( 0, 0 )
+			    end
+
+		    elseif coroutine.status( self.worldgen_coro ) == "suspended" then
+		    	if type(result) == "table" then
+		    		table.arrayadd( self.yield_cmds, result )
+		    	end
+			else
+		        assert( is_instance( result[1], World ))
+		        self.fade = 1.0
+
+		        local game = GameScreen( result[1] )
+		        GetGUI():AddScreen( game, 1 )
+
+	   	 		GetDbg():TryExecuteDebugFile( "script/startup.lua" )
 		    end
-
-	    elseif coroutine.status( self.worldgen_coro ) ~= "suspended" then
-	        assert( is_instance( result, World ))
-	        self.fade = 1.0
-
-	        local game = GameScreen( result )
-	        GetGUI():AddScreen( game, 1 )
-
-   	 		GetDbg():TryExecuteDebugFile( "script/startup.lua" )
-	    end
+		end
 	end
 
 	if self.fade then
@@ -125,7 +148,46 @@ function LoadScreen:UpdateScreen( dt )
 		self.hoverx, self.hovery = wx, wy
 	end
 end
-	
+
+function LoadScreen:ProcessYield( dt )
+
+	-- If waiting, ...
+	if self.yield_wait then
+		self.yield_wait = self.yield_wait - dt
+		if self.yield_wait > 0 then
+			return true
+		end
+	end
+
+	if #self.yield_cmds == 0 then
+		return
+	end
+
+	local cmd = table.remove( self.yield_cmds, 1 )
+	if not IsEnum( cmd, YIELD_CMD ) then
+		print( "invalid yield cmd:", tostr(result))
+		return
+	end
+
+	if cmd == YIELD_CMD.WAIT then
+		self.yield_wait = table.remove( self.yield_cmds, 1 )
+		assert( self.yield_wait > 0 )
+		return true
+
+	elseif cmd == YIELD_CMD.PAN_TILE then
+		local tile = table.remove( self.yield_cmds, 1 )
+		local duration = table.remove( self.yield_cmds, 1 )
+		self:PanTo( tile.x, tile.y )
+		self.yield_wait = (self.yield_wait or 0) + duration
+		return true
+
+	elseif cmd == YIELD_CMD.LOCATION then
+		self.location = table.remove( self.yield_cmds, 1 )
+		assert( is_instance( self.location, Location ))
+		self:PanTo( 0, 0 )
+	end
+end
+
 function LoadScreen:RenderHoveredLocation( gui )
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoBringToFrontOnFocus" }
@@ -154,32 +216,32 @@ end
 
 function LoadScreen:RenderScreen( gui )
 
+	local ui = imgui
+    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
+	-- ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
+	ui.SetNextWindowPos( 0, 0 )
+
+    ui.Begin( "ROOM", true, flags )
+
+    ui.Dummy( love.graphics.getWidth(), 0 )
+    if self.worldgen_coro and ui.SmallButton( "?" ) then
+    	DBG( self.worldgen_coro )
+    end
 	if self.error_trace then
-		local ui = imgui
-	    local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
-		-- ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
-		ui.SetNextWindowPos( 0, 0 )
-
-	    ui.Begin( "ROOM", true, flags )
-
-	    ui.Dummy( love.graphics.getWidth(), 0 )
-	    if self.worldgen_coro and ui.SmallButton( "?" ) then
-	    	DBG( self.worldgen_coro )
-	    end
 	    ui.TextColored( 1, 0, 0, 1, tostring(self.error_trace) )
-		self.top_height = ui.GetWindowHeight() 
-	    ui.End()
+	end
+	self.top_height = ui.GetWindowHeight() 
+    ui.End()
 
 
-	   	if self.location then
-		    self:RenderLocationTiles( self.location )
-		end
+   	if self.location then
+	    self:RenderLocationTiles( self.location )
+	end
 
-	    if self.hovered_tile then
-		    self:RenderHoveredLocation( gui )
-		else
-			ui.SetTooltip( string.format( "(%.1f, %.1f)", self:ScreenToCell( love.mouse.getPosition() )))
-		end
+    if self.hovered_tile then
+	    self:RenderHoveredLocation( gui )
+	else
+		ui.SetTooltip( string.format( "(%.1f, %.1f)", self:ScreenToCell( love.mouse.getPosition() )))
 	end
 
    	-- render map --
