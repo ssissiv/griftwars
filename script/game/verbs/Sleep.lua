@@ -38,6 +38,10 @@ function Sleep:CanInteract()
 		if not actor:IsAlert() then
 			return false, "Not Alert"
 		end
+	else
+		if not actor:IsSleeping() then
+			return false, "Not asleep"
+		end
 	end
 
 	if actor:InCombat() then

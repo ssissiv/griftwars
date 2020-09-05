@@ -1,0 +1,268 @@
+TODO
+====
+
+SLEEP: on awaken, need to re-tick behaviour?
+
+PROCGEN Coroutine yielding for fancy viz control.
+	-- Convert all FilLTiles to cursor-based.
+
+
+Wolf:
+	Lunge: ranged leap, knock prone
+
+Gnoll:
+	Sleep during day.
+	Shove you against wall and Stun.
+	Have poisoned meat.
+	Friend: Will attack your enemies.
+	Enemy: Not much they already hate everythign :p
+
+HillGiant:
+	Sleeps a lot.
+	Throws boulders, very powerful.
+	Likes large quantities of food.
+	Friend: Wont smush you.
+	Enemy: ...
+
+Bandit:
+	Fights to posted locations, otherwise sits around camp.
+	Friend: Bandit intel?
+	Ambition: 
+
+OpenHills:
+1 - Gnoll Valleys.
+ * They sleep in nooks. Stealth lets you get their ore.
+ * Use Diplomacy to demand parlay. Follow to Chief. Choose: Friend or Foe.
+ * (II) More Gnolls, better equipped
+
+
+- Old Quarry
+ * Access to ore.
+ * Is StrategicPoint: adds command that acquires pickaxes, orders laborers to mine the ore.
+ 	** pick axe order is just a progress bar, during which trade price increases, smiths make the axe to speed it up, etc.
+ * (II) Hi quality ore? More ore? 
+ * Spirits @ night.
+
+ - Training Grounds
+ * Off-duty guards come here during the day
+ * You can train here to increase STR.
+
+- Roaming Herdsman
+ * Gives you awesome enegy bars.
+ * Animals - sick/ill
+   ** If they die, he goes to live in a shed for the rest of his days.
+
+- Forward Encampment.
+ * If a faction is engaging in war, this gets created.
+ * (II) - depends on Faction?
+
+- Lake
+ * Diving wold be fun :p
+ * Shaman: casts clairvoyance
+   ** Wants mushrooms, weird plant things
+   ** Casts invisibility, wanders around, then shapeshifts back.
+
+- Plains
+ * GIant Lizard.
+
+- Abandoned Well
+ * Has weapon and journal
+ * Needs rope or climbing to scale
+
+- Village
+ * Smith
+ * Allies
+   ** Will come with you for 20/day.
+
+- Orc Encampment
+ * Starts at I.
+  ** Grows like any other faction...
+  ** Wants: Ore -> Will create Orc blacksmith for gearing.
+  ** 
+
+
+
+World:CutScene():
+	 Fade out, warp puppet somewhere, time passes, used for for story structure.
+
+
+Marks should not be an Engram.
+
+Fucking verbs.. how does validity get re-evaluated when target state changes? other state? if something despawns?
+Show verbs of Agents when inspecting.
+ * Immediate (attacking, moving)
+ * Task (trying to kill you, traveling home)
+ * Goal (defending the city, looking for a magic necklace)
+
+No-Travel zones for agents
+Homes?
+
+Make CharacterStreams RNG, Location Stream RNG, for the various levels of procgen so for example
+a mustache doesn't change the entire western hemisphere.
+
+diplomacy 1d6
+resist. 2
+suspicious +2 resist vs. diplomacy.
+When you roll diplomacy, reduce will (blue hearts?). after X times (patience - bar with discrete segments, regens but very slowly)
+If you reduce will to 0, you gain: the shtuff.
+
+
+* More strategic points, capturing strat points.
+* Map render from puppet POV : show ally/enemies, etc.
+
+* Return to AI Schedules.  Need predictability.
+
+
+
+* Venture Corp
+	- give CEO salary
+	- generate hierarchy
+
+* Quests: to gain Trust.
+	- Tokens for specific people?	
+
+* JOBS.
+	- how to assure the player works the jobs they're hired for?
+	- leaving
+	- getting fired
+	- salary, job child-verbs, (side effects)
+
+INTEL:
+	* Revealed by "Rumors".
+	  * How much to bribe this person? Who you can bribe?
+	* Wanna make someone disappear? Need permission. (all deaths within a region...)
+
+	* Knowledge about Agents (PRIVACY flags) decay except for the 3 you are allowed to mark as "Important"
+	* Friends are automatically "Important"
+	* You can only mark so many things as "Important", and the rest will decay.
+
+NEW AGENTS:
+
+	SNOOP: Reveal PRIVACY flags about local T1s, famous ppl.
+		Gain Trust when you pay them. (+trust, -coins)
+	RANGERS: follow, fight.
+		Gain Trust for each shared kill. (+trust, -health)
+		Gain Intel about other RANGERS.
+		Gain: Combat skill.
+	WORKER: gets you a job.
+		Gain trust and wages. +trust, +money, +trust w/ T2 boss, +trust w/ other employees.
+
+	T2:
+		SHOPKEEP:
+			Gain Trust as you trade with them.
+			Trust Level 1: Bonus to trade.
+			Trust Level 2: 
+
+		WORKER BOSS.
+
+		HEAD RANGERS (T2 Rangers):
+			Fight to T2 Enemies. (+trust per kill)
+			Trust lvls: T2 Combat skills, (T2 GEAR as monster loot), Become HEAD RANGER.
+			Can: Learn all RANGER identities, Recruit RANGERS.
+			Relations: P
+
+		HUBS (T2 SNOOP): Has underling SNOOPs.
+			Trust when info is brought.
+			Gain: Hacking skill.
+
+
+
+	Controllers:
+		* Regional warlords.
+		* "Mayors" of specific areas -- have all the top connections.
+		* Look to import intell, or money, or warfare.
+	CEOs
+		* 3rd tier person who controls a specific economy (a business)
+	Bio-Agriculture Farmers.
+		work behaviour: wander in field, work it, use robots randomly
+		* Source: nutri-pallets
+	Engis.
+		* Craft hi-tech gadgets.
+		Needs: E.Parts, or is a frustrated worker
+		* Source: gadgets, Sink: E.Parts
+	Factory Mgr.
+		* [KINGPIN] Has his subordinate meet w/ Engis to do exchanges.
+		* Source: [E.Parts]
+	Toolers
+		* Make weapons out of [Metal], [E.Parts], [Battery]
+		
+
+
+LOCALES:
+	* Places to go while agents are relaxing.
+	The Neon Strip - engis lurk here, gaming parlours, etc.
+	Bio Domes - farmers work here, commute from the 'burbs
+	Flesh Road - for all that stuff.
+
+BEHAVIOUR:
+	* Should generating Behaviours use POtentialVerb set?  THere is some redundancy when specifying potential verbs via COllectVerbs, and having to manually add a Behaviour verb in the character def.  Having two requirements makes potential verbs inflexible.
+	* Does the normal Behaviour AI run for the player, and the player simply *selects* what should be done?
+	
+	
+	figure out how behaviours run in parallel without stepping on eachothers toes.
+	* Think of behaviour as a 'fourier analysis'. Start with the basic 'spine' of
+	the behaviour, the basest default, eg. "Diurnal".
+	* Then layer on complexity, whose times/etc vary dpeending on agent state.
+	* Not dissimilar to what we have now, biggest problem is figuring out the correct priority. I think priority
+	is actually a vector; firstly time scale, and secondly importance. (how important is this behaviour is on the order of this time unit).  So for example, "running from enemy" is on the short time scale (seconds), and very improtant.  "obtaining the killswitch" is very important but on a large time scale.
+	* behaviours are also dynamic:
+		"Stay alive" isn't always there, it's only there under certain criteria/when certain things happen, like
+		getting in combat.  Once out of combat, the behaviour removes itself.
+	
+	Are behaviours what we should have a DSL for?  Want to basically work in these units of game data.
+
+
+DEBUG LOG FILE:
+	pls.
+
+SENSELOG:
+	needs to keep parameters, not just text, to so newly learned identities change logs from the past.
+
+AI/PLANNING:
+Structuring Access to resources and planning relationships:
+	track gain/loss of resources within Verbs for an agent for a week, say.
+	agent becomes a sink or source of these.
+	* relationships dictate a resource flow (specified in broad categories) that are permitted.
+	* a well-connected agent has broad access to sinks or sources as the need may be, and then
+	wish to construct a particular relationsihp with the target.
+	* An given agent has paritcular Verbs avilaalbe for constructing these relationships.
+	* A given agent might even have a relationship (subordinate) who's job is to construct these relationships for him.
+
+You have max token slots, and tokens in them.  You commit them to certain requirement sets (embedded in social Interactions, etc.), which typically unlocks something.
+
+Diplo 1 can unlock lvl 1. Acquintances, who will reveal knowledge.
+
+Knowledge gains you xp.
+
+When you sleep, you convert XP to charge your stats.  (See punch club.)  When stats exceed a level, you can add a token, upgrade a token, roll for a token, etc.  Stat drain is locked in at integers (won't drain past a level).
+
+Stats drain over time, and take increasingly more XP to increase.
+
+You must find where your tokens best fit to optimize for XP gain in a cycle of growth.
+
+
+INFO MODEL:
+	Add verbs for utilizing certain info.
+	LOCAL_NEWS:
+		Event model for tracking newsworthy events within a region?
+		Somehow, local news lets you learn about 'public aspects' of people.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

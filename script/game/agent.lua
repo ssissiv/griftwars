@@ -757,10 +757,13 @@ function Agent:CancelInvalidVerbs()
 			local verb = self.verbs[i]
 			-- It is possible that while Cancelling, a verb alters state which will call this function.
 			-- So it is fine if a verb is undergoing cancelling already -- just don't bother with it.
-			if not verb:IsCancelled() then
+			while verb and not verb:IsCancelled() do
 				local ok, reason = verb:CanInteract()
 				if not ok then
 					verb:Cancel( reason )
+					break
+				else
+					verb = verb.child
 				end
 			end
 			-- If cancelling removes the final verb, there will be nothing left to iterate over.
@@ -895,9 +898,11 @@ function Agent:OnNoise( source, magnitude )
 			self:CreateStat( STAT.WAKEFUL, 0, 100, 0 )
 		end
 		self:DeltaStat( STAT.WAKEFUL, magnitude )
+
 		if self:GetStatValue( STAT.WAKEFUL ) >= self.stats[ STAT.WAKEFUL ]:GetMaxValue() then
 			Msg:Echo( self.location, "{1} awakens with a start!", self )
 			self:SetMentalState( MSTATE.ALERT )
+			self.behaviour:ScheduleNextTick( 0, "wakened" )
 		end
 	end
 end

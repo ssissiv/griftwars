@@ -213,7 +213,7 @@ function Behaviour:RenderDebugPanel( ui, panel, dbg )
 		panel:AppendTable( ui, self.tick_reason )
 	end
 
-	if self.tick_ev then
+	if self.tick_ev and not self.tick_ev.trigger_time then
 		ui.Text( "Tick in:" )
 		ui.SameLine( 0, 10 )
 		local txt = Calendar.FormatDuration( self.tick_ev.when - world:GetDateTime() )
