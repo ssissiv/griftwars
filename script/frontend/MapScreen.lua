@@ -58,7 +58,7 @@ function MapScreen:ElapsedTime()
 	return self.elapsed_time
 end
 
-function MapScreen:UpdateScreen( dt )
+function MapScreen:OnUpdateScreen( dt )
 	self.camera:UpdateCamera( dt )
 
 	self.elapsed_time = self.elapsed_time + dt
@@ -160,7 +160,7 @@ function MapScreen:RenderHeader( gui )
     ui.End()
 end
 
-function MapScreen:RenderScreen( gui )
+function MapScreen:OnRenderScreen( gui )
 
 	self:RenderHeader( gui )
 

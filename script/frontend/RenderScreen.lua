@@ -12,6 +12,22 @@ function RenderScreen:GetScreenSize()
 	return love.graphics.getWidth(), love.graphics.getHeight()
 end
 
+function RenderScreen:CloseScreen()
+	GetGUI():RemoveScreen( self )
+end
+
+function RenderScreen:FadeToBlack( fn )
+	self.screen_fade = 0
+	self.screen_fade_k = 0.5
+	self.screen_fade_fn = fn
+end
+
+function RenderScreen:FadeFromBlack( fn )
+	self.screen_fade = 1.0
+	self.screen_fade_k = -0.5
+	self.screen_fade_fn = fn
+end
+
 function RenderScreen:DebugText( x, y, txt, clr )
 	if clr then
 		self:SetColour( clr )
@@ -82,6 +98,34 @@ function RenderScreen:RenderTooltip( ui )
     ui.Begin( "TOOLTIP", true, flags )
     	ui.Text( self.tooltip )
     ui.End()
+end
+
+function RenderScreen:UpdateScreen( dt )
+	if self.screen_fade then
+		self.screen_fade = self.screen_fade + (dt * self.screen_fade_k)
+		if self.screen_fade < 0 or self.screen_fade > 1.0 then
+			self.screen_fade, self.screen_fade_k = nil, nil
+			if self.screen_fade_fn then
+				self.screen_fade_fn()
+			end
+		end
+	end
+
+	if self.OnUpdateScreen then
+		self:OnUpdateScreen( dt )
+	end
+end
+
+function RenderScreen:RenderScreen()
+	if self.OnRenderScreen then
+		self:OnRenderScreen()
+	end
+
+   	-- render map --
+   	if self.screen_fade then
+   		love.graphics.setColor( 0, 0, 0, self.screen_fade * 255 )
+		self:Rectangle( 0, 0, self:GetScreenSize() )
+	end
 end
 
 function RenderScreen:__tostring()

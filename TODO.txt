@@ -4,6 +4,8 @@ TODO
 SLEEP: on awaken, need to re-tick behaviour?
 
 PROCGEN Coroutine yielding for fancy viz control.
+	-- Convert all FilLTiles to cursor-based.
+
 
 Wolf:
 	Lunge: ranged leap, knock prone

@@ -16,7 +16,7 @@ function CityMilitary:OnSpawn( world )
 	do
 		self.commander = world:SpawnEntity( Agent.Commander() )
 		self:AddFactionMember( self.commander, FACTION_ROLE.COMMANDER, loc.format( "{1} high commander", self:GetFactionName() ))
-
+		
 		local job = Job.ManageResources( self.commander )
 		job:SetResourceOwner( self )
 		self.commander:GainAspect( job )

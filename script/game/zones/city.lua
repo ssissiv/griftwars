@@ -52,7 +52,12 @@ function City:OnWorldGenPass( pass )
 		-- Localize faction members.
 		for i, room in ipairs( self.rooms ) do
 			if is_instance( room, Location.MilitaryHQ ) then
-				self.faction:GetAgentsByRole( FACTION_ROLE.COMMANDER )[1]:WarpToLocation( room )
+				local commander = self.faction:GetAgentsByRole( FACTION_ROLE.COMMANDER )[1]
+				commander:WarpToLocation( room )
+				local tile = commander:GetTile()
+				coroutine.yield( YIELD_CMD.LOCATION, room )
+				coroutine.yield( YIELD_CMD.PAN_TILE, tile )
+				coroutine.yield( YIELD_CMD.CAPTION, commander.faction:GetRoleTitle(), tile.x, tile.y - 1, 1.0 )
 
 			elseif room:GetBoundaryPortal() then
 				for i, captain in ipairs( self.faction:GetAgentsByRole( FACTION_ROLE.CAPTAIN )) do

@@ -136,10 +136,16 @@ end
 
 function ui:AddScreen( screen, idx )
 	table.insert( self.screens, idx or #self.screens + 1, screen )
+	if screen.OnScreenAdded then
+		screen:OnScreenAdded()
+	end
 end
 
 function ui:RemoveScreen( screen )
 	table.arrayremove( self.screens, screen )
+	if screen.OnScreenRemoved then
+		screen:OnScreenRemoved()
+	end
 end
 
 function ui:GetTopScreen()

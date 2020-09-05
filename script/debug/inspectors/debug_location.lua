@@ -6,7 +6,7 @@ function DebugLocation:init( location )
     self.location = location
 end
 
-function DebugLocation:RenderScreen()
+function DebugLocation:DebugRenderScreen()
     local screen = GetGUI():GetTopScreen()
     if is_instance( screen, GameScreen ) then
         screen:SetColour( 0xFFFFFFFF )
@@ -65,7 +65,7 @@ function DebugLocation:RenderPanel( ui, panel, dbg )
 
     DebugTable.RenderPanel( self, ui, panel, dbg )
 
-    self:RenderScreen()
+    self:DebugRenderScreen()
 end
 
  

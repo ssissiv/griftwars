@@ -61,7 +61,7 @@ function GameScreen:ClearMessage()
 	self.post_time = nil
 end
 
-function GameScreen:UpdateScreen( dt )
+function GameScreen:OnUpdateScreen( dt )
 	self.world:UpdateWorld( dt )
 
 	self:UpdateFloaters( dt )
@@ -262,7 +262,7 @@ function GameScreen:RenderCombatDetails( ui, puppet )
     end
 end
 
-function GameScreen:RenderScreen( gui )
+function GameScreen:OnRenderScreen( gui )
 
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }

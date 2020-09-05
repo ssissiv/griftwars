@@ -3,7 +3,7 @@ local TileMapCursor = class( "TileMapCursor" )
 function TileMapCursor:init( map )
 	assert( is_instance( map, Aspect.TileMap ))
 	self.map = map
-	self.yield_duration = 0.0001
+	self.yield_duration = nil --0.001 -- Fixme: doesnt scale properly.
 	self.yield_count = 0
 end
 

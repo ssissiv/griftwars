@@ -2,6 +2,7 @@ YIELD_CMD = MakeEnum{
 	"WAIT",
 	"LOCATION",
 	"PAN_TILE",
+	"CAPTION",
 }
 
 local LoadScreen = class( "LoadScreen", RenderScreen )
@@ -16,14 +17,11 @@ function LoadScreen:init( worldgen )
 	self.camera:ZoomToLevel( self.zoom_level )
 
 	self.yield_cmds = {}
+	self.captions = {}
 
 	self:GenerateWorld()
 
 	return self
-end
-
-function LoadScreen:CloseScreen()
-	GetGUI():RemoveScreen( self )
 end
 
 function LoadScreen:GenerateWorld()
@@ -94,6 +92,8 @@ end
 
 
 function LoadScreen:UpdateScreen( dt )
+	RenderScreen.UpdateScreen( self, dt )
+
 	if self:ProcessYield( dt ) then
 		-- processing yield
 	else
@@ -116,23 +116,20 @@ function LoadScreen:UpdateScreen( dt )
 		    	end
 			else
 		        assert( is_instance( result[1], World ))
-		        self.fade = 1.0
+		        self:FadeToBlack( function() 
+		        	self:CloseScreen()
 
-		        local game = GameScreen( result[1] )
-		        GetGUI():AddScreen( game, 1 )
+			        local game = GameScreen( result[1] )
+			        GetGUI():AddScreen( game, 1 )
 
-	   	 		GetDbg():TryExecuteDebugFile( "script/startup.lua" )
+			        game:FadeFromBlack()
+		       end )
+
 		    end
 		end
 	end
 
-	if self.fade then
-		self.fade = self.fade - dt
-		if self.fade <= 0 then
-			self:CloseScreen()
-		end
-	end
-
+	self:UpdateCaptions( dt )
 
 	self.camera:UpdateCamera( dt )
 
@@ -158,6 +155,10 @@ function LoadScreen:ProcessYield( dt )
 			return true
 		end
 	end
+	-- Waiting on captions...
+	if #self.captions > 0 then
+		return true
+	end
 
 	if #self.yield_cmds == 0 then
 		return
@@ -176,17 +177,59 @@ function LoadScreen:ProcessYield( dt )
 
 	elseif cmd == YIELD_CMD.PAN_TILE then
 		local tile = table.remove( self.yield_cmds, 1 )
-		local duration = table.remove( self.yield_cmds, 1 )
 		self:PanTo( tile.x, tile.y )
-		self.yield_wait = (self.yield_wait or 0) + duration
 		return true
 
 	elseif cmd == YIELD_CMD.LOCATION then
 		self.location = table.remove( self.yield_cmds, 1 )
 		assert( is_instance( self.location, Location ))
 		self:PanTo( 0, 0 )
+
+	elseif cmd == YIELD_CMD.CAPTION then
+		local txt = table.remove( self.yield_cmds, 1 )
+		local x = table.remove( self.yield_cmds, 1 )
+		local y = table.remove( self.yield_cmds, 1 )
+		local duration = table.remove( self.yield_cmds, 1 )
+		self:ShowCaption( txt, x, y, duration )
 	end
 end
+
+function LoadScreen:ShowCaption( txt, x, y, duration )
+	local caption =
+	{
+		txt = txt,
+		x = x,
+		y = y,
+		duration = duration,
+		dt = 0,
+	}
+	table.insert( self.captions, caption )
+end
+
+function LoadScreen:UpdateCaptions( dt )
+	for i = #self.captions, 1, -1 do
+		local caption = self.captions[i]
+		caption.dt = caption.dt + dt
+		if caption.dt >= caption.duration + 0.5 then
+			table.remove( self.captions, i )
+		end
+	end
+end
+
+function LoadScreen:RenderCaptions( dt )
+	for i = #self.captions, 1, -1 do
+		local caption = self.captions[i]
+
+		local x, y = self.camera:WorldToScreen( caption.x, caption.y )
+		local a = 1.0
+		if caption.dt >= caption.duration then
+			a = 1.0 - clamp( (caption.dt - caption.duration) / 0.5, 0, 1.0 )
+		end
+
+		self:DebugText( x, y, caption.txt, AlphaColour( 0xFFFFFFFF, a ))
+	end
+end
+
 
 function LoadScreen:RenderHoveredLocation( gui )
 	local ui = imgui
@@ -213,9 +256,7 @@ function LoadScreen:RenderHoveredLocation( gui )
     ui.End()
 end
 
-
-function LoadScreen:RenderScreen( gui )
-
+function LoadScreen:OnRenderScreen( gui )
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "NoScrollBar", "NoBringToFrontOnFocus" }
 	-- ui.SetNextWindowSize( love.graphics.getWidth(), 200 )
@@ -244,11 +285,7 @@ function LoadScreen:RenderScreen( gui )
 		ui.SetTooltip( string.format( "(%.1f, %.1f)", self:ScreenToCell( love.mouse.getPosition() )))
 	end
 
-   	-- render map --
-   	if self.fade then
-   		love.graphics.setColor( 0, 0, 0, self.fade * 255 )
-		self:Rectangle( 0, 0, self:GetScreenSize() )
-	end
+	self:RenderCaptions()
 end
 
 
