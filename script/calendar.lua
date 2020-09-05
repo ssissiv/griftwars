@@ -16,9 +16,9 @@ function Calendar.FormatTime( datetime, show_seconds )
 	if show_seconds then
 		local minutes, seconds = math.modf( fminutes )
 		seconds = math.floor( seconds * 60 )
-		return loc.format( "({2}:{3%02d} {4}, {5} seconds)", nil, hour, minutes, am_pm, seconds )
+		return loc.format( "{2}:{3%02d} {4}, {5} seconds", nil, hour, minutes, am_pm, seconds )
 	else
-		return loc.format( "({2}:{3%02d} {4})", nil, hour, minutes, am_pm )
+		return loc.format( "{2}:{3%02d} {4}", nil, hour, minutes, am_pm )
 	end
 end
 

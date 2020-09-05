@@ -112,18 +112,28 @@ function LoadScreen:UpdateScreen( dt )
 
 		    elseif coroutine.status( self.worldgen_coro ) == "suspended" then
 		    	if type(result) == "table" then
-		    		table.arrayadd( self.yield_cmds, result )
+					if not CONFIG.QUICKGEN then
+			    		table.arrayadd( self.yield_cmds, result )
+			    	end
 		    	end
 			else
 		        assert( is_instance( result[1], World ))
-		        self:FadeToBlack( function() 
+
+				if CONFIG.QUICKGEN then
 		        	self:CloseScreen()
 
 			        local game = GameScreen( result[1] )
 			        GetGUI():AddScreen( game, 1 )
+		    	else
+			        self:FadeToBlack( function() 
+			        	self:CloseScreen()
 
-			        game:FadeFromBlack()
-		       end )
+				        local game = GameScreen( result[1] )
+				        GetGUI():AddScreen( game, 1 )
+
+				        game:FadeFromBlack()
+				    end )
+		    	end
 
 		    end
 		end
@@ -147,7 +157,6 @@ function LoadScreen:UpdateScreen( dt )
 end
 
 function LoadScreen:ProcessYield( dt )
-
 	-- If waiting, ...
 	if self.yield_wait then
 		self.yield_wait = self.yield_wait - dt

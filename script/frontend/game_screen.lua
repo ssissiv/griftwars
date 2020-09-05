@@ -988,17 +988,7 @@ function GameScreen:KeyPressed( key )
 
 	local pan_delta = Input.IsShift() and 0.5 or 0.1
 
-	if key == "space" then
-		if self.world:IsPaused( PAUSE_TYPE.INTERRUPT ) then
-			self.world:TogglePause( PAUSE_TYPE.INTERRUPT )
-		else
-			self.world:TogglePause( PAUSE_TYPE.DEBUG )
-			-- self.is_panning = true
-			-- self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
-			-- self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
-		end
-
-	elseif key == "i" then
+	if key == "i" then
 		if self.inventory_window then
 			self:RemoveWindow( self.inventory_window )
 			self.inventory_window = nil
@@ -1069,9 +1059,25 @@ function GameScreen:KeyPressed( key )
 			self.puppet:AttemptVerb( Verb.Walk( self.puppet, DIR.N ))
 		end
 
-	elseif key == "." then
-		if self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and not self.puppet:IsBusy() and self.puppet:IsSpawned() then
-			self.puppet:AttemptVerb( Verb.Wait, self.puppet )
+	elseif key == "space" then
+
+		if Input.IsControl() then
+			if self.world:IsPaused( PAUSE_TYPE.INTERRUPT ) then
+				self.world:TogglePause( PAUSE_TYPE.INTERRUPT )
+			else
+				self.world:TogglePause( PAUSE_TYPE.DEBUG )
+				-- self.is_panning = true
+				-- self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
+				-- self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
+			end
+
+		elseif self.puppet and not self.world:IsPaused( PAUSE_TYPE.NEXUS ) and self.puppet:IsSpawned() then
+			local wait = self.puppet:FindVerb( Verb.Wait )
+			if wait then
+				wait:Cancel()
+			elseif not self.puppet:IsBusy() then
+				self.puppet:AttemptVerb( Verb.Wait, self.puppet )
+			end
 		end
 
 	elseif key == "return" or key == "enter" then

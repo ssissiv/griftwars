@@ -7,6 +7,7 @@ START_TIME = love.timer.getTime()
 local strict = require "util/strict"
 strictify( _G )
 
+CONFIG = require "config"
 util = require "util/util"
 constants = require "constants"
 assets = require "assets"

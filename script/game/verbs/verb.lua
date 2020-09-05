@@ -50,6 +50,9 @@ function Verb:CalculateTimeElapsed( dt )
 	elseif self.yield_type == "rate" then
 		return dt * self.yield_value
 
+	elseif self.yield_type == "indefinite" then
+		return dt * self.yield_value
+
 	else
 		return dt
 	end
@@ -393,6 +396,9 @@ function Verb:Cancel( reason )
 	elseif self.yield_ev then
 		self.actor.world:UnscheduleEvent( self.yield_ev )
 		self.actor.world:TriggerEvent( self.yield_ev )
+
+	elseif self.yield_type == "indefinite" then
+		self:Resume( self.coro )
 	end
 end
 
@@ -412,6 +418,16 @@ function Verb:GetActingProgress()
 		local time_left = self.yield_ev.when - self.actor.world:GetDateTime()
 		return time_left / self.yield_duration
 	end
+end
+
+function Verb:YieldIndefinitely()
+	self.yield_type = "indefinite"
+	self.yield_value = 1.0
+
+	local result = coroutine.yield()
+
+	self.yield_value = nil
+	self.yield_type = nil
 end
 
 function Verb:YieldForTime( duration, how, act_rate )
@@ -472,7 +488,7 @@ function Verb:Unyield()
 end
 
 function Verb:Resume( coro )
-	assert( self.yield_ev )
+	assert( self.yield_ev or self.yield_type == "indefinite" )
 
 	self.yield_ev = nil
 	self.yield_duration = nil

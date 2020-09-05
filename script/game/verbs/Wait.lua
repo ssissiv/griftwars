@@ -8,7 +8,8 @@ function Wait:Interact()
 	else
 		self.actor:GetStat( STAT.FATIGUE ):DeltaRegen( -50 )
 
-		self:YieldForTime( HALF_HOUR, "wall", 1.0 )
+		-- self:YieldForTime( HALF_HOUR, "wall", 1.0 )
+		self:YieldIndefinitely()
 
 		self.actor:GetStat( STAT.FATIGUE ):DeltaRegen( 50 )
 	end

@@ -31,6 +31,9 @@ function Job:RenderAgentDetails( ui, screen )
 			ui.SameLine( 0, 5 )
 			ui.TextColored( 0, 1, 0, 1, loc.format( "{1} credits/day", salary ))
 		end
+		if self.start_time and self.end_time then
+			ui.Text( loc.format( "  Shift: {1} - {2}", Calendar.FormatTime( self.start_time ), Calendar.FormatTime( self.end_time )))
+		end
 		local hire_time = job:GetHireTime()
 		if hire_time then
 			local now = self.owner.world:GetDateTime()

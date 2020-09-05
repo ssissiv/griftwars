@@ -643,13 +643,17 @@ function Agent:AssertNotBusy()
 	end
 end
 
-function Agent:IsDoing( verb )
+function Agent:FindVerb( verb_class )
 	for i, v in ipairs( self.verbs or table.empty ) do
-		if v:FindVerb( verb ) then
-			return true
+		local verb = v:FindVerb( verb_class )
+		if verb then
+			return verb
 		end
 	end
-	return false
+end
+
+function Agent:IsDoing( verb_class )
+	return self:FindVerb( verb_class ) ~= nil
 end
 
 function Agent:AttemptVerb( verb, obj )
