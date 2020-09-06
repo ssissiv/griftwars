@@ -116,9 +116,9 @@ function RenderScreen:UpdateScreen( dt )
 	end
 end
 
-function RenderScreen:RenderScreen()
+function RenderScreen:RenderScreen( gui )
 	if self.OnRenderScreen then
-		self:OnRenderScreen()
+		self:OnRenderScreen( gui )
 	end
 
    	-- render map --

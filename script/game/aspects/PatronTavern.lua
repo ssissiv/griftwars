@@ -14,6 +14,12 @@ function PatronTavern:CanInteract()
 		return false, "No spots available"
 	end
 
+	local ok, reason = self.owner:GetAspect( Feature.Tavern ):IsOpenForBusiness()
+	if not ok then
+		print( ok, reason, self.actor )
+		return ok, reason
+	end
+
 	return PatronTavern._base.CanInteract( self )
 end
 

@@ -8,7 +8,7 @@ function TavernLocation:init()
 	Location.init( self )
 	local tavern = self:GainAspect( Feature.Tavern())
 
-	self:GainAspect( Activity.PatronTavern() )
+	self:GainAspect( Activity.PatronTavern() ) -- People can patronize this location.
 end
 
 

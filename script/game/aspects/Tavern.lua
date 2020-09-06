@@ -16,6 +16,23 @@ function Tavern:AssignBarkeep( agent )
 	end
 end
  
+function Tavern:IsOpenForBusiness()
+	if self.barkeep == nil or self.barkeep:IsDead() then
+		return false, "No proprietor"
+	end
+
+	local job = self.barkeep:GetAspect( Job.Barkeep )
+	if not job then
+		return false, "No job"
+	end
+
+	if not job:IsTimeForShift( self:Now() ) then
+		return false, "Not time for shift"
+	end
+
+	return true
+end
+
 function Tavern:SpawnBarkeep()
 	local world = self:GetWorld()
 	
