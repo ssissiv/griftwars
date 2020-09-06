@@ -210,7 +210,7 @@ function GameScreen:RenderCombatTargetDetails( ui, puppet, target )
     end
 
 
--- 	local attack = target:GetAspect( Aspect.Combat ):GetCurrentAttack()
+-- 	local attack = target:GetAspect( Verb.Combat ):GetCurrentAttack()
 -- 	if attack then
 -- 		local t = attack:GetActingProgress()
 -- 		if t then
@@ -235,7 +235,7 @@ function GameScreen:RenderCombatTargetDetails( ui, puppet, target )
 end
 
 function GameScreen:RenderCombatDetails( ui, puppet )
-    local combat = puppet:GetAspect( Aspect.Combat )
+    local combat = puppet:GetAspect( Verb.Combat )
     if combat and puppet:InCombat() then
     	ui.Separator()
 
@@ -252,14 +252,28 @@ function GameScreen:RenderCombatDetails( ui, puppet )
     	if show_tt and details then
     		ui.SetTooltip( details )
     	end
-
-    	for i, target in combat:Targets() do
-    	-- for i, target in puppet:GetLocation():Contents() do
-    		if target.InCombatWith and target:InCombatWith( puppet ) then
-    			self:RenderCombatTargetDetails( ui, puppet, target )
-	    	end
-    	end
     end
+end
+
+function GameScreen:RenderLocationContentDetails( ui, puppet )
+	for i, obj in puppet:GetLocation():Contents() do
+		if obj == puppet then
+			--
+		elseif is_instance( obj, Agent ) then
+			if obj:InCombat() then
+				self:RenderCombatTargetDetails( ui, puppet, obj )
+
+			elseif obj:HasAspect( StatusEffect.RecentNoise ) then
+				local alertness = obj:CalculateAlertness()
+				local hp, max_hp = obj:GetHealth()
+				local txt = loc.format( "{1.Id} - {2}/{3}", obj:LocTable( self.puppet ), hp, max_hp )
+				ui.TextColored( 0.5, 0.5, 0, 1.0, txt )
+
+				ui.SameLine( 0, 10 )
+				ui.Text( loc.format( "Alertness: {1}", alertness ))
+			end
+		end
+	end
 end
 
 function GameScreen:OnRenderScreen( gui )
@@ -337,8 +351,7 @@ function GameScreen:OnRenderScreen( gui )
 
 	  	self:RenderAgentDetails( ui, puppet )
 
-	    -- Render Combat targets
-	    self:RenderCombatDetails( ui, puppet )
+	    self:RenderLocationContentDetails( ui, puppet )
 	    ui.Separator()
 
 	    self:RenderSenses( ui, puppet )		

@@ -892,17 +892,20 @@ function Agent:Stats()
 	return pairs( self.stats )
 end
 
+function Agent:AwakenStartle()
+	Msg:Echo( self.location, "{1} awakens with a start!", self )
+	self:SetMentalState( MSTATE.ALERT )
+	self:LoseAspect( StatusEffect.RecentNoise )
+	self.combat:EvaluateTargets() -- Ensures InCombat for the evaluation of behaviour verbs.
+	self.behaviour:ScheduleNextTick( 0, "wakened" )
+end
+
 function Agent:OnNoise( source, magnitude )
 	if self.mental_state == MSTATE.SLEEPING then
-		if not self.stats[ STAT.WAKEFUL ] then
-			self:CreateStat( STAT.WAKEFUL, 0, 100, 0 )
-		end
-		self:DeltaStat( STAT.WAKEFUL, magnitude )
+		self:GainStatusEffect( StatusEffect.RecentNoise, math.ceil( magnitude / 5) )
 
-		if self:GetStatValue( STAT.WAKEFUL ) >= self.stats[ STAT.WAKEFUL ]:GetMaxValue() then
-			Msg:Echo( self.location, "{1} awakens with a start!", self )
-			self:SetMentalState( MSTATE.ALERT )
-			self.behaviour:ScheduleNextTick( 0, "wakened" )
+		if self:CheckAlertness() then
+			self:AwakenStartle()
 		end
 	end
 end
@@ -1105,7 +1108,7 @@ function Agent:RenderMapTile( screen, tile, x1, y1, x2, y2 )
 	end
 
 	-- Show as a target in combat
-	local combat = self:GetAspect( Aspect.Combat )
+	local combat = self:GetAspect( Verb.Combat )
 	if self.world and combat and combat:IsTarget( viewer ) then
 		screen:SetColour( constants.colours.RED )
 		love.graphics.print( "!", (x1+x2)*0.5, (y1), 0, scale, 0.6 * scale )

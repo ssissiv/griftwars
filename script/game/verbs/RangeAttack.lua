@@ -110,7 +110,7 @@ function RangeAttack:Interact()
 	end
 
 	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
-	target:GetAspect( Aspect.Combat ):EvaluateTargets()
+	target:GetAspect( Verb.Combat ):EvaluateTargets()
 
 	actor:GetStat( STAT.FATIGUE ):DeltaValue( -self.fatigue_cost )
 

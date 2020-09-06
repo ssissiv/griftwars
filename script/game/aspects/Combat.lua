@@ -1,4 +1,8 @@
-local Combat = class( "Aspect.Combat", Aspect )
+local CombatPolicy = class( "Verb.CombatPolicy", Verb )
+
+------------------------------------------------------
+
+local Combat = class( "Verb.Combat", Verb )
 
 Combat.TABLE_KEY = "combat"
 
@@ -9,7 +13,8 @@ Combat.event_handlers =
 	end,
 }
 
-function Combat:init()
+function Combat:init( actor )
+	Verb.init( self, actor )
 	self.targets = {}
 end
 
@@ -32,6 +37,42 @@ function Combat:CollectVerbs( verbs, actor, target )
 	end
 end
 
+function Combat:CalculateUtility()
+	return UTILITY.COMBAT
+end
+
+function Combat:CanInteract()
+	if not self:HasTargets() then
+		return false, "No targets"
+	end
+
+	return true
+end
+
+function Combat:FindCombatPolicy()
+	local best_policy, best_utility
+	for i, aspect in self.owner:Aspects() do
+		if is_instance( aspect, Verb.CombatPolicy ) then
+			local utility = aspect:CalculateUtility()
+			if best_utility == nil or utility > best_utility then
+				best_policy, best_utility = aspect, utility
+			end
+		end
+	end
+	return best_policy
+end
+
+function Combat:Interact()
+	while true do
+		local policy = self:FindCombatPolicy()
+		if policy then
+			self:DoChildVerb( policy )
+		else
+			self:YieldForTime( ONE_MINUTE ) -- ???
+		end
+	end
+end
+
 function Combat:OnLocationChanged( prev_location, location )
 	if prev_location then
 		prev_location:RemoveListener( self )
@@ -39,7 +80,7 @@ function Combat:OnLocationChanged( prev_location, location )
 	if location then
 		location:ListenForAny( self, self.OnLocationEvent )
 	end
-	self:EvaluateTargets()
+	-- self.owner.behaviour:ScheduleNextTick( 0, "location_changed" )
 end
 
 function Combat:GetCurrentAttack()
@@ -118,7 +159,7 @@ function Combat:EvaluateTarget( target )
 	if target:GetLocation() ~= self.owner:GetLocation() then
 		return false, "not in location"
 	end
-	local combat = target:GetAspect( Aspect.Combat )
+	local combat = target:GetAspect( Verb.Combat )
 	if not combat then
 		return false, "no combat"
 	end
@@ -161,16 +202,13 @@ function Combat:AddTarget( target )
 		self.owner:BroadcastEvent( ENTITY_EVENT.COMBAT_STARTED, self )
 	end
 
-	if not self.attack then
-		assert( not self.owner:HasAspect( Verb.HostileCombat ))
-		self.attack = self.owner:GainAspect( Verb.HostileCombat( self.owner ))
-	end
-
 	self.owner:RegenVerbs()
 	self.owner:CancelInvalidVerbs()
+	self.owner.behaviour:ScheduleNextTick( 0, "new combat target" )
+	
 	target:ListenForAny( self, self.OnTargetEvent )
 
-	local combat = target:GetAspect( Aspect.Combat )
+	local combat = target:GetAspect( Verb.Combat )
 	if not combat:IsTarget( self.owner ) then
 		combat:AddTarget( self.owner )
 	end	
@@ -188,13 +226,12 @@ function Combat:RemoveTarget( target )
 
 	target:RemoveListener( self )
 
-	if #self.targets == 0 and self.attack then
-		self.owner:LoseAspect( self.attack )
-		self.attack = nil
+	if #self.targets == 0 then
 		self.owner:BroadcastEvent( ENTITY_EVENT.COMBAT_ENDED, self )
 	end
 
 	self.owner:RegenVerbs()
+	self.owner:CancelInvalidVerbs()
 end
 
 function Combat:PickTarget()

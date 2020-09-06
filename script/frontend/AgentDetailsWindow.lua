@@ -95,7 +95,7 @@ end
 
 function AgentDetailsWindow:RenderStats( ui, screen )
 	self:RenderAspects( "Stats:", ui, screen, Aspect.StatValue )
-	self:RenderAspects( "Combat:", ui, screen, Aspect.Combat )
+	self:RenderAspects( "Combat:", ui, screen, Verb.Combat )
 	self:RenderAspects( "Job:", ui, screen, Job )
 end
 

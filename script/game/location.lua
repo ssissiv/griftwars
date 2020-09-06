@@ -636,8 +636,9 @@ function Location:LookupTile( tx, ty )
 end
 
 function Location:EmitNoise( source, magnitude )
+	local x0, y0 = source:GetCoordinate()
 	for i, obj in ipairs( self.contents or table.empty ) do
-		if obj.OnNoise then
+		if obj.OnNoise and distance( x0, y0, obj:GetCoordinate() ) <= magnitude then
 			obj:OnNoise( source, magnitude )
 		end
 	end

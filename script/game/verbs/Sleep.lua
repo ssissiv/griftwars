@@ -44,6 +44,10 @@ function Sleep:CanInteract()
 		end
 	end
 
+	if self.obj and self.obj:GetTile() ~= actor:GetTile() then
+		return false, "Too far"
+	end
+
 	if actor:InCombat() then
 		return false, "In combat!"
 	end

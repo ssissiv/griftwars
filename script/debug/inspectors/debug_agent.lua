@@ -115,7 +115,7 @@ function DebugAgent:RenderPanel( ui, panel, dbg )
 		end
 	end
 
-	local combat = self.agent:GetAspect( Aspect.Combat )
+	local combat = self.agent:GetAspect( Verb.Combat )
 	if combat and ui.CollapsingHeader( "Combat" ) then
 		if combat.current_attack then
 			ui.Text( "Current attack: " )

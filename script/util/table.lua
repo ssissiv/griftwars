@@ -207,7 +207,7 @@ function table.merge( ... )
 end
 
 function table.inherit( tbase, t )
-    local tnew = shallowcopy( tbase ) -- note: shallow inheritance.
+    local tnew = table.shallowcopy( tbase ) -- note: shallow inheritance.
     for k, v in pairs(t) do
         tnew[k] = v
     end

@@ -141,7 +141,7 @@ function MeleeAttack:Interact()
 	end
 
 	target:GetMemory():AddEngram( Engram.HasAttacked( actor ))
-	target:GetAspect( Aspect.Combat ):EvaluateTargets()
+	target:GetAspect( Verb.Combat ):EvaluateTargets()
 
 	actor:GetStat( STAT.FATIGUE ):DeltaValue( self.fatigue_cost )
 
@@ -167,6 +167,10 @@ function MeleeAttack:Interact()
 
 	actor:BroadcastEvent( AGENT_EVENT.POST_ATTACK, target, self, ok )
 	aji:TallyDown()
+
+	if target:IsSleeping() and target:CheckAlertness( 80 ) then		
+		target:AwakenStartle()
+	end
 end
 
 function MeleeAttack:RenderTooltip( ui, viewer )

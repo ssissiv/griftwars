@@ -90,6 +90,16 @@ function Agent:CalculateStat( stat )
 	return self.acc:CalculateValue( CALC_EVENT.STAT, self:GetStatValue( stat ), stat )
 end
 
+function Agent:CalculateAlertness()
+	return self:CalculateStat( STAT.ALERTNESS )
+end
+
+function Agent:CheckAlertness( alert_bonus )
+	local alertness = self:CalculateAlertness() + (alert_bonus or 0)
+	local roll = math.random( 1, 100 )
+	return roll < alertness
+end
+
 function Agent:CalculateMoveSpeed()
 	return self.acc:CalculateValue( CALC_EVENT.MOVE_SPEED, 1.0 )
 end
@@ -125,12 +135,12 @@ function Agent:CanLearnSkill( skill )
 end
 
 function Agent:InCombat()
-	local combat = self:GetAspect( Aspect.Combat )
+	local combat = self:GetAspect( Verb.Combat )
 	return combat and combat:HasTargets()
 end
 
 function Agent:InCombatWith( target )
-	local combat = self:GetAspect( Aspect.Combat )
+	local combat = self:GetAspect( Verb.Combat )
 	return combat and combat:IsTarget( target )
 end
 

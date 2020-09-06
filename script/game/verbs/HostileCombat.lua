@@ -1,4 +1,4 @@
-local HostileCombat = class( "Verb.HostileCombat", Verb )
+local HostileCombat = class( "Verb.HostileCombat", Verb.CombatPolicy )
 
 function HostileCombat:init( actor )
 	Verb.init( self, actor )
@@ -19,7 +19,7 @@ function HostileCombat:CanInteract()
 	local actor = self.actor
 	if not actor:IsSpawned() then
 		return false
-	elseif not actor:GetAspect( Aspect.Combat ):HasTargets() then
+	elseif not actor:GetAspect( Verb.Combat ):HasTargets() then
 		return false, "No targets"
 	end
 
@@ -27,7 +27,7 @@ function HostileCombat:CanInteract()
 end
 
 function HostileCombat:CollectAttacks( actor )
-	local combat = actor:GetAspect( Aspect.Combat )
+	local combat = actor:GetAspect( Verb.Combat )
 	local attacks = {}
 	for i, target in combat:Targets() do
 		actor:RegenVerbs( "attacks" )
@@ -58,7 +58,7 @@ function HostileCombat:Interact()
 	if attack then
 		local target = attack:GetTarget()
 		assert( target, tostring(attack) )
-		actor:GetAspect( Aspect.Combat ):SetCurrentAttack( attack )
+		actor:GetAspect( Verb.Combat ):SetCurrentAttack( attack )
 
 		-- Move into attack range if possible.
 		if not attack:InAttackRange( actor, target ) then
@@ -72,8 +72,8 @@ function HostileCombat:Interact()
 			self:DoChildVerb( attack )
 		end
 
-		if actor:GetAspect( Aspect.Combat ) then
-			actor:GetAspect( Aspect.Combat ):SetCurrentAttack( nil )
+		if actor:GetAspect( Verb.Combat ) then
+			actor:GetAspect( Verb.Combat ):SetCurrentAttack( nil )
 		end
 	end
 end

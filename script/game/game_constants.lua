@@ -291,6 +291,7 @@ STAT = MakeEnum
 	"FATIGUE",
 	"HEALTH",
 	"XP",
+	"ALERTNESS",
 
 	-- Transient stats
 	"PATIENCE",
@@ -422,6 +423,10 @@ FACTION_TIERS =
 	[ FACTION_ROLE.CAPTAIN ] = 2,
 	[ FACTION_ROLE.GUARD ] = 1,
 }
+
+-- Noise magnitudes
+NOISE_WALK = 5
+NOISE_MAX = 100
 
 IMPASS = MakeBitField
 {
