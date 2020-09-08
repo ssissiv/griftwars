@@ -27,7 +27,11 @@ end
 function LoadScreen:GenerateWorld()
     local gen
     local function GenerateWorldCoro()
-        gen = WorldGen()
+    	if CONFIG.GEN then
+    		gen = CLASSES[ CONFIG.GEN ]()
+    	else
+	        gen = WorldGen()
+	    end
         local world = gen:GenerateWorld()
         return world
     end

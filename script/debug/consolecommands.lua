@@ -82,6 +82,18 @@ function switch( agent )
 	world:SetPuppet( agent )
 end
 
+function find( str, idx )
+    local tags = str:split( " " )
+    for i, entity in ipairs( world.entities ) do
+		if DebugUtil.FilterEntity( entity, str, tags ) then
+    		idx = (idx or 1) - 1
+    		if idx <= 0 then
+    			return entity
+	    	end
+	    end
+	end
+end
+
 function goto( str, idx )
 	local location_idx, other_idx = idx or 1, idx or 1
     local tags = str:split( " " )

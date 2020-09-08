@@ -142,7 +142,8 @@ function Verb:GetOwner()
 end
 
 function Verb:OnLoseAspect( owner )
-	self:Cancel( "lose aspect" )
+	assert( not self:IsDoing() )
+	-- self:Cancel( "lose aspect" )
 	Aspect.OnLoseAspect( self, owner )
 end
 
@@ -301,6 +302,7 @@ function Verb:DoChildVerb( verb )
 
 	assert( verb.parent == nil )
 	verb.parent = self
+	verb.start_trace = debug.traceback()
 
 	local result = verb:DoVerb()
 
@@ -314,6 +316,7 @@ function Verb:DoVerb()
 	local actor = self.actor
 	assert( actor )
 	assert( actor:IsDoing( self ), "not doing" )
+	assert( not actor:IsDead(), "dead actor" )
 
 	if self.event_handlers then
 		for event_name, fn in pairs( self.event_handlers ) do
@@ -497,7 +500,6 @@ function Verb:Resume( coro )
 		local ok, reason = self:CanInteract()
 		if not ok then
 			self:Cancel( reason )
-
 
 		-- Behaviour might also cancel by choosing a new priority verb.
 		elseif self.actor.behaviour then

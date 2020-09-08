@@ -14,7 +14,7 @@ function Barkeep:GetName()
 end
 
 function Barkeep:GetWaypoint()
-	return self.tavern:GetWaypoint( WAYPOINT.KEEPER )
+	return self.tavern:GetWaypointByTag( WAYPOINT.KEEPER )
 end
 
 function Barkeep:CollectVerbs( verbs, actor, target )

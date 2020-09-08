@@ -16,7 +16,7 @@ function ManageShop:GetName()
 end
 
 function ManageShop:GetWaypoint()
-	return self.shop:GetLocation():GetWaypoint( WAYPOINT.KEEPER )
+	return self.shop:GetLocation():GetWaypointByTag( WAYPOINT.KEEPER )
 end
 
 function ManageShop:AssignShop( shop )

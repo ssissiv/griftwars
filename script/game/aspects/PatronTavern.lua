@@ -16,7 +16,6 @@ function PatronTavern:CanInteract()
 
 	local ok, reason = self.owner:GetAspect( Feature.Tavern ):IsOpenForBusiness()
 	if not ok then
-		print( ok, reason, self.actor )
 		return ok, reason
 	end
 

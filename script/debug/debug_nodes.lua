@@ -117,7 +117,11 @@ function DebugCoroutine:RenderPanel( ui, panel )
             local fnname = info.name or string.format( "<%s:%d>", info.short_src, info.linedefined )
             local txt = string.format( "%s:%d in function '%s'", info.short_src, info.currentline, fnname )
             if ui.Selectable( txt ) then
-                self.selected_frame = i
+                if self.selected_frame == i then
+                    self.selected_frame = nil
+                else
+                    self.selected_frame = i
+                end
             end
             if self.selected_frame == i then
                 ui.Indent( 20 )
