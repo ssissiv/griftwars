@@ -1,10 +1,10 @@
-local FleeFromCombat = class( "Verb.FleeFromCombat", Verb )
+local FleeFromCombat = class( "Verb.FleeFromCombat", Verb.CombatPolicy )
 
 function FleeFromCombat:GetDesc( viewer )
 	return "Fleeing!"
 end
 
-function FleeFromCombat:CalculateUtility()
+function FleeFromCombat:CalculatePolicyUtility()
 	if not self.actor:InCombat() then
 		return 0
 	end

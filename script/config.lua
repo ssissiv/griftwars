@@ -1,5 +1,5 @@
 return
 {
-	GEN = "WorldGen.TinyWorld",
+	GEN = "WorldGen",
 	QUICKGEN = true
 }

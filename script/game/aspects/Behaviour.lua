@@ -83,7 +83,7 @@ function Behaviour:OnVerbUnassigned( event_name, owner, verb )
 end
 
 function Behaviour:ScheduleNextTick( delta, reason )
-	if self.owner:IsPuppet() then
+	if self.owner:IsPuppet() or self.owner:IsDead() then
 		return
 	end
 
@@ -119,7 +119,7 @@ end
 
 function Behaviour:OnTickBehaviour( reason )
 
-	if self.owner:IsPuppet() then
+	if self.owner:IsPuppet() or self.owner:IsDead() then
 		return
 	end
 	

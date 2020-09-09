@@ -9,11 +9,14 @@ function TinyWorld:GenerateWorld()
 	local zone = Zone.Hills( self, 1, 1 )
 	world:SpawnEntity( zone )
 
-	local origin = Location.OpenHills()
+	local origin = Location.OpenFields()
 	origin:SetDetails( "Tiny World", "Not much here." )
 	origin:SetCoordinate( 0, 0 )
 	origin:AssignZone( zone, 1 )
 	world:SpawnLocation( origin )
+
+	local npc = Agent.Orc()
+	npc:WarpToLocation( origin )
 
 	-- for i = 1, 1 do
 	-- 	local npc = Agent.HillGiant()

@@ -28,7 +28,8 @@ function PatronTavern:Interact()
 
 	local travel = Verb.Travel( self.actor ):SetDest( wp )
 	while self:DoChildVerb( travel ) do
-		self:Idle( ONE_HOUR )
+		self:Idle( math.random() * ONE_HOUR )
+		Msg:Speak( self.actor, "Another beer, keeper!" )
 	end
 
 	wp:UnoccupyWaypoint( self.actor )

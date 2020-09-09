@@ -1,16 +1,5 @@
 local Verb = class( "Verb", Aspect )
 
-Verb.event_handlers =
-{
-	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
-		if agent:HasAspect( self ) then
-			agent:LoseAspect( self )
-		else
-			self:Cancel( "died" )
-		end
-	end,
-}
-
 function Verb:init( actor, obj )
 	assert( actor == nil or is_instance( actor, Agent ))
 	assert( not obj )
@@ -318,12 +307,6 @@ function Verb:DoVerb()
 	assert( actor:IsDoing( self ), "not doing" )
 	assert( not actor:IsDead(), "dead actor" )
 
-	if self.event_handlers then
-		for event_name, fn in pairs( self.event_handlers ) do
-			actor:ListenForEvent( event_name, self, fn )
-		end
-	end
-
 	self.world = actor.world
 
 	self.error = nil
@@ -353,8 +336,6 @@ function Verb:Cleanup()
 
 	self.coro = nil
 	self.time_finished = self.actor.world:GetDateTime()
-
-	self.actor:RemoveListener( self )
 end
 
 function Verb:IsDoing()

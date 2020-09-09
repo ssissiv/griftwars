@@ -9,6 +9,7 @@ Combat.TABLE_KEY = "combat"
 Combat.event_handlers =
 {
 	[ AGENT_EVENT.DIED ] = function( self, event_name, agent, ... )
+		print( "DIED!!", agent, self )
 		agent:LoseAspect( self )
 	end,
 }
@@ -19,11 +20,13 @@ function Combat:init( actor )
 end
 
 function Combat:OnSpawn( world )
-	Aspect.OnSpawn( self, world )
+	Combat._base.OnSpawn( self, world )
+	assert( self.owner.events:IsListener( self, AGENT_EVENT.DIED ))
 	self:EvaluateTargets()
 end
 
 function Combat:OnLoseAspect()
+	print( "LOSE", self.owner, self.owner.location )
 	if self.owner.location then
 		self.owner.location:RemoveListener( self )
 	end
@@ -46,14 +49,14 @@ function Combat:CanInteract()
 		return false, "No targets"
 	end
 
-	return true
+	return Verb.CanInteract( self )
 end
 
 function Combat:FindCombatPolicy()
 	local best_policy, best_utility
 	for i, aspect in self.owner:Aspects() do
 		if is_instance( aspect, Verb.CombatPolicy ) then
-			local utility = aspect:CalculateUtility()
+			local utility = aspect:CalculatePolicyUtility()
 			if best_utility == nil or utility > best_utility then
 				best_policy, best_utility = aspect, utility
 			end
@@ -63,11 +66,13 @@ function Combat:FindCombatPolicy()
 end
 
 function Combat:Interact()
-	while true do
+	while not self:IsCancelled() do
 		local policy = self:FindCombatPolicy()
-		if policy then
-			self:DoChildVerb( policy )
-		else
+		if not policy or not self:DoChildVerb( policy ) then
+			print( self.actor, "doesn't know what to do in combat" )
+			if policy then
+				print( "\t", policy:CanDo() )
+			end
 			self:YieldForTime( ONE_MINUTE ) -- ???
 		end
 	end

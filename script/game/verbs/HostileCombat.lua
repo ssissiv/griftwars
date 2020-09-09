@@ -9,7 +9,7 @@ function HostileCombat:GetDesc( viewer )
 	return "Fighting!"
 end
 
-function HostileCombat:CalculateUtility()
+function HostileCombat:CalculatePolicyUtility()
 	local attacks = self:CollectAttacks( self.actor )
 	local attack_utility = attacks[1] and attacks[1]:GetUtility() or 0
 	return UTILITY.COMBAT + attack_utility
@@ -19,11 +19,18 @@ function HostileCombat:CanInteract()
 	local actor = self.actor
 	if not actor:IsSpawned() then
 		return false
-	elseif not actor:GetAspect( Verb.Combat ):HasTargets() then
+	elseif not actor.combat then
+		return false, "no combat"
+	elseif not actor.combat:HasTargets() then
 		return false, "No targets"
 	end
 
-	return true
+	self.attacks = self:CollectAttacks( actor )
+	if #self.attacks == 0 then
+		return false, "No attacks"
+	end
+
+	return true --HostileCombat._base.CanInteract( self )
 end
 
 function HostileCombat:CollectAttacks( actor )
@@ -47,33 +54,28 @@ function HostileCombat:CollectAttacks( actor )
 	return attacks
 end
 
-function HostileCombat:GetCurrentAttack()
-	return self.current_attack
-end
-
 function HostileCombat:Interact()
 	local actor = self.actor
-	self.attacks = self:CollectAttacks( actor )
 	local attack = self.attacks[1]
-	if attack then
-		local target = attack:GetTarget()
-		assert( target, tostring(attack) )
-		actor:GetAspect( Verb.Combat ):SetCurrentAttack( attack )
+	assert( attack )
+	local target = attack:GetTarget()
+	assert( target, tostring(attack) )
+	actor:GetAspect( Verb.Combat ):SetCurrentAttack( attack )
 
-		-- Move into attack range if possible.
-		if not attack:InAttackRange( actor, target ) then
-			self.travel:SetApproachDistance( attack:GetAttackRange() )
-			self.travel:SetDest( target )
-			local ok, reason = self:DoChildVerb( self.travel )
-		end
+	-- Move into attack range if possible.
+	if not attack:InAttackRange( actor, target ) then
+		self.travel:SetApproachDistance( attack:GetAttackRange() )
+		self.travel:SetDest( target )
+		local ok, reason = self:DoChildVerb( self.travel )
+	end
 
-		-- Atttaaack.
-		if not self:IsCancelled() then
-			self:DoChildVerb( attack )
-		end
+	-- Atttaaack.
+	if not self:IsCancelled() then
+		self:DoChildVerb( attack )
+	end
 
-		if actor:GetAspect( Verb.Combat ) then
-			actor:GetAspect( Verb.Combat ):SetCurrentAttack( nil )
-		end
+	if actor:GetAspect( Verb.Combat ) then
+		actor:GetAspect( Verb.Combat ):SetCurrentAttack( nil )
 	end
 end
+

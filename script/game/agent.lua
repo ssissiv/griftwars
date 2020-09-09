@@ -763,6 +763,7 @@ function Agent:CancelInvalidVerbs()
 					verb:Cancel( reason )
 					break
 				else
+					assert( not self:IsDead() ) -- CanInteract should've returned false
 					verb = verb.child
 				end
 			end
@@ -870,6 +871,7 @@ function Agent:Kill()
 	self:CancelInvalidVerbs()
 
 	self:BroadcastEvent( AGENT_EVENT.DIED )
+	assert( not self.combat )
 end
 
 function Agent:IsDead()
