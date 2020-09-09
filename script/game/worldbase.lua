@@ -9,11 +9,13 @@ function WorldBase:init()
 	
 	self:ListenForAny( self, self.OnWorldEvent )
 	self.scheduled_events = {}
-	self.events_triggered = 0
 	self.total_events_triggered = 0
-	self.event_peak = 0
-	self.event_times = {}
-	
+	self.events_per_second_idx = 1
+	self.events_per_second = {}
+	for i = 1, 10 do
+		self.events_per_second[i] = -1
+	end
+
 	self.buckets = {}
 	self.entities = {}
 	self.pause = {}
@@ -110,7 +112,6 @@ function WorldBase:AdvanceTime( dt, max_events )
 	-- Broadcast any scheduled events.
 	local ev = self.scheduled_events[ 1 ]
 
-	self.event_peak = math.max( self.event_peak, #self.scheduled_events )
 	local ev_count = 0 -- TODO: wall time?
 
 	while ev and ev.when <= self.datetime + dt do
@@ -121,12 +122,6 @@ function WorldBase:AdvanceTime( dt, max_events )
 		ev_count = ev_count + 1
 
 		if not ev.cancel then
-			self.events_triggered = self.events_triggered + 1
-			if self.events_triggered >= 1000 then
-				self.events_triggered = self.events_triggered - 1000
-				self.event_peak = 0
-				table.insert( self.event_times, self.datetime )
-			end
 			self.total_events_triggered = self.total_events_triggered + 1
 			self:TriggerEvent( ev )
 		end
@@ -282,6 +277,24 @@ function WorldBase:CalculateTimeElapsed( dt )
 	return dt * WALL_TO_GAME_TIME * self.debug_world_speed
 end
 
+function WorldBase:CalculateEventsPerSecond()
+	local min_count, max_count = math.huge, -math.huge
+	local count = 0
+	for i = 1, #self.events_per_second do
+		local events = self.events_per_second[i]
+		if events >= 0 then
+			min_count = math.min( min_count, events )
+			max_count = math.max( max_count, events )
+			count = count + 1
+		end
+	end
+	if count == 0 then
+		return 0
+	else
+		return 10 * (max_count - min_count) / count
+	end
+end
+
 function WorldBase:UpdateWorld( dt )
 	if self:IsPaused( PAUSE_TYPE.IDLE ) then
 		dt = 0
@@ -299,6 +312,14 @@ function WorldBase:UpdateWorld( dt )
 	-- end
 	self.time_debt = self:AdvanceTime( world_dt, 100 )
 
+	-- Track events per second.
+	self.event_dt = (self.event_dt or 0) + dt
+	while self.event_dt >= 0.1 do
+		self.event_dt = self.event_dt - 0.1
+		self.events_per_second[ self.events_per_second_idx ] = self.total_events_triggered
+		self.events_per_second_idx = (self.events_per_second_idx % #self.events_per_second) + 1
+	end
+	
 	if self.OnUpdateWorld then
 		self:OnUpdateWorld( dt, world_dt )
 	end

@@ -25,7 +25,8 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
 
     if ui.TreeNode( "Event Load" ) then
         ui.Text( string.format( "%d total events", self.game.world.total_events_triggered  ))
-        ui.Text( string.format( "%d scheduled (%d peak)", #self.game.world.scheduled_events, self.game.world.event_peak ))
+        ui.Text( string.format( "%d scheduled", #self.game.world.scheduled_events ))
+        ui.Text( string.format( "%.1f events per second", self.game.world:CalculateEventsPerSecond() ))
 
         -- local arr = { 5, 8, 10, 12, 15, 24, 20, 3, 3, 3, 3, 3 }
         -- ui.PlotHistogram("Events", arr, #arr, 0 )
